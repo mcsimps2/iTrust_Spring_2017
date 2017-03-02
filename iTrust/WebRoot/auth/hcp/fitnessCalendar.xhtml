@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:itrust="/WEB-INF/tags.tld">
+<f:view
+	beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+<h:body>
+	<ui:composition template="/iTrust_template.xhtml">
+		<ui:define name="pageTitle">iTrust - Fitness Calendar</ui:define>
+		<ui:define name="leftMenu">
+			<ui:include src="/auth/hcp/menu.xhtml" />
+		</ui:define>
+		<ui:define name="mainContent">
+			<itrust:patientNav thisTitle="Fitness Calendar" />
+			<div align="center">
+				<br />
+				<h:message for="" />
+			</div>
+			<div align="center">
+				<table width="90%">
+					<tr>
+						<td style="text-align: left;">
+							<h:form>
+								<h:commandButton action="#{fitness_info_controller.goToPrevious()}" value="Previous"/>
+							</h:form>
+						</td>
+						<td style="text-align: center;">
+							<h3>Fitness data for #{user.getUserNameForID(session.getAttribute("pid"))} for #{fitness_info_controller.getMonthName()} #{fitness_info_controller.getYear()}</h3>
+						</td>
+						<td style="text-align: right;">
+							<h:form>
+								<h:commandButton action="#{fitness_info_controller.goToNext()}" value="Next"/>
+							</h:form>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td>
+							<table id="calendarTable">
+								<tr>
+									<ui:repeat var="dayOfWeek" value="#{fitness_info_controller.getDaysOfWeek()}">
+										<th>#{dayOfWeek}</th>
+									</ui:repeat>
+								</tr>
+								<ui:repeat var="week" value="#{fitness_info_controller.getFitnessCalendar()}">
+									<tr>
+										<ui:repeat var="calDay" value="#{week}">
+											<td>
+												<div class="cell">
+													<ui:fragment rendered="#{calDay != null}">
+														<div style="float: right;">#{calDay.day}</div>
+														<div class="calendarEntry">
+															<ui:fragment rendered="#{!calDay.containsData}">
+																<h:link style="font-size: 12px;" outcome="editFitnessInfo" value="Add">
+									      						 		<f:param name="date" value="#{calDay.date}" />
+									      						 		<f:param name="day" value="#{calDay.day}" />
+								   								</h:link>
+															</ui:fragment>
+															<ui:fragment rendered="#{calDay.containsData}">
+																<h:link style="font-size: 12px;" outcome="editFitnessInfo" value="View/Edit">
+									      						 		<f:param name="date" value="#{calDay.date}" />
+									      						 		<f:param name="day" value="#{calDay.day}" />
+								   								</h:link>
+															</ui:fragment>
+														</div>
+													</ui:fragment>
+												</div>
+											</td>
+										</ui:repeat>
+									</tr>
+								</ui:repeat>
+							</table>
+						</td>
+						<td style="text-align: center;">
+							<h:link style="color:black;" class="btn btn-default" outcome="fitnessGraphs" value="View Summary Report"></h:link>
+							<br/>
+							<br/>
+							<h:link style="color:black;" class="btn btn-default" outcome="uploadFitnessInfo" value="Upload Fitness File"></h:link>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:itrust="/WEB-INF/tags.tld">
+<f:view
+	beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+<h:body>
+	<ui:composition template="/iTrust_template.xhtml">
+		<ui:define name="pageTitle">iTrust - Fitness Reports</ui:define>
+		<ui:define name="leftMenu">
+			<ui:include src="/auth/hcp/menu.xhtml" />
+		</ui:define>
+
+		<ui:define name="mainContent">
+			<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+			<script type="text/javascript">
+				//Code borrows heavily from https://developers.google.com/chart/interactive/docs/gallery/linechart
+				google.charts.load('current', {'packages':['corechart']});
+		    	//This is probably what we should call once refresh is pressed
+		    	if (#{fitness_graph_subject.startDate} != null &amp;&amp; #{fitness_graph_subject.endDate} != null) {	
+		    		google.charts.setOnLoadCallback(drawCharts);
+		    	}
+		
+				function drawCharts() {
+					var dailyData = google.visualization.arrayToDataTable([
+						[ 'Day', 'Step Count' ],
+						#{fitness_graph_subject.dailyGraphObserver.dataString}
+					]);
+					var dailyOptions = {
+						title : 'Daily Step Count for #{user.getUserNameForID(session.getAttribute("pid"))}',
+						interpolateNulls : true
+					};
+					var dailyChart = new google.visualization.LineChart(document.getElementById('daily-chart'));
+					dailyChart.draw(dailyData, dailyOptions);
+					
+					//Delta Chart
+					var deltaData = google.visualization.arrayToDataTable([
+						[ 'Day', 'Delta Step Count' ],
+						#{fitness_graph_subject.deltaGraphObserver.dataString}
+					]);
+					var deltaOptions = {
+						title : 'Delta Step Count for #{user.getUserNameForID(session.getAttribute("pid"))}',
+						interpolateNulls : true
+					};
+					var deltaChart = new google.visualization.LineChart(document.getElementById('delta-chart'));
+					deltaChart.draw(deltaData, deltaOptions);
+					
+					//Weekly Avg Chart
+					var weeklyAvgData = google.visualization.arrayToDataTable([
+						[ 'Day', 'Average Step Count' ],
+						#{fitness_graph_subject.weeklyAvgGraphObserver.dataString}
+					]);
+					 
+					var weeklyAvgOptions = {
+						title : 'Weekly Average Step Count for #{user.getUserNameForID(session.getAttribute("pid"))}',
+						interpolateNulls : true
+					};
+					
+					var weeklyAvgChart = new google.visualization.LineChart(document.getElementById('weekly-avg-chart'));
+					weeklyAvgChart.draw(weeklyAvgData, weeklyAvgOptions);
+				}
+			</script>
+		
+			<itrust:patientNav thisTitle="Fitness Reports" />
+			<h:message for="" id="fitnessInfo-message" class="iTrustError" />
+			<div align="center">
+				
+				<table width="90%">
+					<tr>
+						<td style="text-align: center;">
+							<h3>Fitness reports for #{user.getUserNameForID(session.getAttribute("pid"))}</h3>
+							<p>Enter dates in YYYY-MM-DD format.</p>
+							<h:form>
+								<div class="form-group" style="background-color:#fcfcfc;">
+									<h:outputLabel for="end-date">Start Date:</h:outputLabel>
+									<h:inputText value="#{fitness_graph_subject.startDate}" id="start-date" style="margin:10px;">
+										<f:ajax />
+									</h:inputText>
+									<h:outputLabel for="end-date">End Date:</h:outputLabel>
+									<h:inputText value="#{fitness_graph_subject.endDate}" id="end-date" style="margin:10px;">
+										<f:ajax />
+									</h:inputText>
+									<h:commandLink class="btn btn-default" value="Generate" action="#{fitness_graph_subject.updateAndNotify()}" style="color:black;margin:10px;"/>
+									<h:link style="color:black;margin:10px;" class="btn btn-default" outcome="fitnessCalendar" value="Go Back"></h:link>
+								</div>
+							</h:form>
+						</td>
+					</tr>
+				</table>
+				
+				<div id="daily-chart" style="width: 900px; height: 500px; margin: 20px;"></div>
+				<div id="delta-chart" style="width: 900px; height: 500px; margin: 20px;"></div>
+				<div id="weekly-avg-chart" style="width: 900px; height: 500px; margin: 20px;"></div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

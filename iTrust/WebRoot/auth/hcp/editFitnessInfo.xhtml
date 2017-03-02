@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:f="http://java.sun.com/jsf/core">
+	  
+<f:view
+	beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+<h:body>
+	<ui:composition template = "/iTrust_template.xhtml">
+		<ui:define name="pageStyle">
+			<link rel="stylesheet" href="/iTrust/css/form-layout.css" />
+		</ui:define>
+		<ui:define name="pageTitle">View/Edit Fitness Info</ui:define>
+		<ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml"/></ui:define>	
+		
+		<ui:define name="mainContent">
+			<h:message for="" id="fitnessInfo-message" class="iTrustError" />
+			<h3 align="center">Viewing Fitness Data for #{user.getUserNameForID(session.getAttribute("pid"))} for #{fitness_info_controller.getMonthName()} #{fitness_info_controller.getSelectedDay()}, #{fitness_info_controller.getYear()}</h3>
+			<h:form style="width:50%; margin-left:20%">
+				<div class="form-group">
+					<h:outputLabel for="fiSteps">Steps:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.steps}" id="fiSteps" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiCalsBurned">Calories Burned:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.caloriesBurned}" id="fiCalsBurned" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiMiles">Distance (miles):</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.miles}" id="fiMiles" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiFloors">Floors:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.floors}" id="fiFloors" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiActiveCals">Active Calories:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.activeCalories}" id="fiActiveCals" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiActiveHours">Hours of Activity:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.activeHours}" id="fiActiveHours" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiUVExposure">Minutes of UV Exposure:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.minutesUVExposure}" id="fiUVExposure" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiSedentary">Minutes Sedentary:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.minutesSedentary}" id="fiSedentary" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiLightlyActive">Minutes Lightly Active:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.minutesLightlyActive}" id="fiLightlyActive" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiFairlyActive">Minutes Fairly Active:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.minutesFairlyActive}" id="fiFairlyActive" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiVeryActive">Minutes Very Active:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.minutesVeryActive}" id="fiVeryActive" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiHRLow">Lowest Heart Rate:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.heartRateLow}" id="fiHRLow" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiHRHigh">Highest Heart Rate:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.heartRateHigh}" id="fiHRHigh" >
+					</h:inputText>
+				</div>
+				<div class="form-group">
+					<h:outputLabel for="fiHRAvg">Average Heart Rate:</h:outputLabel>
+					<h:inputText value="#{fitness_info_form.fitnessInfo.heartRateAvg}" id="fiHRAvg" >
+					</h:inputText>
+				</div>
+				<div align="center">
+					<table width="50%">
+						<tr>
+							<td style="text-align: left;">
+								<h:form>
+									<h:commandButton class="btn btn-default" value="Save" action="#{fitness_info_form.submit()}"/>
+								</h:form>
+							</td>
+							<td style="text-align: right;">
+								<h:form>
+									<h:link style="color:black;" class="btn btn-default" outcome="fitnessCalendar" value="Cancel"></h:link>
+								</h:form>
+							</td>
+						</tr>
+					</table>
+		     	</div>
+			</h:form>
+		</ui:define>
+		
+		<ui:define name="pageScripts"></ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
