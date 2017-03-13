@@ -47,12 +47,14 @@ public class FitnessInfoMySQLTest {
 	@Before
 	public void setup() throws DBException, SQLException, IOException
 	{
+		TestDataGenerator.main(null);
+		
 		ds = ConverterDAO.getDataSource();
 		fisql = new FitnessInfoMySQL(ds);
 		loader = new FitnessInfoSQLLoader();
 		
 		//Clear the tables
-		TestDataGenerator.main(null);
+		//TestDataGenerator.main(null);
 		
 		//This will also populate the data tables, including the fitness tables
 		//See fitnessData.sql for the values in the table put in there
@@ -262,5 +264,170 @@ public class FitnessInfoMySQLTest {
 		}
 	}
 	
+	@Test
+	public void testAddBoundaries()
+	{
+		//Test boundaries for PID
+		FitnessInfo fi1 = new FitnessInfo(0, "2000-10-11", 500, 200, 1, 3, 5, 7, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			fisql.add(fi1);
+			Assert.fail("Added something with an invalid PID");
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		FitnessInfo fi2 = new FitnessInfo(1, "2000-10-11", 500, 200, 1, 3, 5, 7, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			Assert.assertTrue(fisql.add(fi2));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		FitnessInfo fi3 = new FitnessInfo(2, "1990-10-11", 500, 200, 1, 3, 5, 7, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			
+			Assert.assertTrue(fisql.add(fi3));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		
+		//Test boundaries for calories active
+		fi1 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, -1, 7, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			fisql.add(fi1);
+			Assert.fail("Added something with an invalid active calorie count");
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		fi2 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, 5, 0, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			Assert.assertTrue(fisql.add(fi2));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		fi3 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, 5, 7, 1, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			
+			Assert.assertTrue(fisql.add(fi3));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		
+		//Test boundaries for calories active
+		fi1 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, 201, 7, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			fisql.add(fi1);
+			Assert.fail("Added something with an invalid active calorie count");
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		fi2 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, 5, 200, 9, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			Assert.assertTrue(fisql.add(fi2));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		fi3 = new FitnessInfo(1, "2000-10-11", 1, 200, 1, 3, 5, 7, 199, 10, 12, 15, 16, 17, 18, 19);
+		try
+		{
+			
+			Assert.assertTrue(fisql.add(fi3));
+		}
+		catch (DBException | FormValidationException e)
+		{
+			Assert.fail("Did not add a valid entry");
+		}
+		
+	}
 	
+	@Test
+	public void testConstructor()
+	{
+		//The default constructor should not be working for JUnit test cases
+		FitnessInfoMySQL fisql = null;
+		try
+		{
+			fisql = new FitnessInfoMySQL();
+			Assert.fail("Created a FitnessInfoMySQL when should not have been able to");
+		}
+		catch (DBException e)
+		{
+			//Good!
+			Assert.assertNull(fisql);
+		}
+	}
+	
+	/*
+	@Test
+	public void invalidRemoveFitnessInfo()
+	{
+		try
+		{
+			fisql.removeFitnessInfo(1, "abcd");
+			Assert.fail("Allowed an invalid date");
+		}
+		catch (DBException e)
+		{
+			//Good!
+			Assert.assertNotNull(e);
+		}
+		try
+		{
+			fisql.removeFitnessInfo(1, "1996-01-01", "abcdefg");
+			Assert.fail("Allowed an invalid date");
+		}
+		catch (DBException e)
+		{
+			//Good!
+			Assert.assertNotNull(e);
+		}
+	}
+	*/
+	
+	@Test
+	public void invalidGetFitnessInfo()
+	{
+		try
+		{
+			fisql.getFitnessInfo(1, "sneaky' WHERE 'oops");
+			Assert.fail("Allowed an invalid date");
+		}
+		catch (DBException e)
+		{
+			//Good!
+			Assert.assertNotNull(e);
+		}
+		try
+		{
+			fisql.getFitnessInfo(1, "1996-01-01", "sneaky' WHERE 'oops");
+			Assert.fail("Allowed an invalid date");
+		}
+		catch (DBException e)
+		{
+			//Good!
+			Assert.assertNotNull(e);
+		}
+	}
 }

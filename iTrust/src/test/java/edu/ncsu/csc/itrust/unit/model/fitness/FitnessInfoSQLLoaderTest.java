@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.unit.model.fitness;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoSQLLoader;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
  * Tests the FitnessInfoSQLLoader
@@ -23,10 +25,13 @@ public class FitnessInfoSQLLoaderTest {
 	FitnessInfoSQLLoader loader;
 	/**
 	 * Setup the tests
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
 	@Before
-	public void setup()
+	public void setup() throws IOException, SQLException
 	{
+		TestDataGenerator.main(null);
 		loader = new FitnessInfoSQLLoader();
 	}
 	

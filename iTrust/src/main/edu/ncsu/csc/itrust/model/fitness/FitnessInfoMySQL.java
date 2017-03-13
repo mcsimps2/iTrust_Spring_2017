@@ -159,7 +159,9 @@ public class FitnessInfoMySQL implements FitnessInfoData, Serializable
 		Connection conn = null;
 		PreparedStatement pstring = null;
 		try {
+			//System.out.println("Validating");
 			validator.validate(fi); //need, at min, the pid and date not to be blank
+			//System.out.println("Passed validation");
 		}
 		catch (FormValidationException e1) {
 			throw new DBException(new SQLException(e1));
@@ -223,6 +225,29 @@ public class FitnessInfoMySQL implements FitnessInfoData, Serializable
 	@Override
 	public boolean update(FitnessInfo fi) throws DBException, FormValidationException {
 		return add(fi);
+		/*
+		boolean retval = false;
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		try {
+			validator.validate(fi);
+		} catch (FormValidationException e1) {
+			throw new DBException(new SQLException(e1.getMessage()));
+		}
+		int results;
+
+		try {
+			conn = ds.getConnection();
+			pstring = loader.loadParameters(conn, pstring, fi, false);
+			results = pstring.executeUpdate();
+			retval = (results > 0);
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+		return retval;
+		*/
 	}
 
 	/**

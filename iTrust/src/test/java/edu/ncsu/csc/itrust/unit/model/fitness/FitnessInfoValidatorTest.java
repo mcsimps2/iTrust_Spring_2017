@@ -36,6 +36,7 @@ public class FitnessInfoValidatorTest {
 	@Before
 	public void setup() throws IOException, SQLException
 	{
+		TestDataGenerator.main(null);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date dcurrDate = new Date();
 		Date dyesterday = DateUtils.addDays(new Date(), -1);
@@ -83,7 +84,7 @@ public class FitnessInfoValidatorTest {
 	@Test
 	public void testInvalidFitnessInfo()
 	{
-		FitnessInfo[] fiArr = new FitnessInfo[7];
+		FitnessInfo[] fiArr = new FitnessInfo[9];
 		//Before date of birth
 		fiArr[0] = new FitnessInfo(1, "1500-01-02", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		//Invalid pid
@@ -98,7 +99,12 @@ public class FitnessInfoValidatorTest {
 		fiArr[5] = new FitnessInfo(1, currDate, 1, 5, 6, 7, 80, 9, 10, 11, 12, 13, 14, 15, 16, 17); 
 		//After date of death
 		fiArr[6] = new FitnessInfo(2, tmrw, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-		
+		//Negative values
+		fiArr[7] = new FitnessInfo(1, currDate, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1);
+		//Null date
+		fiArr[8] = new FitnessInfo(1, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		//Not a patient
+		//fiArr[9] = new FitnessInfo(9000000000, currDate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		for (int i = 0; i < fiArr.length; i++)
 		{
 			try

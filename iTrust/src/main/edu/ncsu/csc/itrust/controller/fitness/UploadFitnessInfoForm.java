@@ -14,7 +14,6 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
  * Form used to communicate between the view and controller
  * when uploading a FitBit export file.
  * 
- * @author jcgonzal
  * @author amcheshi
  */
 @ManagedBean(name = "upload_fitness_info_form")
@@ -27,8 +26,6 @@ public class UploadFitnessInfoForm
 	private SessionUtils sessionUtils;
 	/** Stores the file to be uploaded */
 	private Part file;
-	/** Stores the type of file to be uploaded */
-	private String fileType;
 	
 	/**
 	 * Default constructor.
@@ -70,7 +67,7 @@ public class UploadFitnessInfoForm
 			return;
 		}
 		try {
-			controller.upload(fileType, file.getInputStream());
+			controller.upload(file.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,19 +87,5 @@ public class UploadFitnessInfoForm
 	 */
 	public void setFile(Part file) {
 		this.file = file;
-	}
-
-	/**
-	 * @return the fileType
-	 */
-	public String getFileType() {
-		return fileType;
-	}
-
-	/**
-	 * @param fileType the fileType to set
-	 */
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
 	}
 }

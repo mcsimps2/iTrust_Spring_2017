@@ -13,7 +13,7 @@
 		<ui:define name="pageStyle">
 			<link rel="stylesheet" href="/iTrust/css/form-layout.css" />
 		</ui:define>
-		<ui:define name="pageTitle">Upload a Fitness File</ui:define>
+		<ui:define name="pageTitle">Upload a FitBit or Microsoft Band File</ui:define>
 		<ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml"/></ui:define>	
 		
 		<ui:define name="mainContent">
@@ -22,10 +22,6 @@
 			<p align="center">Export and upload a CSV file from the FitBit or Microsoft Band to add patient fitness data</p>
 			<div style="text-align:center; margin-bottom:50px">
 				<h:form class="upload-form" enctype="multipart/form-data">
-					<h:selectOneMenu value="#{upload_fitness_info_form.fileType}" style="display:inline;margin-right:10px;">
-					   	<f:selectItem itemValue="FitBit" itemLabel="FitBit" />
-					   	<f:selectItem itemValue="Microsoft Band" itemLabel="Microsoft Band" />
-					</h:selectOneMenu>
 					<h:inputFile id="file" value="#{upload_fitness_info_form.file}" style="display:inline;"/>
 					<h:commandButton value="Upload" action="#{upload_fitness_info_form.upload()}" style="margin-left:10px;"/>
 				</h:form>

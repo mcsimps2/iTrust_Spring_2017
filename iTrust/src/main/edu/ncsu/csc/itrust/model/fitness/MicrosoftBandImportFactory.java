@@ -18,14 +18,9 @@ import edu.ncsu.csc.itrust.exception.CSVFormatException;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 
+public class MicrosoftBandImportFactory extends FitnessImportFactory {
 
-/**
- * Imports data from a Microsoft Band file into the database
- * @author jcgonzal
- *
- */
-public class MicrosoftBandImportFactory extends FitnessImportFactory
-{
+
 	/** Handles the interaction with the database */
 	FitnessInfoMySQL fisql;
 	
@@ -60,7 +55,6 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 	public void importFitnessInfo(long pid, InputStream input) throws CSVFormatException, IOException, FitnessInfoFileFormatException
 	{
 		Scanner scan = new Scanner(new InputStreamReader(input));
-
 		CSVParser csv = new CSVParser(scan);
 		ArrayList<String> header = csv.getHeader();
 		ArrayList<ArrayList<String>> data = csv.getData();
@@ -83,6 +77,36 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 	}
 	
 	/**
+	 * Imports the fitness info from the given header and data
+	 * @param pid whose fitness data the info corresponds to
+	 * @param header the header of the file
+	 * @param data the data content of the file
+	 * @throws FitnessInfoFileFormatException
+	 */
+	public void importFitnessInfo(long pid, ArrayList<String> header, ArrayList<ArrayList<String>> data) throws FitnessInfoFileFormatException
+	{
+		if (header == null || data == null)
+		{
+			throw new FitnessInfoFileFormatException("Empty header or data");
+		}
+		validateHeader(header);
+		validateData(data);
+		
+		//Now we have valid data and headers, put the data into the database
+		for (int i = 0; i < data.size(); i++)
+		{
+			FitnessInfo fi = convertRowToFitnessInfo(data.get(i), pid);
+			try
+			{
+				fisql.add(fi); //will automatically insert/update values, overwriting is default for updates
+			} catch (FormValidationException | DBException e)
+			{
+				throw new FitnessInfoFileFormatException("Invalidly formatted data");
+			}
+		}
+	}
+	
+	/**
 	 * Converts a row of a CSV file into a FitnessInfo object
 	 * Precondition: the row has been validated
 	 * @param row the row of the CSV file
@@ -93,13 +117,58 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 	private FitnessInfo convertRowToFitnessInfo(ArrayList<String> row, long pid) throws FitnessInfoFileFormatException
 	{
 		String date = convertDate(row.get(0)); //get the date in YYYY-MM-DD format
-		FitnessInfo ret = new FitnessInfo(pid, date, getIntFromString(row.get(1)), getIntFromString(row.get(2)), getDoubleFromString(row.get(6)), getIntFromString(row.get(8)), 0, 0, 0, 0, 0, getIntFromString(row.get(3)), getIntFromString(row.get(4)), getIntFromString(row.get(5)), getIntFromString(row.get(7)), getIntFromString(row.get(9)));
+		//FitnessInfo ret = new FitnessInfo(pid, date, getIntFromString(row.get(2)), getIntFromString(row.get(1)), Double.parseDouble(row.get(3)), getIntFromString(row.get(4)), getIntFromString(row.get(9)), getIntFromString(row.get(5)), getIntFromString(row.get(7)), getIntFromString(row.get(6)), getIntFromString(row.get(8)), 0, 0, 0, 0, 0);
+		//Date, Steps, Calories, HR_Lowest, HR_Highest, HR_Average, Total_Miles_Moved, Active_Hours, Floors_Climbed, UV_Exposure_Minutes
+		//0      1        2           3          4            5           6                7             8              9            
+		//pid, date, 1, 2, 6, 8, --, --, --, --, --, 3, 4, 5, 7, 9
+		FitnessInfo ret = new FitnessInfo(pid, date, getIntRepresentation(row.get(1)), getIntRepresentation(row.get(2)), getDoubleRepresentation(row.get(6)), getIntRepresentation(row.get(8)), 0, 0, 0, 0, 0, getIntRepresentation(row.get(3)), getIntRepresentation(row.get(4)), getIntRepresentation(row.get(5)), getIntRepresentation(row.get(7)), getIntRepresentation(row.get(9)));
+		/*
+		 * public FitnessInfo(long pid, String date, int steps, int caloriesBurned, double miles, int floors,
+			int activeCalories, int minutesSedentary, int minutesFairlyActive, int minutesLightlyActive,
+			int minutesVeryActive, int heartRateLow, int heartRateHigh, int heartRateAvg, int activeHours,
+			int minutesUVExposure)
+		 */
 		return ret;
 	}
 	
 	/**
+	 * Turns the string into an integer.  If the string is null or empty, turns it into a zero
+	 * @param str the string to convert
+	 * @return the integer representation
+	 * @throws FitnessInfoFileFormatException
+	 */
+	private int getIntRepresentation(String str) throws FitnessInfoFileFormatException
+	{
+		if (str == null || str.equals(""))
+		{
+			return 0;
+		}
+		else
+		{
+			return getIntFromString(str);
+		}
+	}
+	
+	/**
+	 * Turns the string into a double.  If the string is null or empty, turns it into a zero
+	 * @param str hte string to convert
+	 * @return the integer representation
+	 */
+	private double getDoubleRepresentation(String str)
+	{
+		if (str == null || str.equals(""))
+		{
+			return 0;
+		}
+		else
+		{
+			return Double.parseDouble(str);
+		}
+	}
+	
+	/**
 	 * Verifies the header of the CSV file is in the format
-	 * "Date", "Steps", "Calories", "HR_Lowest", "HR_Highest", "HR_Average", "Total_Miles_Moved", "Active_Hours", "Floors_Climbed", "UV_Exposure_Minutes"
+	 * "Date", "Calories Burned", "Steps", "Distance", "Floors", "Minutes Sedentary", "Minutes Lightly Active", "Minutes Fairly Active", "Minutes Very Active", "Activity Calories"
 	 * @param header the header of the CSV file
 	 * @throws FitnessInfoFileFormatException if not a valid header
 	 */
@@ -124,6 +193,8 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 		}
 	}
 	
+	
+	
 	/**
 	 * Data is valid when:
 	 * (1) The date is in the format (M)M/(D)D/YY and exists
@@ -135,9 +206,9 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 	 * @throws FitnessInfoFileFormatException when the data is invalid
 	 */
 	private void validateData(ArrayList<ArrayList<String>> data) throws FitnessInfoFileFormatException
-	{	
+	{
 		//First, check all dates
-		ArrayList<String> dates = getColumn(data, 0);
+		ArrayList<String> dates = getColumn(data, 0); //dates are the first column (index 0)
 		for (int i = 0; i < dates.size(); i++)
 		{
 			if (!dateIsValid(dates.get(i)))
@@ -152,11 +223,20 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 			ArrayList<String> row = data.get(i);
 			for (int j = 1; j < row.size(); j++) //for every column except the date
 			{
-				if (j == 6) //skip col=6, the seventh column which is total miles moved
+				if (j == 6) //skip col=6, the sixth column which is distance
 				{
 					continue;
 				}
-				int val = getIntFromString(row.get(j));
+				String element = row.get(j);
+				int val = -1;
+				if (element == null || element.equals(""))
+				{
+					val = 0;
+				}
+				else
+				{
+					val = getIntFromString(element);
+				}
 				if (val < 0)
 				{
 					throw new FitnessInfoFileFormatException("Encountered a negative value in the file");
@@ -170,9 +250,7 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 		{
 			try
 			{
-				double val;
-				if (distances.get(i).equals("")) val = 0.0;
-				else val = Double.parseDouble(distances.get(i));
+				double val = Double.parseDouble(distances.get(i));
 				if (val < 0)
 				{
 					throw new FitnessInfoFileFormatException("Encountered a negative value in the file");
@@ -191,10 +269,9 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 	 * @param str the integer in a string format
 	 * @return the int representation of the string
 	 */
-	public static int getIntFromString(String str) throws FitnessInfoFileFormatException
+	private int getIntFromString(String str) throws FitnessInfoFileFormatException
 	{
 		str = str.replace(",", "");
-		if (str.equals("")) return 0;
 		try
 		{
 			return Integer.parseInt(str);
@@ -202,20 +279,6 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 		catch (NumberFormatException e)
 		{
 			throw new FitnessInfoFileFormatException("Unable to parse integers in the file");
-		}
-	}
-	
-	public static double getDoubleFromString(String str) throws FitnessInfoFileFormatException
-	{
-		str = str.replace(",", "");
-		if (str.equals("")) return 0.0;
-		try
-		{
-			return Double.parseDouble(str);
-		}
-		catch (NumberFormatException e)
-		{
-			throw new FitnessInfoFileFormatException("Unable to parse doubles in the file");
 		}
 	}
 	
@@ -347,5 +410,4 @@ public class MicrosoftBandImportFactory extends FitnessImportFactory
 		}
 		return ret;
 	}
-
 }
