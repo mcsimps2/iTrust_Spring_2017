@@ -25,7 +25,6 @@ import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
 import edu.ncsu.csc.itrust.exception.CSVFormatException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitbitImportFactory;
-import edu.ncsu.csc.itrust.model.fitness.MicrosoftBandImportFactory;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoFileFormatException;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
@@ -119,8 +118,8 @@ public class UploadFitnessDataStepDefs {
 		}
 	}
 	
-	@When("^I upload the fitbit file (.+)$")
-	public void uploadFitbitData(String filePath) throws IOException {
+	@When("^I upload the file (.+)$")
+	public void uploadFitnessData(String filePath) throws IOException {
 		// Save file path for future steps
 		this.filePath = filePath;
 		
@@ -143,32 +142,8 @@ public class UploadFitnessDataStepDefs {
 		}
 	}
 	
-	@When("^I upload the microsoft band file (.+)$")
-	public void uploadMicrosoftBandData(String filePath) throws IOException {
-		// Save file path for future steps
-		this.filePath = filePath;
-		
-		// Ditch the web driver, let's go below the surface to upload the data
-		InputStream input = null;
-		try {
-			input = new FileInputStream(filePath);
-			MicrosoftBandImportFactory fact = new MicrosoftBandImportFactory(ConverterDAO.getDataSource());
-			fact.importFitnessInfo(1, input);
-			fileUploaded = true;
-		} catch (FileNotFoundException e) {
-			Assert.fail(e.getMessage());
-		} catch (CSVFormatException e) {
-			Assert.fail(e.getMessage());
-		} catch (FitnessInfoFileFormatException e) {
-			fileUploaded = false;
-		} finally {
-			if (input != null)
-				input.close();
-		}
-	}
-	
-	@Then("^the fitbit data in the file is added to the patient’s fitness data$")
-	public void checkFitbitDataAdded() {
+	@Then("^the data in the file is added to the patient’s fitness data$")
+	public void checkFitnessDataAdded() {
 		// Check that file upload was successful
 		Assert.assertTrue(fileUploaded);
 		
@@ -247,99 +222,6 @@ public class UploadFitnessDataStepDefs {
 				csvInfo.setMinutesFairlyActive(Integer.parseInt(tokenList.get(7)));
 				csvInfo.setMinutesVeryActive(Integer.parseInt(tokenList.get(8)));
 				csvInfo.setActiveCalories(Integer.parseInt(tokenList.get(9)));
-				
-				// Now let's check that the data in the bean is in the database
-				FitnessInfoController controller = new FitnessInfoController(ConverterDAO.getDataSource());
-				FitnessInfo dbInfo = controller.getFitnessInfo(1, csvInfo.getDate());
-				Assert.assertTrue("FitnessInfo does not match", csvInfo.equals(dbInfo));
-			}
-		} catch (Exception e) {
-			Assert.fail(e.getMessage());
-		} finally {
-			if (input != null)
-				input.close();
-		}
-	}
-	
-	@Then("^the microsoft band data in the file is added to the patient's fitness data$")
-	public void checkMicrosoftBandDataAdded() {
-		// Check that file upload was successful
-		Assert.assertTrue(fileUploaded);
-		
-		// Set up Scanner
-		Scanner input = null;
-		try {
-			input = new Scanner(new File(filePath));
-			
-			// Read through first line
-			input.nextLine();
-			
-			// Process one line at a time
-			while (input.hasNextLine()) {
-				// Start by building a FitnessInfo object - we will fill this with the information in the next line
-				FitnessInfo csvInfo = new FitnessInfo();
-				csvInfo.setPid(1);
-				String line = input.nextLine();
-				
-				// Split by commas
-				String[] tokens = line.split(",", -1);
-				
-				// We may need to merge a few of these tokens, so let's first switch to an ArrayList to make it easier
-				ArrayList<String> tokenList = new ArrayList<String>(Arrays.asList(tokens));
-				
-				/* Now let's look for tokens that need merging
-				   We know that a token starting with a double quote needs to be merged with the next token,
-				   because that means it would have had a comma in between double quotes in the csv file,
-				   which should be registered as one token. For example:
-				   		...,"1,234",...
-			   	   "1,234" should be read as one token, but the split() method above would have split it
-			   	   into two tokens: ("1) and (234")
-			    */
-				for (int i = 0; i < tokenList.size(); i++) {
-					String token = tokenList.get(i);
-					if (token.startsWith("\"")) { // this token needs to be merged with the next
-						// Merge the tokens
-						String newToken = token + tokenList.get(i + 1); //should contain: "someText" (with quotes)
-						newToken = newToken.substring(1, newToken.length() - 1); //remove beginning and ending quotes
-						tokenList.set(i, newToken); // replace the old token with the new merged token
-						tokenList.remove(i + 1); // remove the token that was merged with
-					}
-				}
-				
-				// Now we just need to fix the format of the date to match YYYY-MM-DD
-				try {
-					// Separate date token by '/'
-					String[] split = tokenList.get(0).split("/");
-					int month = Integer.parseInt(split[0]);
-					int day = Integer.parseInt(split[1]);
-					int year = Integer.parseInt(split[2]);
-					
-					//Convert YY to YYYY
-					DateFormat formatYY = new SimpleDateFormat("yy");
-					Date yearShort = formatYY.parse(year + "");
-					DateFormat formatYYYY = new SimpleDateFormat("yyyy");
-					String yearLong = formatYYYY.format(yearShort);
-					
-					// Create date string in format: YYYY-MM-DD
-					String date = String.format("%s-%02d-%02d", yearLong, month, day);
-					
-					// Update date token
-					tokenList.set(0, date);
-				} catch (Exception e) {
-					Assert.fail("Failed to format date from file: " + e.getMessage());
-				}
-				
-				// Tokens should now be correct, so let's fill in the fitness bean
-				csvInfo.setDate(tokenList.get(0));
-				csvInfo.setSteps(MicrosoftBandImportFactory.getIntFromString(tokenList.get(1)));
-				csvInfo.setCaloriesBurned(MicrosoftBandImportFactory.getIntFromString(tokenList.get(2)));
-				csvInfo.setHeartRateLow(MicrosoftBandImportFactory.getIntFromString(tokenList.get(3)));
-				csvInfo.setHeartRateHigh(MicrosoftBandImportFactory.getIntFromString(tokenList.get(4)));
-				csvInfo.setHeartRateAvg(MicrosoftBandImportFactory.getIntFromString(tokenList.get(5)));
-				csvInfo.setMiles(MicrosoftBandImportFactory.getDoubleFromString(tokenList.get(6)));
-				csvInfo.setActiveHours(MicrosoftBandImportFactory.getIntFromString(tokenList.get(7)));
-				csvInfo.setFloors(MicrosoftBandImportFactory.getIntFromString(tokenList.get(8)));
-				csvInfo.setMinutesUVExposure(MicrosoftBandImportFactory.getIntFromString(tokenList.get(9)));
 				
 				// Now let's check that the data in the bean is in the database
 				FitnessInfoController controller = new FitnessInfoController(ConverterDAO.getDataSource());

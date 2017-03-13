@@ -2,7 +2,11 @@ package edu.ncsu.csc.itrust.model.fitness;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Scanner;
 
+import edu.ncsu.csc.itrust.CSVParser;
 import edu.ncsu.csc.itrust.exception.CSVFormatException;
 
 
@@ -23,4 +27,12 @@ public abstract class FitnessImportFactory
 	 */
 	public abstract void importFitnessInfo(long pid, InputStream input) throws CSVFormatException, IOException, FitnessInfoFileFormatException;
 	
+	/**
+	 * Imports the fitness info from the given header and data
+	 * @param pid whose fitness data the info corresponds to
+	 * @param header the header of the file
+	 * @param data the data content of the file
+	 * @throws FitnessInfoFileFormatException
+	 */
+	public abstract void importFitnessInfo(long pid, ArrayList<String> header, ArrayList<ArrayList<String>> data) throws FitnessInfoFileFormatException;
 }

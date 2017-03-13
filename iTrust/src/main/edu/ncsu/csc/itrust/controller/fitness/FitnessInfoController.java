@@ -15,6 +15,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.CSVParser;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.CSVFormatException;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -42,8 +43,6 @@ public class FitnessInfoController extends iTrustController
 	private static final String FITNESS_INFO_CANNOT_BE_ADDED = "Fitness Info Cannot Be Updated";
 	/** Constant for the message to be displayed if the fitness info was successfully added/updated */
 	private static final String FITNESS_INFO_SUCCESSFULLY_ADDED = "Fitness Info Successfully Updated";
-	private static final String FITBIT_INFO_SUCCESSFULLY_ADDED = "Fitbit Fitness Info Successfully Updated";
-	private static final String MICROSOFT_BAND_INFO_SUCCESSFULLY_ADDED = "Microsoft Band Fitness Info Successfully Updated";
 	private static final String FITNESS_UPLOAD_SUCCESSFUL = "Fitness data uploaded successfully";
 	private static final String FITNESS_UPLOAD_UNSUCCESSFUL = "Failed to upload fitness data";
 	
@@ -55,9 +54,8 @@ public class FitnessInfoController extends iTrustController
 	//FitnessGraphSubject fitnessGraphSubject;
 	/** Calendar object used to create the fitness calendar */
 	Calendar cal;
-	/** Used to import files */
-	FitnessImportFactory fitbitFactory;
-	MicrosoftBandImportFactory microsoftBandFactory;
+	/** Used to import FitBit files */
+	FitnessImportFactory importFactory;
 	
 	/**
 	 * Default constructor.
@@ -73,8 +71,7 @@ public class FitnessInfoController extends iTrustController
 			e.printStackTrace();
 		}
 		try {
-			fitbitFactory = new FitbitImportFactory();
-			microsoftBandFactory = new MicrosoftBandImportFactory();
+			importFactory = new FitbitImportFactory();
 		} catch (DBException e) {
 			e.printStackTrace();
 		}
@@ -92,8 +89,7 @@ public class FitnessInfoController extends iTrustController
 		cal = Calendar.getInstance();
 		cal.set(Calendar.DATE, 1);
 		fitnessInfoData = new FitnessInfoMySQL(ds);
-		fitbitFactory = new FitbitImportFactory(ds);
-		microsoftBandFactory = new MicrosoftBandImportFactory(ds);
+		importFactory = new FitbitImportFactory(ds);
 	}
 	
 	/**
@@ -413,57 +409,53 @@ public class FitnessInfoController extends iTrustController
 	 * 
 	 * @param inputStream the given InputStream
 	 */
-	public void upload(String fileType, InputStream inputStream) {
+	public void upload(InputStream inputStream) {
 		long pid = getSessionPID();
-		String message;
-		boolean success = false;
-		
-		if (fileType.equals("FitBit")) {
-			try {
-				fitbitFactory.importFitnessInfo(pid, inputStream);
-				success = true;
-				message = FITBIT_INFO_SUCCESSFULLY_ADDED;
-			} catch (CSVFormatException e) {
-				message = e.getMessage();
-				e.printStackTrace();
-			} catch (IOException e) {
-				message = e.getMessage();
-				e.printStackTrace();
-			} catch (FitnessInfoFileFormatException e) {
-				message = e.getMessage();
-				e.printStackTrace();
+		ArrayList<String> header = null;
+		ArrayList<ArrayList<String>> data = null;
+		try
+		{
+			CSVParser csv = new CSVParser(inputStream);
+			header = csv.getHeader();
+			data = csv.getData();
+			if (header.contains("Activities"))
+			{
+				//Have a fitbit file
+				//the real header is the one below
+				header = data.get(0);
+				data.remove(0);
+				importFactory = new FitbitImportFactory();
 			}
-		} else {
-			try {
-				microsoftBandFactory.importFitnessInfo(pid, inputStream);
-				success = true;
-				message = MICROSOFT_BAND_INFO_SUCCESSFULLY_ADDED;
-			} catch (CSVFormatException e) {
-				message = e.getMessage();
-				e.printStackTrace();
-			} catch (IOException e) {
-				message = e.getMessage();
-				e.printStackTrace();
-			} catch (FitnessInfoFileFormatException e) {
-				message = e.getMessage();
-				e.printStackTrace();
+			else
+			{
+				//have a Band file
+				importFactory = new MicrosoftBandImportFactory();
 			}
-		}
-		
-		if (success) {
+			importFactory.importFitnessInfo(pid, header, data);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, FITNESS_UPLOAD_SUCCESSFUL,
-					message, null);
-		} else {
+					FITNESS_INFO_SUCCESSFULLY_ADDED, null);
+		} catch (CSVFormatException e)
+		{
 			printFacesMessage(FacesMessage.SEVERITY_INFO, FITNESS_UPLOAD_UNSUCCESSFUL,
-					message, null);
-		}
-		
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+					e.getMessage(), null);
+			e.printStackTrace();
+		} catch (DBException e)
+		{
+			printFacesMessage(FacesMessage.SEVERITY_INFO, FITNESS_UPLOAD_UNSUCCESSFUL,
+					e.getMessage(), null);
+			e.printStackTrace();
+		} catch (FitnessInfoFileFormatException e) {
+			printFacesMessage(FacesMessage.SEVERITY_INFO, FITNESS_UPLOAD_UNSUCCESSFUL,
+					e.getMessage(), null);
+			e.printStackTrace();
+		} 
+		finally {
+			if (inputStream != null)
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 	

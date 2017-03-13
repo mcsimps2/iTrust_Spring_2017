@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.model.fitness;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,6 +96,36 @@ public class FitbitImportFactory extends FitnessImportFactory
 	}
 	
 	/**
+	 * Imports the fitness info from the given header and data
+	 * @param pid whose fitness data the info corresponds to
+	 * @param header the header of the file
+	 * @param data the data content of the file
+	 * @throws FitnessInfoFileFormatException
+	 */
+	public void importFitnessInfo(long pid, ArrayList<String> header, ArrayList<ArrayList<String>> data) throws FitnessInfoFileFormatException
+	{
+		if (header == null || data == null)
+		{
+			throw new FitnessInfoFileFormatException("Empty header or data");
+		}
+		validateHeader(header);
+		validateData(data);
+		
+		//Now we have valid data and headers, put the data into the database
+		for (int i = 0; i < data.size(); i++)
+		{
+			FitnessInfo fi = convertRowToFitnessInfo(data.get(i), pid);
+			try
+			{
+				fisql.add(fi); //will automatically insert/update values, overwriting is default for updates
+			} catch (FormValidationException | DBException e)
+			{
+				throw new FitnessInfoFileFormatException("Invalidly formatted data");
+			}
+		}
+	}
+	
+	/**
 	 * Converts a row of a CSV file into a FitnessInfo object
 	 * Precondition: the row has been validated
 	 * @param row the row of the CSV file
@@ -105,8 +136,43 @@ public class FitbitImportFactory extends FitnessImportFactory
 	private FitnessInfo convertRowToFitnessInfo(ArrayList<String> row, long pid) throws FitnessInfoFileFormatException
 	{
 		String date = convertDate(row.get(0)); //get the date in YYYY-MM-DD format
-		FitnessInfo ret = new FitnessInfo(pid, date, getIntFromString(row.get(2)), getIntFromString(row.get(1)), Double.parseDouble(row.get(3)), getIntFromString(row.get(4)), getIntFromString(row.get(9)), getIntFromString(row.get(5)), getIntFromString(row.get(7)), getIntFromString(row.get(6)), getIntFromString(row.get(8)), 0, 0, 0, 0, 0);
+		FitnessInfo ret = new FitnessInfo(pid, date, getIntRepresentation(row.get(2)), getIntRepresentation(row.get(1)), getDoubleRepresentation(row.get(3)), getIntRepresentation(row.get(4)), getIntRepresentation(row.get(9)), getIntRepresentation(row.get(5)), getIntRepresentation(row.get(7)), getIntRepresentation(row.get(6)), getIntRepresentation(row.get(8)), 0, 0, 0, 0, 0);
 		return ret;
+	}
+	
+	/**
+	 * Turns the string into an integer.  If the string is null or empty, turns it into a zero
+	 * @param str the string to convert
+	 * @return the integer representation
+	 * @throws FitnessInfoFileFormatException
+	 */
+	private int getIntRepresentation(String str) throws FitnessInfoFileFormatException
+	{
+		if (str == null || str.equals(""))
+		{
+			return 0;
+		}
+		else
+		{
+			return getIntFromString(str);
+		}
+	}
+	
+	/**
+	 * Turns the string into a double.  If the string is null or empty, turns it into a zero
+	 * @param str hte string to convert
+	 * @return the integer representation
+	 */
+	private double getDoubleRepresentation(String str)
+	{
+		if (str == null || str.equals(""))
+		{
+			return 0;
+		}
+		else
+		{
+			return Double.parseDouble(str);
+		}
 	}
 	
 	/**
@@ -168,7 +234,21 @@ public class FitbitImportFactory extends FitnessImportFactory
 				{
 					continue;
 				}
-				int val = getIntFromString(row.get(j));
+				String element = row.get(j);
+				if (element == null || element.equals(""))
+				{
+					row.set(j, "0");
+				}
+				//System.out.println(j + " value: " + element);
+				int val = -1;
+				if (element == null || element.equals(""))
+				{
+					val = 0;
+				}
+				else
+				{
+					val = getIntFromString(element);
+				}
 				if (val < 0)
 				{
 					throw new FitnessInfoFileFormatException("Encountered a negative value in the file");
