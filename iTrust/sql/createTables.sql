@@ -90,6 +90,7 @@ CREATE TABLE patients(
 	SpiritualPractices varchar(512) default '',
 	AlternateName varchar(32) default '',
 	DateOfDeactivation DATE default NULL,
+	obstetricsCareEligibility BOOLEAN default FALSE,
 	PRIMARY KEY (MID)
 ) ENGINE=MyISAM;
 

@@ -62,7 +62,17 @@ public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private String spiritualPractices = "";
 	private String alternateName = "";
 	private String dateOfDeactivationStr = "";
-
+	private Boolean obstetricsCareEligibility = false;
+	
+	public Boolean getObstectricsCareEligibility()
+	{
+		return obstetricsCareEligibility;
+	}
+	
+	public void setObstetricsCareEligibility(Boolean obstetricsCareEligibility)
+	{
+		this.obstetricsCareEligibility = obstetricsCareEligibility;
+	}
 
 	public BloodType getBloodType() {
 		return bloodType;
