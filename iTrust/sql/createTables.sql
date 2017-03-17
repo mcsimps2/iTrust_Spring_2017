@@ -524,3 +524,27 @@ CREATE TABLE fitness
 	activeHours BIGINT UNSIGNED,
 	minutesUVExposure BIGINT UNSIGNED
 ) ENGINE=MyISAM;
+
+CREATE TABLE obstetricsInit
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+	pid BIGINT UNSIGNED NOT NULL,
+	dateOfInit DATE,
+	LMP DATE,
+	PRIMARY KEY (id)
+) ENGINE=MyISAM;
+
+CREATE TABLE priorPregnancies
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+    obstetricsInitID BIGINT UNSIGNED NOT NULL,
+    pid BIGINT UNSIGNED NOT NULL,
+	yearOfConception BIGINT UNSIGNED,
+	numDaysPregnant BIGINT UNSIGNED,
+	numHoursInLabor BIGINT UNSIGNED,
+	weightGain BIGINT UNSIGNED,
+	deliveryType VARCHAR(255) DEFAULT '',
+	multiplicity BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
+) ENGINE=MyISAM;

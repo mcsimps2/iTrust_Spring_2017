@@ -876,6 +876,10 @@ public class TestDataGenerator {
 	public void icdCode() throws FileNotFoundException, SQLException, IOException {
 		new DBBuilder(factory).executeSQLFile(DIR + "/icdcode.sql");
 	}
+	
+	public void obstetricsInit() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/obstetricsInitData.sql");
+	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
 	
@@ -984,6 +988,8 @@ public class TestDataGenerator {
 		patient30();
 		
 		fitnessData();
+		
+		obstetricsInit();
 		
 		setMode();
 	}
