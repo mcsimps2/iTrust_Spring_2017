@@ -75,6 +75,30 @@ public class PatientDAO {
 			throw new DBException(e);
 		}
 	}
+	
+	/**
+	 * Determines if the patient is eligible for obstetrics care or not
+	 * @param mid the mid of the patient
+	 * @return true if the patient is eligible
+	 * @throws ITrustException
+	 * @throws DBException
+	 */
+	public boolean getObstetricsEligibility(long mid) throws ITrustException, DBException {
+		try (Connection conn = factory.getConnection();
+				PreparedStatement ps = conn.prepareStatement("SELECT obstetricsCareEligibility FROM patients WHERE MID=?")) {
+			ps.setLong(1, mid);
+			ResultSet rs;
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				return rs.getBoolean("obstetricsCareEligibility");
+			} else {
+				rs.close();
+				throw new ITrustException("User does not exist");
+			}
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
+	}
 
 	/**
 	 * Returns the role of a particular patient - why is this in PatientDAO? It
