@@ -9,6 +9,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitValidator;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class ObstetricsInitValidatorTest 
@@ -16,8 +17,9 @@ public class ObstetricsInitValidatorTest
 	ObstetricsInitValidator validator;
 	
 	@Before
-	public void setup() throws IOException, SQLException
+	public void setup() throws Exception
 	{
+		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 		validator = new ObstetricsInitValidator(ConverterDAO.getDataSource());
 	}

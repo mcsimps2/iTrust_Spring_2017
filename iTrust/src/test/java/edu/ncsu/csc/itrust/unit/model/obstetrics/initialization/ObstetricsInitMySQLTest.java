@@ -13,6 +13,7 @@ import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitSQLLoader;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class ObstetricsInitMySQLTest {
@@ -22,8 +23,9 @@ public class ObstetricsInitMySQLTest {
 	ObstetricsInit[] oiArr;
 	
 	@Before
-	public void setup() throws IOException, SQLException
+	public void setup() throws Exception
 	{
+		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 		ds = ConverterDAO.getDataSource();
 		oisql = new ObstetricsInitMySQL(ds);
@@ -45,6 +47,20 @@ public class ObstetricsInitMySQLTest {
 				Assert.assertTrue(results.contains(oiArr[i]));
 			}
 		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetRecordByID()
+	{
+		try
+		{
+			List<ObstetricsInit> results = oisql.getRecords(1);
+			ObstetricsInit result = results.get(0);
+			Assert.assertTrue(oisql.getRecordByID(result.getRecordID()).equals(result));
+		}
+		catch (DBException e) {
 			Assert.fail(e.getMessage());
 		}
 	}

@@ -22,4 +22,12 @@ public interface ObstetricsInitData
 	 * @throws DBException 
 	 */
 	public boolean add(ObstetricsInit oi) throws DBException;
+	
+	/**
+	 * Returns the unique record corresponding to the given recordID
+	 * @param recordID the unique ID of the record in the DB, set by MySQL
+	 * @return the record corresponding to the recordID
+	 * @throws DBException
+	 */
+	public ObstetricsInit getRecordByID(int recordID) throws DBException;
 }

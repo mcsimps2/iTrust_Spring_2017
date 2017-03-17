@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitSQLLoader;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class ObstetricsInitSQLLoaderTest 
@@ -19,8 +20,9 @@ public class ObstetricsInitSQLLoaderTest
 	ObstetricsInitSQLLoader loader;
 	
 	@Before
-	public void setup() throws IOException, SQLException
+	public void setup() throws Exception
 	{
+		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 		loader = new ObstetricsInitSQLLoader();
 	}

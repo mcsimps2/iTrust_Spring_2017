@@ -112,5 +112,35 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		}
 		return false;
 	}
+	
+	@Override
+	public ObstetricsInit getRecordByID(int recordID) throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		ResultSet results = null;
+		try {
+			conn = ds.getConnection();
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + recordID);
+			results = pstring.executeQuery();
+			final List<ObstetricsInit> list = loader.loadList(results);
+			if (list.size() != 0)
+			{
+				return list.get(0);
+			}
+			return null;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			try {
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				throw new DBException(e);
+			} finally {
+				DBUtil.closeConnection(conn, pstring);
+			}
+		}
+	}
 
 }

@@ -131,13 +131,7 @@ public class ObstetricsInit {
 	{
 		try
 		{
-			//Parse string for day, month, and year
-			String syear = date.substring(0,4);
-			String smonth = date.substring(5,7);
-			String sday = date.substring(8,10);
-			int year = Integer.parseInt(syear);
-			int month = Integer.parseInt(smonth);
-			int day = Integer.parseInt(sday);
+			
 			
 			//Check that this forms a valid date
 			Calendar cal = Calendar.getInstance();

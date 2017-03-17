@@ -545,6 +545,6 @@ CREATE TABLE priorPregnancies
 	weightGain BIGINT UNSIGNED,
 	deliveryType VARCHAR(255) DEFAULT '',
 	multiplicity BIGINT UNSIGNED,
-    PRIMARY KEY (id),
+	PRIMARY KEY (id),
     FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
