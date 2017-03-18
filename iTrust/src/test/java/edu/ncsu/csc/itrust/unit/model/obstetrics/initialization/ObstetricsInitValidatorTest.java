@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 
-import java.io.IOException;
-import java.sql.SQLException;
 
 import org.junit.*;
 

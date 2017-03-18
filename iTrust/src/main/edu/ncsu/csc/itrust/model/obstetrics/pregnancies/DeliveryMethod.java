@@ -18,6 +18,11 @@ public enum DeliveryMethod {
         return text;
     }
     
+    /**
+     * Converts a string to the Enum type it matches
+     * @param text the string to convert
+     * @return a DeliveryMethod enum type representing the string
+     */
     public static DeliveryMethod matchString(String text) {
         for (DeliveryMethod i : DeliveryMethod.values()) {
           if (i.text.equalsIgnoreCase(text)) {

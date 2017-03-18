@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.model.obstetrics.initialization;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -7,11 +8,13 @@ import edu.ncsu.csc.itrust.model.fitness.DateFormatException;
 
 public class ObstetricsInit {
 	/**ID of this record */
-	int recordID = -1;
+	int id = -1;
 	/** PID of patient */
 	long pid = 0;
 	/** Date of the initialization Record */
 	private String date;
+	/** Timestamp */
+	private Timestamp timestamp;
 	/* Date of the last menstrual period */
 	private String LMP;
 	/** EDD - LMP in days*/
@@ -38,9 +41,10 @@ public class ObstetricsInit {
 	 * @param date the date of the record
 	 * @param lmp the lmp recorded in the record
 	 */
-	public ObstetricsInit(int recordID, long pid, String date, String lmp) {
+	public ObstetricsInit(int id, Timestamp timestamp, long pid, String date, String lmp) {
 		super();
-		setRecordID(recordID);
+		setID(id);
+		setTimestamp(timestamp);
 		setPid(pid);
 		setDate(date);
 		setLMP(lmp);
@@ -148,7 +152,6 @@ public class ObstetricsInit {
 		
 	}
 	
-	/* GETTERS AND SETTERS */
 	public String getDate() {
 		return date;
 	}
@@ -204,8 +207,6 @@ public class ObstetricsInit {
 		return stringToSQLDate(getDate());
 	}
 	
-	
-	/* OTHER GETTERS AND SETTERS */
 	/**
 	 * Sets the date field to the given date
 	 * @param date the SQL date 
@@ -241,12 +242,12 @@ public class ObstetricsInit {
 		this.pid = pid;
 	}
 
-	public int getRecordID() {
-		return recordID;
+	public int getID() {
+		return id;
 	}
 
-	public void setRecordID(int recordID) {
-		this.recordID = recordID;
+	public void setID(int id) {
+		this.id = id;
 	}
 
 	@Override
@@ -283,8 +284,20 @@ public class ObstetricsInit {
 		return true;
 	}
 
-	
-	
-	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
+	}
 }
 

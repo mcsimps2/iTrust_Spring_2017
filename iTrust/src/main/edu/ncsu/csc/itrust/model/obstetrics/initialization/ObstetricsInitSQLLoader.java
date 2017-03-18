@@ -41,7 +41,8 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 	@Override
 	public ObstetricsInit loadSingle(ResultSet rs) throws SQLException {
 		ObstetricsInit oi = new ObstetricsInit();
-		oi.setRecordID(rs.getInt("id"));
+		oi.setID(rs.getInt("id"));
+		oi.setTimestamp(rs.getTimestamp("ts"));
 		oi.setPid(rs.getLong("pid"));
 		oi.setDate(rs.getDate("dateOfInit"));
 		oi.setLMP(rs.getDate("LMP"));
@@ -74,9 +75,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 		}
 		else
 		{
-			stmt = "UPDATE obstetricsInit SET LMP=? WHERE pid=" + insertObject.getPid() + " AND dateOfInit='" + insertObject.getDate() + "';";
-			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
-			ps.setDate(1, Date.valueOf(insertObject.getLMP()));
+			throw new IllegalStateException("Unimplemented: Updates not allowed for obstetericsInit database");
 		}
 		return ps;
 	}

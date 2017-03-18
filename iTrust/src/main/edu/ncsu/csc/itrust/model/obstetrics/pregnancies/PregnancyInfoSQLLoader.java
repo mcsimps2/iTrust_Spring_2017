@@ -39,13 +39,13 @@ public class PregnancyInfoSQLLoader implements SQLLoader<PregnancyInfo>
 	@Override
 	public PregnancyInfo loadSingle(ResultSet rs) throws SQLException {
 		PregnancyInfo pi = new PregnancyInfo();
-		pi.setRecordID(rs.getInt("id"));
+		pi.setID(rs.getInt("id"));
 		pi.setObstetricsInitID(rs.getInt("obstetricsInitID"));
 		pi.setPid(rs.getLong("pid"));
 		pi.setYearOfConception(rs.getInt("yearOfConception"));
 		pi.setNumDaysPregnant(rs.getInt("numDaysPregnant"));
 		pi.setNumHoursInLabor(rs.getInt("numHoursInLabor"));
-		pi.setWeightGain(rs.getInt("weightGain"));
+		pi.setWeightGain(rs.getDouble("weightGain"));
 		pi.setDeliveryType(DeliveryMethod.matchString(rs.getString("deliveryType")));
 		pi.setMultiplicity(rs.getInt("multiplicity"));
 		return pi;
@@ -75,23 +75,13 @@ public class PregnancyInfoSQLLoader implements SQLLoader<PregnancyInfo>
 			ps.setInt(3, insertObject.getYearOfConception());
 			ps.setInt(4, insertObject.getNumDaysPregnant());
 			ps.setInt(5, insertObject.getNumHoursInLabor());
-			ps.setInt(6, insertObject.getWeightGain());
+			ps.setDouble(6, insertObject.getWeightGain());
 			ps.setString(7, insertObject.getDeliveryType().toString());
 			ps.setInt(8, insertObject.getMultiplicity());
 		}
 		else
 		{
-			stmt = "UPDATE priorPregnancies SET obstetricsInitID=?, pid=?, yearOfConception=?, numDaysPregnant=?, numHoursInLabor=?, weightGain=?, deliveryType=?, multiplicity=? WHERE id=?";
-			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, insertObject.getObstetricsInitID());
-			ps.setLong(2, insertObject.getPid());
-			ps.setInt(3, insertObject.getYearOfConception());
-			ps.setInt(4, insertObject.getNumDaysPregnant());
-			ps.setInt(5, insertObject.getNumHoursInLabor());
-			ps.setInt(6, insertObject.getWeightGain());
-			ps.setString(7, insertObject.getDeliveryType().toString());
-			ps.setInt(8, insertObject.getMultiplicity());
-			ps.setInt(9, insertObject.getRecordID());
+			throw new IllegalStateException("Unimplemented: Updates not allowed for priorPregnancies database");
 		}
 		return ps;
 	}

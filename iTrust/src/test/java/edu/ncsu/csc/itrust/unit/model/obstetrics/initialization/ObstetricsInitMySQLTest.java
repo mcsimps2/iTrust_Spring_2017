@@ -58,7 +58,7 @@ public class ObstetricsInitMySQLTest {
 		{
 			List<ObstetricsInit> results = oisql.getRecords(1);
 			ObstetricsInit result = results.get(0);
-			Assert.assertTrue(oisql.getRecordByID(result.getRecordID()).equals(result));
+			Assert.assertTrue(oisql.getByID(result.getID()).equals(result));
 		}
 		catch (DBException e) {
 			Assert.fail(e.getMessage());

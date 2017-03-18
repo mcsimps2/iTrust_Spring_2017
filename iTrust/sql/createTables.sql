@@ -528,6 +528,7 @@ CREATE TABLE fitness
 CREATE TABLE obstetricsInit
 (
 	id BIGINT UNSIGNED AUTO_INCREMENT,
+	ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	pid BIGINT UNSIGNED NOT NULL,
 	dateOfInit DATE,
 	LMP DATE,
@@ -542,7 +543,7 @@ CREATE TABLE priorPregnancies
 	yearOfConception BIGINT UNSIGNED,
 	numDaysPregnant BIGINT UNSIGNED,
 	numHoursInLabor BIGINT UNSIGNED,
-	weightGain BIGINT UNSIGNED,
+	weightGain DOUBLE,
 	deliveryType VARCHAR(255) DEFAULT '',
 	multiplicity BIGINT UNSIGNED,
 	PRIMARY KEY (id),

@@ -3,14 +3,14 @@ package edu.ncsu.csc.itrust.model.obstetrics.pregnancies;
 public class PregnancyInfo 
 {
 	/** Unique ID corresponding to this record */
-	private int recordID;
+	private int id;
 	/** Points to which obstetrics initialization visit created this pregnancy record */
 	private int obstetricsInitID;
 	private long pid;
 	private int yearOfConception;
 	private int numDaysPregnant;
 	private int numHoursInLabor;
-	private int weightGain;
+	private double weightGain;
 	private DeliveryMethod deliveryType;
 	private int multiplicity;
 	
@@ -26,7 +26,7 @@ public class PregnancyInfo
 	 * @param multiplicity
 	 */
 	public PregnancyInfo(int obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
-			int weightGain, DeliveryMethod deliveryType, int multiplicity) {
+			double weightGain, DeliveryMethod deliveryType, int multiplicity) {
 		super();
 		this.obstetricsInitID = obstetricsInitID;
 		this.pid = pid;
@@ -50,10 +50,10 @@ public class PregnancyInfo
 	 * @param deliveryType
 	 * @param multiplicity
 	 */
-	public PregnancyInfo(int recordID, int obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
-			int weightGain, DeliveryMethod deliveryType, int multiplicity) {
+	public PregnancyInfo(int id, int obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
+			double weightGain, DeliveryMethod deliveryType, int multiplicity) {
 		super();
-		this.recordID = recordID;
+		this.id = id;;
 		this.obstetricsInitID = obstetricsInitID;
 		this.pid = pid;
 		this.yearOfConception = yearOfConception;
@@ -67,16 +67,6 @@ public class PregnancyInfo
 	public PregnancyInfo()
 	{
 		super();
-	}
-	
-	
-	
-	public int getRecordID() {
-		return recordID;
-	}
-
-	public void setRecordID(int recordID) {
-		this.recordID = recordID;
 	}
 
 	public int getObstetricsInitID() {
@@ -109,12 +99,6 @@ public class PregnancyInfo
 	public void setNumHoursInLabor(int numHoursInLabor) {
 		this.numHoursInLabor = numHoursInLabor;
 	}
-	public int getWeightGain() {
-		return weightGain;
-	}
-	public void setWeightGain(int weightGain) {
-		this.weightGain = weightGain;
-	}
 	public DeliveryMethod getDeliveryType() {
 		return deliveryType;
 	}
@@ -128,6 +112,22 @@ public class PregnancyInfo
 		this.multiplicity = multiplicity;
 	}
 
+	public int getID() {
+		return id;
+	}
+
+	public void setID(int id) {
+		this.id = id;
+	}
+
+	public void setWeightGain(double weightGain) {
+		this.weightGain = weightGain;
+	}
+	
+	public double getWeightGain() {
+		return weightGain;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,7 +138,9 @@ public class PregnancyInfo
 		result = prime * result + numHoursInLabor;
 		result = prime * result + obstetricsInitID;
 		result = prime * result + (int) (pid ^ (pid >>> 32));
-		result = prime * result + weightGain;
+		long temp;
+		temp = Double.doubleToLongBits(weightGain);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + yearOfConception;
 		return result;
 	}
@@ -164,23 +166,11 @@ public class PregnancyInfo
 			return false;
 		if (pid != other.pid)
 			return false;
-		if (weightGain != other.weightGain)
+		if (Double.doubleToLongBits(weightGain) != Double.doubleToLongBits(other.weightGain))
 			return false;
 		if (yearOfConception != other.yearOfConception)
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "PregnancyInfo [recordID=" + recordID + ", obstetricsInitID=" + obstetricsInitID + ", pid=" + pid
-				+ ", yearOfConception=" + yearOfConception + ", numDaysPregnant=" + numDaysPregnant
-				+ ", numHoursInLabor=" + numHoursInLabor + ", weightGain=" + weightGain + ", deliveryType="
-				+ deliveryType + ", multiplicity=" + multiplicity + "]";
-	}
-
-	
-	
-	
 	
 }

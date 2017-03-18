@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -65,7 +63,7 @@ public class PregnancyInfoMySQLTest {
 			}
 			PregnancyInfo result = results.get(0);
 			//Now try to get that same record by id
-			Assert.assertTrue(pisql.getRecordByID(result.getRecordID()).equals(result));
+			Assert.assertTrue(pisql.getByID(result.getID()).equals(result));
 		}
 		catch (DBException e)
 		{

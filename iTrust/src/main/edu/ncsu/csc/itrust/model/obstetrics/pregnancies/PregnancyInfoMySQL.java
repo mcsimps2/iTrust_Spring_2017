@@ -89,32 +89,6 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 	}
 
 	@Override
-	public List<PregnancyInfo> getNewRecordsAddedDuringInit(int obstetricsInitID) throws DBException {
-		Connection conn = null;
-		PreparedStatement pstring = null;
-		ResultSet results = null;
-		try {
-			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE obstetricsInitID=" + obstetricsInitID);
-			results = pstring.executeQuery();
-			final List<PregnancyInfo> list = loader.loadList(results);
-			return list;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		} finally {
-			try {
-				if (results != null) {
-					results.close();
-				}
-			} catch (SQLException e) {
-				throw new DBException(e);
-			} finally {
-				DBUtil.closeConnection(conn, pstring);
-			}
-		}
-	}
-
-	@Override
 	public boolean add(PregnancyInfo pi) throws DBException {
 		Connection conn = null;
 		PreparedStatement pstring = null;
@@ -145,13 +119,73 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 	}
 
 	@Override
-	public PregnancyInfo getRecordByID(int recordID) throws DBException {
+	public List<PregnancyInfo> getRecordsFromInit(int obstetricsInitID) throws DBException {
+		//Record what the pid was
+		ObstetricsInit oiRecord = oisql.getByID(obstetricsInitID);
+		if (oiRecord == null)
+		{
+			throw new IllegalArgumentException("Invalid obstetricsInitID. Doesn't correspond to anything found in the Database");
+		}
+		long pid = oiRecord.getPid();
+		//Now, get all the previous pregnancy records
 		Connection conn = null;
 		PreparedStatement pstring = null;
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE id=" + recordID);
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricInitID<=" + obstetricsInitID);
+			results = pstring.executeQuery();
+			List<PregnancyInfo> list = loader.loadList(results);
+			return list;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			try {
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				throw new DBException(e);
+			} finally {
+				DBUtil.closeConnection(conn, pstring);
+			}
+		}
+	}
+
+	@Override
+	public List<PregnancyInfo> getAll() throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		ResultSet results = null;
+		try {
+			conn = ds.getConnection();
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies");
+			results = pstring.executeQuery();
+			final List<PregnancyInfo> list = loader.loadList(results);
+			return list;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			try {
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				throw new DBException(e);
+			} finally {
+				DBUtil.closeConnection(conn, pstring);
+			}
+		}
+	}
+
+	@Override
+	public PregnancyInfo getByID(long id) throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		ResultSet results = null;
+		try {
+			conn = ds.getConnection();
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE id=" + id);
 			results = pstring.executeQuery();
 			final List<PregnancyInfo> list = loader.loadList(results);
 			if (list.size() != 0)
@@ -175,40 +209,33 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 	}
 
 	@Override
-	public List<PregnancyInfo> getRecordsFromInit(int obstetricsInitID) throws DBException {
-		//First, form a list from all pregnancy records added during the init
-		List<PregnancyInfo> newRecords = getNewRecordsAddedDuringInit(obstetricsInitID);
-		//Record what the pid was
-		ObstetricsInit oiRecord = oisql.getRecordByID(obstetricsInitID);
-		if (oiRecord == null)
-		{
-			throw new IllegalArgumentException("Invalid obstetricsInitID. Doesn't correspond to anything found in the Database");
-		}
-		long pid = oiRecord.getPid();
-		//Now, get all the previous pregnancy records
+	public boolean update(PregnancyInfo pi) throws DBException, FormValidationException {
 		Connection conn = null;
 		PreparedStatement pstring = null;
-		ResultSet results = null;
-		try {
+		try
+		{
+			validator.validate(pi);
+		}
+		catch (FormValidationException e)
+		{
+			throw new DBException(new SQLException(e));
+		}
+		try
+		{
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricInitID<" + obstetricsInitID);
-			results = pstring.executeQuery();
-			List<PregnancyInfo> list = loader.loadList(results);
-			list.addAll(newRecords);
-			return list;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		} finally {
-			try {
-				if (results != null) {
-					results.close();
-				}
-			} catch (SQLException e) {
-				throw new DBException(e);
-			} finally {
-				DBUtil.closeConnection(conn, pstring);
+			pstring = loader.loadParameters(conn, pstring, pi, false);
+			int results = pstring.executeUpdate();
+			if (results != 0) {
+				return true;
 			}
 		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+		return false;
 	}
 
 }

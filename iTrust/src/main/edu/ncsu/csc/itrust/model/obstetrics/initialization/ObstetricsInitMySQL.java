@@ -99,8 +99,8 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		{
 			conn = ds.getConnection();
 			pstring = loader.loadParameters(conn, pstring, oi, true);
-			int results = pstring.executeUpdate();
-			if (results != 0) {
+			int rowsAffected = pstring.executeUpdate();
+			if (rowsAffected != 0) {
 				return true;
 			}
 		}
@@ -114,13 +114,39 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	}
 	
 	@Override
-	public ObstetricsInit getRecordByID(int recordID) throws DBException {
+	public List<ObstetricsInit> getAll() throws DBException {
 		Connection conn = null;
 		PreparedStatement pstring = null;
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + recordID);
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit");
+			results = pstring.executeQuery();
+			final List<ObstetricsInit> list = loader.loadList(results);
+			return list;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		} finally {
+			try {
+				if (results != null) {
+					results.close();
+				}
+			} catch (SQLException e) {
+				throw new DBException(e);
+			} finally {
+				DBUtil.closeConnection(conn, pstring);
+			}
+		}
+	}
+	
+	@Override
+	public ObstetricsInit getByID(long id) throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		ResultSet results = null;
+		try {
+			conn = ds.getConnection();
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + id);
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			if (list.size() != 0)
@@ -141,6 +167,36 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 				DBUtil.closeConnection(conn, pstring);
 			}
 		}
+	}
+	
+	@Override
+	public boolean update(ObstetricsInit oi) throws DBException, FormValidationException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		try
+		{
+			validator.validate(oi);
+		}
+		catch (FormValidationException e)
+		{
+			throw new DBException(new SQLException(e));
+		}
+		try
+		{
+			conn = ds.getConnection();
+			pstring = loader.loadParameters(conn, pstring, oi, false);
+			int results = pstring.executeUpdate();
+			if (results != 0) {
+				return true;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+		return false;
 	}
 
 }

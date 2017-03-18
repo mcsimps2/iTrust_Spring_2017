@@ -85,7 +85,7 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		//Make sure that the obstetricsInitID actually refers to a real record in the obstetricsInit DB
 		try
 		{
-			if (oisql.getRecordByID(obj.getObstetricsInitID()) == null)
+			if (oisql.getByID(obj.getObstetricsInitID()) == null)
 			{
 				errs.addIfNotNull("The given ObstetricsInitID does not correspond to an actual entry in the database");
 				throw new FormValidationException(errs);
@@ -99,6 +99,11 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		//Verify the year
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
+		if (obj.getYearOfConception() > year)
+		{
+			errs.addIfNotNull("Year is in the future");
+		}
+		
 		if (Math.abs(year - obj.getYearOfConception()) > 175)
 		{
 			errs.addIfNotNull("Difference between current year and year of conception is too great");
@@ -134,7 +139,5 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		{
 			throw new FormValidationException(errs);
 		}
-		
-		
 	}
 }

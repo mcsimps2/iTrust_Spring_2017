@@ -78,7 +78,6 @@ public class ObstetricsInitValidator extends POJOValidator<ObstetricsInit>
 			patient = rs.next() ? patientLoader.loadSingle(rs) : null;
 			rs.close();
 		} catch (SQLException e) {
-			//System.out.println("Bad pid4");
 			errs.addIfNotNull("Could not find the patient with the specified PID");
 			throw new FormValidationException(errs);
 		}

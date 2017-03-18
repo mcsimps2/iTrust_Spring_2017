@@ -1,6 +1,5 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -57,15 +56,16 @@ public class PregnancyInfoSQLLoaderTest {
 		
 		//Try to update it
 		pi.setNumDaysPregnant(1000);
-		pi.setRecordID(1);
-		ps = loader.loadParameters(conn, ps, pi, false);
-		ps.executeUpdate();
-		
-		//Now check
-		String stmt = "SELECT * FROM priorPregnancies WHERE pid=1";
-		ps = conn.prepareStatement(stmt);
-		List<PregnancyInfo> list = loader.loadList(ps.executeQuery());
-		Assert.assertTrue(list.contains(pi));
+		pi.setID(1);
+		try
+		{
+			ps = loader.loadParameters(conn, ps, pi, false);
+			ps.executeUpdate();
+			Assert.fail("Called an unimplemented method");
+		} catch (IllegalStateException e)
+		{
+			Assert.assertTrue(true);
+		}
 	}
 	
 }

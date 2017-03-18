@@ -3,8 +3,9 @@ package edu.ncsu.csc.itrust.model.obstetrics.pregnancies;
 import java.util.List;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.model.DataBean;
 
-public interface PregnancyInfoData {
+public interface PregnancyInfoData extends DataBean<PregnancyInfo> {
 	/**
 	 * Returns all pregnancy records from all initializations for a given patient
 	 * @param pid the patient's ID
@@ -13,14 +14,6 @@ public interface PregnancyInfoData {
 	 */
 	public List<PregnancyInfo> getRecords(long pid) throws DBException;
 	
-	/**
-	 * You probably don't want to use this method. Look at getRecordsFromInit instead.
-	 * Returns the pregnancy records ADDED during a specific obstetric initialization
-	 * @param obstetricsInitID the ID of the initialization where the pregnancy records were added
-	 * @return a list of the found records
-	 * @throws DBException
-	 */
-	public List<PregnancyInfo> getNewRecordsAddedDuringInit(int obstetricsInitID) throws DBException;
 	
 	/**
 	 * Returns the pregnancy records saved from an obstetrics initialization.  This includes all
@@ -39,12 +32,4 @@ public interface PregnancyInfoData {
 	 * @throws DBException 
 	 */
 	public boolean add(PregnancyInfo pi) throws DBException;
-	
-	/**
-	 * Returns the unique record corresponding to the given recordID
-	 * @param recordID the unique ID of the record in the DB, set by MySQL
-	 * @return the record corresponding to the recordID
-	 * @throws DBException
-	 */
-	public PregnancyInfo getRecordByID(int recordID) throws DBException;
 }

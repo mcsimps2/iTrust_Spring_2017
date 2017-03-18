@@ -1,5 +1,4 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
-import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -60,16 +59,16 @@ public class ObstetricsInitSQLLoaderTest
 		
 		//Now, update it
 		oi.setLMP("2015-12-29");
-		ps = loader.loadParameters(conn, ps, oi, false);
-		ps.executeUpdate();
+		try
+		{
+			ps = loader.loadParameters(conn, ps, oi, false);
+			ps.executeUpdate();
+			Assert.fail("Called an unimplemented method");
+		} catch (IllegalStateException e)
+		{
+			Assert.assertTrue(true);
+		}
 		
-		//Now check
-		String stmt = "SELECT * FROM obstetricsInit WHERE PID = 1111 AND dateOfInit='2016-03-01'";
-		ps = conn.prepareStatement(stmt);
-		ResultSet rs = ps.executeQuery();
-		Assert.assertTrue(rs.next());
-		Assert.assertTrue(rs.getDate("dateOfInit").equals(oi.getSQLDate()));
-		Assert.assertTrue(rs.getDate("LMP").equals(oi.getSQLLMP()));
-		//Assert.assertFalse(rs.next());
+		
 	}
 }
