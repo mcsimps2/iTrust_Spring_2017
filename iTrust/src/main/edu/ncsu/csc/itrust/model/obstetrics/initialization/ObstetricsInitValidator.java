@@ -89,7 +89,7 @@ public class ObstetricsInitValidator extends POJOValidator<ObstetricsInit>
 		}
 		
 		//Verify the patient is obstetrics eligible
-		if (!patient.getObstectricsCareEligibility())
+		if (!patient.getObstetricsCareEligibility())
 		{
 			errs.addIfNotNull("Patient is not eligible for obstetrics care");
 			throw new FormValidationException(errs);
