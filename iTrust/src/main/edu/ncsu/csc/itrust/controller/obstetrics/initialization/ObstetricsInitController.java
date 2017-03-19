@@ -1,32 +1,19 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
-import edu.ncsu.csc.itrust.CSVParser;
+import edu.ncsu.csc.itrust.controller.NavigationController;
 import edu.ncsu.csc.itrust.controller.iTrustController;
-import edu.ncsu.csc.itrust.exception.CSVFormatException;
 import edu.ncsu.csc.itrust.exception.DBException;
-import edu.ncsu.csc.itrust.exception.FormValidationException;
-import edu.ncsu.csc.itrust.model.fitness.FitbitImportFactory;
-import edu.ncsu.csc.itrust.model.fitness.FitnessImportFactory;
-import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
-import edu.ncsu.csc.itrust.model.fitness.FitnessInfoData;
-import edu.ncsu.csc.itrust.model.fitness.FitnessInfoFileFormatException;
-import edu.ncsu.csc.itrust.model.fitness.FitnessInfoMySQL;
-import edu.ncsu.csc.itrust.model.fitness.MicrosoftBandImportFactory;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
@@ -45,10 +32,11 @@ public class ObstetricsInitController extends iTrustController
 	private static final String PATIENT_MADE_ELIGIBLE = " is now eligible for obstetric care";
 	
 	/** Grants access to the database */
-	//ObstetricsInitData oiData; TODO
+	ObstetricsInitData oiData;
 	/** Used to obtain session variables and request parameters */
 	SessionUtils sessionUtils;
-	/** Queue of messages to be printed to the screen TODO*/
+	/** The most recently viewed ObstetricsInit record */
+	private ObstetricsInit viewedOI;
 	
 	
 	/**
@@ -57,13 +45,11 @@ public class ObstetricsInitController extends iTrustController
 	public ObstetricsInitController() {
 		super();
 		sessionUtils = SessionUtils.getInstance();
-		/* TODO
 		try {
 			oiData = new ObstetricsInitMySQL();
 		} catch (DBException e) {
 			e.printStackTrace();
 		}
-		*/ 
 	}
 	
 	/**
@@ -75,7 +61,7 @@ public class ObstetricsInitController extends iTrustController
 	public ObstetricsInitController(DataSource ds) {
 		super();
 		sessionUtils = SessionUtils.getInstance();
-		//oiData = new ObstetricsInitMySQL(ds); TODO
+		oiData = new ObstetricsInitMySQL(ds);
 	}
 	
 	/**
@@ -91,15 +77,26 @@ public class ObstetricsInitController extends iTrustController
 			pidLong = Long.parseLong(pid);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
 			return false;
 		}
 		
 		// Check patient eligibility
 		PatientDAO dao = new PatientDAO(DAOFactory.getProductionInstance());
-		//return dao.getPatient(pidLong).getObstetricsCareEligibility(); TODO
-		return true; //TODO
+		try {
+			return dao.getPatient(pidLong).getObstetricsCareEligibility();
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			return false;
+		}
 	}
 	
+	/**
+	 * Makes the patient with the given pid eligible for obstetric care.
+	 * @param pid MID of a patient
+	 * @param hcpid MID of the HCP that is performing this action
+	 */
 	public void makePatientEligible(String pid, String hcpid) {
 		// Parse the Strings
 		long pidLong;
@@ -109,6 +106,7 @@ public class ObstetricsInitController extends iTrustController
 			hcpidLong = Long.parseLong(hcpid);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
 			return;
 		}
 		
@@ -118,8 +116,8 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			patient = dao.getPatient(pidLong);
 		} catch (DBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
 			return;
 		}
 		
@@ -127,13 +125,62 @@ public class ObstetricsInitController extends iTrustController
 		printFacesMessage(FacesMessage.SEVERITY_INFO, message, message, null);
 		
 		// Change eligibility and update database
-		/*
-		patient.setObstetricsCareEligibility(true); TODO
-		dao.editPatient(patient, hcpidLong);
-		*/
+		patient.setObstetricsCareEligibility(true);
+		try {
+			dao.editPatient(patient, hcpidLong);
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+		}
 	}
 	
-	public void getRecords(String pid) {
+	/**
+	 * Returns a list of all of the existing Obstetrics Initialization Records for the
+	 * patient with the given pid, in descending order by date.
+	 * @param pid MID of a patient
+	 * @return list of initialization records in descending order by date
+	 */
+	public List<ObstetricsInit> getRecords(String pid) {
+		// Parse the String
+		long pidLong;
+		try {
+			pidLong = Long.parseLong(pid);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
+			return null;
+		}
 		
+		// Get records from database
+		List<ObstetricsInit> list;
+		try {
+			list = oiData.getRecords(pidLong);
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			return null;
+		}
+		
+		// Sort and return list
+		list.sort(null);
+		return list;
+	}
+
+	public ObstetricsInit getViewedOI() {
+		return viewedOI;
+	}
+
+	/**
+	 * Navigates to the viewObstetricsRecord page to view the given record.
+	 * @param viewedOI
+	 */
+	public void setViewedOI(ObstetricsInit viewedOI) {
+		this.viewedOI = viewedOI;
+		try {
+			NavigationController.viewObstetricsRecord();
+		} catch (IOException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "IOException", e.getMessage(), null);
+		}
 	}
 }
