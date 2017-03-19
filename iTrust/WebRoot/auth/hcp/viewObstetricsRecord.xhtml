@@ -27,36 +27,39 @@
                     }
                 </style>
             </ui:define>
+
             <ui:define name="pageTitle">Emergency Health Record</ui:define>
             <ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml" /></ui:define>
 
             <ui:define name="mainContent">
                 <h1>View Obstetrics Records</h1>
 
+                <ui:param name="oiRecord" value="#{obstetrics_init_controller.viewedOI}" />
+
                 <div class="obstetrics-record-wrapper">
                     <div class="obstetrics-record-container">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4>Obstetrics record for XXXXXX XXXXXX</h4>
+                                <h4>Obstetrics record for <strong>#{user.getUserNameForID(session.getAttribute("pid"))}</strong></h4>
                             </div>
 
                             <table class="table table-hover">
                                 <tbody>
                                     <tr>
                                         <td>Initialization date:</td>
-                                        <td>&lt;XXXXXX&gt;</td>
+                                        <td>#{oiRecord.prettyDate}</td>
                                     </tr>
                                     <tr>
                                         <td>LMP:</td>
-                                        <td>&lt;XXXXXX&gt;</td>
+                                        <td>#{oiRecord.prettyLMP}</td>
                                     </tr>
                                     <tr>
-                                        <td>BDD:</td>
-                                        <td>&lt;XXXXXX&gt;</td>
+                                        <td>EDD:</td>
+                                        <td>#{oiRecord.prettyEDD}</td>
                                     </tr>
                                     <tr>
                                         <td>Weeks pregnant at initialization date:</td>
-                                        <td>&lt;XXXXXX&gt;</td>
+                                        <td>#{oiRecord.numWeeksPregnant}</td>
                                     </tr>
                                 </tbody>
                             </table>
