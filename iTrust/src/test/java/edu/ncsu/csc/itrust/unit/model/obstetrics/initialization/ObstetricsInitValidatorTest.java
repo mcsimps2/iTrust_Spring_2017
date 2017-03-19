@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 
 import org.junit.*;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
@@ -64,6 +65,20 @@ public class ObstetricsInitValidatorTest
 				//Good
 				Assert.assertTrue(true);
 			}
+		}
+	}
+	
+	@Test
+	public void testConstructor()
+	{
+		try
+		{
+			new ObstetricsInitValidator();
+			Assert.fail("Should not have been able to call the default constructor");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
 		}
 	}
 }

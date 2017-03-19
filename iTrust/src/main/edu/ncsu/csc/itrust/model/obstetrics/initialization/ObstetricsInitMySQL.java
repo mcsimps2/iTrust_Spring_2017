@@ -170,7 +170,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	}
 	
 	@Override
-	public boolean update(ObstetricsInit oi) throws DBException, FormValidationException {
+	public boolean update(ObstetricsInit oi) throws DBException {
 		Connection conn = null;
 		PreparedStatement pstring = null;
 		try
