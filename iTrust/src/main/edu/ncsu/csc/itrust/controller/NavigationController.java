@@ -98,4 +98,11 @@ public class NavigationController {
 			ctx.redirect("/iTrust/auth/patient/viewOfficeVisit.xhtml");
 		}
 	}
+	
+	public static void viewObstetricsRecord() throws IOException {
+		ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
+		if (ctx != null) {
+			ctx.redirect("/iTrust/auth/hcp/viewObstetricsRecord.xhtml");
+		}
+	}
 }

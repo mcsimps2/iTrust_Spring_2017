@@ -26,7 +26,7 @@
 			
 			<ui:param name="pid" value="#{session.getAttribute('pid')}"/>
 			<ui:param name="isEligible" value="#{obstetrics_init_controller.isPatientEligible(pid)}"/>
-			<ui:fragment rendered="#{isEligible}">
+			<ui:fragment rendered="#{!isEligible}">
 				<div align="center">
 					<h3 align="center">#{user.getUserNameForIDFirstLast(pid)} is not eligible for obstetric care</h3>
 					<table width="25%">
@@ -50,14 +50,9 @@
 			<ui:fragment rendered="#{isEligible}">
 				<div align="center">
 					<h3>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h3>
-					<h:link style="color:black;" class="btn btn-default" outcome="" value="Add New Record"></h:link>
+					<h:link style="color:black;margin:20px" class="btn btn-default" outcome="addObstetricsRecord" value="Add New Record"></h:link>
 					<h:dataTable id="previousRecords" styleClass="fTable" value="#{obstetrics_init_controller.getRecords(pid)}" var="oi" border="1">
 						<br/>
-						<h:column>
-							<h:link outcome="" value="View Record">
-	      						<f:param name="oiID" value="#{oi.ID}" />
-	   						</h:link>
-						</h:column>	
 	 					<h:column>
 							<h:outputText value="#{oi.date}">
 								<ui:remove>
@@ -65,6 +60,11 @@
 								</ui:remove>
 							</h:outputText>
 						</h:column>
+						<h:column>
+							<h:form>
+								<h:commandButton value="View Record" action="#{obstetrics_init_controller.setViewedOI(oi)}"/>
+							</h:form>
+						</h:column>	
 					</h:dataTable>					
 				</div>
 			</ui:fragment>

@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import edu.ncsu.csc.itrust.model.fitness.DateFormatException;
 
-public class ObstetricsInit {
+public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	/**ID of this record */
 	int id = -1;
 	/** PID of patient */
@@ -298,6 +298,19 @@ public class ObstetricsInit {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Compares this instance of ObstetricsInit to another instance of ObstetricsInit.
+	 * Returns less than 0 or greater than 0 if this instance should come before or after the given instance,
+	 * based on descending order by timestamp (so the instance with the most recent timestamp would come first).
+	 * If the timestamps are equal, returns 0.
+	 */
+	@Override
+	public int compareTo(ObstetricsInit other) {
+		if (other == null)
+			throw new NullPointerException();
+		return this.timestamp.compareTo(other.timestamp) * -1;
 	}
 }
 
