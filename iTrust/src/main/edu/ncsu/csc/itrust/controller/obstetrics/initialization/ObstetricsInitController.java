@@ -11,12 +11,16 @@ import javax.sql.DataSource;
 import edu.ncsu.csc.itrust.controller.NavigationController;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -30,6 +34,14 @@ public class ObstetricsInitController extends iTrustController
 {
 	/** Constant for the message to be displayed when a patient is made eligible for obstetric care */
 	private static final String PATIENT_MADE_ELIGIBLE = " is now eligible for obstetric care";
+	/** Error message when patient data cannot be found */
+	private static final String ERROR_LOADING_PATIENT = "Error loading patient data";
+	/** Error message when hcp data cannot be found */
+	private static final String ERROR_LOADING_HCP = "Error loading HCP data";
+	/** Error message when navigation fails */
+	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
+	/** String for an OB/GYN specialist */
+	private static final String OBGYN = "OB/GYN";
 	
 	/** Grants access to the database */
 	ObstetricsInitData oiData;
@@ -77,7 +89,7 @@ public class ObstetricsInitController extends iTrustController
 			pidLong = Long.parseLong(pid);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return false;
 		}
 		
@@ -87,7 +99,7 @@ public class ObstetricsInitController extends iTrustController
 			return dao.getPatient(pidLong).getObstetricsCareEligibility();
 		} catch (DBException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return false;
 		}
 	}
@@ -106,7 +118,7 @@ public class ObstetricsInitController extends iTrustController
 			hcpidLong = Long.parseLong(hcpid);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return;
 		}
 		
@@ -117,7 +129,7 @@ public class ObstetricsInitController extends iTrustController
 			patient = dao.getPatient(pidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return;
 		}
 		
@@ -130,7 +142,7 @@ public class ObstetricsInitController extends iTrustController
 			dao.editPatient(patient, hcpidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 		}
 	}
 	
@@ -147,7 +159,7 @@ public class ObstetricsInitController extends iTrustController
 			pidLong = Long.parseLong(pid);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "NumberFormatException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return null;
 		}
 		
@@ -157,7 +169,7 @@ public class ObstetricsInitController extends iTrustController
 			list = oiData.getRecords(pidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "DBException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return null;
 		}
 		
@@ -165,22 +177,68 @@ public class ObstetricsInitController extends iTrustController
 		list.sort(null);
 		return list;
 	}
+	
+	/**
+	 * Returns whether or not the HCP with the given hcpid has a specialization of OB/GYN.
+	 * @param hcpid the MID of an HCP
+	 * @return true if OB/GYN specialist, false otherwise
+	 */
+	public boolean isOBGYN(String hcpid) {
+		// Parse the String
+		long hcpidLong;
+		try {
+			hcpidLong = Long.parseLong(hcpid);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
+			return false;
+		}
+		
+		// Get the personnel bean from the database
+		PersonnelDAO dao = new PersonnelDAO(DAOFactory.getProductionInstance());
+		PersonnelBean personnel;
+		try {
+			personnel = dao.getPersonnel(hcpidLong);
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
+			return false;
+		}
+		
+		// Check specialty
+		return personnel.getSpecialty().equals(OBGYN);
+	}
 
 	public ObstetricsInit getViewedOI() {
 		return viewedOI;
 	}
 
 	/**
-	 * Navigates to the viewObstetricsRecord page to view the given record.
-	 * @param viewedOI
+	 * Navigates to the viewObstetricsRecord page to view the given record and logs the view.
+	 * @param oi
+	 * @param hcpid the MID of the HCP viewing the record
 	 */
-	public void setViewedOI(ObstetricsInit viewedOI) {
-		this.viewedOI = viewedOI;
+	public void setViewedOI(ObstetricsInit oi, String hcpid) {
+		// Parse the String
+		long hcpidLong;
+		try {
+			hcpidLong = Long.parseLong(hcpid);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
+			return;
+		}
+		
+		// Set the record and log the view
+		this.viewedOI = oi;
+		TransactionLogger.getInstance().logTransaction(TransactionType.VIEW_INITIAL_OBSTETRIC_RECORD, hcpidLong, oi.getPid(), oi.getEDD());
+		
+		// Navigate to the view page
 		try {
 			NavigationController.viewObstetricsRecord();
 		} catch (IOException e) {
 			e.printStackTrace();
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "IOException", e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
 	}
 }
