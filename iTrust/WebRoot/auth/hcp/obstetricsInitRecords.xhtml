@@ -25,7 +25,8 @@
 			
 			
 			<ui:param name="pid" value="#{session.getAttribute('pid')}"/>
-			<ui:fragment rendered="#{!obstetrics_init_controller.isPatientEligible(pid)}">
+			<ui:param name="isEligible" value="#{obstetrics_init_controller.isPatientEligible(pid)}"/>
+			<ui:fragment rendered="#{isEligible}">
 				<div align="center">
 					<h3 align="center">#{user.getUserNameForIDFirstLast(pid)} is not eligible for obstetric care</h3>
 					<table width="25%">
@@ -46,159 +47,27 @@
 					</table>
 				</div>
 			</ui:fragment>
-			<ui:fragment rendered="#{obstetrics_init_controller.isPatientEligible(pid)}">
+			<ui:fragment rendered="#{isEligible}">
 				<div align="center">
 					<h3>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h3>
-						<h:link outcome="home" value="Add New Record"></h:link>
-					
-					<ui:remove>
-					<table width="25%">
-						<tr>
-							<td style="text-align: left;">
-								<h:form>
-									<h:commandButton class="btn btn-default" value="Make Eligible" 
-										action="#{obstetrics_init_controller.makePatientEligible(pid, session.getAttribute('loggedInMID'))}"/>
-								</h:form>
-							</td>
-							<td />
-							<td style="text-align: right;">
-								<h:form>
-									<h:commandButton class="btn btn-default" value="Go Back" action="#{navigation_controller.updatePatient}"/>
-								</h:form>
-							</td>
-						</tr>
-					</table>
-					</ui:remove>
+					<h:link style="color:black;" class="btn btn-default" outcome="" value="Add New Record"></h:link>
+					<h:dataTable id="previousRecords" styleClass="fTable" value="#{obstetrics_init_controller.getRecords(pid)}" var="oi" border="1">
+						<br/>
+						<h:column>
+							<h:link outcome="" value="View Record">
+	      						<f:param name="oiID" value="#{oi.ID}" />
+	   						</h:link>
+						</h:column>	
+	 					<h:column>
+							<h:outputText value="#{oi.date}">
+								<ui:remove>
+								<f:converter converterId="localDateTimeConverter"/>
+								</ui:remove>
+							</h:outputText>
+						</h:column>
+					</h:dataTable>					
 				</div>
 			</ui:fragment>
-			
-			
-			
-			<ui:remove>
-			<c:set var="pid" value="#{session.getAttribute('pid')}"/>
-			<c:choose>
-				<c:when test="#{!obstetrics_init_controller.isPatientEligible(pid)}">
-					<div align="center">
-						<h3 align="center">#{user.getUserNameForIDFirstLast(pid)} is not eligible for obstetric care</h3>
-						<table width="25%">
-							<tr>
-								<td style="text-align: left;">
-									<h:form>
-										<h:commandButton class="btn btn-default" value="Make Eligible" 
-											action="#{obstetrics_init_controller.makePatientEligible(pid, session.getAttribute('loggedInMID'))}"/>
-									</h:form>
-								</td>
-								<td />
-								<td style="text-align: right;">
-									<h:form>
-										<h:commandButton class="btn btn-default" value="Go Back" action="#{navigation_controller.updatePatient}"/>
-									</h:form>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div align="center">
-						<h3>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h3>
-							<h:link outcome="home" value="Add New Record"></h:link>
-						
-						<ui:remove>
-						<table width="25%">
-							<tr>
-								<td style="text-align: left;">
-									<h:form>
-										<h:commandButton class="btn btn-default" value="Make Eligible" 
-											action="#{obstetrics_init_controller.makePatientEligible(pid, session.getAttribute('loggedInMID'))}"/>
-									</h:form>
-								</td>
-								<td />
-								<td style="text-align: right;">
-									<h:form>
-										<h:commandButton class="btn btn-default" value="Go Back" action="#{navigation_controller.updatePatient}"/>
-									</h:form>
-								</td>
-							</tr>
-						</table>
-						</ui:remove>
-					</div>
-				</c:otherwise>
-			</c:choose>
-			</ui:remove>
-			
-			
-			
-			
-			
-			
-			<ui:remove>
-			<div align="center">
-				<table width="90%">
-					<tr>
-						<td style="text-align: left;">
-							<h:form>
-								<h:commandButton action="#{fitness_info_controller.goToPrevious()}" value="Previous"/>
-							</h:form>
-						</td>
-						<td style="text-align: center;">
-							<h3>Fitness data for #{user.getUserNameForID(session.getAttribute("pid"))} for #{fitness_info_controller.getMonthName()} #{fitness_info_controller.getYear()}</h3>
-						</td>
-						<td style="text-align: right;">
-							<h:form>
-								<h:commandButton action="#{fitness_info_controller.goToNext()}" value="Next"/>
-							</h:form>
-						</td>
-					</tr>
-				</table>
-
-				<table>
-					<tr>
-						<td>
-							<table id="calendarTable">
-								<tr>
-									<ui:repeat var="dayOfWeek" value="#{fitness_info_controller.getDaysOfWeek()}">
-										<th>#{dayOfWeek}</th>
-									</ui:repeat>
-								</tr>
-								<ui:repeat var="week" value="#{fitness_info_controller.getFitnessCalendar()}">
-									<tr>
-										<ui:repeat var="calDay" value="#{week}">
-											<td>
-												<div class="cell">
-													<ui:fragment rendered="#{calDay != null}">
-														<div style="float: right;">#{calDay.day}</div>
-														<div class="calendarEntry">
-															<ui:fragment rendered="#{!calDay.containsData}">
-																<h:link style="font-size: 12px;" outcome="editFitnessInfo" value="Add">
-									      						 		<f:param name="date" value="#{calDay.date}" />
-									      						 		<f:param name="day" value="#{calDay.day}" />
-								   								</h:link>
-															</ui:fragment>
-															<ui:fragment rendered="#{calDay.containsData}">
-																<h:link style="font-size: 12px;" outcome="editFitnessInfo" value="View/Edit">
-									      						 		<f:param name="date" value="#{calDay.date}" />
-									      						 		<f:param name="day" value="#{calDay.day}" />
-								   								</h:link>
-															</ui:fragment>
-														</div>
-													</ui:fragment>
-												</div>
-											</td>
-										</ui:repeat>
-									</tr>
-								</ui:repeat>
-							</table>
-						</td>
-						<td style="text-align: center;">
-							<h:link style="color:black;" class="btn btn-default" outcome="fitnessGraphs" value="View Summary Report"></h:link>
-							<br/>
-							<br/>
-							<h:link style="color:black;" class="btn btn-default" outcome="uploadFitnessInfo" value="Upload Fitness File"></h:link>
-						</td>
-					</tr>
-				</table>
-			</div>
-			</ui:remove>
 		</ui:define>
 	</ui:composition>
 </h:body>

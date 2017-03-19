@@ -132,4 +132,8 @@ public class ObstetricsInitController extends iTrustController
 		dao.editPatient(patient, hcpidLong);
 		*/
 	}
+	
+	public void getRecords(String pid) {
+		
+	}
 }
