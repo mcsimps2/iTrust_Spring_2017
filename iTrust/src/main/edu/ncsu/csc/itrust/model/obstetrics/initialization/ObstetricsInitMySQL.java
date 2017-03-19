@@ -171,32 +171,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	
 	@Override
 	public boolean update(ObstetricsInit oi) throws DBException {
-		Connection conn = null;
-		PreparedStatement pstring = null;
-		try
-		{
-			validator.validate(oi);
-		}
-		catch (FormValidationException e)
-		{
-			throw new DBException(new SQLException(e));
-		}
-		try
-		{
-			conn = ds.getConnection();
-			pstring = loader.loadParameters(conn, pstring, oi, false);
-			int results = pstring.executeUpdate();
-			if (results != 0) {
-				return true;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, pstring);
-		}
-		return false;
+		throw new IllegalStateException("Unimplemented");
 	}
 
 }

@@ -1,8 +1,11 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
 
+import java.util.Calendar;
+
 import org.junit.*;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
@@ -47,7 +50,13 @@ public class PregnancyInfoValidatorTest {
 				new PregnancyInfo(1, 2, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //2 is ineligble for obstetrics care
 				new PregnancyInfo(1, 1, 1017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //year of conception invalid
 				new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 0), //invalid multiplicity
-				new PregnancyInfo(1, 1, 2017, -1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1) //negative value
+				new PregnancyInfo(1, 1, 2017, -1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, -15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, 15, -25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, -1), //negative value
+				new PregnancyInfo(1, 9999999, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent PID
+				new PregnancyInfo(99999999, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent obstetricsInitID
+				new PregnancyInfo(1, 1, Calendar.getInstance().get(Calendar.YEAR) + 15, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1) //year in the future	
 		};
 		for (int i = 0; i < piArr.length; i++)
 		{
@@ -62,6 +71,20 @@ public class PregnancyInfoValidatorTest {
 				//Good
 				Assert.assertTrue(true);
 			}
+		}
+	}
+	
+	@Test
+	public void testConstructor()
+	{
+		try
+		{
+			new PregnancyInfoValidator();
+			Assert.fail("Should not have been able to call the default constructor");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
 		}
 	}
 }

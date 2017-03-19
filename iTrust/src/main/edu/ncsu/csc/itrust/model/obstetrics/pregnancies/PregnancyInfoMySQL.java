@@ -133,7 +133,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricInitID<=" + obstetricsInitID);
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricsInitID<=" + obstetricsInitID);
 			results = pstring.executeQuery();
 			List<PregnancyInfo> list = loader.loadList(results);
 			return list;
@@ -209,33 +209,8 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 	}
 
 	@Override
-	public boolean update(PregnancyInfo pi) throws DBException, FormValidationException {
-		Connection conn = null;
-		PreparedStatement pstring = null;
-		try
-		{
-			validator.validate(pi);
-		}
-		catch (FormValidationException e)
-		{
-			throw new DBException(new SQLException(e));
-		}
-		try
-		{
-			conn = ds.getConnection();
-			pstring = loader.loadParameters(conn, pstring, pi, false);
-			int results = pstring.executeUpdate();
-			if (results != 0) {
-				return true;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, pstring);
-		}
-		return false;
+	public boolean update(PregnancyInfo pi) throws DBException {
+		throw new IllegalStateException("Unimplemented");
 	}
 
 }
