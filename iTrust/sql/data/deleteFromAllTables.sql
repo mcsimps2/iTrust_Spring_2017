@@ -89,3 +89,6 @@ ALTER TABLE medicalProcedure AUTO_INCREMENT = 0;
 
 DELETE FROM fitness;
 
+DELETE FROM obstetricsInit;
+
+DELETE FROM priorPregnancies;
