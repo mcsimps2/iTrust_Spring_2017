@@ -10,10 +10,10 @@ Scenario Outline: Check Records Display Values
 	Given I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with pid <patientName>
 	And click on their link
-	Then <numRecords> obstetrics records appear with dates <dates>
+	Then 1 obstetric record appears with date 
 Examples:
-	| hcpMID | pw | patientName | numRecords | dates |
-	| 9000000000 | pw | Random | TODO | TODO |
+	| hcpMID | pw | patientName | dates |
+	| 9000000012 | pw | Baby | 2005-03-01 |
 	
 Scenario Outline: Ineligable Obstetrics Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -21,10 +21,10 @@ Scenario Outline: Ineligable Obstetrics Patient
 	When I search for the patient with pid <pid>
 	And click on their link
 	And I click the button to make the patient eligable for obstetrics care
-	Then <numRecords> obstetrics records appear with dates <dates>
+	Then no obstetrics records appear
 Examples:
-	| hcpMID | pw | patientName | numRecords | dates |
-	| 9000000000 | pw | Andy | 0 | null |
+	| hcpMID | pw | patientName |
+	| 9000000012 | pw | Andy |
 	
 Scenario Outline: Non OB/GYN HCP
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -34,7 +34,7 @@ Scenario Outline: Non OB/GYN HCP
 	Then the add record button will not be displayed
 Examples:
 	| hcpMID | pw | patientName |
-	| 9000000000 | pw | Random |
+	| 9000000000 | pw | Baby |
 
 Scenario Outline: View Obstetric Record
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -47,4 +47,4 @@ Scenario Outline: View Obstetric Record
 
 Examples:
 	| hcpMID | pw | patientName | initDate | lmp | edd | weeksPreg | numPreg |
-	| 9000000000 | pw | Random | TODO | TODO | TODO | TODO | TODO |
+	| 9000000012 | pw | Baby | 2005-03-01 | 2005-01-03 | 2005-10-10 | 8 | 1 |
