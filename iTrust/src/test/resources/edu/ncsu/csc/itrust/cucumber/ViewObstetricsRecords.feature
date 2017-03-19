@@ -13,9 +13,9 @@ Scenario Outline: Check Records Display Values
 	Then <numRecords> obstetrics records appear with dates <dates>
 Examples:
 	| hcpMID | pw | patientName | numRecords | dates |
-	| 9000000000 | pw | Random | -1 | TODO |
+	| 9000000000 | pw | Random | TODO | TODO |
 	
-Scenario Outine: Ineligable Obstetrics Patient
+Scenario Outline: Ineligable Obstetrics Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with pid <pid>
@@ -24,7 +24,17 @@ Scenario Outine: Ineligable Obstetrics Patient
 	Then <numRecords> obstetrics records appear with dates <dates>
 Examples:
 	| hcpMID | pw | patientName | numRecords | dates |
-	| 9000000000 | pw | Zappic | 0 | null |
+	| 9000000000 | pw | Andy | 0 | null |
+	
+Scenario Outline: Non OB/GYN HCP
+	Given I have logged in as HCP <hcpMID> with password <pw>
+	Given I have navigated to Patient Info -> Obstetrics Records
+	When I search for the patient with pid <patientName>
+	And click on their link
+	Then the add record button will not be displayed
+Examples:
+	| hcpMID | pw | patientName |
+	| 9000000000 | pw | Random |
 
 Scenario Outline: View Obstetric Record
 	Given I have logged in as HCP <hcpMID> with password <pw>
