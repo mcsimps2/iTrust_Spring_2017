@@ -15,6 +15,8 @@ import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -43,8 +45,10 @@ public class ObstetricsInitController extends iTrustController
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	
-	/** Grants access to the database */
+	/** Grants access to the obstetrics initializations database */
 	ObstetricsInitData oiData;
+	/** Grants access to the pregnancy data database */
+	PregnancyInfoData pregnancyData;
 	/** Used to obtain session variables and request parameters */
 	SessionUtils sessionUtils;
 	/** The most recently viewed ObstetricsInit record */
@@ -59,6 +63,7 @@ public class ObstetricsInitController extends iTrustController
 		sessionUtils = SessionUtils.getInstance();
 		try {
 			oiData = new ObstetricsInitMySQL();
+			pregnancyData = new PregnancyInfoMySQL();
 		} catch (DBException e) {
 			e.printStackTrace();
 		}
@@ -74,6 +79,7 @@ public class ObstetricsInitController extends iTrustController
 		super();
 		sessionUtils = SessionUtils.getInstance();
 		oiData = new ObstetricsInitMySQL(ds);
+		pregnancyData = new PregnancyInfoMySQL(ds);
 	}
 	
 	/**
