@@ -32,7 +32,7 @@
             <ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml" /></ui:define>
 
             <ui:define name="mainContent">
-                <h1>View Obstetrics Records</h1>
+                <h1>View Obstetrics Record</h1>
 
                 <ui:param name="oiRecord" value="#{obstetrics_init_controller.viewedOI}" />
 
@@ -104,7 +104,7 @@
                 </ui:fragment>
 
                 <h:form class="done-button-container">
-                    <h:commandButton value="Done" action="obstetricsInitRecords" />
+                    <h:commandButton value="Done" action="#{navigation_controller.viewObstetricsOverview}" />
                 </h:form>
             </ui:define>
         </ui:composition>
