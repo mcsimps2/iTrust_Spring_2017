@@ -1,12 +1,13 @@
 package edu.ncsu.csc.itrust.model.obstetrics.initialization;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import edu.ncsu.csc.itrust.model.fitness.DateFormatException;
 
-public class ObstetricsInit {
+public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	/**ID of this record */
 	int id = -1;
 	/** PID of patient */
@@ -15,8 +16,8 @@ public class ObstetricsInit {
 	private String date;
 	/** Timestamp */
 	private Timestamp timestamp;
-	/* Date of the last menstrual period */
-	private String LMP;
+	/** Date of the last menstrual period */
+	private String lmp;
 	/** EDD - LMP in days*/
 	private final int EDD_LMP_DIFF = 280;
 	
@@ -60,6 +61,10 @@ public class ObstetricsInit {
 		cal.setTime(getJavaDate());
 		cal.add(Calendar.DATE, EDD_LMP_DIFF);
 		return dateToString(cal.getTime());
+	}
+	
+	public String getPrettyEDD() {
+		return generatePrettyDate(getEDD());
 	}
 	
 	/**
@@ -149,11 +154,30 @@ public class ObstetricsInit {
 		{
 			return false;
 		}
-		
+	}
+	
+	/**
+	 * Generate and return a pretty version of the specified date string.
+	 * Format:
+	 *     Month day, year
+	 * Example:
+	 *     March 4, 2017
+	 *
+	 * @param dateString a string representing a date
+	 * @return a pretty version of the date
+	 */
+	private String generatePrettyDate(String dateString) {
+		SimpleDateFormat formatter = new SimpleDateFormat("MMMMMMMMM d, yyyy");
+		java.util.Date date = stringToJavaDate(dateString);
+		return formatter.format(date);
 	}
 	
 	public String getDate() {
-		return date;
+		return this.date;
+	}
+	
+	public String getPrettyDate() {
+		return generatePrettyDate(this.date);
 	}
 	
 	public void setDate(String date) {
@@ -165,10 +189,15 @@ public class ObstetricsInit {
 	}
 	
 	public String getLMP() {
-		return LMP;
+		return lmp;
 	}
-	public void setLMP(String lMP) {
-		LMP = lMP;
+	
+	public String getPrettyLMP() {
+		return generatePrettyDate(getLMP());
+	}
+	
+	public void setLMP(String lmp) {
+		this.lmp = lmp;
 	}
 	
 	public void setLMP(java.util.Date date)
@@ -254,7 +283,7 @@ public class ObstetricsInit {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((LMP == null) ? 0 : LMP.hashCode());
+		result = prime * result + ((lmp == null) ? 0 : lmp.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + (int) (pid ^ (pid >>> 32));
 		return result;
@@ -269,10 +298,10 @@ public class ObstetricsInit {
 		if (getClass() != obj.getClass())
 			return false;
 		ObstetricsInit other = (ObstetricsInit) obj;
-		if (LMP == null) {
-			if (other.LMP != null)
+		if (lmp == null) {
+			if (other.lmp != null)
 				return false;
-		} else if (!LMP.equals(other.LMP))
+		} else if (!lmp.equals(other.lmp))
 			return false;
 		if (date == null) {
 			if (other.date != null)
@@ -298,6 +327,19 @@ public class ObstetricsInit {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Compares this instance of ObstetricsInit to another instance of ObstetricsInit.
+	 * Returns less than 0 or greater than 0 if this instance should come before or after the given instance,
+	 * based on descending order by timestamp (so the instance with the most recent timestamp would come first).
+	 * If the timestamps are equal, returns 0.
+	 */
+	@Override
+	public int compareTo(ObstetricsInit other) {
+		if (other == null)
+			throw new NullPointerException();
+		return this.timestamp.compareTo(other.timestamp) * -1;
 	}
 }
 

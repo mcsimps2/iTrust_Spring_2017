@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:itrust="/WEB-INF/tags.tld">
+<f:view
+	beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+<h:body>
+	<ui:composition template="/iTrust_template.xhtml">
+		<ui:define name="pageStyle">
+			<link rel="stylesheet" href="/iTrust/css/form-layout.css" />
+		</ui:define>
+		<ui:define name="pageTitle">iTrust - Obstetrics Records</ui:define>
+		<ui:define name="leftMenu">
+			<ui:include src="/auth/hcp/menu.xhtml" />
+		</ui:define>
+		<ui:define name="mainContent">
+			<itrust:patientNav thisTitle="Obstetrics Records" />
+			<div align="center">
+				<br />
+				<h:message for="" />
+			</div>
+			<ui:param name="pid" value="#{session.getAttribute('pid')}"/>
+			<ui:param name="hcpid" value="#{session.getAttribute('loggedInMID')}"/>
+			<ui:param name="isEligible" value="#{obstetrics_init_controller.isPatientEligible(pid)}"/>
+			<ui:fragment rendered="#{!isEligible}">
+				<div align="center">
+					<h3 align="center">#{user.getUserNameForIDFirstLast(pid)} is not eligible for obstetric care</h3>
+					<table width="25%">
+						<tr>
+							<td style="text-align: left;">
+								<h:form>
+									<h:commandButton class="btn btn-default" value="Make Eligible" 
+										action="#{obstetrics_init_controller.makePatientEligible(pid, hcpid)}"/>
+								</h:form>
+							</td>
+							<td />
+							<td style="text-align: right;">
+								<h:form>
+									<h:commandButton class="btn btn-default" value="Go Back" action="#{navigation_controller.updatePatient}"/>
+								</h:form>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</ui:fragment>
+			<ui:fragment rendered="#{isEligible}">
+				<div align="center">
+					<h3>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h3>
+					<ui:fragment rendered="#{obstetrics_init_controller.isOBGYN(hcpid)}">
+						<h:link style="color:black;margin:20px" class="btn btn-default" outcome="addObstetricsRecord" value="Add New Record"></h:link>
+					</ui:fragment>
+					<ui:param name="oiList" value="#{obstetrics_init_controller.getRecords(pid)}"/>
+					<ui:fragment rendered="#{empty oiList}">
+						<h2 style="font-size: 175%; font-weight: bold;">No Obstetrics Records for this Patient!</h2>
+					</ui:fragment>
+					<ui:fragment rendered="#{not empty oiList}">
+						<h:dataTable id="previousRecords" styleClass="fTable" value="#{obstetrics_init_controller.getRecords(pid)}" var="oi" border="1">
+							<br/>
+		 					<h:column>
+								<h:outputText value="#{oi.date}"/>
+							</h:column>
+							<h:column>
+								<h:form>
+									<h:commandButton value="View Record" action="#{obstetrics_init_controller.setViewedOI(oi, hcpid)}"/>
+								</h:form>
+							</h:column>	
+						</h:dataTable>	
+					</ui:fragment>		
+				</div>
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
