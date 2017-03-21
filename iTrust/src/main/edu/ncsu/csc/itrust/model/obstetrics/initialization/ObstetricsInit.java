@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.model.obstetrics.initialization;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -99,12 +100,15 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 * @param date the date to turn into a java.util.Date object
 	 * @return the date in a java date object
 	 */
-	@SuppressWarnings("deprecation")
 	public static java.util.Date stringToJavaDate(String date)
 	{
-		java.util.Date jDate = new java.util.Date(Integer.parseInt(date.substring(0,4))-1900, Integer.parseInt(date.substring(5,7)) - 1, Integer.parseInt(date.substring(8,10)));
-		return jDate;
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -167,6 +171,7 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 * @return a pretty version of the date
 	 */
 	private String generatePrettyDate(String dateString) {
+		System.out.println(dateString);
 		SimpleDateFormat formatter = new SimpleDateFormat("MMMMMMMMM d, yyyy");
 		java.util.Date date = stringToJavaDate(dateString);
 		return formatter.format(date);
