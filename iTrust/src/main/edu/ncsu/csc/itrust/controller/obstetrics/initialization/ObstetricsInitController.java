@@ -212,6 +212,7 @@ public class ObstetricsInitController extends iTrustController
 		}
 		
 		// Check specialty
+		if (personnel.getSpecialty() == null) return false;
 		return personnel.getSpecialty().equals(OBGYN);
 	}
 
