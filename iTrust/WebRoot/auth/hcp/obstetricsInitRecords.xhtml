@@ -48,9 +48,15 @@
 			</ui:fragment>
 			<ui:fragment rendered="#{isEligible}">
 				<div align="center">
-					<h3>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h3>
+					<h1>Obstetrics Records for #{user.getUserNameForIDFirstLast(pid)}</h1>
+					
 					<ui:fragment rendered="#{obstetrics_init_controller.isOBGYN(hcpid)}">
-						<h:link style="color:black;margin:20px" class="btn btn-default" outcome="addObstetricsRecord" value="Add New Record"></h:link>
+						<h:form style="margin:15px;">
+							<h:commandButton value="Add New Record" action="#{obstetrics_init_controller.viewAddObstetricsInit(null, hcpid)}"/>
+						</h:form>
+					</ui:fragment>
+					<ui:fragment rendered="#{!obstetrics_init_controller.isOBGYN(hcpid)}">
+						<p>You are not an OB/GYN specialist. Only OB/GYN specialists are eligible to add obstetrics records.</p>
 					</ui:fragment>
 					<ui:param name="oiList" value="#{obstetrics_init_controller.getRecords(pid)}"/>
 					<ui:fragment rendered="#{empty oiList}">
@@ -64,7 +70,7 @@
 							</h:column>
 							<h:column>
 								<h:form>
-									<h:commandButton value="View Record" action="#{obstetrics_init_controller.setViewedOI(oi, hcpid)}"/>
+									<h:commandButton value="View Record" action="#{obstetrics_init_controller.viewAddObstetricsInit(oi, hcpid)}"/>
 								</h:form>
 							</h:column>
 						</h:dataTable>

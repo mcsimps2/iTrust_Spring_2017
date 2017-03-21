@@ -45,7 +45,7 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_LOADING_HCP = "Error loading HCP data";
 	/** Error message when getting pregnancy data fails */
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
-	/** Error message when navigation fails */
+	/** Error message when viewing record fails */
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
@@ -236,10 +236,11 @@ public class ObstetricsInitController extends iTrustController
 
 	/**
 	 * Navigates to the viewObstetricsRecord page to view the given record and logs the view.
+	 * If adding a new record, oi should be null.
 	 * @param oi
 	 * @param hcpid the MID of the HCP viewing the record
 	 */
-	public void setViewedOI(ObstetricsInit oi, String hcpid) {
+	public void viewAddObstetricsInit(ObstetricsInit oi, String hcpid) {
 		// Parse the String
 		long hcpidLong;
 		try {
@@ -250,13 +251,15 @@ public class ObstetricsInitController extends iTrustController
 			return;
 		}
 		
-		// Set the record and log the view
+		// Set the record and log the view if we're viewing
 		this.viewedOI = oi;
-		TransactionLogger.getInstance().logTransaction(TransactionType.VIEW_INITIAL_OBSTETRIC_RECORD, hcpidLong, oi.getPid(), oi.getEDD());
+		if (oi != null) {
+			TransactionLogger.getInstance().logTransaction(TransactionType.VIEW_INITIAL_OBSTETRIC_RECORD, hcpidLong, oi.getPid(), oi.getEDD());
+		}
 		
-		// Navigate to the view page
+		// Navigate to the view/add page
 		try {
-			NavigationController.viewObstetricsRecord();
+			NavigationController.viewAddObstetricsRecord();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
