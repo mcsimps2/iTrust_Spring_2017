@@ -15,6 +15,7 @@ import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfo;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
@@ -40,6 +41,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_LOADING_PATIENT = "Error loading patient data";
 	/** Error message when hcp data cannot be found */
 	private static final String ERROR_LOADING_HCP = "Error loading HCP data";
+	/** Error message when getting pregnancy data fails */
+	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
 	/** Error message when navigation fails */
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
 	/** String for an OB/GYN specialist */
@@ -182,6 +185,16 @@ public class ObstetricsInitController extends iTrustController
 		// Sort and return list
 		list.sort(null);
 		return list;
+	}
+	
+	public List<PregnancyInfo> getPastPregnancies(int oid) {
+		try {
+			return this.pregnancyData.getRecordsFromInit(oid);
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PREGNANCIES, e.getMessage(), null);
+			return null;
+		}
 	}
 	
 	/**

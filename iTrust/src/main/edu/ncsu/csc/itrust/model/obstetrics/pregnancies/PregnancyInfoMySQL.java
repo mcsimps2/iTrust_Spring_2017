@@ -133,7 +133,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricInitID<=" + obstetricsInitID);
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricsInitID<=" + obstetricsInitID);
 			results = pstring.executeQuery();
 			List<PregnancyInfo> list = loader.loadList(results);
 			return list;
