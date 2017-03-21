@@ -538,8 +538,8 @@ CREATE TABLE obstetricsInit
 CREATE TABLE priorPregnancies
 (
 	id BIGINT UNSIGNED AUTO_INCREMENT,
-    obstetricsInitID BIGINT UNSIGNED NOT NULL,
-    pid BIGINT UNSIGNED NOT NULL,
+	obstetricsInitID BIGINT UNSIGNED NOT NULL,
+	pid BIGINT UNSIGNED NOT NULL,
 	yearOfConception BIGINT UNSIGNED,
 	numDaysPregnant BIGINT UNSIGNED,
 	numHoursInLabor BIGINT UNSIGNED,
@@ -547,5 +547,5 @@ CREATE TABLE priorPregnancies
 	deliveryType VARCHAR(255) DEFAULT '',
 	multiplicity BIGINT UNSIGNED,
 	PRIMARY KEY (id),
-    FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
+	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;

@@ -28,7 +28,12 @@ public class PregnancyInfoValidatorTest {
 	@Test
 	public void testValidPregnancyInfo()
 	{
-		PregnancyInfo[] piArr = {new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1)};
+		PregnancyInfo[] piArr = {
+			new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 3),
+			new PregnancyInfo(1, 1, 1999, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 2),
+			new PregnancyInfo(1, 1, 2017, 1, 1, 1, DeliveryMethod.CAESAREAN_SECTION, 1), //Boundary values
+			new PregnancyInfo(1, 1, 2017, 0, 0, 0, DeliveryMethod.CAESAREAN_SECTION, 1) //Boundary values
+		};
 		//Note patient 1 is obstetrics eligible
 		for (int i = 0; i < piArr.length; i++)
 		{
@@ -53,7 +58,7 @@ public class PregnancyInfoValidatorTest {
 				new PregnancyInfo(1, 1, 2017, -1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
 				new PregnancyInfo(1, 1, 2017, 1, -15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
 				new PregnancyInfo(1, 1, 2017, 1, 15, -25, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
-				new PregnancyInfo(1, 1, 2017, 1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, -1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, -1), //negative value, boundary value
 				new PregnancyInfo(1, 9999999, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent PID
 				new PregnancyInfo(99999999, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent obstetricsInitID
 				new PregnancyInfo(1, 1, Calendar.getInstance().get(Calendar.YEAR) + 15, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1) //year in the future	

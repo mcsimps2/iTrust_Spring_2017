@@ -13,9 +13,9 @@ public enum DeliveryMethod {
 		this.text = text;
 	}
 	
-    @Override
+	@Override
     public String toString() {
-        return text;
+    	return text;
     }
     
     /**
@@ -24,11 +24,11 @@ public enum DeliveryMethod {
      * @return a DeliveryMethod enum type representing the string
      */
     public static DeliveryMethod matchString(String text) {
-        for (DeliveryMethod i : DeliveryMethod.values()) {
-          if (i.text.equalsIgnoreCase(text)) {
-            return i;
-          }
-        }
-        throw new IllegalArgumentException("No such enum exists");
-      }
+    	for (DeliveryMethod i : DeliveryMethod.values()) {
+    		if (i.text.equalsIgnoreCase(text)) {
+    			return i;
+    		}
+    	}
+    	throw new IllegalArgumentException("No such enum exists");
+    }
 }

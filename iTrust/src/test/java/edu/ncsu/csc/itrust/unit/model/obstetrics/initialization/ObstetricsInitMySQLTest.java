@@ -1,6 +1,5 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,8 +20,13 @@ public class ObstetricsInitMySQLTest {
 	ObstetricsInitMySQL oisql;
 	ObstetricsInitSQLLoader loader;
 	DataSource ds;
+	/** Holds records already in the database */
 	ObstetricsInit[] oiArr;
 	
+	/**
+	 * Sets up the test environment and variables
+	 * @throws Exception
+	 */
 	@Before
 	public void setup() throws Exception
 	{
@@ -38,6 +42,9 @@ public class ObstetricsInitMySQLTest {
 		oiArr[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
 	}
 	
+	/**
+	 * Verifies we can't use the default constructor for testing
+	 */
 	@Test
 	public void testConstructor()
 	{
@@ -53,6 +60,9 @@ public class ObstetricsInitMySQLTest {
 		}
 	}
 	
+	/**
+	 * Verifies we can get records by an ID
+	 */
 	@Test
 	public void testGetRecords()
 	{
@@ -67,6 +77,9 @@ public class ObstetricsInitMySQLTest {
 		}
 	}
 	
+	/**
+	 * Verifies we can retrieve a record by its ID
+	 */
 	@Test
 	public void testGetByID()
 	{
@@ -86,13 +99,19 @@ public class ObstetricsInitMySQLTest {
 		
 	}
 	
+	/**
+	 * Verifies we can add valid data to the database and catch invalid data
+	 * For a more thorough valid-invalid data testing, reference ObstetricsInitValidatorTest.java
+	 */
 	@Test
 	public void testAdd()
 	{
 		//Valid adds
 		ObstetricsInit[] toAddValid = {
 				new ObstetricsInit(1, "2000-01-01", "1999-11-11"),
-				new ObstetricsInit(1, "2017-01-01", "2016-05-05")
+				new ObstetricsInit(1, "2017-01-01", "2016-05-05"),
+				new ObstetricsInit(1, "2017-02-02", "2017-02-02"),
+				new ObstetricsInit(1, "2017-02-02", "2017-02-01")
 		};
 		for (int i = 0; i < toAddValid.length; i++)
 		{
@@ -121,6 +140,7 @@ public class ObstetricsInitMySQLTest {
 		ObstetricsInit[] toAddInvalid = {
 				new ObstetricsInit(2, "2000-01-01", "1999-11-11"), //Patient 2 is not obstetrics eligible
 				new ObstetricsInit(1, "1999-11-11", "2000-01-01"), //Initialization date is before LMP
+				new ObstetricsInit(1, "2015-05-05", "2015-05-06") //Check for off by 1 errors
 		};
 		
 		for (int i = 0; i < toAddInvalid.length; i++)
@@ -137,23 +157,13 @@ public class ObstetricsInitMySQLTest {
 		}
 	}
 	
+	/**
+	 * Verifies that the update method is unimplemented and can't be used
+	 */
 	@Test
 	public void testUpdate()
 	{
-		//Invalid record
-		ObstetricsInit oi = new ObstetricsInit(1, "2015-10-21", "2016-02-03"); //LMP is after initialization date
-		try
-		{
-			oisql.update(oi);
-			Assert.fail("Did not catch an invalid record");
-		}
-		catch (DBException e)
-		{
-			Assert.assertNotNull(e);
-		}
-		
-		//Now try a valid record
-		oi = new ObstetricsInit(1, "2016-02-03", "2015-10-21");
+		ObstetricsInit oi = new ObstetricsInit(1, "2016-02-03", "2015-10-21");
 		try
 		{
 			oisql.update(oi);
@@ -168,6 +178,9 @@ public class ObstetricsInitMySQLTest {
 		}
 	}
 	
+	/**
+	 * Verifies we can retrieve every obstetrics record in the database
+	 */
 	@Test
 	public void testGetAll()
 	{
@@ -186,6 +199,10 @@ public class ObstetricsInitMySQLTest {
 		}
 	}
 	
+	/**
+	 * Attempts to drop the database to generate exceptional cases for testing (helps with coverage)
+	 * @throws Exception
+	 */
 	@Test
 	public void testDiabolical() throws Exception
 	{
@@ -237,7 +254,6 @@ public class ObstetricsInitMySQLTest {
 		{
 			Assert.assertNotNull(e);
 		}
-		
 		
 		//Now rebuild everything to not screw up the whole system
 		DBBuilder.main(null);

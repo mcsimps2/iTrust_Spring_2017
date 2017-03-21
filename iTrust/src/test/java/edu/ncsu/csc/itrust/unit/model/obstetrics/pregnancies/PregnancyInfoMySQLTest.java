@@ -134,6 +134,23 @@ public class PregnancyInfoMySQLTest {
 			list = pisql.getRecordsFromInit(1);
 			Assert.assertEquals(1, list.size());
 			Assert.assertEquals(piArr[0], list.get(0));
+			
+			//Add another record
+			PregnancyInfo pi = new PregnancyInfo(2, 1, 2000, 500, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
+			pisql.add(pi);
+			//See if everything still works
+			//Testing for obstetricsInitID 2
+			list = pisql.getRecordsFromInit(2);
+			Assert.assertEquals(3, list.size());
+			for (int i = 0; i < piArr.length; i++)
+			{
+				Assert.assertTrue(list.contains(piArr[i]));
+			}
+			Assert.assertTrue(list.contains(pi));
+			//Testing for id 1
+			list = pisql.getRecordsFromInit(1);
+			Assert.assertEquals(1, list.size());
+			Assert.assertEquals(piArr[0], list.get(0));
 		}
 		catch (DBException e)
 		{
