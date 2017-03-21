@@ -17,7 +17,7 @@ public enum DeliveryMethod {
     public String toString() {
         return text;
     }
-    
+
     /**
      * Converts a string to the Enum type it matches
      * @param text the string to convert
@@ -30,5 +30,5 @@ public enum DeliveryMethod {
           }
         }
         throw new IllegalArgumentException("No such enum exists");
-      }
+    }
 }

@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -15,6 +16,7 @@ import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfo;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
@@ -259,5 +261,9 @@ public class ObstetricsInitController extends iTrustController
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
+	}
+	
+	public List<DeliveryMethod> getDeliveryMethods() {
+		return Arrays.asList(DeliveryMethod.values());
 	}
 }
