@@ -102,7 +102,7 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 */
 	public static java.util.Date stringToJavaDate(String date)
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			return sdf.parse(date);
 		} catch (ParseException e) {
