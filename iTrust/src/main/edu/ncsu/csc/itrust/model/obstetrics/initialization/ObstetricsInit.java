@@ -88,11 +88,10 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 * @param date the date to turn into a java.sql.Date object
 	 * @return the date in a sql date object
 	 */
-	@SuppressWarnings("deprecation")
 	public static java.sql.Date stringToSQLDate(String date)
 	{
-		java.sql.Date sDate = new java.sql.Date(Integer.parseInt(date.substring(0,4))-1900, Integer.parseInt(date.substring(5,7)) - 1, Integer.parseInt(date.substring(8,10)));
-		return sDate;
+		java.util.Date javaDate = stringToJavaDate(date);
+		return new java.sql.Date(javaDate.getTime());
 	}
 	
 	/**

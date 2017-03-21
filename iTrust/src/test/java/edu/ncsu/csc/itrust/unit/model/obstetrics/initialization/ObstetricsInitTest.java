@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 
+import java.util.Calendar;
+
 import org.junit.*;
 
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
@@ -23,5 +25,15 @@ public class ObstetricsInitTest {
 	public void testGetEDD()
 	{
 		Assert.assertEquals("2017-12-21", oi1.getEDD());
+	}
+	
+	@Test
+	public void testStringToSQLDate()
+	{
+		java.sql.Date date = ObstetricsInit.stringToSQLDate("2017-03-21");
+		
+		Assert.assertEquals(Calendar.MARCH, date.getMonth());
+		Assert.assertEquals(21, date.getDate());
+		Assert.assertEquals(2017 - 1900, date.getYear());
 	}
 }
