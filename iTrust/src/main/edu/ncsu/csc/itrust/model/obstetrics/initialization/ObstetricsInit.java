@@ -171,7 +171,6 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 * @return a pretty version of the date
 	 */
 	private String generatePrettyDate(String dateString) {
-		System.out.println(dateString);
 		SimpleDateFormat formatter = new SimpleDateFormat("MMMMMMMMM d, yyyy");
 		java.util.Date date = stringToJavaDate(dateString);
 		return formatter.format(date);
