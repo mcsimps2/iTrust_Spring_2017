@@ -10,9 +10,9 @@ Scenario Outline: Check Records Display Values
 	Given I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with pid <patientName>
 	And click on their link
-	Then 1 obstetric record appears with date 
+	Then an obstetrics record appears with date <date>
 Examples:
-	| hcpMID | pw | patientName | dates |
+	| hcpMID | pw | patientName | date |
 	| 9000000012 | pw | Baby | 2005-03-01 |
 	
 Scenario Outline: Ineligable Obstetrics Patient
@@ -47,4 +47,4 @@ Scenario Outline: View Obstetric Record
 
 Examples:
 	| hcpMID | pw | patientName | initDate | lmp | edd | weeksPreg | numPreg |
-	| 9000000012 | pw | Baby | 2005-03-01 | 2005-01-03 | 2005-10-10 | 8 | 1 |
+	| 9000000012 | pw | Baby | March 1, 2005 | January 3, 2005 | October 10, 2005 | 8 | 1 |

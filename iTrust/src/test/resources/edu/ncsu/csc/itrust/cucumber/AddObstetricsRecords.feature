@@ -17,5 +17,5 @@ Scenario Outline: Add Obstetrics Record
 	And a success message appears indicating save successful
 Examples:
 	| name | cYear | weeksPreg | hrsLabor | weightGain | deliveryType | mult |
-	| Baby | 2017-01-01 | 2010 | 38 | 12 | 32 | vaginal | 1 |
+	| Baby | 2017-01-01 | 2010 | 38 | 12 | 32 | Vaginal Delivery | 1 |
 	
