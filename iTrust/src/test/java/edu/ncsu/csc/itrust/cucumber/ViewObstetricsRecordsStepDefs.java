@@ -86,7 +86,7 @@ public class ViewObstetricsRecordsStepDefs {
 			driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody tr:nth-child(" + (numPreg + 1) + ")"));
 			Assert.fail("Too many prior pregnancies shown");
 		} catch (NoSuchElementException e) {
-			//Good. There sholdn't be that element
+			//Good. There shouldn't be that element
 		}
 	}
 }
