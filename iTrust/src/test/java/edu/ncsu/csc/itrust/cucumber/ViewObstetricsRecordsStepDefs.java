@@ -1,29 +1,26 @@
 package edu.ncsu.csc.itrust.cucumber;
 
-import java.util.concurrent.TimeUnit;
-
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
 
 public class ViewObstetricsRecordsStepDefs {
 
-//	private final static String BASEURL = "http://localhost:8080/iTrust";
-	private HtmlUnitDriver driver;
+	private iTrustDriver driver;
 	
-	public ViewObstetricsRecordsStepDefs() {
-		this.driver = new HtmlUnitDriver();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	public ViewObstetricsRecordsStepDefs(iTrustDriver driver) {
+		this.driver = driver;
 	}
 	
 	@Given("^I have navigated to Patient Info -> Obstetrics Records$")
 	public void navigateToObstetricsRecords() {
 		//Find the link to patient fitness data and click it
+		System.out.println(driver.getCurrentUrl());
 		try
 		{
 			driver.findElement(By.linkText("Obstetrics Records")).click();
