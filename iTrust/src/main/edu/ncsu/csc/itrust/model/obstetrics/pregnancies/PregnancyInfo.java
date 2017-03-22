@@ -93,6 +93,9 @@ public class PregnancyInfo
 	public void setNumDaysPregnant(int numDaysPregnant) {
 		this.numDaysPregnant = numDaysPregnant;
 	}
+	public int getNumWeeksPregnant() {
+		return numDaysPregnant % 7;
+	}
 	public int getNumHoursInLabor() {
 		return numHoursInLabor;
 	}

@@ -43,6 +43,35 @@ public class UserController {
 		}
 		
 	}
+	
+	public String getUserNameForIDFirstLast(String mid) throws DBException{
+		User user = null;
+		if( mid == null) return "";
+		if(mid.isEmpty()) return "";
+		long id = -1;
+		try{
+			id = Long.parseLong(mid);
+		}
+		catch(NumberFormatException ne){
+			return "";
+		}
+		//if(id<1) return "";
+		user = userData.getByID(id);
+		if(user != null){
+			if(user.getRole().equals(Role.TESTER)){
+				return Long.toString(user.getMID());
+			}
+			else{
+				return user.getFirstName().concat(" "+user.getLastName());
+			}
+			
+		}
+		else{
+			return "";
+		}
+		
+	}
+	
 	public String getUserRoleForID(String mid) throws DBException{
 		User user = null;
 		if( mid == null) return "";
