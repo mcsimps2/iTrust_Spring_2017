@@ -1,9 +1,12 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -57,6 +60,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy";
 	/** Error when non integers are input to pregnancy info */
 	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field";
+	/** Error message when adding the obstetrics initialization record fails */
+	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	
@@ -246,7 +251,10 @@ public class ObstetricsInitController extends iTrustController
 	
 	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
 		try {
-			return this.pregnancyData.getRecordsFromInit(oid);
+			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(oid);
+			Collections.sort(pregnancies,
+					(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+			return pregnancies;
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PREGNANCIES, e.getMessage(), null);
@@ -341,6 +349,9 @@ public class ObstetricsInitController extends iTrustController
 	}
 	
 	public List<PregnancyInfo> getDisplayedPregnancies() {
+		Collections.sort(displayedPregnancies,
+				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+		
 		return displayedPregnancies;
 	}
 
@@ -436,22 +447,45 @@ public class ObstetricsInitController extends iTrustController
 		this.addedPregnancies.add(newPregnancy);
 		this.displayedPregnancies.add(newPregnancy);
 		
-		// Sort the displayed list
-		Collections.sort(displayedPregnancies,
-				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
-		
 		// Clear fields except LMP
 		clearPregnancyFields();
 	}
 	
 	public void addObstetricsRecord() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String today = dateFormat.format(date);
+		
+		long pid = sessionUtils.getCurrentPatientMIDLong();
+		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
-		// Log the record
-		// Go through all pregnancy records in addedPregnancies and set the OID from
-		//                                                    the previous operation
-		// Add all pregnancy records from addedPregnancies
-		// Clear both lists and the temporary LMP
-		// Redirect to the overview page with the navigation controller
+		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
+		try {
+			int oid = oiData.addAndReturnID(oi);
+			// TODO Log the record that was added
+			
+			// Go through all pregnancy records in addedPregnancies
+			for (PregnancyInfo pregnancy : this.addedPregnancies) {
+				// set the OID
+				pregnancy.setObstetricsInitID(oid);
+				// and add it to the database
+				pregnancyData.add(pregnancy);
+			}
+			
+			// Clear both lists and the temporary LMP
+			this.clearPregnancyFields();
+			this.clearPregnancyLists();
+			this.clearLMP();
+			
+			// Redirect to the overview page with the navigation controller
+			NavigationController.viewObstetricsOverview();
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
+		}
 	}
 	
 	public void cancelAddObstetricsRecord() {
