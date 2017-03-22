@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 
 import org.junit.*;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
@@ -49,6 +50,7 @@ public class ObstetricsInitValidatorTest
 				new ObstetricsInit(2, "2014-05-01", "2014-01-01"), //2 is ineligible for obstetrics care
 				new ObstetricsInit(1, "2014-01-01", "2014-01-05"), //Date occurs < to LMP
 				new ObstetricsInit(0, "2014-05-01", "2014-01-01"), //non-existent patient
+				new ObstetricsInit(1, "2015-05-05", "2015-05-06"), //Check for off by 1 errors
 				badDate //null date and LMP
 		};
 		for (int i = 0; i < oiArr.length; i++)
@@ -64,6 +66,20 @@ public class ObstetricsInitValidatorTest
 				//Good
 				Assert.assertTrue(true);
 			}
+		}
+	}
+	
+	@Test
+	public void testConstructor()
+	{
+		try
+		{
+			new ObstetricsInitValidator();
+			Assert.fail("Should not have been able to call the default constructor");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
 		}
 	}
 }

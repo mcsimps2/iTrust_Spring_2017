@@ -1,8 +1,11 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
 
+import java.util.Calendar;
+
 import org.junit.*;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
@@ -25,7 +28,12 @@ public class PregnancyInfoValidatorTest {
 	@Test
 	public void testValidPregnancyInfo()
 	{
-		PregnancyInfo[] piArr = {new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1)};
+		PregnancyInfo[] piArr = {
+			new PregnancyInfo(1, 1, 2017, 270, 15, 25.2, DeliveryMethod.CAESAREAN_SECTION, 3),
+			new PregnancyInfo(1, 1, 1999, 270, 15, 25.5, DeliveryMethod.CAESAREAN_SECTION, 2),
+			new PregnancyInfo(1, 1, 2017, 1, 1, 1, DeliveryMethod.CAESAREAN_SECTION, 1), //Boundary values
+			new PregnancyInfo(1, 1, 2017, 0, 0, 0, DeliveryMethod.CAESAREAN_SECTION, 1) //Boundary values
+		};
 		//Note patient 1 is obstetrics eligible
 		for (int i = 0; i < piArr.length; i++)
 		{
@@ -44,10 +52,15 @@ public class PregnancyInfoValidatorTest {
 	public void testInvalidPregnancyInfo()
 	{
 		PregnancyInfo[] piArr = {
-				new PregnancyInfo(1, 2, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //2 is ineligble for obstetrics care
-				new PregnancyInfo(1, 1, 1017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //year of conception invalid
-				new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 0), //invalid multiplicity
-				new PregnancyInfo(1, 1, 2017, -1, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1) //negative value
+				new PregnancyInfo(1, 2, 2017, 270, 15, 25.1, DeliveryMethod.CAESAREAN_SECTION, 1), //2 is ineligble for obstetrics care
+				new PregnancyInfo(1, 1, 1017, 270, 15, 25.2, DeliveryMethod.CAESAREAN_SECTION, 1), //year of conception invalid
+				new PregnancyInfo(1, 1, 2017, 270, 15, 2.35, DeliveryMethod.CAESAREAN_SECTION, 0), //invalid multiplicity
+				new PregnancyInfo(1, 1, 2017, -1, 15, 25.4, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, -15, 25.5, DeliveryMethod.CAESAREAN_SECTION, 1), //negative value
+				new PregnancyInfo(1, 1, 2017, 1, 15, 25.6, DeliveryMethod.CAESAREAN_SECTION, -1), //negative value, boundary value
+				new PregnancyInfo(1, 9999999, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent PID
+				new PregnancyInfo(99999999, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1), //nonexistent obstetricsInitID
+				new PregnancyInfo(1, 1, Calendar.getInstance().get(Calendar.YEAR) + 15, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1) //year in the future	
 		};
 		for (int i = 0; i < piArr.length; i++)
 		{
@@ -62,6 +75,20 @@ public class PregnancyInfoValidatorTest {
 				//Good
 				Assert.assertTrue(true);
 			}
+		}
+	}
+	
+	@Test
+	public void testConstructor()
+	{
+		try
+		{
+			new PregnancyInfoValidator();
+			Assert.fail("Should not have been able to call the default constructor");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
 		}
 	}
 }

@@ -29,7 +29,8 @@ fathermid,
 bloodtype,
 ethnicity,
 gender,
-topicalnotes)
+topicalnotes,
+obstetricsCareEligibility)
 VALUES
 (5,
 'Programmer',
@@ -57,7 +58,8 @@ VALUES
 'AB+',
 'African American',
 'Female',
-'')
+'',
+TRUE)
 ;
 
 

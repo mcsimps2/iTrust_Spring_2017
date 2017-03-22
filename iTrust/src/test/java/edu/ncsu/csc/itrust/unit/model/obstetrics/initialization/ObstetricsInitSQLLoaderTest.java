@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.initialization;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -17,6 +18,8 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 public class ObstetricsInitSQLLoaderTest 
 {
 	ObstetricsInitSQLLoader loader;
+	DataSource ds;
+	ObstetricsInit[] oiArr;
 	
 	@Before
 	public void setup() throws Exception
@@ -24,6 +27,11 @@ public class ObstetricsInitSQLLoaderTest
 		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 		loader = new ObstetricsInitSQLLoader();
+		ds = ConverterDAO.getDataSource();
+		
+		oiArr = new ObstetricsInit[2];
+		oiArr[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
+		oiArr[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
 	}
 	
 	@Test
@@ -68,7 +76,24 @@ public class ObstetricsInitSQLLoaderTest
 		{
 			Assert.assertTrue(true);
 		}
-		
-		
+	}
+	
+	@Test
+	public void testLoadList()
+	{
+		try {
+			Connection conn = ds.getConnection();
+			String stmt = "SELECT * FROM obstetricsInit";
+			PreparedStatement ps = conn.prepareStatement(stmt);
+			ResultSet rs = ps.executeQuery();
+			List<ObstetricsInit> list = loader.loadList(rs);
+			for (int i = 0; i < oiArr.length; i++)
+			{
+				Assert.assertTrue(list.contains(oiArr[i]));
+			}
+		} catch (SQLException e)
+		{
+			Assert.fail(e.getMessage());
+		}
 	}
 }

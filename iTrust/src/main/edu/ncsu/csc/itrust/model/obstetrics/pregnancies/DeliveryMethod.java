@@ -6,29 +6,30 @@ public enum DeliveryMethod {
 	VAGINAL_DELIVERY_FORCEPS("Vaginal Delivery Forceps Assist"),
 	CAESAREAN_SECTION("Caesarean section"),
 	MISCARRIAGE("Miscarriage");
-	
+
 	private final String text;
-	
+
 	private DeliveryMethod(final String text) {
 		this.text = text;
 	}
-	
-    @Override
-    public String toString() {
-        return text;
-    }
 
-    /**
-     * Converts a string to the Enum type it matches
-     * @param text the string to convert
-     * @return a DeliveryMethod enum type representing the string
-     */
-    public static DeliveryMethod matchString(String text) {
-        for (DeliveryMethod i : DeliveryMethod.values()) {
-          if (i.text.equalsIgnoreCase(text)) {
-            return i;
-          }
-        }
-        throw new IllegalArgumentException("No such enum exists");
-    }
+	@Override
+	public String toString() {
+		return text;
+	}
+
+	/**
+	 * Converts a string to the Enum type it matches
+	 * 
+	 * @param text the string to convert
+	 * @return a DeliveryMethod enum type representing the string
+	 */
+	public static DeliveryMethod matchString(String text) {
+		for (DeliveryMethod i : DeliveryMethod.values()) {
+			if (i.text.equalsIgnoreCase(text)) {
+				return i;
+			}
+		}
+		throw new IllegalArgumentException("No such enum exists");
+	}
 }

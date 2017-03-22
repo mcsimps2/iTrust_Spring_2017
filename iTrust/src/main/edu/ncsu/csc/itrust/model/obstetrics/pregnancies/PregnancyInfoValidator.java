@@ -57,7 +57,7 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		PatientBean patient = null;
 		
 		try (Connection conn = ds.getConnection();
-				PreparedStatement ps = conn.prepareStatement("SELECT * FROM patients WHERE MID = ?")) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM patients WHERE MID = ?;")) {
 			ps.setLong(1, obj.getPid());
 			ResultSet rs = ps.executeQuery();
 			PatientLoader patientLoader = new PatientLoader();
@@ -118,11 +118,6 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		if (obj.getNumHoursInLabor() < 0)
 		{
 			errs.addIfNotNull("Negative hours in labor");
-		}
-		
-		if (obj.getWeightGain() < 0)
-		{
-			errs.addIfNotNull("Negative weight gain");
 		}
 		
 		if (obj.getDeliveryType() == null)
