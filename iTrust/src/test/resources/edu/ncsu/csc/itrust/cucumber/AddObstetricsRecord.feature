@@ -7,9 +7,11 @@ Background:
 	And I have logged in with MID 9000000012 and password pw
 	
 Scenario Outline: Add Obstetrics Record
-	Given I am viewing obstetrics records for patient with name <name>
-	When I click Add New Record
-	And I enters an lmp in for the LMP field
+	Given I have navigated to Patient Info -> Obstetrics Records
+	When I search for the patient with name <name>
+	And click on their link
+	And I click Add New Record
+	And I enter an lmp in for the LMP field
 	And I enter a prior pregnancy with values: conception year <cYear>, weeks pregnant <weeksPreg>, hours in labor <hrsLabor>, weight gain <weightGain>, delivery type <deliveryType>, multiplicity <mult>
 	And I click add pregnancy
 	And I click Save Record
@@ -25,7 +27,22 @@ Scenario Outline: Add Obstetrics Record with Invalid Input
 	And I enters an lmp in for the LMP field
 	And I enter a prior pregnancy with values: conception year <cYear>, weeks pregnant <weeksPreg>, hours in labor <hrsLabor>, weight gain <weightGain>, delivery type <deliveryType>, multiplicity <mult>
 	And I click add pregnancy
-	Then the following error message appears: <err>
+	Then there is an error message appears about invalid input
 Examples:
-	| name | cYear | weeksPreg | hrsLabor | weightGain | deliveryType | mult | err |
-	| Baby | 2010 | -1 | 12 | 32 | Vaginal Delivery | 1 | Error Message |
+	| name | cYear | weeksPreg | hrsLabor | weightGain | deliveryType | mult |
+	| Baby | 2010 | -1 | 12 | 32 | Vaginal Delivery | 1 |
+	
+Scenario Outline: Cancel Add Obstetrics Record
+	Given I have navigated to Patient Info -> Obstetrics Records
+	When I search for the patient with name <name>
+	And click on their link
+	And I click Add New Record
+	And I enter an lmp in for the LMP field
+	And I enter a prior pregnancy with values: conception year <cYear>, weeks pregnant <weeksPreg>, hours in labor <hrsLabor>, weight gain <weightGain>, delivery type <deliveryType>, multiplicity <mult>
+	And I click add pregnancy
+	And I click cancel
+	And I click Add New Record
+	Then all the fields are empty
+Examples:
+	| name | cYear | weeksPreg | hrsLabor | weightGain | deliveryType | mult |
+	| Baby | 2010 | 38 | 12 | 32 | Vaginal Delivery | 1 |

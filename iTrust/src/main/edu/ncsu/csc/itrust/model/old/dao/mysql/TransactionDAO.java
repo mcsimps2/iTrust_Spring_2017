@@ -129,6 +129,29 @@ public class TransactionDAO {
 			throw new DBException(e);
 		}
 	}
+	
+	/**
+	 * Return a list of all transactions with the given code
+	 * 
+	 * @param code
+	 *            The transaction code to search for.
+	 * @return A java.util.List of transactions.
+	 * @throws DBException
+	 */
+	public List<TransactionBean> getTransactionsByCode(int code)
+			throws DBException {
+		try (Connection conn = factory.getConnection();
+				PreparedStatement ps = conn
+						.prepareStatement("SELECT * FROM transactionlog WHERE transactionCode=? ORDER BY timeLogged DESC")) {
+			ps.setInt(1, code);
+			ResultSet rs = ps.executeQuery();
+			List<TransactionBean> transactionList = loader.loadList(rs);
+			rs.close();
+			return transactionList;
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
+	}
 
 	/**
 	 * The Most Thorough Fetch
