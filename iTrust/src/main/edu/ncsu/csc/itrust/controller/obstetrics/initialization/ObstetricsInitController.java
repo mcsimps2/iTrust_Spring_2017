@@ -437,12 +437,12 @@ public class ObstetricsInitController extends iTrustController
 			// TODO Log the record that was added
 			
 			// Go through all pregnancy records in addedPregnancies
-			this.addedPregnancies.forEach(pregnancy -> {
+			for (PregnancyInfo pregnancy : this.addedPregnancies) {
 				// set the OID
 				pregnancy.setObstetricsInitID(oid);
 				// and add it to the database
 				pregnancyData.add(pregnancy);
-			});
+			}
 			
 			// Clear both lists and the temporary LMP
 			this.clearPregnancyFields();
@@ -454,6 +454,9 @@ public class ObstetricsInitController extends iTrustController
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
 		}
 	}
 	
