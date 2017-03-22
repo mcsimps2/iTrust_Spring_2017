@@ -64,7 +64,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE pid=" + pid);
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE pid=" + pid + ";");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			return list;
@@ -120,7 +120,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit");
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit;");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			return list;
@@ -146,7 +146,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + id);
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + id + ";");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			if (list.size() != 0)
@@ -170,33 +170,8 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	}
 	
 	@Override
-	public boolean update(ObstetricsInit oi) throws DBException, FormValidationException {
-		Connection conn = null;
-		PreparedStatement pstring = null;
-		try
-		{
-			validator.validate(oi);
-		}
-		catch (FormValidationException e)
-		{
-			throw new DBException(new SQLException(e));
-		}
-		try
-		{
-			conn = ds.getConnection();
-			pstring = loader.loadParameters(conn, pstring, oi, false);
-			int results = pstring.executeUpdate();
-			if (results != 0) {
-				return true;
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			throw new DBException(e);
-		} finally {
-			DBUtil.closeConnection(conn, pstring);
-		}
-		return false;
+	public boolean update(ObstetricsInit oi) throws DBException {
+		throw new IllegalStateException("Unimplemented");
 	}
 
 }

@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -100,5 +102,163 @@ public class PregnancyInfoMySQLTest {
 			Assert.assertTrue(true);
 		}
 		
+	}
+	
+	@Test
+	public void testConstructor()
+	{
+		try
+		{
+			new PregnancyInfoMySQL();
+			Assert.fail("Should not have been able to call default constructor");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+	}
+	
+	@Test
+	public void testGetRecordsFromInit()
+	{
+		try
+		{
+			//See if this works for the second record in the DB
+			List<PregnancyInfo> list = pisql.getRecordsFromInit(2);
+			for (int i = 0; i < piArr.length; i++)
+			{
+				Assert.assertTrue(list.contains(piArr[i]));
+			}
+			
+			//See if this works for the first record in the DB
+			list = pisql.getRecordsFromInit(1);
+			Assert.assertEquals(1, list.size());
+			Assert.assertEquals(piArr[0], list.get(0));
+			
+			//Add another record
+			PregnancyInfo pi = new PregnancyInfo(2, 1, 2000, 500, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
+			pisql.add(pi);
+			//See if everything still works
+			//Testing for obstetricsInitID 2
+			list = pisql.getRecordsFromInit(2);
+			Assert.assertEquals(3, list.size());
+			for (int i = 0; i < piArr.length; i++)
+			{
+				Assert.assertTrue(list.contains(piArr[i]));
+			}
+			Assert.assertTrue(list.contains(pi));
+			//Testing for id 1
+			list = pisql.getRecordsFromInit(1);
+			Assert.assertEquals(1, list.size());
+			Assert.assertEquals(piArr[0], list.get(0));
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetAll()
+	{
+		try
+		{
+			//See if this works for the second record in the DB
+			List<PregnancyInfo> list = pisql.getAll();
+			for (int i = 0; i < piArr.length; i++)
+			{
+				Assert.assertTrue(list.contains(piArr[i]));
+			}
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testUpdate()
+	{
+		try
+		{
+			pisql.update(piArr[0]);
+			Assert.fail("Called an unimplemented method");
+		}
+		catch (IllegalStateException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testDiabolical() throws Exception
+	{
+		//Try dropping the databases right before an add
+		try {
+			Connection conn = ds.getConnection();
+			String stmt = "DROP TABLE priorPregnancies";
+			conn.prepareStatement(stmt).execute();
+		} catch (SQLException e) {
+			Assert.fail(e.getMessage());
+		}
+		
+		try
+		{
+			pisql.getRecords(1);
+			Assert.fail("Functioned without databases");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		
+		try
+		{
+			pisql.getAll();
+			Assert.fail("Functioned without databases");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		
+		try
+		{
+			pisql.add(piArr[0]);
+			Assert.fail("Functioned without databases");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		
+		try
+		{
+			pisql.getByID(1);
+			Assert.fail("Functioned without databases");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		
+		try
+		{
+			pisql.getRecordsFromInit(1);
+			Assert.fail("Functioned without databases");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+		
+		
+		//Now rebuild everything to not screw up the whole system
+		DBBuilder.main(null);
+		TestDataGenerator.main(null);
 	}
 }
