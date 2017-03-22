@@ -106,10 +106,10 @@ public class NavigationController {
 		}
 	}
 	
-	public static void viewObstetricsRecord() throws IOException {
+	public static void viewAddObstetricsRecord() throws IOException {
 		ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
 		if (ctx != null) {
-			ctx.redirect("/iTrust/auth/hcp/viewObstetricsRecord.xhtml");
+			ctx.redirect("/iTrust/auth/hcp/viewAddObstetricsRecord.xhtml");
 		}
 	}
 }

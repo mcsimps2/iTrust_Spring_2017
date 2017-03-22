@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -15,6 +16,7 @@ import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfo;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
@@ -24,7 +26,6 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
-import edu.ncsu.csc.itrust.model.user.patient.Patient;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -44,7 +45,7 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_LOADING_HCP = "Error loading HCP data";
 	/** Error message when getting pregnancy data fails */
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
-	/** Error message when navigation fails */
+	/** Error message when viewing record fails */
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
@@ -57,7 +58,6 @@ public class ObstetricsInitController extends iTrustController
 	SessionUtils sessionUtils;
 	/** The most recently viewed ObstetricsInit record */
 	private ObstetricsInit viewedOI;
-	
 	
 	/**
 	 * Default constructor.
@@ -192,7 +192,17 @@ public class ObstetricsInitController extends iTrustController
 		return list;
 	}
 	
-	public List<PregnancyInfo> getPastPregnancies(int oid) {
+	public List<PregnancyInfo> getPastPregnancies() {
+		try {
+			return this.pregnancyData.getRecords(sessionUtils.getCurrentPatientMIDLong());
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PREGNANCIES, e.getMessage(), null);
+			return null;
+		}
+	}
+	
+	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
 		try {
 			return this.pregnancyData.getRecordsFromInit(oid);
 		} catch (DBException e) {
@@ -241,10 +251,11 @@ public class ObstetricsInitController extends iTrustController
 
 	/**
 	 * Navigates to the viewObstetricsRecord page to view the given record and logs the view.
+	 * If adding a new record, oi should be null.
 	 * @param oi
 	 * @param hcpid the MID of the HCP viewing the record
 	 */
-	public void setViewedOI(ObstetricsInit oi, String hcpid) {
+	public void viewAddObstetricsInit(ObstetricsInit oi, String hcpid) {
 		// Parse the String
 		long hcpidLong;
 		try {
@@ -255,16 +266,22 @@ public class ObstetricsInitController extends iTrustController
 			return;
 		}
 		
-		// Set the record and log the view
+		// Set the record and log the view if we're viewing
 		this.viewedOI = oi;
-		TransactionLogger.getInstance().logTransaction(TransactionType.VIEW_INITIAL_OBSTETRIC_RECORD, hcpidLong, oi.getPid(), oi.getEDD());
+		if (oi != null) {
+			TransactionLogger.getInstance().logTransaction(TransactionType.VIEW_INITIAL_OBSTETRIC_RECORD, hcpidLong, oi.getPid(), oi.getEDD());
+		}
 		
-		// Navigate to the view page
+		// Navigate to the view/add page
 		try {
-			NavigationController.viewObstetricsRecord();
+			NavigationController.viewAddObstetricsRecord();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
+	}
+	
+	public List<DeliveryMethod> getDeliveryMethods() {
+		return Arrays.asList(DeliveryMethod.values());
 	}
 }
