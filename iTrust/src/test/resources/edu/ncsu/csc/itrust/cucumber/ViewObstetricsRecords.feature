@@ -48,3 +48,16 @@ Scenario Outline: View Obstetric Record
 Examples:
 	| hcpMID | pw | patientName | initDate | lmp | edd | weeksPreg | numPreg |
 	| 9000000012 | pw | Baby | March 1, 2005 | January 3, 2005 | October 10, 2005 | 8 | 1 |
+
+Scenario Outline: Select Wrong Patient
+	Given I have logged in as HCP <hcpMID> with password <pw>
+	Given I have navigated to Patient Info -> Obstetrics Records
+	When I search for the patient with pid <wrongName>
+	And click on their link
+	And I decide to select another patient
+	And I search for the patient with pid <rightName>
+	And click on their link
+	Then an obstetrics record appears with date <date>
+Examples:
+	| hcpMID | pw | wrongName | rightName | date |
+	| 9000000012 | pw | Andy | Baby | 2005-03-01 |
