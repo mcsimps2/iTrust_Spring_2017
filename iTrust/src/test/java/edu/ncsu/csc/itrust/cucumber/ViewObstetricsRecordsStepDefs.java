@@ -62,6 +62,12 @@ public class ViewObstetricsRecordsStepDefs {
 		driver.findElement(By.cssSelector("tbody tr:first-child form")).submit();
 	}
 	
+	@When("^I decide to select another patient$")
+	public void selectAnotherPatient()
+	{
+		driver.findElement(By.linkText("Select a Different Patient")).click();
+	}
+	
 	@Then("^the following data will be displayed: (.+), (.+), (.+), (.+)$")
 	public void obstetricsRecordDataDisplayed(String initDate, String lmp, String edd, String weeksPreg)
 	{
