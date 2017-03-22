@@ -135,9 +135,6 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 			conn = ds.getConnection();
 			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies, obstetricsInit WHERE priorPregnancies.pid=? AND priorPregnancies.obstetricsInitID = obstetricsInit.id AND obstetricsInit.ts <= ? AND obstetricsInit.id <= ?;");
 			pstring.setLong(1, pid);
-			pstring.setTimestamp(2, oisql.getByID(obstetricsInitID).getTimestamp());
-			pstring.setInt(3, obstetricsInitID);
-			pstring.setLong(1, pid);
 			pstring.setTimestamp(2, oiRecord.getTimestamp());
 			pstring.setInt(3, obstetricsInitID);
 			results = pstring.executeQuery();
