@@ -8,7 +8,7 @@ Background:
 Scenario Outline: Check Records Display Values
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
-	When I search for the patient with pid <patientName>
+	When I search for the patient with name <patientName>
 	And click on their link
 	Then an obstetrics record appears with date <date>
 Examples:
@@ -18,7 +18,7 @@ Examples:
 Scenario Outline: Ineligable Obstetrics Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
-	When I search for the patient with pid <pid>
+	When I search for the patient with name <patientName>
 	And click on their link
 	And I click the button to make the patient eligable for obstetrics care
 	Then no obstetrics records appear
@@ -29,7 +29,7 @@ Examples:
 Scenario Outline: Non OB/GYN HCP
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
-	When I search for the patient with pid <patientName>
+	When I search for the patient with name <patientName>
 	And click on their link
 	Then the add record button will not be displayed
 Examples:
@@ -39,7 +39,7 @@ Examples:
 Scenario Outline: View Obstetric Record
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
-	When I search for the patient with pid <patientName>
+	When I search for the patient with name <patientName>
 	And click on their link
 	And I click on the first obstetrics record
 	Then the following data will be displayed: <initDate>, <lmp>, <edd>, <weeksPreg>
@@ -52,10 +52,10 @@ Examples:
 Scenario Outline: Select Wrong Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
 	Given I have navigated to Patient Info -> Obstetrics Records
-	When I search for the patient with pid <wrongName>
+	When I search for the patient with name <wrongName>
 	And click on their link
 	And I decide to select another patient
-	And I search for the patient with pid <rightName>
+	And I search for the patient with name <rightName>
 	And click on their link
 	Then an obstetrics record appears with date <date>
 Examples:
