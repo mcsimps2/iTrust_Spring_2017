@@ -12,7 +12,6 @@ import edu.ncsu.csc.itrust.controller.obstetrics.initialization.ObstetricsInitCo
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
-import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -23,9 +22,9 @@ public class ObstetricsInitControllerTest {
 	private ObstetricsInitController controller;
 	/** DataSource used to instantiate controller */
 	DataSource ds;
-	
-	ObstetricsInitData oiData;
-	
+	/** ObstetricsInitData used to access the db to test the controller */
+	ObstetricsInitMySQL oiData;
+	/** PregnancyInfoMySql used to access the db to test the controller */
 	PregnancyInfoMySQL pregnancyData;
 	
 	@Before
@@ -38,8 +37,7 @@ public class ObstetricsInitControllerTest {
 		
 		/* Clear the tables.
 		   This will also populate the data tables, including the fitness tables
-		   See fitnessData.sql for the values in the table put in there
-		   by the test data generator */
+		   */
 		TestDataGenerator.main(null);
 	}
 
