@@ -24,6 +24,7 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.model.user.patient.Patient;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -105,7 +106,9 @@ public class ObstetricsInitController extends iTrustController
 		// Check patient eligibility
 		PatientDAO dao = new PatientDAO(DAOFactory.getProductionInstance());
 		try {
-			return dao.getPatient(pidLong).getObstetricsCareEligibility();
+			PatientBean p = dao.getPatient(pidLong);
+			if (p == null) return false;
+			return p.getObstetricsCareEligibility();
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
@@ -141,6 +144,8 @@ public class ObstetricsInitController extends iTrustController
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return;
 		}
+		
+		if (patient == null) return;
 		
 		String message = String.format("%s %s %s", patient.getFirstName(), patient.getLastName(), PATIENT_MADE_ELIGIBLE);
 		printFacesMessage(FacesMessage.SEVERITY_INFO, message, message, null);
@@ -225,6 +230,7 @@ public class ObstetricsInitController extends iTrustController
 		}
 		
 		// Check specialty
+		if (personnel == null) return false;
 		if (personnel.getSpecialty() == null) return false;
 		return personnel.getSpecialty().equals(OBGYN);
 	}
