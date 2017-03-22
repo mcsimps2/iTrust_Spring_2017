@@ -57,7 +57,7 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 		PatientBean patient = null;
 		
 		try (Connection conn = ds.getConnection();
-				PreparedStatement ps = conn.prepareStatement("SELECT * FROM patients WHERE MID = ?")) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM patients WHERE MID = ?;")) {
 			ps.setLong(1, obj.getPid());
 			ResultSet rs = ps.executeQuery();
 			PatientLoader patientLoader = new PatientLoader();

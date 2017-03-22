@@ -69,7 +69,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid);
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + ";");
 			results = pstring.executeQuery();
 			final List<PregnancyInfo> list = loader.loadList(results);
 			return list;
@@ -133,7 +133,6 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			//pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE pid=" + pid + " AND obstetricsInitID<=" + obstetricsInitID);
 			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies, obstetricsInit WHERE priorPregnancies.pid=? AND priorPregnancies.obstetricsInitID = obstetricsInit.id AND obstetricsInit.ts <= ? AND obstetricsInit.id <= ?;");
 			pstring.setLong(1, pid);
 			pstring.setTimestamp(2, oisql.getByID(obstetricsInitID).getTimestamp());
@@ -166,7 +165,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies");
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies;");
 			results = pstring.executeQuery();
 			final List<PregnancyInfo> list = loader.loadList(results);
 			return list;
@@ -192,7 +191,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE id=" + id);
+			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies WHERE id=" + id + ";");
 			results = pstring.executeQuery();
 			final List<PregnancyInfo> list = loader.loadList(results);
 			if (list.size() != 0)

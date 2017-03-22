@@ -64,7 +64,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE pid=" + pid);
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE pid=" + pid + ";");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			return list;
@@ -120,7 +120,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit");
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit;");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			return list;
@@ -146,7 +146,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + id);
+			pstring = conn.prepareStatement("SELECT * FROM obstetricsInit WHERE id=" + id + ";");
 			results = pstring.executeQuery();
 			final List<ObstetricsInit> list = loader.loadList(results);
 			if (list.size() != 0)
