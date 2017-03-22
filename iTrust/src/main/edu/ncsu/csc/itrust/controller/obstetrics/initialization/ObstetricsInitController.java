@@ -297,6 +297,19 @@ public class ObstetricsInitController extends iTrustController
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
 			return;
 		}
+
+		// We're loading the page, so clear everything.
+		clearPregnancyFields();
+		clearPregnancyLists();
+		clearLMP();
+		
+		if (oi != null) {
+			// We're viewing a record, so show past pregnancy records from it.
+			this.displayedPregnancies = getPastPregnanciesFromInit(oi.getID());
+		} else {
+			// We're adding a record, so show all past pregnancies.
+			this.displayedPregnancies = getPastPregnancies();
+		}
 		
 		// Set the record and log the view if we're viewing
 		this.viewedOI = oi;
@@ -419,6 +432,7 @@ public class ObstetricsInitController extends iTrustController
 		// Clear pregnancy lists (we're not going to submit them) and pregnancy fields
 		clearPregnancyFields();
 		clearPregnancyLists();
+		clearLMP();
 		
 		// Go back to the overview page
 		try {
@@ -441,5 +455,9 @@ public class ObstetricsInitController extends iTrustController
 	private void clearPregnancyLists() {
 		this.addedPregnancies.clear();
 		this.displayedPregnancies.clear();
+	}
+	
+	private void clearLMP() {
+		this.setLmp("");
 	}
 }
