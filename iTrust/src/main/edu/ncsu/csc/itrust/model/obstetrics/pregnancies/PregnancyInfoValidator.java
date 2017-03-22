@@ -120,11 +120,6 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 			errs.addIfNotNull("Negative hours in labor");
 		}
 		
-		if (obj.getWeightGain() < 0)
-		{
-			errs.addIfNotNull("Negative weight gain");
-		}
-		
 		if (obj.getDeliveryType() == null)
 		{
 			errs.addIfNotNull("Empty delivery type");
