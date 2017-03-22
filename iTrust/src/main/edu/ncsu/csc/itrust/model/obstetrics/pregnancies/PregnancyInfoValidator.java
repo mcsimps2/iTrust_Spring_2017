@@ -51,6 +51,16 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 
 	@Override
 	public void validate(PregnancyInfo obj) throws FormValidationException {
+		validate(obj, true);
+	}
+	
+	/**
+	 * Validate function to be used on add and on save
+	 * @param obj object to be validated
+	 * @param validateObstetricsInitID boolean whether or not to check OIID, if true saving, if false adding
+	 * @throws FormValidationException
+	 */
+	public void validate(PregnancyInfo obj, boolean validateObstetricsInitID) throws FormValidationException {
 		ErrorList errs = new ErrorList();
 		
 		//Verify the PID exists in the database
@@ -82,18 +92,20 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 			throw new FormValidationException(errs);
 		}
 		
-		//Make sure that the obstetricsInitID actually refers to a real record in the obstetricsInit DB
-		try
-		{
-			if (oisql.getByID(obj.getObstetricsInitID()) == null)
+		if (validateObstetricsInitID) {
+			//Make sure that the obstetricsInitID actually refers to a real record in the obstetricsInit DB
+			try
 			{
-				errs.addIfNotNull("The given ObstetricsInitID does not correspond to an actual entry in the database");
+				if (oisql.getByID(obj.getObstetricsInitID()) == null)
+				{
+					errs.addIfNotNull("The given ObstetricsInitID does not correspond to an actual entry in the database");
+					throw new FormValidationException(errs);
+				}
+			} catch (DBException e)
+			{
+				errs.addIfNotNull("Unable to access the database");
 				throw new FormValidationException(errs);
-			}
-		} catch (DBException e)
-		{
-			errs.addIfNotNull("Unable to access the database");
-			throw new FormValidationException(errs);
+			}	
 		}
 		
 		//Verify the year
