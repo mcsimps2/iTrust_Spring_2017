@@ -31,7 +31,7 @@
 					}
 				</style>
 			</ui:define>
-			<ui:define name="pageTitle">Emergency Health Record</ui:define>
+			<ui:define name="pageTitle">iTrust - Add/View Obstetrics</ui:define>
 			<ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml" /></ui:define>
 
 			<ui:define name="mainContent">
@@ -115,21 +115,21 @@
 							<tbody>
 								<ui:fragment rendered="#{addingRecord}">
 									<tr>
-										<td><h:inputText class="form-control"/></td>
-										<td><h:inputText class="form-control"/></td>
-										<td><h:inputText class="form-control"/></td>
-										<td><h:inputText class="form-control"/></td>
+										<td><h:inputText name="yearOfConception" class="form-control"/></td>
+										<td><h:inputText name="numWeeksPregnant" class="form-control"/></td>
+										<td><h:inputText name="numHoursInLabor" class="form-control"/></td>
+										<td><h:inputText name="weightGain" class="form-control"/></td>
 										<td>
-											<h:selectOneMenu class="form-control">
+											<h:selectOneMenu name="deliveryType" class="form-control">
 												<f:selectItems var="method"
 															   value="#{obstetrics_init_controller.getDeliveryMethods()}"
 															   itemLabel="#{method.toString()}"
 															   itemValue="#{method.toString()}" />
 											</h:selectOneMenu>
 										</td>
-										<td><h:inputText  class="form-control"/></td>
+										<td><h:inputText name="multiplicity" class="form-control"/></td>
 	
-										<td><h:commandButton value="Add" /></td>
+										<td><h:commandButton value="Add" action="obstetrics_init_form.addPregnancyRecord()" /></td>
 									</tr>
 								</ui:fragment>
 
@@ -151,7 +151,7 @@
 
 					<div class="text-center">
 						<ui:fragment rendered="#{addingRecord}">
-							<h:commandButton value="Submit" action="#{navigation_controller.viewObstetricsOverview}" />
+							<h:commandButton value="Submit" action="#{obstetrics_init_form.addObstetricsRecord()}" />
 							&nbsp;
 							<h:commandButton value="Cancel" action="#{navigation_controller.viewObstetricsOverview}" />
 						</ui:fragment>

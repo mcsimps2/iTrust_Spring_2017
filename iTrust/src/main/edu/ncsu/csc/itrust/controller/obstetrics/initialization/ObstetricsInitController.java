@@ -59,7 +59,6 @@ public class ObstetricsInitController extends iTrustController
 	/** The most recently viewed ObstetricsInit record */
 	private ObstetricsInit viewedOI;
 	
-	
 	/**
 	 * Default constructor.
 	 */
