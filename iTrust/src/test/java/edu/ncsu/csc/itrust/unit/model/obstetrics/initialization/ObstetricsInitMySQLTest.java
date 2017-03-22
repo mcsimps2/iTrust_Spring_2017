@@ -259,4 +259,31 @@ public class ObstetricsInitMySQLTest {
 		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 	}
+	
+	@Test
+	public void testAddAndReturnID()
+	{
+		ObstetricsInit oi1 = new ObstetricsInit(1, "2015-05-05", "2015-04-01");
+		try
+		{
+			Assert.assertEquals(4, oisql.addAndReturnID(oi1));
+			Assert.assertEquals(5, oisql.addAndReturnID(oi1));
+			Assert.assertEquals(6, oisql.addAndReturnID(oi1));
+		} catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+		
+		//invalid test
+		oi1 = new ObstetricsInit(-1, "2015-05-05", "2015-04-01");
+		try
+		{
+			oisql.addAndReturnID(oi1);
+			Assert.fail("Allowed an invalid object");
+		}
+		catch (DBException e)
+		{
+			Assert.assertNotNull(e);
+		}
+	}
 }

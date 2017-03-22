@@ -23,4 +23,12 @@ public interface ObstetricsInitData extends DataBean<ObstetricsInit>
 	 * @throws DBException 
 	 */
 	public boolean add(ObstetricsInit oi) throws DBException;
+	
+	/**
+	 * Adds a record to the obstetricsInit DB and returns the ID of the newly inserted record
+	 * @param oi the record to add
+	 * @return the ID of the new row, -1 if unsuccessful
+	 * @throws DBException 
+	 */
+	public int addAndReturnID(ObstetricsInit oi) throws DBException;
 }

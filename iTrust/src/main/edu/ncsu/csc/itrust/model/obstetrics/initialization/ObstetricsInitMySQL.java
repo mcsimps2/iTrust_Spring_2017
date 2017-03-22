@@ -173,5 +173,46 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	public boolean update(ObstetricsInit oi) throws DBException {
 		throw new IllegalStateException("Unimplemented");
 	}
+	
+	@Override
+	public int addAndReturnID(ObstetricsInit oi) throws DBException
+	{
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		try
+		{
+			validator.validate(oi);
+		}
+		catch (FormValidationException e)
+		{
+			throw new DBException(new SQLException(e));
+		}
+		try
+		{
+			conn = ds.getConnection();
+			pstring = loader.loadParameters(conn, pstring, oi, true);
+			int rowsAffected = pstring.executeUpdate();
+			if (rowsAffected == 0)
+			{
+				return -1;
+			}
+			pstring = conn.prepareStatement("SELECT LAST_INSERT_ID() FROM obstetricsInit;");
+			ResultSet rs = pstring.executeQuery();
+			if (rs.next())
+			{
+				return rs.getInt(1);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+	}
 
 }
