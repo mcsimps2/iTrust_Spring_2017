@@ -189,7 +189,17 @@ public class ObstetricsInitController extends iTrustController
 		return list;
 	}
 	
-	public List<PregnancyInfo> getPastPregnancies(int oid) {
+	public List<PregnancyInfo> getPastPregnancies() {
+		try {
+			return this.pregnancyData.getRecords(sessionUtils.getCurrentPatientMIDLong());
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PREGNANCIES, e.getMessage(), null);
+			return null;
+		}
+	}
+	
+	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
 		try {
 			return this.pregnancyData.getRecordsFromInit(oid);
 		} catch (DBException e) {

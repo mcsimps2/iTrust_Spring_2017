@@ -87,7 +87,12 @@
 					<h2>Prior Pregnancies</h2>
 
 					<ui:param name="oid" value="#{obstetrics_init_controller.viewedOI.id}" />
-					<ui:param name="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnancies(oid)}" />
+					<ui:fragment rendered="#{viewingRecord}">
+						<ui:param name="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnanciesFromInit(oid)}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{addingRecord}">
+						<ui:param name="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnancies()}" />
+					</ui:fragment>
 
 					<ui:fragment rendered="#{viewingRecord and (empty priorPregnancies)}">
 						<h2>There are no prior pregnancies to display.</h2>
@@ -108,18 +113,6 @@
 							</thead>
 
 							<tbody>
-								<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
-									<tr>
-										<td>#{pregnancyInfo.yearOfConception}</td>
-										<td>#{pregnancyInfo.numWeeksPregnant}</td>
-										<td>#{pregnancyInfo.numHoursInLabor}</td>
-										<td>#{pregnancyInfo.weightGain}</td>
-										<td>#{pregnancyInfo.deliveryType.toString()}</td>
-										<td>#{pregnancyInfo.multiplicity}</td>
-										<td></td>
-									</tr>
-								</ui:repeat>
-
 								<ui:fragment rendered="#{addingRecord}">
 									<tr>
 										<td><h:inputText class="form-control"/></td>
@@ -139,6 +132,18 @@
 										<td><h:commandButton value="Add" /></td>
 									</tr>
 								</ui:fragment>
+
+								<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
+									<tr>
+										<td>#{pregnancyInfo.yearOfConception}</td>
+										<td>#{pregnancyInfo.numWeeksPregnant}</td>
+										<td>#{pregnancyInfo.numHoursInLabor}</td>
+										<td>#{pregnancyInfo.weightGain}</td>
+										<td>#{pregnancyInfo.deliveryType.toString()}</td>
+										<td>#{pregnancyInfo.multiplicity}</td>
+										<td></td>
+									</tr>
+								</ui:repeat>
 
 							</tbody>
 						</table>
