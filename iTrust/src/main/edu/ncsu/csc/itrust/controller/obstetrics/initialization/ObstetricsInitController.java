@@ -241,7 +241,10 @@ public class ObstetricsInitController extends iTrustController
 	
 	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
 		try {
-			return this.pregnancyData.getRecordsFromInit(oid);
+			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(oid);
+			Collections.sort(pregnancies,
+					(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+			return pregnancies;
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PREGNANCIES, e.getMessage(), null);
@@ -336,6 +339,9 @@ public class ObstetricsInitController extends iTrustController
 	}
 	
 	public List<PregnancyInfo> getDisplayedPregnancies() {
+		Collections.sort(displayedPregnancies,
+				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+		
 		return displayedPregnancies;
 	}
 
@@ -414,10 +420,6 @@ public class ObstetricsInitController extends iTrustController
 		// Add the new pregnancy record to both lists
 		this.addedPregnancies.add(newPregnancy);
 		this.displayedPregnancies.add(newPregnancy);
-		
-		// Sort the displayed list
-		Collections.sort(displayedPregnancies,
-				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
 		
 		// Clear fields except LMP
 		clearPregnancyFields();
