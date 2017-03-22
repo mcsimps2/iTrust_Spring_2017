@@ -1,9 +1,12 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -51,6 +54,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
 	/** Error message when viewing the obstetrics overview fails */
 	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview";
+	/** Error message when adding the obstetrics initialization record fails */
+	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	
@@ -419,13 +424,37 @@ public class ObstetricsInitController extends iTrustController
 	}
 	
 	public void addObstetricsRecord() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String today = dateFormat.format(date);
+		
+		long pid = sessionUtils.getCurrentPatientMIDLong();
+		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
-		// Log the record
-		// Go through all pregnancy records in addedPregnancies and set the OID from
-		//                                                    the previous operation
-		// Add all pregnancy records from addedPregnancies
-		// Clear both lists and the temporary LMP
-		// Redirect to the overview page with the navigation controller
+		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
+		try {
+			int oid = oiData.addAndReturnID(oi);
+			// TODO Log the record that was added
+			
+			// Go through all pregnancy records in addedPregnancies
+			this.addedPregnancies.forEach(pregnancy -> {
+				// set the OID
+				pregnancy.setObstetricsInitID(oid);
+				// and add it to the database
+				pregnancyData.add(pregnancy);
+			});
+			
+			// Clear both lists and the temporary LMP
+			this.clearPregnancyFields();
+			this.clearPregnancyLists();
+			this.clearLMP();
+			
+			// Redirect to the overview page with the navigation controller
+			NavigationController.viewObstetricsOverview();
+		} catch (DBException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
+		}
 	}
 	
 	public void cancelAddObstetricsRecord() {
