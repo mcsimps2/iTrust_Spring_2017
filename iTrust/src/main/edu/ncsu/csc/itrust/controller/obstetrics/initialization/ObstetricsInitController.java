@@ -1,7 +1,9 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.initialization;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -47,6 +49,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
 	/** Error message when viewing record fails */
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
+	/** Error message when viewing the obstetrics overview fails */
+	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	
@@ -58,6 +62,34 @@ public class ObstetricsInitController extends iTrustController
 	SessionUtils sessionUtils;
 	/** The most recently viewed ObstetricsInit record */
 	private ObstetricsInit viewedOI;
+	
+	/** List of pregnancy records to display, including those retrieved from
+	 * the database and those added by the user */
+	private List<PregnancyInfo> displayedPregnancies = new ArrayList<PregnancyInfo>();
+	
+	/** List of pregnancy records added by the user */
+	private List<PregnancyInfo> addedPregnancies = new ArrayList<PregnancyInfo>();
+	
+	/** Temporary storage of the LMP for when the user is adding prior pregnancies */
+	private String lmp;
+	
+	/** Year of conception for pregnancy record */
+	private String yearOfConception;
+	
+	/** Number of weeks pregnant for pregnancy record */
+	private String numWeeksPregnant;
+	
+	/** Number of hours in labor for pregnancy record */
+	private String numHoursInLabor;
+	
+	/** Weight gain for pregnancy record */
+	private String weightGain;
+	
+	/** Delivery type for pregnancy record */
+	private String deliveryType;
+	
+	/** Multiplicity for pregnancy record */
+	private String multiplicity;
 	
 	/**
 	 * Default constructor.
@@ -191,8 +223,8 @@ public class ObstetricsInitController extends iTrustController
 		list.sort(null);
 		return list;
 	}
-	
-	public List<PregnancyInfo> getPastPregnancies() {
+
+	private List<PregnancyInfo> getPastPregnancies() {
 		try {
 			return this.pregnancyData.getRecords(sessionUtils.getCurrentPatientMIDLong());
 		} catch (DBException e) {
@@ -283,5 +315,131 @@ public class ObstetricsInitController extends iTrustController
 	
 	public List<DeliveryMethod> getDeliveryMethods() {
 		return Arrays.asList(DeliveryMethod.values());
+	}
+	
+	public List<PregnancyInfo> getDisplayedPregnancies() {
+		return displayedPregnancies;
+	}
+
+	public void setDisplayedPregnancies(List<PregnancyInfo> displayedPregnancies) {
+		this.displayedPregnancies = displayedPregnancies;
+	}
+
+	public String getLmp() {
+		return lmp;
+	}
+
+	public void setLmp(String lmp) {
+		this.lmp = lmp;
+	}
+
+	public String getYearOfConception() {
+		return yearOfConception;
+	}
+
+	public void setYearOfConception(String yearOfConception) {
+		this.yearOfConception = yearOfConception;
+	}
+
+	public String getNumWeeksPregnant() {
+		return numWeeksPregnant;
+	}
+
+	public void setNumWeeksPregnant(String numWeeksPregnant) {
+		this.numWeeksPregnant = numWeeksPregnant;
+	}
+
+	public String getNumHoursInLabor() {
+		return numHoursInLabor;
+	}
+
+	public void setNumHoursInLabor(String numHoursInLabor) {
+		this.numHoursInLabor = numHoursInLabor;
+	}
+
+	public String getWeightGain() {
+		return weightGain;
+	}
+
+	public void setWeightGain(String weightGain) {
+		this.weightGain = weightGain;
+	}
+
+	public String getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(String deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+
+	public String getMultiplicity() {
+		return multiplicity;
+	}
+
+	public void setMultiplicity(String multiplicity) {
+		this.multiplicity = multiplicity;
+	}
+
+	public void addPregnancyRecord() {
+		// Make a new pregnancy record
+		PregnancyInfo newPregnancy = new PregnancyInfo(
+			Integer.parseInt(sessionUtils.getCurrentPatientMID()),
+			Integer.parseInt(yearOfConception),
+			Integer.parseInt(numWeeksPregnant) * 7,
+			Integer.parseInt(numHoursInLabor),
+			Integer.parseInt(weightGain),
+			DeliveryMethod.matchString(deliveryType),
+			Integer.parseInt(multiplicity)
+		);
+
+		// Add the new pregnancy record to both lists
+		this.addedPregnancies.add(newPregnancy);
+		this.displayedPregnancies.add(newPregnancy);
+		
+		// Sort the displayed list
+		Collections.sort(displayedPregnancies,
+				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+		
+		// Clear fields except LMP
+		clearPregnancyFields();
+	}
+	
+	public void addObstetricsRecord() {
+		// Make a new ObstetricsInit record with the LMP and save it in the database
+		// Log the record
+		// Go through all pregnancy records in addedPregnancies and set the OID from
+		//                                                    the previous operation
+		// Add all pregnancy records from addedPregnancies
+		// Clear both lists and the temporary LMP
+		// Redirect to the overview page with the navigation controller
+	}
+	
+	public void cancelAddObstetricsRecord() {
+		// Clear pregnancy lists (we're not going to submit them) and pregnancy fields
+		clearPregnancyFields();
+		clearPregnancyLists();
+		
+		// Go back to the overview page
+		try {
+			NavigationController.viewObstetricsOverview();
+		} catch (IOException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
+		}
+	}
+	
+	private void clearPregnancyFields() {
+		this.setYearOfConception("");
+		this.setNumWeeksPregnant("");
+		this.setNumHoursInLabor("");
+		this.setWeightGain("");
+		// We won't bother to clear the delivery type because it's a dropdown.
+		this.setMultiplicity("");
+	}
+	
+	private void clearPregnancyLists() {
+		this.addedPregnancies.clear();
+		this.displayedPregnancies.clear();
 	}
 }

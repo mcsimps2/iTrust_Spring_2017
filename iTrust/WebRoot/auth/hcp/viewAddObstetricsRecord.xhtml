@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<f:view beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
 
@@ -64,7 +65,7 @@
 											<td>LMP:</td>
 											<td>
 												<ui:fragment rendered="#{addingRecord}">
-													<h:inputText class="form-control" name="lmp" />
+													<h:inputText class="form-control" value="#{obstetrics_init_controller.lmp}" />
 												</ui:fragment>
 												<ui:fragment rendered="#{viewingRecord}">
 													#{oiRecord.prettyLMP}
@@ -89,12 +90,13 @@
 						<h2>Prior Pregnancies</h2>
 	
 						<ui:param name="oid" value="#{obstetrics_init_controller.viewedOI.id}" />
-						<ui:fragment rendered="#{viewingRecord}">
-							<ui:param name="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnanciesFromInit(oid)}" />
-						</ui:fragment>
-						<ui:fragment rendered="#{addingRecord}">
-							<ui:param name="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnancies()}" />
-						</ui:fragment>
+						
+						<c:if test="#{viewingRecord}">
+							<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnanciesFromInit(oid)}" />
+						</c:if>
+						<c:if test="#{addingRecord}">
+							<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getDisplayedPregnancies()}" />
+						</c:if>
 	
 						<ui:fragment rendered="#{viewingRecord and (empty priorPregnancies)}">
 							<h2>There are no prior pregnancies to display.</h2>
@@ -117,21 +119,21 @@
 								<tbody>
 									<ui:fragment rendered="#{addingRecord}">
 										<tr>
-											<td><h:inputText name="yearOfConception" class="form-control"/></td>
-											<td><h:inputText name="numWeeksPregnant" class="form-control"/></td>
-											<td><h:inputText name="numHoursInLabor" class="form-control"/></td>
-											<td><h:inputText name="weightGain" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.yearOfConception}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.numWeeksPregnant}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.numHoursInLabor}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.weightGain}" class="form-control"/></td>
 											<td>
-												<h:selectOneMenu name="deliveryType" class="form-control">
+												<h:selectOneMenu value="#{obstetrics_init_controller.deliveryType}" class="form-control">
 													<f:selectItems var="method"
 																   value="#{obstetrics_init_controller.getDeliveryMethods()}"
 																   itemLabel="#{method.toString()}"
 																   itemValue="#{method.toString()}" />
 												</h:selectOneMenu>
 											</td>
-											<td><h:inputText name="multiplicity" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.multiplicity}" class="form-control"/></td>
 		
-											<td><h:commandButton value="Add" action="obstetrics_init_form.addPregnancyRecord()" /></td>
+											<td><h:commandButton value="Add" action="#{obstetrics_init_controller.addPregnancyRecord()}" /></td>
 										</tr>
 									</ui:fragment>
 	
@@ -153,9 +155,9 @@
 	
 						<div class="text-center">
 							<ui:fragment rendered="#{addingRecord}">
-								<h:commandButton value="Submit" action="#{obstetrics_init_form.addObstetricsRecord()}" />
+								<h:commandButton value="Submit" action="#{obstetrics_init_controller.addObstetricsRecord()}" />
 								&nbsp;
-								<h:commandButton value="Cancel" action="#{navigation_controller.viewObstetricsOverview}" />
+								<h:commandButton value="Cancel" action="#{obstetrics_init_controller.cancelAddObstetricsRecord()}" />
 							</ui:fragment>
 							<ui:fragment rendered="#{viewingRecord}">
 								<h:commandButton value="Done" action="#{navigation_controller.viewObstetricsOverview}" />
