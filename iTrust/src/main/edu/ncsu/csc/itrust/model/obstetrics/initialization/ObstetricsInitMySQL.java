@@ -175,18 +175,13 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	}
 	
 	@Override
-	public int addAndReturnID(ObstetricsInit oi) throws DBException
+	public int addAndReturnID(ObstetricsInit oi) throws DBException, FormValidationException
 	{
 		Connection conn = null;
 		PreparedStatement pstring = null;
-		try
-		{
-			validator.validate(oi);
-		}
-		catch (FormValidationException e)
-		{
-			throw new DBException(new SQLException(e));
-		}
+		
+		validator.validate(oi);
+		
 		try
 		{
 			conn = ds.getConnection();
