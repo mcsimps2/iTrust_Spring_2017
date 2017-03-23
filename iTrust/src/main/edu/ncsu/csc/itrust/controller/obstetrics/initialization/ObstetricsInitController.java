@@ -61,13 +61,15 @@ public class ObstetricsInitController extends iTrustController
 	/** Error message when adding invalid pregancy info */
 	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy.";
 	/** Error when non integers are input to pregnancy info */
-	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field.";
+	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field (weight gain can take a decimal value)";
 	/** Error message when adding the obstetrics initialization record fails */
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
 	/** Error indicating incorrect date format for lmp */
 	private static final String ERROR_LMP_FORMAT = "Error: please format the LMP as YYYY-MM-DD.";
+	/** Error indicating the LMP is required */
+	private static final String ERROR_REQUIRED_LMP = "Error: the LMP field is required.";
 	/** Error indicating the pregnancy should be added before submitting if there is info in the fields */
-	private static final String ERROR_ADD_PREGNANCY_FIRST = "Click to add pregnancy or remove data from the pregnancy fields before creating the record.";
+	private static final String ERROR_ADD_PREGNANCY_FIRST = "Error: there was unsubmitted information in the pregnancy form. Please finish adding it or remove it.";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	/** Success message when obstetrics record is created */
@@ -444,7 +446,7 @@ public class ObstetricsInitController extends iTrustController
 				Integer.parseInt(yearOfConception),
 				Integer.parseInt(numWeeksPregnant) * 7,
 				Integer.parseInt(numHoursInLabor),
-				Integer.parseInt(weightGain),
+				Double.parseDouble(weightGain),
 				DeliveryMethod.matchString(deliveryType),
 				Integer.parseInt(multiplicity)
 			);
@@ -473,8 +475,12 @@ public class ObstetricsInitController extends iTrustController
 	}
 	
 	public void addObstetricsRecord() {
-		if (StringUtils.isEmpty(yearOfConception) || StringUtils.isEmpty(numWeeksPregnant) || StringUtils.isEmpty(numHoursInLabor) ||
-				StringUtils.isEmpty(weightGain) || StringUtils.isEmpty(multiplicity))
+		// if (they're all empty) or (they're all filled)
+		if (!StringUtils.isEmpty(yearOfConception)
+		 || !StringUtils.isEmpty(numWeeksPregnant)
+		 || !StringUtils.isEmpty(numHoursInLabor)
+		 || !StringUtils.isEmpty(weightGain)
+		 || !StringUtils.isEmpty(multiplicity))
 		{
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADD_PREGNANCY_FIRST, ERROR_ADD_PREGNANCY_FIRST, null);
 			return;
@@ -486,8 +492,11 @@ public class ObstetricsInitController extends iTrustController
 		
 		long pid = sessionUtils.getCurrentPatientMIDLong();
 		
-		//Validate the date
-		if (!ObstetricsInit.verifyDate(this.getLmp())) {
+		// Validate the date
+		if (this.getLmp() == null || this.getLmp().isEmpty()) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_REQUIRED_LMP, ERROR_REQUIRED_LMP, null);
+			return;
+		} else if (!ObstetricsInit.verifyDate(this.getLmp())) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LMP_FORMAT, ERROR_LMP_FORMAT, null);
 			return;
 		}
