@@ -62,6 +62,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field.";
 	/** Error message when adding the obstetrics initialization record fails */
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
+	/** Error indicating incorrect date format for lmp */
+	private static final String ERROR_LMP_FORMAT = "Error: please format the LMP as YYYY-MM-DD.";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	/** Success message when obstetrics record is created */
@@ -460,6 +462,11 @@ public class ObstetricsInitController extends iTrustController
 		
 		long pid = sessionUtils.getCurrentPatientMIDLong();
 		
+		//Validate the date
+		if (!ObstetricsInit.verifyDate(this.getLmp())) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LMP_FORMAT, ERROR_LMP_FORMAT, null);
+		}
+		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
 		try {
@@ -496,6 +503,9 @@ public class ObstetricsInitController extends iTrustController
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
+		} catch (FormValidationException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
 		}
 	}
 	
