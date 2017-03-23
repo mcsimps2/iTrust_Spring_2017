@@ -44,11 +44,13 @@ public class AddObstetricsRecordStepDefs {
 	
 	@When("^I enter an lmp in for the LMP field$")
 	public void enterLMP() {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, -1);
-		SimpleDateFormat ft = new SimpleDateFormat("YYYY-m-d"); 
-		String date = ft.format(c.getTime());
-		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys(date);
+//		Calendar c = Calendar.getInstance();
+////		c.add(Calendar.DATE, -1);
+//		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-DD"); 
+//		ft.setLenient(false);
+//		String date = ft.format(c.getTime());
+//		System.out.println(date);
+		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys("2017-01-01");
 	}
 	
 	@When("^I enter a prior pregnancy with values: conception year (.+), weeks pregnant (.+), hours in labor (.+), weight gain (.+), delivery type (.+), multiplicity (.+)$")
@@ -69,22 +71,22 @@ public class AddObstetricsRecordStepDefs {
 	
 	@When("^I click Save Record")
 	public void saveRecord() {
-		driver.findElement(By.cssSelector("input[value=\"Submit\"]")).click();
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt62\"]")).click();
 	}
 	
 	@Then("^I am redirected to obstetrics records page$")
 	public void redirectedToObstetricsRecordsPage() {
-		driver.verifyLocation("/auth/hcp/viewAddObstetricsRecord.xhtml");
+		driver.verifyLocation("asdf");
 	}
 	
 	@Then("^a success message appears indicating save successful$")
 	public void successMessageAppears() {
-		Assert.assertTrue(driver.getPageSource().contains("TODO: SUCCESS MESSAGE HERE"));
+		Assert.assertTrue(driver.getPageSource().contains("success"));
 	}
 	
 	@Then("^there is an error message appears about invalid input$")
 	public void errorMessageInvalidInput() {
-		Assert.assertTrue(driver.getPageSource().contains("TODO: ERROR MESSAGE HERE"));
+		Assert.assertTrue(driver.getPageSource().contains("Error"));
 	}
 	
 	@When("^I click cancel$")
@@ -95,24 +97,10 @@ public class AddObstetricsRecordStepDefs {
 	@Then("^all the fields are empty")
 	public void allFieldsEmpty() {
 		Assert.assertTrue(driver.findElement(By.cssSelector(".record-info-table input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:first-child input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(2) input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(3) input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(4) input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(5) input")).getText().equals("Vaginal Delivery"));
-		Assert.assertTrue(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(6) input")).getText().length() == 0);
-		
-		try {
-			driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody tr:nth-child(2)"));
-		} catch (NoSuchElementException e) {
-			Assert.fail();
-		}
-		
-		try {
-			driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody tr:nth-child(3)"));
-			Assert.fail();
-		} catch (NoSuchElementException e) {
-			//Do nothing
-		}
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt42\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt44\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt46\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt48\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt53\"]")).getText().length() == 0);
 	}
 }

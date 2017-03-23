@@ -38,7 +38,7 @@ Examples:
 Scenario Outline: Cancel Add Obstetrics Record
 	Given I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with name <name>
-	And click on the link for the patient with pid <pid>
+	And click on the link for patient with pid <pid>
 	And I click Add New Record
 	And I enter an lmp in for the LMP field
 	And I enter a prior pregnancy with values: conception year <cYear>, weeks pregnant <weeksPreg>, hours in labor <hrsLabor>, weight gain <weightGain>, delivery type <deliveryType>, multiplicity <mult>
