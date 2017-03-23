@@ -10,6 +10,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoMySQL;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 import java.io.IOException;
@@ -36,8 +37,9 @@ public class EnterAndEditFitnessDataStepDefs {
 		randomInfo = new FitnessInfo();
 	}
 	@After
-	public void resetDB() throws IOException, SQLException
+	public void resetDB() throws Exception
 	{
+		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 	}
 	
