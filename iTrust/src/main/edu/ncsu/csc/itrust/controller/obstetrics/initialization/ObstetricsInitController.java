@@ -469,7 +469,13 @@ public class ObstetricsInitController extends iTrustController
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
 		try {
 			int oid = oiData.addAndReturnID(oi);
-			// TODO Log the record that was added
+			
+			TransactionLogger.getInstance().logTransaction(
+				TransactionType.CREATE_INITIAL_OBSTETRIC_RECORD,
+				sessionUtils.getSessionLoggedInMIDLong(),
+				Long.parseLong(sessionUtils.getSessionPID()),
+				oi.getEDD()
+			);
 			
 			// Go through all pregnancy records in addedPregnancies
 			for (PregnancyInfo pregnancy : this.addedPregnancies) {
