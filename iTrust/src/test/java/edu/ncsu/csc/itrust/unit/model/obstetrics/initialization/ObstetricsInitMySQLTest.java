@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.junit.*;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
@@ -261,7 +262,7 @@ public class ObstetricsInitMySQLTest {
 	}
 	
 	@Test
-	public void testAddAndReturnID()
+	public void testAddAndReturnID() throws FormValidationException
 	{
 		ObstetricsInit oi1 = new ObstetricsInit(1, "2015-05-05", "2015-04-01");
 		try

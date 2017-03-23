@@ -15,6 +15,28 @@ public class PregnancyInfo
 	private int multiplicity;
 	
 	/**
+	 * Constructor used when just creating a PregnancyInfo object to validate
+	 * @param pid
+	 * @param yearOfConception
+	 * @param numDaysPregnant
+	 * @param numHoursInLabor
+	 * @param weightGain
+	 * @param deliveryType
+	 * @param multiplicity
+	 */
+	public PregnancyInfo(int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
+			double weightGain, DeliveryMethod deliveryType, int multiplicity) {
+		super();
+		this.pid = pid;
+		this.yearOfConception = yearOfConception;
+		this.numDaysPregnant = numDaysPregnant;
+		this.numHoursInLabor = numHoursInLabor;
+		this.weightGain = weightGain;
+		this.deliveryType = deliveryType;
+		this.multiplicity = multiplicity;
+	}
+	
+	/**
 	 * Constructor used when adding a record to the database
 	 * @param obstetricsInitID
 	 * @param pid
@@ -94,7 +116,7 @@ public class PregnancyInfo
 		this.numDaysPregnant = numDaysPregnant;
 	}
 	public int getNumWeeksPregnant() {
-		return numDaysPregnant % 7;
+		return numDaysPregnant / 7;
 	}
 	public int getNumHoursInLabor() {
 		return numHoursInLabor;

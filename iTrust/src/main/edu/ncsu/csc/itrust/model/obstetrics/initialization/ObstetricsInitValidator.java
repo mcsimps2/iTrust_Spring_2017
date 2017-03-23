@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.naming.Context;
@@ -53,7 +54,7 @@ public class ObstetricsInitValidator extends POJOValidator<ObstetricsInit>
 		//Verify non-null values
 		if (obj.getDate() == null || obj.getLMP() == null)
 		{
-			errs.addIfNotNull("Null  or empty date or LMP");
+			errs.addIfNotNull("Null or empty date or LMP");
 			throw new FormValidationException(errs);
 		}
 		
@@ -61,9 +62,24 @@ public class ObstetricsInitValidator extends POJOValidator<ObstetricsInit>
 		Date dateOfInit = obj.getJavaDate();
 		Date dateOfLMP = obj.getJavaLMP();
 	
+		if (dateOfLMP == null) {
+			errs.addIfNotNull("LMP must be filled out");
+			throw new FormValidationException(errs);
+		}
+		
 		if (dateOfInit.before(dateOfLMP))
 		{
 			errs.addIfNotNull("The initialization date is before the LMP");
+			throw new FormValidationException(errs);
+		}
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateOfInit);
+		cal.add(Calendar.YEAR, -1);
+		Date yearBeforeInit = cal.getTime();
+		
+		if (dateOfLMP.before(yearBeforeInit)) {
+			errs.addIfNotNull("The LMP date cannot be more than a year before the initialization date");
 			throw new FormValidationException(errs);
 		}
 		
