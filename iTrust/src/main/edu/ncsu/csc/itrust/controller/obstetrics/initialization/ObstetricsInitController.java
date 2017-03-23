@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+
 import edu.ncsu.csc.itrust.controller.NavigationController;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -417,7 +419,21 @@ public class ObstetricsInitController extends iTrustController
 		this.multiplicity = multiplicity;
 	}
 
-	public void addPregnancyRecord() {
+	/**
+	 * Add pregnancy record based on the fields
+	 * @return success
+	 */
+	public boolean addPregnancyRecord() {
+		
+		if (StringUtils.isEmpty(yearOfConception) &&
+				StringUtils.isEmpty(numWeeksPregnant) &&
+				StringUtils.isEmpty(numHoursInLabor) &&
+				StringUtils.isEmpty(weightGain) &&
+				StringUtils.isEmpty(multiplicity))
+			//I guess it's technically success
+			//Only place we are using return is from addObstetricsRecord()
+			return true;
+		
 		// Make a new pregnancy record
 		PregnancyInfo newPregnancy;
 		try {
@@ -433,7 +449,7 @@ public class ObstetricsInitController extends iTrustController
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, ERROR_ADDING_PREGNANCY_INT_REQUIRED, null);
-			return;
+			return false;
 		}
 		
 		//Validate the pregnancyFields
@@ -442,7 +458,7 @@ public class ObstetricsInitController extends iTrustController
 		} catch (FormValidationException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, e.getMessage(), null);
-			return;
+			return false;
 		}
 			
 		// Add the new pregnancy record to both lists
@@ -451,9 +467,13 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Clear fields except LMP
 		clearPregnancyFields();
+		return true;
 	}
 	
 	public void addObstetricsRecord() {
+		//In case there are any fields there
+		if (!addPregnancyRecord()) return;
+		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String today = dateFormat.format(date);

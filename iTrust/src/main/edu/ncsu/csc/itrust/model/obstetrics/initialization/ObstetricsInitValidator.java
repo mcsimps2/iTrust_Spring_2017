@@ -62,6 +62,11 @@ public class ObstetricsInitValidator extends POJOValidator<ObstetricsInit>
 		Date dateOfInit = obj.getJavaDate();
 		Date dateOfLMP = obj.getJavaLMP();
 	
+		if (dateOfLMP == null) {
+			errs.addIfNotNull("LMP must be filled out");
+			throw new FormValidationException(errs);
+		}
+		
 		if (dateOfInit.before(dateOfLMP))
 		{
 			errs.addIfNotNull("The initialization date is before the LMP");

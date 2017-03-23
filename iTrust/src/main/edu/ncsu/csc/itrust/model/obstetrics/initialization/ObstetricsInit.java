@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
+
 import edu.ncsu.csc.itrust.model.fitness.DateFormatException;
 
 public class ObstetricsInit implements Comparable<ObstetricsInit> {
@@ -142,10 +144,9 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	 */
 	public static boolean verifyDate(String date)
 	{
+		if (StringUtils.isEmpty(date)) return false;
 		try
-		{
-			
-			
+		{			
 			//Check that this forms a valid date
 			Calendar cal = Calendar.getInstance();
 			cal.setLenient(false);
