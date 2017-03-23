@@ -3,6 +3,7 @@ Feature: Add Patient's Obstetrics Records
 	I want to be able to add an obstetrics initialization record for a patient
 	
 Background:
+	Given the databases have been reset
 	Given I am at the iTrust login screen
 	And I have logged in with MID 9000000012 and password pw
 	

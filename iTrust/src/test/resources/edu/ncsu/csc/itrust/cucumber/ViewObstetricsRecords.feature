@@ -4,6 +4,7 @@ Feature: View Patient's Obstetrics Records
 	
 Background:
 	Given I am at the iTrust login screen
+	Given the databases have been reset
 	
 Scenario Outline: Check Records Display Values
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -47,7 +48,7 @@ Scenario Outline: View Obstetric Record
 
 Examples:
 	| hcpMID | pw | patientName | initDate | lmp | edd | weeksPreg | numPreg |
-	| 9000000012 | pw | Random | March 16 | January 1 | December 21 | 10 | 2 |
+	| 9000000012 | pw | Random | March 16 | January 1 | December 21 | 10 | 1 |
 
 Scenario Outline: Select Wrong Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>

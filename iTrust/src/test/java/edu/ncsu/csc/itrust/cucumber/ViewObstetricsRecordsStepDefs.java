@@ -8,6 +8,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class ViewObstetricsRecordsStepDefs {
 
@@ -17,10 +19,16 @@ public class ViewObstetricsRecordsStepDefs {
 		this.driver = driver;
 	}
 	
+	@Given("^the databases have been reset$")
+	public void resetDB() throws Exception
+	{
+		DBBuilder.main(null);
+		TestDataGenerator.main(null);
+	}
+	
 	@Given("^I have navigated to Patient Info -> Obstetrics Records$")
 	public void navigateToObstetricsRecords() {
 		//Find the link to patient fitness data and click it
-		System.out.println(driver.getCurrentUrl());
 		try
 		{
 			driver.findElement(By.linkText("Obstetrics Records")).click();
@@ -80,8 +88,6 @@ public class ViewObstetricsRecordsStepDefs {
 	public void obstetricsRecordDataDisplayed(String initDate, String lmp, String edd, String weeksPreg)
 	{
 		String source = driver.getPageSource();
-		System.out.println(source);
-		System.out.println(initDate);
 		Assert.assertTrue(source.contains(initDate));
 		Assert.assertTrue(source.contains(lmp));
 		Assert.assertTrue(source.contains(edd));
