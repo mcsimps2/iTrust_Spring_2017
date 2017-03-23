@@ -261,4 +261,19 @@ public class PregnancyInfoMySQLTest {
 		DBBuilder.main(null);
 		TestDataGenerator.main(null);
 	}
+	
+	@Test
+	public void random()
+	{
+		try
+		{
+			List<PregnancyInfo> list = pisql.getRecordsFromInit(1);
+			System.out.println(list.size());
+			list = pisql.getRecordsFromInit(2);
+			System.out.println(list.size());
+		} catch (DBException e)
+		{
+			
+		}
+	}
 }
