@@ -21,8 +21,7 @@ public class AddObstetricsRecordStepDefs {
 		this.driver = driver;
 	}
 	
-	/*
-	@Given("^I have logged in with MID 9000000012 and password pw")
+	@Given("^I have logged in as OBGYN with MID 9000000012 and password pw")
 	public void loggedInOBGYN() {
 		// Make sure we are at the login screen
 		Assert.assertTrue(driver.verifyLocation("/iTrust/auth/forwardUser.jsp"));
@@ -37,17 +36,16 @@ public class AddObstetricsRecordStepDefs {
 			Assert.fail("Error logging in, user not in database?");
 		Assert.assertTrue(driver.verifyLocation("/iTrust/auth/hcp/home.jsp"));
 	}
-	*/
 	
 	@When("^I click Add New Record$")
 	public void clickAddNewRecord() {
-		driver.findElement(By.cssSelector("div form:nth-child(2)")).submit();
+		driver.findElement(By.cssSelector("input[value=\"Add New Record\"]")).submit();
 	}
 	
 	@When("^I enter an lmp in for the LMP field$")
 	public void enterLMP() {
 		Calendar c = Calendar.getInstance();
-		c.add(-1, Calendar.MONTH);
+		c.add(Calendar.MONTH, -1);
 		SimpleDateFormat ft = new SimpleDateFormat("YYYY-m-d"); 
 		String date = ft.format(c.getTime());
 		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys(date);
@@ -55,18 +53,18 @@ public class AddObstetricsRecordStepDefs {
 	
 	@When("^I enter a prior pregnancy with values: conception year (.+), weeks pregnant (.+), hours in labor (.+), weight gain (.+), delivery type (.+), multiplicity (.+)$")
 	public void enterPriorPregnancy(String cYear, String weeksPreg, String hrsLabor, String weightGain, String deliveryType, String mult) {
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:first-child input")).sendKeys(cYear);
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(2) input")).sendKeys(weeksPreg);
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(3) input")).sendKeys(hrsLabor);
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(4) input")).sendKeys(weightGain);
-		Select s = new Select(driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(5) select")));
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt42\"]")).sendKeys(cYear);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt44\"]")).sendKeys(weeksPreg);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt46\"]")).sendKeys(hrsLabor);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt48\"]")).sendKeys(weightGain);
+		Select s = new Select(driver.findElement(By.cssSelector("select[name=\"j_idt20:j_idt50\"]")));
 		s.selectByVisibleText(deliveryType);
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(6) input")).sendKeys(mult);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt53\"]")).sendKeys(mult);
 	}
 	
 	@When("^I click add pregnancy$")
 	public void addPregnancy() {
-		driver.findElement(By.cssSelector(".prior-pregnancies-wrapper tbody td:nth-child(7) input")).click();
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt55\"]")).submit();
 	}
 	
 	@When("^I click Save Record")
