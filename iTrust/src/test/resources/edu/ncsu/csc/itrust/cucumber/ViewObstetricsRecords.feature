@@ -4,6 +4,7 @@ Feature: View Patient's Obstetrics Records
 	
 Background:
 	Given I am at the iTrust login screen
+	Given the databases have been reset
 	
 Scenario Outline: Check Records Display Values
 	Given I have logged in as HCP <hcpMID> with password <pw>
