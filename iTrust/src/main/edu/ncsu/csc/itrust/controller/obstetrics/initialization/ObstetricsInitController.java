@@ -47,27 +47,29 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class ObstetricsInitController extends iTrustController
 {
 	/** Constant for the message to be displayed when a patient is made eligible for obstetric care */
-	private static final String PATIENT_MADE_ELIGIBLE = " is now eligible for obstetric care";
+	private static final String PATIENT_MADE_ELIGIBLE = " is now eligible for obstetric care.";
 	/** Error message when patient data cannot be found */
-	private static final String ERROR_LOADING_PATIENT = "Error loading patient data";
+	private static final String ERROR_LOADING_PATIENT = "Error loading patient data.";
 	/** Error message when hcp data cannot be found */
-	private static final String ERROR_LOADING_HCP = "Error loading HCP data";
+	private static final String ERROR_LOADING_HCP = "Error loading HCP data.";
 	/** Error message when getting pregnancy data fails */
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
 	/** Error message when viewing record fails */
-	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
+	private static final String ERROR_VIEWING_RECORD = "Error viewing record.";
 	/** Error message when viewing the obstetrics overview fails */
-	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview";
+	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview.";
 	/** Error message when adding invalid pregancy info */
-	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy";
+	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy.";
 	/** Error when non integers are input to pregnancy info */
-	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field";
+	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field.";
 	/** Error message when adding the obstetrics initialization record fails */
-	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record";
+	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
 	/** Error indicating incorrect date format for lmp */
-	private static final String ERROR_LMP_FORMAT = "Format the LMP as YYYY-MM-DD";
+	private static final String ERROR_LMP_FORMAT = "Error: please format the LMP as YYYY-MM-DD.";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
+	/** Success message when obstetrics record is created */
+	private static final String SUCCESS_ADD_OBSTETRICS = "The obstetrics record was added successfully.";
 	
 	/** Grants access to the obstetrics initializations database */
 	ObstetricsInitData oiData;
@@ -509,6 +511,9 @@ public class ObstetricsInitController extends iTrustController
 			this.clearPregnancyFields();
 			this.clearPregnancyLists();
 			this.clearLMP();
+			
+			// Add success messages
+			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
 			
 			// Redirect to the overview page with the navigation controller
 			NavigationController.viewObstetricsOverview();
