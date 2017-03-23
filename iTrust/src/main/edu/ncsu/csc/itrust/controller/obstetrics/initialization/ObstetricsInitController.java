@@ -66,6 +66,8 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
 	/** Error indicating incorrect date format for lmp */
 	private static final String ERROR_LMP_FORMAT = "Error: please format the LMP as YYYY-MM-DD.";
+	/** Error indicating the pregnancy should be added before submitting if there is info in the fields */
+	private static final String ERROR_ADD_PREGNANCY_FIRST = "Click to add pregnancy or remove data from the pregnancy fields before creating the record.";
 	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
 	/** Success message when obstetrics record is created */
@@ -425,16 +427,14 @@ public class ObstetricsInitController extends iTrustController
 	 * Add pregnancy record based on the fields
 	 * @return success
 	 */
-	public boolean addPregnancyRecord() {
+	public void addPregnancyRecord() {
 		
 		if (StringUtils.isEmpty(yearOfConception) &&
 				StringUtils.isEmpty(numWeeksPregnant) &&
 				StringUtils.isEmpty(numHoursInLabor) &&
 				StringUtils.isEmpty(weightGain) &&
 				StringUtils.isEmpty(multiplicity))
-			//I guess it's technically success
-			//Only place we are using return is from addObstetricsRecord()
-			return true;
+			return;
 		
 		// Make a new pregnancy record
 		PregnancyInfo newPregnancy;
@@ -451,7 +451,7 @@ public class ObstetricsInitController extends iTrustController
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, ERROR_ADDING_PREGNANCY_INT_REQUIRED, null);
-			return false;
+			return;
 		}
 		
 		//Validate the pregnancyFields
@@ -460,7 +460,7 @@ public class ObstetricsInitController extends iTrustController
 		} catch (FormValidationException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, e.getMessage(), null);
-			return false;
+			return;
 		}
 			
 		// Add the new pregnancy record to both lists
@@ -469,13 +469,17 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Clear fields except LMP
 		clearPregnancyFields();
-		return true;
+		return;
 	}
 	
 	public void addObstetricsRecord() {
-		//In case there are any fields there
-		if (!addPregnancyRecord()) return;
-		
+		if (StringUtils.isEmpty(yearOfConception) || StringUtils.isEmpty(numWeeksPregnant) || StringUtils.isEmpty(numHoursInLabor) ||
+				StringUtils.isEmpty(weightGain) || StringUtils.isEmpty(multiplicity))
+		{
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADD_PREGNANCY_FIRST, ERROR_ADD_PREGNANCY_FIRST, null);
+			return;
+		}
+			
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String today = dateFormat.format(date);
@@ -485,6 +489,7 @@ public class ObstetricsInitController extends iTrustController
 		//Validate the date
 		if (!ObstetricsInit.verifyDate(this.getLmp())) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LMP_FORMAT, ERROR_LMP_FORMAT, null);
+			return;
 		}
 		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
