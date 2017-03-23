@@ -21,6 +21,7 @@ public class AddObstetricsRecordStepDefs {
 		this.driver = driver;
 	}
 	
+	/*
 	@Given("^I have logged in with MID 9000000012 and password pw")
 	public void loggedInOBGYN() {
 		// Make sure we are at the login screen
@@ -36,6 +37,7 @@ public class AddObstetricsRecordStepDefs {
 			Assert.fail("Error logging in, user not in database?");
 		Assert.assertTrue(driver.verifyLocation("/iTrust/auth/hcp/home.jsp"));
 	}
+	*/
 	
 	@When("^I click Add New Record$")
 	public void clickAddNewRecord() {

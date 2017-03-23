@@ -13,7 +13,7 @@ Scenario Outline: Check Records Display Values
 	Then an obstetrics record appears with date <date>
 Examples:
 	| hcpMID | pw | patientName | date |
-	| 9000000012 | pw | Baby | 2005-03-01 |
+	| 9000000012 | pw | Random | 2017-03-16 |
 	
 Scenario Outline: Ineligable Obstetrics Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -34,7 +34,7 @@ Scenario Outline: Non OB/GYN HCP
 	Then the add record button will not be displayed
 Examples:
 	| hcpMID | pw | patientName |
-	| 9000000000 | pw | Baby |
+	| 9000000000 | pw | Random |
 
 Scenario Outline: View Obstetric Record
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -47,7 +47,7 @@ Scenario Outline: View Obstetric Record
 
 Examples:
 	| hcpMID | pw | patientName | initDate | lmp | edd | weeksPreg | numPreg |
-	| 9000000012 | pw | Baby | March 1, 2005 | January 3, 2005 | October 10, 2005 | 8 | 1 |
+	| 9000000012 | pw | Random | March 16 | January 1 | December 21 | 10 | 2 |
 
 Scenario Outline: Select Wrong Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
@@ -57,7 +57,7 @@ Scenario Outline: Select Wrong Patient
 	And I decide to select another patient
 	And I search for the patient with name <rightName>
 	And click on their link
-	Then an obstetrics record appears with date <date>
+	Then no obstetrics records appear
 Examples:
-	| hcpMID | pw | wrongName | rightName | date |
-	| 9000000012 | pw | Andy | Baby | 2005-03-01 |
+	| hcpMID | pw | wrongName | rightName |
+	| 9000000012 | pw | Andy | Fozzie |
