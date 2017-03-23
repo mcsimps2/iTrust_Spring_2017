@@ -36,6 +36,7 @@
 			<ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml" /></ui:define>
 
 			<ui:define name="mainContent">
+				<h:message for="" id="obstetrics-message" class="iTrustError" />
 				<ui:param name="oiRecord" value="#{obstetrics_init_controller.viewedOI}" />
 				<ui:param name="addingRecord" value="#{empty oiRecord}" />
 				<ui:param name="viewingRecord" value="#{not empty oiRecord}" />

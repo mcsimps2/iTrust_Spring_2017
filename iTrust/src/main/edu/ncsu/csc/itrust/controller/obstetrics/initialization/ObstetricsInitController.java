@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import edu.ncsu.csc.itrust.controller.NavigationController;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
@@ -25,6 +26,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfo;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoValidator;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -54,6 +56,10 @@ public class ObstetricsInitController extends iTrustController
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record";
 	/** Error message when viewing the obstetrics overview fails */
 	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview";
+	/** Error message when adding invalid pregancy info */
+	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy";
+	/** Error when non integers are input to pregnancy info */
+	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field";
 	/** Error message when adding the obstetrics initialization record fails */
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record";
 	/** String for an OB/GYN specialist */
@@ -67,6 +73,8 @@ public class ObstetricsInitController extends iTrustController
 	SessionUtils sessionUtils;
 	/** The most recently viewed ObstetricsInit record */
 	private ObstetricsInit viewedOI;
+	/** PregnancyInfoValidator used for validating on add, not just on save */
+	private PregnancyInfoValidator pregnancyInfoValidator;
 	
 	/** List of pregnancy records to display, including those retrieved from
 	 * the database and those added by the user */
@@ -105,6 +113,7 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			oiData = new ObstetricsInitMySQL();
 			pregnancyData = new PregnancyInfoMySQL();
+			pregnancyInfoValidator = new PregnancyInfoValidator();
 		} catch (DBException e) {
 			e.printStackTrace();
 		}
@@ -121,6 +130,7 @@ public class ObstetricsInitController extends iTrustController
 		sessionUtils = SessionUtils.getInstance();
 		oiData = new ObstetricsInitMySQL(ds);
 		pregnancyData = new PregnancyInfoMySQL(ds);
+		pregnancyInfoValidator = new PregnancyInfoValidator(ds);
 	}
 	
 	/**
@@ -407,16 +417,32 @@ public class ObstetricsInitController extends iTrustController
 
 	public void addPregnancyRecord() {
 		// Make a new pregnancy record
-		PregnancyInfo newPregnancy = new PregnancyInfo(
-			Integer.parseInt(sessionUtils.getCurrentPatientMID()),
-			Integer.parseInt(yearOfConception),
-			Integer.parseInt(numWeeksPregnant) * 7,
-			Integer.parseInt(numHoursInLabor),
-			Integer.parseInt(weightGain),
-			DeliveryMethod.matchString(deliveryType),
-			Integer.parseInt(multiplicity)
-		);
-
+		PregnancyInfo newPregnancy;
+		try {
+			newPregnancy = new PregnancyInfo(
+				Integer.parseInt(sessionUtils.getCurrentPatientMID()),
+				Integer.parseInt(yearOfConception),
+				Integer.parseInt(numWeeksPregnant) * 7,
+				Integer.parseInt(numHoursInLabor),
+				Integer.parseInt(weightGain),
+				DeliveryMethod.matchString(deliveryType),
+				Integer.parseInt(multiplicity)
+			);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, ERROR_ADDING_PREGNANCY_INT_REQUIRED, null);
+			return;
+		}
+		
+		//Validate the pregnancyFields
+		try {
+			pregnancyInfoValidator.validate(newPregnancy, false);
+		} catch (FormValidationException e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, e.getMessage(), null);
+			return;
+		}
+			
 		// Add the new pregnancy record to both lists
 		this.addedPregnancies.add(newPregnancy);
 		this.displayedPregnancies.add(newPregnancy);
