@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:view beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+
+	<h:body>
+		<ui:composition template="/iTrust_template.xhtml">
+			<ui:define name="pageStyle">
+				<style>
+					.obstetrics-record-wrapper {
+						margin-top: 30px;
+						text-align: center;
+					}
+
+					.obstetrics-record-container {
+						display: inline-block;
+						text-align: left;
+					}
+
+					.obstetrics-record-container .table {
+						margin-bottom: 0px;
+					}
+
+					.obstetrics-record-container .table td {
+						vertical-align: middle;
+					}
+				</style>
+			</ui:define>
+			<ui:define name="pageTitle">iTrust - Add/View Obstetrics</ui:define>
+			<ui:define name="leftMenu"><ui:include src="/auth/hcp/menu.xhtml" /></ui:define>
+
+			<ui:define name="mainContent">
+				<h:message for="" id="obstetrics-message" class="iTrustError" />
+				<ui:param name="oiRecord" value="#{obstetrics_init_controller.viewedOI}" />
+				<ui:param name="addingRecord" value="#{empty oiRecord}" />
+				<ui:param name="viewingRecord" value="#{not empty oiRecord}" />
+
+				<h:form>
+					<ui:fragment rendered="#{addingRecord}"><h1>Adding Obstetrics Record</h1></ui:fragment>
+					<ui:fragment rendered="#{viewingRecord}"><h1>Viewing Obstetrics Record</h1></ui:fragment>
+
+					<div class="obstetrics-record-wrapper">
+						<div class="obstetrics-record-container">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4>
+										<ui:fragment rendered="#{addingRecord}">Adding</ui:fragment>
+										<ui:fragment rendered="#{viewingRecord}">Viewing</ui:fragment>
+										obstetrics record for <strong>#{user.getUserNameForIDFirstLast(session.getAttribute("pid"))}</strong>
+									</h4>
+								</div>
+
+								<table class="table table-hover record-info-table">
+									<tbody>
+										<tr>
+											<td>Initialization date:</td>
+											<td>#{oiRecord.prettyDate}</td>
+										</tr>
+										<tr>
+											<td>LMP:</td>
+											<td>
+												<ui:fragment rendered="#{addingRecord}">
+													<h:inputText class="form-control" value="#{obstetrics_init_controller.lmp}" />
+												</ui:fragment>
+												<ui:fragment rendered="#{viewingRecord}">
+													#{oiRecord.prettyLMP}
+												</ui:fragment>
+											</td>
+										</tr>
+										<tr>
+											<td>EDD:</td>
+											<td>#{oiRecord.prettyEDD}</td>
+										</tr>
+										<tr>
+											<td>Weeks pregnant at initialization date:</td>
+											<td>#{oiRecord.numWeeksPregnant}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div class="prior-pregnancies-wrapper">
+						<h2>Prior Pregnancies</h2>
+	
+						<ui:param name="oid" value="#{obstetrics_init_controller.viewedOI.id}" />
+						
+						<c:if test="#{viewingRecord}">
+							<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnanciesFromInit(oid)}" />
+						</c:if>
+						<c:if test="#{addingRecord}">
+							<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getDisplayedPregnancies()}" />
+						</c:if>
+	
+						<ui:fragment rendered="#{viewingRecord and (empty priorPregnancies)}">
+							<h2>There are no prior pregnancies to display.</h2>
+						</ui:fragment>
+						<ui:fragment rendered="#{addingRecord or (not empty priorPregnancies)}">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>Year of conception</th>
+										<th>Number of weeks pregnant</th>
+										<th>Number of hours in labor</th>
+										<th>Weight gain during pregnancy</th>
+										<th>Delivery type</th>
+										<th>Multiplicity</th>
+	
+										<th></th>
+									</tr>
+								</thead>
+	
+								<tbody>
+									<ui:fragment rendered="#{addingRecord}">
+										<tr>
+											<td><h:inputText value="#{obstetrics_init_controller.yearOfConception}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.numWeeksPregnant}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.numHoursInLabor}" class="form-control"/></td>
+											<td><h:inputText value="#{obstetrics_init_controller.weightGain}" class="form-control"/></td>
+											<td>
+												<h:selectOneMenu value="#{obstetrics_init_controller.deliveryType}" class="form-control">
+													<f:selectItems var="method"
+																   value="#{obstetrics_init_controller.getDeliveryMethods()}"
+																   itemLabel="#{method.toString()}"
+																   itemValue="#{method.toString()}" />
+												</h:selectOneMenu>
+											</td>
+											<td><h:inputText value="#{obstetrics_init_controller.multiplicity}" class="form-control"/></td>
+		
+											<td><h:commandButton value="Add" action="#{obstetrics_init_controller.addPregnancyRecord()}" /></td>
+										</tr>
+									</ui:fragment>
+	
+									<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
+										<tr>
+											<td>#{pregnancyInfo.yearOfConception}</td>
+											<td>#{pregnancyInfo.numWeeksPregnant}</td>
+											<td>#{pregnancyInfo.numHoursInLabor}</td>
+											<td>#{pregnancyInfo.weightGain}</td>
+											<td>#{pregnancyInfo.deliveryType.toString()}</td>
+											<td>#{pregnancyInfo.multiplicity}</td>
+											<td></td>
+										</tr>
+									</ui:repeat>
+	
+								</tbody>
+							</table>
+						</ui:fragment>
+	
+						<div class="text-center">
+							<ui:fragment rendered="#{addingRecord}">
+								<h:commandButton value="Submit" action="#{obstetrics_init_controller.addObstetricsRecord()}" />
+								&nbsp;
+								<h:commandButton value="Cancel" action="#{obstetrics_init_controller.cancelAddObstetricsRecord()}" />
+							</ui:fragment>
+							<ui:fragment rendered="#{viewingRecord}">
+								<h:commandButton value="Done" action="#{navigation_controller.viewObstetricsOverview}" />
+							</ui:fragment>
+						</div>
+					</div>
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

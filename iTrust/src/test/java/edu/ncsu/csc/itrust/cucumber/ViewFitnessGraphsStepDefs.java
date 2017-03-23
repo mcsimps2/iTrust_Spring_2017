@@ -47,8 +47,8 @@ public class ViewFitnessGraphsStepDefs {
 		Assert.assertTrue(driver.verifyLocation("/iTrust/auth/forwardUser.jsp"));
 				
 		//login with the given mid and password
-		driver.findElement(By.name("j_username")).sendKeys(mid);;
-		driver.findElement(By.name("j_password")).sendKeys(pwd);;
+		driver.findElement(By.name("j_username")).sendKeys(mid);
+		driver.findElement(By.name("j_password")).sendKeys(pwd);
 		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
 
 		//Check if we logged in correctly
