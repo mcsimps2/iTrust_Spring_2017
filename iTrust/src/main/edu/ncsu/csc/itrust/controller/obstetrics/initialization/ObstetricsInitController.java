@@ -61,7 +61,7 @@ public class ObstetricsInitController extends iTrustController
 	/** Error message when adding invalid pregancy info */
 	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy.";
 	/** Error when non integers are input to pregnancy info */
-	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field.";
+	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field (weight gain can take a decimal value)";
 	/** Error message when adding the obstetrics initialization record fails */
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
 	/** Error indicating incorrect date format for lmp */
@@ -446,7 +446,7 @@ public class ObstetricsInitController extends iTrustController
 				Integer.parseInt(yearOfConception),
 				Integer.parseInt(numWeeksPregnant) * 7,
 				Integer.parseInt(numHoursInLabor),
-				Integer.parseInt(weightGain),
+				Double.parseDouble(weightGain),
 				DeliveryMethod.matchString(deliveryType),
 				Integer.parseInt(multiplicity)
 			);
