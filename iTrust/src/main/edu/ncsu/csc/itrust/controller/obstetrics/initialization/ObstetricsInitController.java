@@ -10,8 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -138,6 +140,22 @@ public class ObstetricsInitController extends iTrustController
 	public ObstetricsInitController(DataSource ds) {
 		super();
 		sessionUtils = SessionUtils.getInstance();
+		oiData = new ObstetricsInitMySQL(ds);
+		pregnancyData = new PregnancyInfoMySQL(ds);
+		pregnancyInfoValidator = new PregnancyInfoValidator(ds);
+	}
+	
+	/**
+	 * For testing purposes
+	 * 
+	 * @param ds
+	 *            DataSource
+	 * @param sessionUtils
+	 *            SessionUtils instance
+	 */
+	public ObstetricsInitController(DataSource ds, SessionUtils sessionUtils) {
+		super();
+		this.sessionUtils = sessionUtils;
 		oiData = new ObstetricsInitMySQL(ds);
 		pregnancyData = new PregnancyInfoMySQL(ds);
 		pregnancyInfoValidator = new PregnancyInfoValidator(ds);
@@ -347,13 +365,21 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Navigate to the view/add page
 		try {
-			NavigationController.viewAddObstetricsRecord();
+			navigateToViewAdd();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
 	}
 	
+	/**
+	 * Navigates the the add/view obstetrics init record page.
+	 * @throws IOException
+	 */
+	public void navigateToViewAdd() throws IOException {
+		NavigationController.viewAddObstetricsRecord();
+	}
+
 	public List<DeliveryMethod> getDeliveryMethods() {
 		return Arrays.asList(DeliveryMethod.values());
 	}
@@ -530,7 +556,7 @@ public class ObstetricsInitController extends iTrustController
 			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
 			
 			// Redirect to the overview page with the navigation controller
-			NavigationController.viewObstetricsOverview();
+			redirectToObstetricsRecordsOverview();
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
@@ -543,6 +569,14 @@ public class ObstetricsInitController extends iTrustController
 		}
 	}
 	
+	/**
+	 * Navigates to the obstetrics init records overview page.
+	 * @throws IOException
+	 */
+	public void redirectToObstetricsRecordsOverview() throws IOException {
+		NavigationController.viewObstetricsOverview();
+	}
+
 	public void cancelAddObstetricsRecord() {
 		// Clear pregnancy lists (we're not going to submit them) and pregnancy fields
 		clearPregnancyFields();
@@ -551,7 +585,7 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Go back to the overview page
 		try {
-			NavigationController.viewObstetricsOverview();
+			redirectToObstetricsRecordsOverview();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
@@ -574,5 +608,28 @@ public class ObstetricsInitController extends iTrustController
 	
 	private void clearLMP() {
 		this.setLmp("");
+	}
+	
+	/**
+	 * Sends a FacesMessage for FacesContext to display.
+	 * 
+	 * @param severity
+	 *            severity of the message
+	 * @param summary
+	 *            localized summary message text
+	 * @param detail
+	 *            localized detail message text
+	 * @param clientId
+	 *            The client identifier with which this message is associated
+	 *            (if any)
+	 */
+	@Override
+	public void printFacesMessage(Severity severity, String summary, String detail, String clientId) {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (ctx == null) {
+			return;
+		}
+		ctx.getExternalContext().getFlash().setKeepMessages(true);
+		ctx.addMessage(clientId, new FacesMessage(severity, summary, detail));
 	}
 }
