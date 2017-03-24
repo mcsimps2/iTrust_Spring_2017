@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -85,7 +86,10 @@ public class ObstetricsInitControllerTest {
 	 */
 	@Test
 	public void testIsPatientEligible() {
-		fail("Not yet implemented");
+		// Test for exceptions
+		Assert.assertFalse("Returned true on an invalid pid", oic.isPatientEligible("not a Long"));
+		Mockito.verify(oic).printFacesMessage(Mockito.eq(FacesMessage.SEVERITY_ERROR), Mockito.anyString(),
+				Mockito.anyString(), Mockito.anyString());
 	}
 
 	/**

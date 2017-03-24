@@ -97,6 +97,9 @@ public class TransactionDAO {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new DBException(e);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			throw new NullPointerException(e.getMessage());
 		}
 	}
 
