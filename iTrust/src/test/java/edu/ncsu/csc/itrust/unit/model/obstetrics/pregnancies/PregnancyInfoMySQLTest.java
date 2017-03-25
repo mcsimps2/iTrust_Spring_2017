@@ -33,8 +33,8 @@ public class PregnancyInfoMySQLTest {
 		loader = new PregnancyInfoSQLLoader();
 		
 		piArr = new PregnancyInfo[2];
-		piArr[0] = new PregnancyInfo(1, 1, 2016, 300, 18, 25, DeliveryMethod.VAGINAL_DELIVERY, 2);
-		piArr[1] = new PregnancyInfo(2, 1, 2014, 200, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
+		piArr[0] = new PregnancyInfo(2, 1, 2014, 200, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
+		piArr[1] = new PregnancyInfo(3, 1, 2016, 300, 18, 25, DeliveryMethod.VAGINAL_DELIVERY, 2);
 	}
 	
 	@Test
@@ -123,34 +123,31 @@ public class PregnancyInfoMySQLTest {
 	{
 		try
 		{
-			//See if this works for the second record in the DB
-			List<PregnancyInfo> list = pisql.getRecordsFromInit(2);
+			//See if this works for the second record for patient 1 in the DB
+			List<PregnancyInfo> list = pisql.getRecordsFromInit(piArr[1].getObstetricsInitID());
+			Assert.assertEquals(piArr.length, list.size());
 			for (int i = 0; i < piArr.length; i++)
 			{
 				Assert.assertTrue(list.contains(piArr[i]));
 			}
 			
-			//See if this works for the first record in the DB
-			list = pisql.getRecordsFromInit(1);
+			//See if this works for the first record for patient 1 in the DB
+			list = pisql.getRecordsFromInit(piArr[0].getObstetricsInitID());
 			Assert.assertEquals(1, list.size());
 			Assert.assertEquals(piArr[0], list.get(0));
 			
 			//Add another record
-			PregnancyInfo pi = new PregnancyInfo(2, 1, 2000, 500, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
+			PregnancyInfo pi = new PregnancyInfo(3, 1, 2000, 500, 10, 20, DeliveryMethod.VAGINAL_DELIVERY, 1);
 			pisql.add(pi);
 			//See if everything still works
 			//Testing for obstetricsInitID 2
-			list = pisql.getRecordsFromInit(2);
+			list = pisql.getRecordsFromInit(3);
 			Assert.assertEquals(3, list.size());
 			for (int i = 0; i < piArr.length; i++)
 			{
 				Assert.assertTrue(list.contains(piArr[i]));
 			}
 			Assert.assertTrue(list.contains(pi));
-			//Testing for id 1
-			list = pisql.getRecordsFromInit(1);
-			Assert.assertEquals(1, list.size());
-			Assert.assertEquals(piArr[0], list.get(0));
 		}
 		catch (DBException e)
 		{

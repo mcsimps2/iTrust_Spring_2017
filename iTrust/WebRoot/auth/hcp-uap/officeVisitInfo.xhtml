@@ -47,6 +47,12 @@
 					
 					<input id="tab-immunizations" type="radio" name="ovtabs" />
 					<label for="tab-immunizations">Immunizations</label>
+					
+					<input id="tab-obstetrics" type="radio" name="ovtabs" />
+					<label for="tab-obstetrics">Obstetrics</label>
+					
+					<input id="tab-ultrasound" type="radio" name="ovtabs" />
+					<label for="tab-ultrasound">Ultrasound</label>
 				</c:if>
 				
 				<div class="tab-content">
@@ -76,6 +82,14 @@
 						
 						<div class="tab-panel" id="content-immunizations">
 							<ui:include src="/auth/hcp-uap/manageImmunizations.xhtml"></ui:include>
+						</div>
+						
+						<div class="tab-panel" id="content-obstetrics">
+							<ui:include src="/auth/hcp-uap/manageObstetrics.xhtml"></ui:include>
+						</div>
+						
+						<div class="tab-panel" id="content-ultrasound">
+							<ui:include src="/auth/hcp-uap/manageUltrasound.xhtml"></ui:include>
 						</div>
 					</c:if>
 				</div>
