@@ -473,7 +473,9 @@ CREATE TABLE obstetricsVisit (
 	fhr						INT				UNSIGNED NOT NULL,
 	multiplicity 			INT				UNSIGNED NOT NULL,
 	lowLyingPlacentaObserved BOOLEAN		NOT NULL,
-	imageOfUltrasound		BLOB
+	imageOfUltrasound		BLOB,
+	PRIMARY KEY (id),
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
 )
 
 CREATE TABLE ultrasound (
@@ -486,7 +488,9 @@ CREATE TABLE ultrasound (
 	ofd						INT				UNSIGNED NOT NULL,
 	ac						INT				UNSIGNED NOT NULL,
 	hl						INT				UNSIGNED NOT NULL,
-	efw						INT				UNSIGNED NOT NULL
+	efw						INT				UNSIGNED NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
 )
 
 CREATE TABLE icdCode

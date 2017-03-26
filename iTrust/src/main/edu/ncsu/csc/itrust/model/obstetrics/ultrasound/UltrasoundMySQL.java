@@ -56,10 +56,9 @@ public class UltrasoundMySQL implements UltrasoundData {
 	
 	@Override
 	public List<Ultrasound> getAll() throws DBException {
-		try {
-			Connection conn = ds.getConnection();
-			PreparedStatement pstring = conn.prepareStatement("SELECT * FROM ultrasound");
-			ResultSet results = pstring.executeQuery();
+		try (Connection conn = ds.getConnection();
+			PreparedStatement pstring = conn.prepareStatement("SELECT * FROM ultrasound;");
+			ResultSet results = pstring.executeQuery()) {
 			List<Ultrasound> list = loader.loadList(results);
 			return list;
 		} catch (SQLException e) {
@@ -69,10 +68,9 @@ public class UltrasoundMySQL implements UltrasoundData {
 
 	@Override
 	public Ultrasound getByID(long id) throws DBException {
-		try {
-			Connection conn = ds.getConnection();
-			PreparedStatement statement = conn.prepareStatement("SELECT * FROM ultrasound WHERE id="+id);
-			ResultSet resultSet = statement.executeQuery();
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM ultrasound WHERE id="+id+";");
+			ResultSet resultSet = statement.executeQuery()) {
 			List<Ultrasound> list = loader.loadList(resultSet);
 			if (list.size() > 0) {
 				return list.get(0);
@@ -91,9 +89,8 @@ public class UltrasoundMySQL implements UltrasoundData {
 		} catch (FormValidationException e1) {
 			throw new DBException(new SQLException(e1));
 		}
-		try { 
-			Connection conn = ds.getConnection();
-			PreparedStatement statement = loader.loadParameters(conn, null, addObj, true);
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = loader.loadParameters(conn, null, addObj, true);) {
 			int results = statement.executeUpdate();
 			return results == 1;
 		} catch (SQLException e) {
@@ -109,9 +106,8 @@ public class UltrasoundMySQL implements UltrasoundData {
 			throw new DBException(new SQLException(e1.getMessage()));
 		}
 
-		try {
-			Connection conn = ds.getConnection();
-			PreparedStatement statement = loader.loadParameters(conn, null, updateObj, false);
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = loader.loadParameters(conn, null, updateObj, false);) {
 			int results = statement.executeUpdate();
 			return results == 1;
 		} catch (SQLException e) {
@@ -121,9 +117,8 @@ public class UltrasoundMySQL implements UltrasoundData {
 
 	@Override
 	public Ultrasound getByOfficeVisit(long officeVisitID) throws DBException {
-		try {
-			Connection conn = ds.getConnection();
-			PreparedStatement statement = conn.prepareStatement("SELECT * FROM ultrasound WHERE officeVisitID="+officeVisitID);
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM ultrasound WHERE officeVisitID="+officeVisitID);) {
 			ResultSet resultSet = statement.executeQuery();
 			List<Ultrasound> list = loader.loadList(resultSet);
 			if (list.size() > 0) {
@@ -138,9 +133,8 @@ public class UltrasoundMySQL implements UltrasoundData {
 
 	@Override
 	public boolean delete(long id) throws DBException {
-		try {
-			Connection conn = ds.getConnection();
-            PreparedStatement pstring = loader.loadDelete(conn, id);
+		try (Connection conn = ds.getConnection();
+            PreparedStatement pstring = loader.loadDelete(conn, id);) {
             return pstring.executeUpdate() > 0;
         } catch (SQLException e) {
         	throw new DBException(e);

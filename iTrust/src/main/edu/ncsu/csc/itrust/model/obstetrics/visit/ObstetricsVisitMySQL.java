@@ -65,7 +65,7 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	@Override
 	public List<ObstetricsVisit> getAll() throws DBException {
 		try (Connection conn = ds.getConnection();
-				PreparedStatement pstring = conn.prepareStatement("SELECT * FROM obstetricsVisit");
+				PreparedStatement pstring = conn.prepareStatement("SELECT * FROM obstetricsVisit;");
 				ResultSet results = pstring.executeQuery()) {
 			List<ObstetricsVisit> list = loader.loadList(results);
 			return list;
@@ -77,7 +77,7 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	@Override
 	public ObstetricsVisit getByID(long id) throws DBException {
 		try (Connection conn = ds.getConnection();
-			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE id="+id);
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE id="+id+";");
 			ResultSet resultSet = statement.executeQuery()) {
 			List<ObstetricsVisit> list = loader.loadList(resultSet);
 			if (list.size() > 0) {
@@ -164,7 +164,7 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	@Override
 	public ObstetricsVisit getByOfficeVisit(long officeVisitID) throws DBException {
 		try (Connection conn = ds.getConnection();
-			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE officeVisitID="+officeVisitID);
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE officeVisitID="+officeVisitID+";");
 			ResultSet resultSet = statement.executeQuery()) {
 			List<ObstetricsVisit> list = loader.loadList(resultSet);
 			if (list.size() > 0) {
