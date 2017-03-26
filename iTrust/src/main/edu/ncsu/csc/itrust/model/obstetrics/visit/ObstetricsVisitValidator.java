@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
-//import javax.sql.DataSource;
-
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.POJOValidator;
@@ -11,12 +9,6 @@ import edu.ncsu.csc.itrust.model.POJOValidator;
  * @author jcgonzal
  */
 public class ObstetricsVisitValidator extends POJOValidator<ObstetricsVisit> {
-
-//	private DataSource ds;
-//	
-//	public ObstetricsVisitValidator(DataSource ds) {
-//
-//	}
 
 	@Override
 	public void validate(ObstetricsVisit obj) throws FormValidationException {

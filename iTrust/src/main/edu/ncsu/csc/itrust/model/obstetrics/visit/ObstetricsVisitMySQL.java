@@ -118,19 +118,19 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	}
 
 	@Override
-	public ObstetricsVisit getObstetricsVisitByOfficeVisit(long officeVisitID) throws DBException {
+	public ObstetricsVisit getByOfficeVisit(long officeVisitID) throws DBException {
 		try (Connection conn = ds.getConnection();
-				PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE officeVisitID="+officeVisitID);
-				ResultSet resultSet = statement.executeQuery()) {
-				List<ObstetricsVisit> list = loader.loadList(resultSet);
-				if (list.size() > 0) {
-					return list.get(0);
-				} else {
-					return null;
-				}
-			} catch (SQLException e) {
-				throw new DBException(e);
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit WHERE officeVisitID="+officeVisitID);
+			ResultSet resultSet = statement.executeQuery()) {
+			List<ObstetricsVisit> list = loader.loadList(resultSet);
+			if (list.size() > 0) {
+				return list.get(0);
+			} else {
+				return null;
 			}
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
 	}
 
 }

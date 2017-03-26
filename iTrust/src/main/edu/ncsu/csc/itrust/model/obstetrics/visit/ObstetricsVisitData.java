@@ -14,5 +14,5 @@ public interface ObstetricsVisitData extends DataBean<ObstetricsVisit> {
 	 * @param officeVisitID the office visit corresponding to the obstetrics visit
 	 * @return the ObstetricsVisit
 	 */
-	public ObstetricsVisit getObstetricsVisitByOfficeVisit(long officeVisitID) throws DBException;
+	public ObstetricsVisit getByOfficeVisit(long officeVisitID) throws DBException;
 }

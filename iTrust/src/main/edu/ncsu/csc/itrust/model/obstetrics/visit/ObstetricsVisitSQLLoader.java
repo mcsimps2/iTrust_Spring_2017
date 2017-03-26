@@ -49,7 +49,7 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
-			stmt = "UPDATE immunization SET  "
+			stmt = "UPDATE obstetricsVisit SET  "
 					+ "officeVisitID=?"
 					+ "weeksPregnant=?"
 					+ "daysPregnant=?"
