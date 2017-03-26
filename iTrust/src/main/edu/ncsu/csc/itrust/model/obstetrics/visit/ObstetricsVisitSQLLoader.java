@@ -51,12 +51,12 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		} else { // NOT NEW
 			long id = insertObject.getId();
 			stmt = "UPDATE obstetricsVisit SET  "
-					+ "officeVisitID=?"
-					+ "weeksPregnant=?"
-					+ "fhr=?"
-					+ "multiplicity=?"
-					+ "lowLyingPlacentaObserved=?"
-					+ "imageOfUltrasound=?"
+					+ "officeVisitID=?, "
+					+ "weeksPregnant=?, "
+					+ "fhr=?, "
+					+ "multiplicity=?, "
+					+ "lowLyingPlacentaObserved=?, "
+					+ "imageOfUltrasound=?, "
 					+ "WHERE id=" + id + ";";
 		}
 		

@@ -12,6 +12,10 @@ import org.junit.Test;
 
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 
+/**
+ * Test pojo for obstetrics visit
+ * @author jcgonzal
+ */
 public class ObstetricsVisitTest {
 
 	/** Pojo with UID */

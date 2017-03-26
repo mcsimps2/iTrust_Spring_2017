@@ -8,8 +8,13 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.Ultrasound;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.UltrasoundValidator;
 
+/**
+ * Test the validator for ultrasound
+ * @author jcgonzal
+ */
 public class UltrasoundValidatorTest {
 
+	/** Validator obj to test */
 	UltrasoundValidator validator;
 	
 	@Before
