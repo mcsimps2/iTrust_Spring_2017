@@ -23,6 +23,8 @@ public class ObstetricsInitMySQLTest {
 	DataSource ds;
 	/** Holds records already in the database */
 	ObstetricsInit[] oiArr;
+	/** Holds all of the records already in the database */
+	ObstetricsInit[] oiArrAll;
 	
 	/**
 	 * Sets up the test environment and variables
@@ -37,10 +39,14 @@ public class ObstetricsInitMySQLTest {
 		oisql = new ObstetricsInitMySQL(ds);
 		loader = new ObstetricsInitSQLLoader();
 		
-		//Pickup some values already in the DB
+		//Pickup some values already in the DB, place them in reverse order of entry (so the most recent entries are first)
 		oiArr = new ObstetricsInit[2];
 		oiArr[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
 		oiArr[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
+		oiArrAll = new ObstetricsInit[3];
+		oiArrAll[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
+		oiArrAll[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
+		oiArrAll[2] = new ObstetricsInit(5, "2005-03-01", "2005-01-03");
 	}
 	
 	/**
@@ -69,9 +75,10 @@ public class ObstetricsInitMySQLTest {
 	{
 		try {
 			List<ObstetricsInit> results = oisql.getRecords(1);
+			Assert.assertEquals(oiArr.length, results.size());
 			for (int i = 0; i < oiArr.length; i++)
 			{
-				Assert.assertTrue(results.contains(oiArr[i]));
+				Assert.assertEquals(oiArr[i], results.get(i));
 			}
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
@@ -185,13 +192,14 @@ public class ObstetricsInitMySQLTest {
 	@Test
 	public void testGetAll()
 	{
-		List<ObstetricsInit> oiList;
+		List<ObstetricsInit> results;
 		try
 		{
-			oiList = oisql.getAll();
+			results = oisql.getAll();
+			Assert.assertEquals(oiArrAll.length, results.size());
 			for (int i = 0; i < oiArr.length; i++)
 			{
-				Assert.assertTrue(oiList.contains(oiArr[i]));
+				Assert.assertEquals(results.get(i), oiArr[i]);
 			}
 		}
 		catch (DBException e)

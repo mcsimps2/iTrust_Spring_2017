@@ -10,7 +10,9 @@
 #tab-lab-procedure:checked ~ .tab-content > #content-lab-procedure, 
 #tab-daignoses:checked ~ .tab-content > #content-daignoses, 
 #tab-medical-procedures:checked ~ .tab-content > #content-medical-procedures, 
-#tab-immunizations:checked ~ .tab-content > #content-immunizations {
+#tab-immunizations:checked ~ .tab-content > #content-immunizations,
+#tab-obstetrics:checked ~ .tab-content > #content-obstetrics,
+#tab-ultrasound:checked ~ .tab-content > #content-ultrasound {
 	display: block;
 }
 
