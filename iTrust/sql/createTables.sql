@@ -467,9 +467,9 @@ CREATE TABLE immunization (
 
 CREATE TABLE obstetricsVisit (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
-	patientMID				BIGINT(20)		UNSIGNED NOT NULL,
-	obstetricsInitID		BIGINT(20)		UNSIGNED NOT NULL,
 	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
+	weeksPregnant			INT				UNSIGNED NOT NULL,
+	daysPregnant			INT				UNSIGNED NOT NULL,
 	fhr						INT				UNSIGNED NOT NULL,
 	multiplicity 			INT				UNSIGNED NOT NULL,
 	lowLyingPlacentaObserved BOOLEAN		NOT NULL,
@@ -478,7 +478,6 @@ CREATE TABLE obstetricsVisit (
 
 CREATE TABLE ultrasound (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
-	patientMID				BIGINT(20)		UNSIGNED NOT NULL,
 	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
 	crl						INT				UNSIGNED NOT NULL,
 	bpd						INT				UNSIGNED NOT NULL,

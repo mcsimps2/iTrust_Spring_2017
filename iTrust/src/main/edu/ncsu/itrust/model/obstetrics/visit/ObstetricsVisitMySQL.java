@@ -14,10 +14,19 @@ import javax.sql.DataSource;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 
+/**
+ * Object used to access the ObstetricsVisit database
+ * @author jcgonzal
+ */
 public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	
+	/** The sql loader used to prepare the statements */
 	ObstetricsVisitSQLLoader loader;
+	
+	/** The validator */
 	ObstetricsVisitValidator validator;
+	
+	/** Datasource to access the db */
 	private DataSource ds;
 	
 	/**

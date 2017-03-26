@@ -3,6 +3,10 @@ package edu.ncsu.itrust.model.obstetrics.visit;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.DataBean;
 
+/**
+ * Interface for the mysql class that will retrieve and set the data
+ * @author jcgonzal
+ */
 public interface ObstetricsVisitData extends DataBean<ObstetricsVisit> {
 	
 	/**

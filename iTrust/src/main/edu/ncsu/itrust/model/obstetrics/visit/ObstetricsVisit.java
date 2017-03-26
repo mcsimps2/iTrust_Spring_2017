@@ -5,33 +5,51 @@ import java.sql.Blob;
 /**
  * Model of info for obstetrics visit
  * @author jcgonzal
- *
  */
 public class ObstetricsVisit {
 
-	private long id;
+	/** Unique id */
+	private Long id;
 	
-	private long patientMID;
+	/** ID to link to OfficeVisit object */
+	private Long officeVisitID;
 	
-	private long obstetricsInitID;
+	/** Number of weeks pregnant at visit */
+	private Integer weeksPregnant;
 	
-	private long officeVisitID;
+	/** Number of days pregnant/partial weeks */
+	private Integer daysPregnant;
 	
-	private int fhr;
+	/** Fetal heart rate */
+	private Integer fhr;
 	
-	private int multiplicity;
+	/** Number of fetuses in the pregnancy */
+	private Integer multiplicity;
 	
-	private boolean lowLyingPlacentaObserved;
+	/** Whether or not a low lying placenta was observed */
+	private Boolean lowLyingPlacentaObserved;
 	
+	/** Data for the image of the ultrasound */
 	private Blob imageOfUltrasound;
 	
-	public ObstetricsVisit(long id, long patientMID, long officeVisitID, long obstetricsInitID,
-			int fhr, int multiplicity, boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
+	/**
+	 * Constructor for the obstetrics visit pojo
+	 * @param id
+	 * @param officeVisitID
+	 * @param weeksPregnant
+	 * @param daysPregnant
+	 * @param fhr
+	 * @param multiplicity
+	 * @param lowLyingPlacentaObserved
+	 * @param imageOfUltraSound
+	 */
+	public ObstetricsVisit(Long id, Long officeVisitID, Integer weeksPregnant, Integer daysPregnant,
+			Integer fhr, Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
 		super();
 		this.id = id;
-		this.patientMID = patientMID;
 		this.officeVisitID = officeVisitID;
-		this.obstetricsInitID = obstetricsInitID;
+		this.weeksPregnant = weeksPregnant;
+		this.daysPregnant = daysPregnant;
 		this.fhr = fhr;
 		this.multiplicity = multiplicity;
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
@@ -41,98 +59,98 @@ public class ObstetricsVisit {
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the patientMID
-	 */
-	public long getPatientMID() {
-		return patientMID;
-	}
-
-	/**
-	 * @param patientMID the patientMID to set
-	 */
-	public void setPatientMID(long patientMID) {
-		this.patientMID = patientMID;
-	}
-
-	/**
-	 * @return the obstetricsInitID
-	 */
-	public long getObstetricsInitID() {
-		return obstetricsInitID;
-	}
-
-	/**
-	 * @param obstetricsInitID the obstetricsInitID to set
-	 */
-	public void setObstetricsInitID(long obstetricsInitID) {
-		this.obstetricsInitID = obstetricsInitID;
 	}
 
 	/**
 	 * @return the officeVisitID
 	 */
-	public long getOfficeVisitID() {
+	public Long getOfficeVisitID() {
 		return officeVisitID;
 	}
 
 	/**
 	 * @param officeVisitID the officeVisitID to set
 	 */
-	public void setOfficeVisitID(long officeVisitID) {
+	public void setOfficeVisitID(Long officeVisitID) {
 		this.officeVisitID = officeVisitID;
+	}
+
+	/**
+	 * @return the weeksPregnant
+	 */
+	public Integer getWeeksPregnant() {
+		return weeksPregnant;
+	}
+
+	/**
+	 * @param weeksPregnant the weeksPregnant to set
+	 */
+	public void setWeeksPregnant(Integer weeksPregnant) {
+		this.weeksPregnant = weeksPregnant;
+	}
+
+	/**
+	 * @return the daysPregnant
+	 */
+	public Integer getDaysPregnant() {
+		return daysPregnant;
+	}
+
+	/**
+	 * @param daysPregnant the daysPregnant to set
+	 */
+	public void setDaysPregnant(Integer daysPregnant) {
+		this.daysPregnant = daysPregnant;
 	}
 
 	/**
 	 * @return the fhr
 	 */
-	public int getFhr() {
+	public Integer getFhr() {
 		return fhr;
 	}
 
 	/**
 	 * @param fhr the fhr to set
 	 */
-	public void setFhr(int fhr) {
+	public void setFhr(Integer fhr) {
 		this.fhr = fhr;
 	}
 
 	/**
 	 * @return the multiplicity
 	 */
-	public int getMultiplicity() {
+	public Integer getMultiplicity() {
 		return multiplicity;
 	}
 
 	/**
 	 * @param multiplicity the multiplicity to set
 	 */
-	public void setMultiplicity(int multiplicity) {
+	public void setMultiplicity(Integer multiplicity) {
 		this.multiplicity = multiplicity;
 	}
 
 	/**
 	 * @return the lowLyingPlacentaObserved
 	 */
-	public boolean isLowLyingPlacentaObserved() {
+	public Boolean isLowLyingPlacentaObserved() {
 		return lowLyingPlacentaObserved;
 	}
 
 	/**
 	 * @param lowLyingPlacentaObserved the lowLyingPlacentaObserved to set
 	 */
-	public void setLowLyingPlacentaObserved(boolean lowLyingPlacentaObserved) {
+	public void setLowLyingPlacentaObserved(Boolean lowLyingPlacentaObserved) {
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
 	}
 

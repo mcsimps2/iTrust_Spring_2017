@@ -12,6 +12,10 @@ import com.mysql.jdbc.Statement;
 
 import edu.ncsu.csc.itrust.model.SQLLoader;
 
+/**
+ * SQL loader to prepare statements to access and update obstetrics visit objects
+ * @author jcgonzal
+ */
 public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 
 	@Override
@@ -25,15 +29,15 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 
 	@Override
 	public ObstetricsVisit loadSingle(ResultSet rs) throws SQLException {
-		long id = rs.getLong("id");
-		long patientMID = rs.getLong("patientMID");
-		long obstetricsInitID = rs.getLong("obstetricsInitID");
-		long officeVisitID = rs.getLong("officeVisitID");
-		int fhr = rs.getInt("fhr");
-		int multiplicity = rs.getInt("multiplicity");
-		boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
+		Long id = rs.getLong("id");
+		Long officeVisitID = rs.getLong("officeVisitID");
+		Integer weeksPregnant = rs.getInt("weeksPregnant");
+		Integer daysPregnant = rs.getInt("daysPregnant");
+		Integer fhr = rs.getInt("fhr");
+		Integer multiplicity = rs.getInt("multiplicity");
+		Boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
 		Blob imageOfUltrasound = rs.getBlob("imageOfUltrasound");
-		return new ObstetricsVisit(id, patientMID, officeVisitID, obstetricsInitID, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
+		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, daysPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
 	}
 
 	@Override
@@ -41,14 +45,14 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 			boolean newInstance) throws SQLException {
 		String stmt = "";
 		if( newInstance ){ // IS NEW CODE
-			stmt = "INSERT INTO obstetricsVisit(patientMID, obstetricsInitID, officeVisitID, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
+			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, daysPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
 			stmt = "UPDATE immunization SET  "
-					+ "patientMID=?, "
-					+ "obstetricsInitID=? "
 					+ "officeVisitID=?"
+					+ "weeksPregnant=?"
+					+ "daysPregnant=?"
 					+ "fhr=?"
 					+ "multiplicity=?"
 					+ "lowLyingPlacentaObserved=?"
@@ -57,9 +61,9 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		}
 		
 		ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
-		ps.setLong( 1, insertObject.getPatientMID() );
-		ps.setLong( 2,  insertObject.getObstetricsInitID() );
-		ps.setLong(3, insertObject.getOfficeVisitID());
+		ps.setLong(1, insertObject.getOfficeVisitID());
+		ps.setInt(2, insertObject.getWeeksPregnant());
+		ps.setInt(3, insertObject.getDaysPregnant());
 		ps.setInt(4, insertObject.getFhr());
 		ps.setInt(5, insertObject.getMultiplicity());
 		ps.setBoolean(6, insertObject.isLowLyingPlacentaObserved());
