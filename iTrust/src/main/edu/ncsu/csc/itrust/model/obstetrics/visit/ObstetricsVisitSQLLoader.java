@@ -33,7 +33,9 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		Long officeVisitID = rs.getLong("officeVisitID");
 		Integer weeksPregnant = rs.getInt("weeksPregnant");
 		Integer fhr = rs.getInt("fhr");
+		if (rs.wasNull()) fhr = null;
 		Integer multiplicity = rs.getInt("multiplicity");
+		if (rs.wasNull()) multiplicity = null;
 		Boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
 		Blob imageOfUltrasound = rs.getBlob("imageOfUltrasound");
 		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);

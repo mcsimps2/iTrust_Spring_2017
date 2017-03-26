@@ -104,7 +104,7 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	@Override
 	public boolean update(ObstetricsVisit updateObj) throws DBException, FormValidationException {
 		try {
-			validator.validate(updateObj);
+			validator.validateUpdate(updateObj);
 		} catch (FormValidationException e1) {
 			throw new DBException(new SQLException(e1.getMessage()));
 		}
