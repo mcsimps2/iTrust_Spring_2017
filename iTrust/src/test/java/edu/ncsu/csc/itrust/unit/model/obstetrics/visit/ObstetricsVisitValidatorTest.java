@@ -46,7 +46,7 @@ public class ObstetricsVisitValidatorTest {
 			validator.validate(badObj1);
 			Assert.fail("Validation passed for an invalid Obstetrics Visit");
 		} catch (FormValidationException e) {
-			Assert.assertTrue(e.getMessage().equals("This form has not been validated correctly. The following field are not properly filled in: [Weeks pregnant is required, Multiplicity is required, Fetal heart rate is required, Low lying placenta observation is required, Image of ultrasound is required]"));
+			Assert.assertTrue(e.getMessage().equals("This form has not been validated correctly. The following field are not properly filled in: [Weeks pregnant is required, Multiplicity is required, Fetal heart rate is required, Low lying placenta observation is required]"));
 		}
 		
 		try {

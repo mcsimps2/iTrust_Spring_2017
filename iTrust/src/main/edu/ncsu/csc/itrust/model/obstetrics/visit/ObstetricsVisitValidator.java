@@ -35,9 +35,6 @@ public class ObstetricsVisitValidator extends POJOValidator<ObstetricsVisit> {
 		if (obj.isLowLyingPlacentaObserved() == null)
 			errorList.addIfNotNull("Low lying placenta observation is required");
 		
-		if (obj.getImageOfUltrasound() == null)
-			errorList.addIfNotNull("Image of ultrasound is required");
-		
 		if ( errorList.hasErrors() )
 			throw new FormValidationException(errorList);
 	}	
