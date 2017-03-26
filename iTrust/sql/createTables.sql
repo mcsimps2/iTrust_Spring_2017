@@ -475,7 +475,7 @@ CREATE TABLE obstetricsVisit (
 	imageOfUltrasound		BLOB,
 	PRIMARY KEY (id),
 	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
-)
+) ENGINE=MyISAM;
 
 CREATE TABLE ultrasound (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
@@ -490,7 +490,7 @@ CREATE TABLE ultrasound (
 	efw						FLOAT			UNSIGNED NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
-)
+) ENGINE=MyISAM;
 
 CREATE TABLE icdCode
 (
