@@ -1,4 +1,4 @@
-package edu.ncsu.itrust.model.obstetrics.visit;
+package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.DataBean;

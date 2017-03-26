@@ -1,4 +1,4 @@
-package edu.ncsu.itrust.model.obstetrics.visit;
+package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
 //import javax.sql.DataSource;
 
