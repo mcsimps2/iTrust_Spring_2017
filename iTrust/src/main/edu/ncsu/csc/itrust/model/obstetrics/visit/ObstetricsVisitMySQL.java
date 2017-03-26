@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.naming.Context;
@@ -15,10 +13,6 @@ import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
-import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
-import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
 
 /**
  * Object used to access the ObstetricsVisit database
@@ -92,43 +86,6 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 
 	@Override
 	public boolean add(ObstetricsVisit addObj) throws FormValidationException, DBException {
-		
-		//Calculate the weeks and days pregnant at time of birth
-		OfficeVisitMySQL officeVisitMySQL = new OfficeVisitMySQL();
-		OfficeVisit visit = officeVisitMySQL.getByID(addObj.getOfficeVisitID());
-		ObstetricsInitMySQL obstetricsInitMySQL = new ObstetricsInitMySQL();
-		List<ObstetricsInit> list = obstetricsInitMySQL.getRecords(visit.getPatientMID());
-		if (list.isEmpty())
-			throw new FormValidationException("There is not an obstetrics initialization within the last 49 weeks.");
-		ObstetricsInit init = list.get(0);
-		Date lmp = ObstetricsInit.stringToJavaDate(init.getLMP());
-		
-		int weeks = 0;
-		int days = 0;
-		
-		Calendar lmpCal = Calendar.getInstance();
-		lmpCal.setTime(lmp);
-		Calendar cal = Calendar.getInstance();
-		
-		while (cal.after(lmpCal)) {
-			cal.add(Calendar.WEEK_OF_YEAR, -1);
-			weeks++;
-		}
-		if (!cal.equals(lmpCal)) {
-			cal.add(Calendar.WEEK_OF_YEAR, 1);
-			weeks--;
-			while (cal.after(lmpCal)) {
-				cal.add(Calendar.DAY_OF_WEEK, -1);
-				days++;
-			}
-		}
-		
-		if (weeks > 49 || (weeks == 49 && days > 0)) {
-			throw new FormValidationException("There is not an obstetrics initialization within the last 49 weeks.");
-		}
-		
-		addObj.setWeeksPregnant(weeks);
-		addObj.setDaysPregnant(days);
 		
 		try {
 			validator.validate(addObj);

@@ -32,12 +32,11 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		Long id = rs.getLong("id");
 		Long officeVisitID = rs.getLong("officeVisitID");
 		Integer weeksPregnant = rs.getInt("weeksPregnant");
-		Integer daysPregnant = rs.getInt("daysPregnant");
 		Integer fhr = rs.getInt("fhr");
 		Integer multiplicity = rs.getInt("multiplicity");
 		Boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
 		Blob imageOfUltrasound = rs.getBlob("imageOfUltrasound");
-		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, daysPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
+		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
 	}
 
 	@Override
@@ -45,14 +44,13 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 			boolean newInstance) throws SQLException {
 		String stmt = "";
 		if( newInstance ){ // IS NEW CODE
-			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, daysPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
+					+ "VALUES (?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
 			stmt = "UPDATE obstetricsVisit SET  "
 					+ "officeVisitID=?"
 					+ "weeksPregnant=?"
-					+ "daysPregnant=?"
 					+ "fhr=?"
 					+ "multiplicity=?"
 					+ "lowLyingPlacentaObserved=?"
@@ -63,11 +61,10 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, insertObject.getOfficeVisitID());
 		ps.setInt(2, insertObject.getWeeksPregnant());
-		ps.setInt(3, insertObject.getDaysPregnant());
-		ps.setInt(4, insertObject.getFhr());
-		ps.setInt(5, insertObject.getMultiplicity());
-		ps.setBoolean(6, insertObject.isLowLyingPlacentaObserved());
-		ps.setBlob(7, insertObject.getImageOfUltrasound());		
+		ps.setInt(3, insertObject.getFhr());
+		ps.setInt(4, insertObject.getMultiplicity());
+		ps.setBoolean(5, insertObject.isLowLyingPlacentaObserved());
+		ps.setBlob(6, insertObject.getImageOfUltrasound());		
 		
 		return ps;
 	}

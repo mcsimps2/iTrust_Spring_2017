@@ -17,9 +17,6 @@ public class ObstetricsVisitValidator extends POJOValidator<ObstetricsVisit> {
 		if (obj.getWeeksPregnant() < 0 || obj.getWeeksPregnant() > 42)
 			errorList.addIfNotNull("Weeks pregnant must be between 0 and 42");
 		
-		if (obj.getDaysPregnant() < 0 || obj.getDaysPregnant() > 6)
-			errorList.addIfNotNull("Days pregnant must be between 0 and 6");
-		
 		if (obj.getMultiplicity() == 0)
 			errorList.addIfNotNull("Multiplicity can not be 0");
 		

@@ -17,9 +17,6 @@ public class ObstetricsVisit {
 	/** Number of weeks pregnant at visit */
 	private Integer weeksPregnant;
 	
-	/** Number of days pregnant/partial weeks */
-	private Integer daysPregnant;
-	
 	/** Fetal heart rate */
 	private Integer fhr;
 	
@@ -43,13 +40,12 @@ public class ObstetricsVisit {
 	 * @param lowLyingPlacentaObserved
 	 * @param imageOfUltraSound
 	 */
-	public ObstetricsVisit(Long id, Long officeVisitID, Integer weeksPregnant, Integer daysPregnant,
-			Integer fhr, Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
+	public ObstetricsVisit(Long id, Long officeVisitID, Integer weeksPregnant, Integer fhr,
+			Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
 		super();
 		this.id = id;
 		this.officeVisitID = officeVisitID;
 		this.weeksPregnant = weeksPregnant;
-		this.daysPregnant = daysPregnant;
 		this.fhr = fhr;
 		this.multiplicity = multiplicity;
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
@@ -96,20 +92,6 @@ public class ObstetricsVisit {
 	 */
 	public void setWeeksPregnant(Integer weeksPregnant) {
 		this.weeksPregnant = weeksPregnant;
-	}
-
-	/**
-	 * @return the daysPregnant
-	 */
-	public Integer getDaysPregnant() {
-		return daysPregnant;
-	}
-
-	/**
-	 * @param daysPregnant the daysPregnant to set
-	 */
-	public void setDaysPregnant(Integer daysPregnant) {
-		this.daysPregnant = daysPregnant;
 	}
 
 	/**
