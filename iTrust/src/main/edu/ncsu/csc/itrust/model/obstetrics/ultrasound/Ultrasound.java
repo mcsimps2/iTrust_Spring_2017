@@ -13,28 +13,28 @@ public class Ultrasound {
 	Long officeVisitID;
 	
 	/** Crown rump length */
-	Integer crl;
+	Float crl;
 	
 	/** Biparietal diameter */
-	Integer bpd;
+	Float bpd;
 	
 	/** Head circumferece */
-	Integer hc;
+	Float hc;
 	
 	/** Femur length */
-	Integer fl;
+	Float fl;
 	
 	/** Occipitofrontal diameter */
-	Integer ofd;
+	Float ofd;
 	
 	/** Abdominal circumference */
-	Integer ac;
+	Float ac;
 	
 	/** Humerus length */
-	Integer hl;
+	Float hl;
 	
 	/** Estimated fetal weight */
-	Integer efw;
+	Float efw;
 	
 	/**
 	 * Constructor for the ultrasound pojo
@@ -49,8 +49,8 @@ public class Ultrasound {
 	 * @param hl
 	 * @param efw
 	 */
-	public Ultrasound(Long id, Long officeVisitID, Integer crl, Integer bpd, Integer hc,
-			Integer fl, Integer ofd, Integer ac, Integer hl, Integer efw) {
+	public Ultrasound(Long id, Long officeVisitID, Float crl, Float bpd, Float hc,
+			Float fl, Float ofd, Float ac, Float hl, Float efw) {
 		this.id = id;
 		this.officeVisitID = officeVisitID;
 		this.crl = crl;
@@ -94,112 +94,112 @@ public class Ultrasound {
 	/**
 	 * @return the crl
 	 */
-	public Integer getCrl() {
+	public Float getCrl() {
 		return crl;
 	}
 
 	/**
 	 * @param crl the crl to set
 	 */
-	public void setCrl(Integer crl) {
+	public void setCrl(Float crl) {
 		this.crl = crl;
 	}
 
 	/**
 	 * @return the bpd
 	 */
-	public Integer getBpd() {
+	public Float getBpd() {
 		return bpd;
 	}
 
 	/**
 	 * @param bpd the bpd to set
 	 */
-	public void setBpd(Integer bpd) {
+	public void setBpd(Float bpd) {
 		this.bpd = bpd;
 	}
 
 	/**
 	 * @return the hc
 	 */
-	public Integer getHc() {
+	public Float getHc() {
 		return hc;
 	}
 
 	/**
 	 * @param hc the hc to set
 	 */
-	public void setHc(Integer hc) {
+	public void setHc(Float hc) {
 		this.hc = hc;
 	}
 
 	/**
 	 * @return the fl
 	 */
-	public Integer getFl() {
+	public Float getFl() {
 		return fl;
 	}
 
 	/**
 	 * @param fl the fl to set
 	 */
-	public void setFl(Integer fl) {
+	public void setFl(Float fl) {
 		this.fl = fl;
 	}
 
 	/**
 	 * @return the ofd
 	 */
-	public Integer getOfd() {
+	public Float getOfd() {
 		return ofd;
 	}
 
 	/**
 	 * @param ofd the ofd to set
 	 */
-	public void setOfd(Integer ofd) {
+	public void setOfd(Float ofd) {
 		this.ofd = ofd;
 	}
 
 	/**
 	 * @return the ac
 	 */
-	public Integer getAc() {
+	public Float getAc() {
 		return ac;
 	}
 
 	/**
 	 * @param ac the ac to set
 	 */
-	public void setAc(Integer ac) {
+	public void setAc(Float ac) {
 		this.ac = ac;
 	}
 
 	/**
 	 * @return the hl
 	 */
-	public Integer getHl() {
+	public Float getHl() {
 		return hl;
 	}
 
 	/**
 	 * @param hl the hl to set
 	 */
-	public void setHl(Integer hl) {
+	public void setHl(Float hl) {
 		this.hl = hl;
 	}
 
 	/**
 	 * @return the efw
 	 */
-	public Integer getEfw() {
+	public Float getEfw() {
 		return efw;
 	}
 
 	/**
 	 * @param efw the efw to set
 	 */
-	public void setEfw(Integer efw) {
+	public void setEfw(Float efw) {
 		this.efw = efw;
 	}
 	

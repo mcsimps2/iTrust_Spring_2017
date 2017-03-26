@@ -14,29 +14,29 @@ public class UltrasoundValidator extends POJOValidator<Ultrasound> {
 	public void validate(Ultrasound obj) throws FormValidationException {
 		ErrorList errorList = new ErrorList();
 		
-		if (obj.getCrl() < 0)
-			errorList.addIfNotNull("CRL must not be negative");
+		if (obj.getCrl() <= 0)
+			errorList.addIfNotNull("CRL must be greater than zero");
 		
 		if (obj.getBpd() < 0)
-			errorList.addIfNotNull("BPD must not be negative");
+			errorList.addIfNotNull("BPD must be greater than zero");
 		
 		if (obj.getHc() < 0)
-			errorList.addIfNotNull("HC must not be negative");
+			errorList.addIfNotNull("HC must be greater than zero");
 		
 		if (obj.getFl() < 0)
-			errorList.addIfNotNull("FL must not be negative");
+			errorList.addIfNotNull("FL must be greater than zero");
 		
 		if (obj.getOfd() < 0)
-			errorList.addIfNotNull("OFD must not be negative");
+			errorList.addIfNotNull("OFD must be greater than zero");
 		
 		if (obj.getAc() < 0)
-			errorList.addIfNotNull("AC must not be negative");
+			errorList.addIfNotNull("AC must be greater than zero");
 		
 		if (obj.getHl() < 0)
-			errorList.addIfNotNull("HL must not be negative");
+			errorList.addIfNotNull("HL must be greater than zero");
 		
 		if (obj.getEfw() < 0)
-			errorList.addIfNotNull("EFW must not be negative");
+			errorList.addIfNotNull("EFW must be greater than zero");
 		
 		//TODO: There might need to be more validation here
 		

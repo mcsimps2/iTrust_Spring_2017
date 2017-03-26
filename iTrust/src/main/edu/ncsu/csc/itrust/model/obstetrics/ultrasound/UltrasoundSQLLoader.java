@@ -30,14 +30,14 @@ public class UltrasoundSQLLoader implements SQLLoader<Ultrasound> {
 	public Ultrasound loadSingle(ResultSet rs) throws SQLException {
 		Long id = rs.getLong("id");
 		Long officeVisitID = rs.getLong("officeVisitID");
-		Integer crl = rs.getInt("crl");
-		Integer bpd = rs.getInt("bpd");
-		Integer hc = rs.getInt("hc");
-		Integer fl = rs.getInt("fl");
-		Integer ofd = rs.getInt("ofd");
-		Integer ac = rs.getInt("ac");
-		Integer hl = rs.getInt("hl");
-		Integer efw = rs.getInt("efw");
+		Float crl = rs.getFloat("crl");
+		Float bpd = rs.getFloat("bpd");
+		Float hc = rs.getFloat("hc");
+		Float fl = rs.getFloat("fl");
+		Float ofd = rs.getFloat("ofd");
+		Float ac = rs.getFloat("ac");
+		Float hl = rs.getFloat("hl");
+		Float efw = rs.getFloat("efw");
 		return new Ultrasound(id, officeVisitID, crl, bpd, hc, fl, ofd,
 				ac, hl, efw);
 	}
@@ -66,14 +66,14 @@ public class UltrasoundSQLLoader implements SQLLoader<Ultrasound> {
 		
 		ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, insertObject.getOfficeVisitID());
-		ps.setInt(2, insertObject.getCrl());
-		ps.setInt(3, insertObject.getBpd());
-		ps.setInt(4, insertObject.getHc());
-		ps.setInt(5, insertObject.getFl());
-		ps.setInt(6, insertObject.getOfd());
-		ps.setInt(7, insertObject.getAc());
-		ps.setInt(8, insertObject.getHl());
-		ps.setInt(9, insertObject.getEfw());
+		ps.setFloat(2, insertObject.getCrl());
+		ps.setFloat(3, insertObject.getBpd());
+		ps.setFloat(4, insertObject.getHc());
+		ps.setFloat(5, insertObject.getFl());
+		ps.setFloat(6, insertObject.getOfd());
+		ps.setFloat(7, insertObject.getAc());
+		ps.setFloat(8, insertObject.getHl());
+		ps.setFloat(9, insertObject.getEfw());
 		
 		return ps;
 	}
