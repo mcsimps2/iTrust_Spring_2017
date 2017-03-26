@@ -37,7 +37,7 @@ public class Ultrasound {
 	Float efw;
 	
 	/**
-	 * Constructor for the ultrasound pojo
+	 * Constructor for getting an ultrasound out of the db
 	 * @param id
 	 * @param officeVisitID
 	 * @param crl
@@ -52,6 +52,31 @@ public class Ultrasound {
 	public Ultrasound(Long id, Long officeVisitID, Float crl, Float bpd, Float hc,
 			Float fl, Float ofd, Float ac, Float hl, Float efw) {
 		this.id = id;
+		this.officeVisitID = officeVisitID;
+		this.crl = crl;
+		this.bpd = bpd;
+		this.hc = hc;
+		this.fl = fl;
+		this.ofd = ofd;
+		this.ac = ac;
+		this.hl = hl;
+		this.efw = efw;
+	}
+	
+	/**
+	 * Constructor for passing into the db
+	 * @param officeVisitID
+	 * @param crl
+	 * @param bpd
+	 * @param hc
+	 * @param fl
+	 * @param ofd
+	 * @param ac
+	 * @param hl
+	 * @param efw
+	 */
+	public Ultrasound(Long officeVisitID, Float crl, Float bpd, Float hc,
+			Float fl, Float ofd, Float ac, Float hl, Float efw) {
 		this.officeVisitID = officeVisitID;
 		this.crl = crl;
 		this.bpd = bpd;

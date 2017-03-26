@@ -17,25 +17,25 @@ public class UltrasoundValidator extends POJOValidator<Ultrasound> {
 		if (obj.getCrl() <= 0)
 			errorList.addIfNotNull("CRL must be greater than zero");
 		
-		if (obj.getBpd() < 0)
+		if (obj.getBpd() <= 0)
 			errorList.addIfNotNull("BPD must be greater than zero");
 		
-		if (obj.getHc() < 0)
+		if (obj.getHc() <= 0)
 			errorList.addIfNotNull("HC must be greater than zero");
 		
-		if (obj.getFl() < 0)
+		if (obj.getFl() <= 0)
 			errorList.addIfNotNull("FL must be greater than zero");
 		
-		if (obj.getOfd() < 0)
+		if (obj.getOfd() <= 0)
 			errorList.addIfNotNull("OFD must be greater than zero");
 		
-		if (obj.getAc() < 0)
+		if (obj.getAc() <= 0)
 			errorList.addIfNotNull("AC must be greater than zero");
 		
-		if (obj.getHl() < 0)
+		if (obj.getHl() <= 0)
 			errorList.addIfNotNull("HL must be greater than zero");
 		
-		if (obj.getEfw() < 0)
+		if (obj.getEfw() <= 0)
 			errorList.addIfNotNull("EFW must be greater than zero");
 		
 		//TODO: There might need to be more validation here

@@ -30,7 +30,7 @@ public class ObstetricsVisit {
 	private Blob imageOfUltrasound;
 	
 	/**
-	 * Constructor for the obstetrics visit pojo
+	 * Constructor for getting out of the db
 	 * @param id
 	 * @param officeVisitID
 	 * @param weeksPregnant
@@ -51,6 +51,27 @@ public class ObstetricsVisit {
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
 		this.imageOfUltrasound = imageOfUltraSound;
 	}
+	
+	/**
+	 * Constructor for passing into the db
+	 * @param officeVisitID
+	 * @param weeksPregnant
+	 * @param fhr
+	 * @param multiplicity
+	 * @param lowLyingPlacentaObserved
+	 * @param imageOfUltraSound
+	 */
+	public ObstetricsVisit(Long officeVisitID, Integer weeksPregnant, Integer fhr,
+			Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
+		super();
+		this.officeVisitID = officeVisitID;
+		this.weeksPregnant = weeksPregnant;
+		this.fhr = fhr;
+		this.multiplicity = multiplicity;
+		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
+		this.imageOfUltrasound = imageOfUltraSound;
+	}
+
 
 	/**
 	 * @return the id

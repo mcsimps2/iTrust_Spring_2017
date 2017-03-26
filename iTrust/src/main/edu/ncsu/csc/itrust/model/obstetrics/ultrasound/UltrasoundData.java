@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.model.obstetrics.ultrasound;
 
+import java.util.List;
+
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.DataBean;
 
@@ -15,7 +17,7 @@ public interface UltrasoundData extends DataBean<Ultrasound> {
 	 * @return the Ultrasound pojo
 	 * @throws DBException
 	 */
-	public Ultrasound getByOfficeVisit(long officeVisitID) throws DBException;
+	public List<Ultrasound> getByOfficeVisit(long officeVisitID) throws DBException;
 	
 	/**
 	 * Method to delete ultrasound
