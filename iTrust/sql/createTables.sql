@@ -465,6 +465,33 @@ CREATE TABLE immunization (
 	FOREIGN KEY (cptCode) 	REFERENCES cptCode(code)
 ) ENGINE=MyISAM;
 
+CREATE TABLE obstetricsVisit (
+	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
+	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
+	weeksPregnant			INT				UNSIGNED NOT NULL,
+	fhr						INT				UNSIGNED NOT NULL,
+	multiplicity 			INT				UNSIGNED NOT NULL,
+	lowLyingPlacentaObserved BOOLEAN		NOT NULL,
+	imageOfUltrasound		BLOB,
+	PRIMARY KEY (id),
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
+)
+
+CREATE TABLE ultrasound (
+	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
+	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
+	crl						FLOAT			UNSIGNED NOT NULL,
+	bpd						FLOAT			UNSIGNED NOT NULL,
+	hc						FLOAT			UNSIGNED NOT NULL,
+	fl						FLOAT			UNSIGNED NOT NULL,
+	ofd						FLOAT			UNSIGNED NOT NULL,
+	ac						FLOAT			UNSIGNED NOT NULL,
+	hl						FLOAT			UNSIGNED NOT NULL,
+	efw						FLOAT			UNSIGNED NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
+)
+
 CREATE TABLE icdCode
 (
 	code VARCHAR(8),
