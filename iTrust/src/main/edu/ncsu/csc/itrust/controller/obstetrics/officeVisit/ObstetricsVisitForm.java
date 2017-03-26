@@ -1,18 +1,7 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
 
-import java.time.LocalDateTime;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
-import edu.ncsu.csc.itrust.model.ValidationFormat;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
-import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 
 @ManagedBean(name = "obstetrics_visit_form")
 @ViewScoped
@@ -42,7 +31,7 @@ public class ObstetricsVisitForm {
 		multiplicity = 3;
 		placentaObserved = true;
 		
-		/* Real code
+		/* Real code TODO
 		try {
 			controller = (ovc == null) ? new ObstetricsVisitController() : ovc;
 			OfficeVisit officeVisit = new OfficeVisitController().getSelectedVisit();
@@ -50,6 +39,7 @@ public class ObstetricsVisitForm {
 			ov = controller.getVisitWithID(officeVisitID);
 			if (ov == null) {
 				ov = new ObstetricsVisit();
+				ov.setOfficeVisitID(officeVisitID);
 			}
 			weeksPregnant = ov.getWeeksPregnant();
 			if (weeksPregnant == null) {
@@ -66,7 +56,27 @@ public class ObstetricsVisitForm {
 		*/
 	}
 	
-	// TODO old cold here
+	/**
+	 * Called when user updates obstetrics on officeVisitInfo.xhtml.
+	 */
+	public void submitObstetrics() {
+		// Temporary code
+		return;
+		
+		/* Real code TODO
+		boolean isNew = ov.getWeeksPregnant() == null;
+		ov.setWeeksPregnant(weeksPregnant);
+		ov.setFHR(fhr);
+		ov.setMultiplicity(multiplicity);
+		ov.setPlacentaObserved(placentaObserved);
+		controller.edit(ov, isNew);
+		if (isNew){
+		    controller.logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+		} else {
+		    controller.logTransaction(TransactionType.EDIT_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+		}
+		*/
+	}
 
 	public Integer getWeeksPregnant() {
 		return weeksPregnant;

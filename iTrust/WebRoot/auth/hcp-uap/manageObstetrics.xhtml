@@ -7,28 +7,47 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 	
-	<h:form id="obstetrics_form">
-		<div class="form-group">
-			<h:outputLabel for="weeksPregnant">Number of weeks pregnant:</h:outputLabel>
-			<h:outputText value="#{obstetrics_visit_form.weeksPregnant}" id="weeksPregnant"
-				class="form-control inline"/>
-		</div>
-		
-		<div class="form-group">
-			<h:outputLabel for="fhr">Fetal Heart Rate (FHR):</h:outputLabel>
-			<h:inputText value="#{obstetrics_visit_form.fhr}" id="fhr"
-				class="form-control inline"/>
-		</div>
-		
-		<div class="form-group">
-			<h:outputLabel for="multiplicity">Multiplicity:</h:outputLabel>
-			<h:inputText value="#{obstetrics_visit_form.multiplicity}" id="multiplicity"
-				class="form-control inline"/>
-		</div>
-		
-		<div class="form-group" style="display: inline;">
-			<h:outputLabel for="placenta">Low Lying Placenta Observed:</h:outputLabel>
-		</div>
-		<h:selectBooleanCheckbox value="#{obstetrics_visit_form.placentaObserved}" id="placenta" style="height: 34px; width: 17px"/>
-	</h:form>
+	<ui:param name="isOBGYN" value="#{obstetrics_init_controller.isOBGYN(session.getAttribute('loggedInMID'))}"/>
+	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
+	
+	<ui:fragment rendered="#{isObstetricsPatient}">
+		<ui:fragment rendered="#{!isOBGYN}">
+			<h4 style="color:indianred; margin-bottom:2rem;">Only an OB/GYN can edit Obstetrics information</h4>
+		</ui:fragment>
+		<h:form id="obstetrics_form">
+			<div class="form-group">
+				<h:outputLabel for="weeksPregnant">Number of weeks pregnant:</h:outputLabel>
+				<h:outputText value="#{obstetrics_visit_form.weeksPregnant}" id="weeksPregnant"
+					class="form-control inline"/>
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="fhr">Fetal Heart Rate (FHR):</h:outputLabel>
+				<h:inputText value="#{obstetrics_visit_form.fhr}" id="fhr"
+					class="form-control inline" readonly="#{!isOBGYN}"/>
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="multiplicity">Multiplicity:</h:outputLabel>
+				<h:inputText value="#{obstetrics_visit_form.multiplicity}" id="multiplicity"
+					class="form-control inline" readonly="#{!isOBGYN}"/>
+			</div>
+			
+			<div class="form-group" style="display: inline;">
+				<h:outputLabel for="placenta">Low Lying Placenta Observed:</h:outputLabel>
+			</div>
+			<h:selectBooleanCheckbox value="#{obstetrics_visit_form.placentaObserved}" id="placenta"
+				style="height:34px; width:17px" disabled="#{!isOBGYN}"/>
+			<div class="form-group form-button-group">
+				<h:commandButton id="submitObstetricsButton" value="Save"
+					action="#{obstetrics_visit_form.submitObstetrics}" disabled="#{!isOBGYN}"/>
+				<h:commandButton id="cancelVisitButton" value="Cancel"
+					action="#{navigation_controller.baseOfficeVisit}" immediate="true" />
+			</div>
+		</h:form>
+	</ui:fragment>
+	
+	<ui:fragment rendered="#{!isObstetricsPatient}">
+		<h2>Not an Obstetrics Patient</h2>
+	</ui:fragment>
 </html>

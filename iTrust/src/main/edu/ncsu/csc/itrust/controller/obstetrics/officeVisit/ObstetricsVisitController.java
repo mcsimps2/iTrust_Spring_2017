@@ -1,10 +1,6 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalQueries;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +25,11 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class ObstetricsVisitController extends iTrustController {
 	/** Max number of weeks since LMP for a patient to be considered an obstetrics patient */
 	private static final int MAX_WEEKS_SINCE_LMP = 49;
+	/** Constant for the error message to be displayed if the Obstetrics Visit is invalid */
+	private static final String OBSTETRICS_VISIT_CANNOT_BE_UPDATED = "Invalid Obstetrics Visit";
+	/** Constant for the message to be displayed if the obstetrics visit was successfully updated */
+	private static final String OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED = "Obstetrics Visit Successfully Updated";
+	
 	//private ObstetricsVisitData ovData; TODO
 	private ObstetricsInitData oiData;
 	private SessionUtils sessionUtils;
@@ -112,6 +113,31 @@ public class ObstetricsVisitController extends iTrustController {
 		}
 		return null;
 	}
+	
+	/**
+	 * TODO
+	 * @param ov
+	 */
+	/*
+	public void edit(ObstetricsVisit ov, boolean isNew) {
+		boolean res = false;
+
+		try {
+			res = ovData.update(ov, isNew);
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
+					null);
+		} catch (Exception e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
+					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
+		}
+		if (res) {
+			// TODO probably add some stuff here regarding the scheduling of the next appointment
+			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
+					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
+		}
+	}
+	*/
 
 	/**
 	 * Sends a FacesMessage for FacesContext to display.

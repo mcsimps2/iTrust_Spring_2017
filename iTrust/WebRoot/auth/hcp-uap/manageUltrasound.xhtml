@@ -7,5 +7,119 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 	
+	<ui:param name="isOBGYN" value="#{obstetrics_init_controller.isOBGYN(session.getAttribute('loggedInMID'))}"/>
+	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
 	
+	<ui:fragment rendered="#{isObstetricsPatient}">
+		<ui:fragment rendered="#{!isOBGYN}">
+			<h4 style="color:indianred; margin-bottom:2rem;">Only an OB/GYN can edit Obstetrics information</h4>
+		</ui:fragment>
+		<div align="center">
+			<h:graphicImage style="height:15rem; margin-bottom:2rem; border:0.5rem solid rgb(75, 75, 75); margin-right:2rem;"
+				value="/image/ultrasound/powerPuff.jpg"/>
+			<h:graphicImage style="height:15rem; margin-bottom:2rem; border:0.5rem solid rgb(75, 75, 75); margin-right:2rem;"
+				value="/image/ultrasound/friends.png"/>
+			<h:graphicImage style="height:15rem; margin-bottom:2rem; border:0.5rem solid rgb(75, 75, 75);"
+				value="/image/ultrasound/fetus.pdf"/>
+		</div>
+		<div class="duo-column-row">
+			<div class="duo-column duo-column-form well" style="border: thin solid grey; border-radius: 25px;">
+				<h:form>
+					<div class="form-group-long">
+						<h:outputLabel for="crl">Crown rump length (CRL):</h:outputLabel>
+						<h:inputText id="crl" class="form-control" value="#{ultrasound_form.crl}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="bpd">Biparietal diameter (BPD):</h:outputLabel>
+						<h:inputText id="bpd" class="form-control" value="#{ultrasound_form.bpd}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="hc">Head circumference (HC):</h:outputLabel>
+						<h:inputText id="hc" class="form-control" value="#{ultrasound_form.hc}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="fl">Femur length (FL):</h:outputLabel>
+						<h:inputText id="fl" class="form-control" value="#{ultrasound_form.fl}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="ofd">Occipitofrontal diameter (OFD):</h:outputLabel>
+						<h:inputText id="ofd" class="form-control" value="#{ultrasound_form.ofd}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="ac">Abdominal circumference (AC):</h:outputLabel>
+						<h:inputText id="ac" class="form-control" value="#{ultrasound_form.ac}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="hl">Humerus length (HL):</h:outputLabel>
+						<h:inputText id="hl" class="form-control" value="#{ultrasound_form.hl}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-group-long">
+						<h:outputLabel for="efw">Estimated fetal weight (EFW):</h:outputLabel>
+						<h:inputText id="efw" class="form-control" value="#{ultrasound_form.efw}" readonly="#{!isOBGYN}"/>
+					</div>
+					<div class="form-action-group">
+						<h:commandButton class="btn btn-default" value="Add Fetus Data"    action="#{ultrasound_form.add()}"  disabled="#{!isOBGYN}"/>
+						<h:commandButton class="btn btn-default" value="Update Fetus Data" action="#{ultrasound_form.edit()}" disabled="#{!isOBGYN}"/>
+					</div>	
+				</h:form>
+			</div>
+			
+			<div class="duo-column duo-column-table">
+				<h:form>
+					<ui:param name="ultrasoundList" value="#{ultrasound_form.getUltrasounds()}" />
+					<ui:fragment rendered="${!empty ultrasoundList}">
+						<h:dataTable styleClass="fTable" value="#{ ultrasoundList }" var="ultrasound" border="1">
+							<h:column>
+								<f:facet name="header">CRL</f:facet>
+								<h:outputText value="#{1}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">BPD</f:facet>
+								<h:outputText value="#{2}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">HC</f:facet>
+								<h:outputText value="#{3}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">FL</f:facet>
+								<h:outputText value="#{4}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">OFD</f:facet>
+								<h:outputText value="#{5}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">AC</f:facet>
+								<h:outputText value="#{6}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">HL</f:facet>
+								<h:outputText value="#{7}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">EFW</f:facet>
+								<h:outputText value="#{8}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Actions</f:facet>
+								<h:commandButton value="Edit" class="btn btn-default" disabled="#{!isOBGYN}"
+										action="#{ ultrasound_form.fillInput() }" >&nbsp;
+								</h:commandButton>
+								<h:commandButton value="Remove" class="btn btn-default" disabled="#{!isOBGYN}"
+										action="#{ultrasound_form.remove()}"
+										onclick="return confirm('Are you sure that you want to remove this fetus data?')" />
+							</h:column>
+						</h:dataTable>
+					</ui:fragment>
+					<ui:fragment rendered="${empty ultrasoundList}">
+						<h2>No Ultrasounds</h2> 
+					</ui:fragment>
+				</h:form>
+			</div>
+		</div>
+	</ui:fragment>
+	<ui:fragment rendered="#{!isObstetricsPatient}">
+		<h2>Not an Obstetrics Patient</h2>
+	</ui:fragment>
 </html>
