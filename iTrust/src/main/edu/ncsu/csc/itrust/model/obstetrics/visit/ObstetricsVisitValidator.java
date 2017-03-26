@@ -60,9 +60,6 @@ public class ObstetricsVisitValidator extends POJOValidator<ObstetricsVisit> {
 		if (obj.getFhr() != null && obj.getFhr() <= 0)
 			errorList.addIfNotNull("Fetal heart rate must be greater than zero");
 		
-		if (obj.isLowLyingPlacentaObserved() == null)
-			errorList.addIfNotNull("Low lying placenta observation is required");
-		
 		if ( errorList.hasErrors() )
 			throw new FormValidationException(errorList);
 	}
