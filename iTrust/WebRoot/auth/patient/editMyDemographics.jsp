@@ -261,13 +261,6 @@
 						+ (p.getCreditCardNumber()))%>"
 												maxlength="19" type="text"></td>
 										</tr>
-										<tr>
-											<td class="subHeaderVertical">Credit Card Number:</td>
-											<td><input name="creditCardNumber"
-												value="<%=StringEscapeUtils.escapeHtml(""
-						+ (p.getCreditCardNumber()))%>"
-												maxlength="19" type="text"></td>
-										</tr>
 									</table>
 
 								</div>
