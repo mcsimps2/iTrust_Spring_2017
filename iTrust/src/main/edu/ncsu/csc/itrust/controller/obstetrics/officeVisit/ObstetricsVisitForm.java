@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
+import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitForm;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
@@ -65,19 +66,16 @@ public class ObstetricsVisitForm {
 	 */
 	public void submitObstetrics() {
 		boolean isNew = obstetricsVisit.getWeeksPregnant() == null;
-
-		if (isNew && (weight == null || bloodPressure == null || bloodPressure.isEmpty())) {
+		
+		OfficeVisitForm offVForm = (OfficeVisitForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("office_visit_form");
+		if (isNew && (offVForm.getWeight() == null || offVForm.getBloodPressure() == null || offVForm.getBloodPressure().isEmpty())) {
 			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "All fields are required",
 					"All fields are required");
 			FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 			return;
 		}
-		
-		officeVisit = offVController.getVisitByID(officeVisitID.toString());
-		officeVisit.setWeight(weight);
-		officeVisit.setBloodPressure(bloodPressure);
-		offVController.edit(officeVisit);
-		
+		offVForm.submitHealthMetrics();
+				
 		obstetricsVisit.setWeeksPregnant(weeksPregnant);
 		obstetricsVisit.setFhr(fhr);
 		obstetricsVisit.setMultiplicity(multiplicity);
