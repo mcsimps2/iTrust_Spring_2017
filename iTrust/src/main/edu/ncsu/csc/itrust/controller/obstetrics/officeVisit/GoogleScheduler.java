@@ -109,7 +109,7 @@ public class GoogleScheduler
 	 * @param endDate events returned will be before this date (exclusive)
 	 * @return the URL to access the pulic Google calendar
 	 */
-	public static String getURL(String calendarID, DateTime startDate, DateTime endDate)
+	private static String getURL(String calendarID, DateTime startDate, DateTime endDate)
 	{
 		String ret = BASE_URL + calendarID + 
 				"/events?timeMin=" + startDate.toStringRfc3339() + 
@@ -127,7 +127,7 @@ public class GoogleScheduler
 	 * @throws DBException
 	 * @throws SQLException
 	 */
-	 public static List<DateTime[]> getAppts(long mid, DateTime startDate, DateTime endDate) throws DBException, SQLException
+	 private static List<DateTime[]> getAppts(long mid, DateTime startDate, DateTime endDate) throws DBException, SQLException
 	 {
 		 ApptDAO apptDAO = factory.getApptDAO();
 		 ApptTypeDAO apptTypeDAO = factory.getApptTypeDAO();
@@ -157,7 +157,7 @@ public class GoogleScheduler
 	  * @param duration how long the appointment should last in minutes
 	  * @return true if the appointment can be scheduled, false otherwise
 	  */
-	 public static boolean isValidTime(Calendar cal, List<DateTime[]> conflicts, int duration)
+	 private static boolean isValidTime(Calendar cal, List<DateTime[]> conflicts, int duration)
 	 {
 		 int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		 if (dayOfWeek == Calendar.SATURDAY)
@@ -186,7 +186,34 @@ public class GoogleScheduler
 	 }
 	 
 	 /**
+	  * Schedules an obstetrics appointment at least numDays from today at the same time of the current office visit,
+	  * taking into account the availability of the HCP (via appointments) and the patient (via their calendar).
+	  * Passing in a null or empty string calendarID when ignore the patient's calendar.
+	  * To use the patient's calendar, it must be public.
+	  * @param hcpid the ID of the HCP
+	  * @param pid the ID of the patient
+	  * @param calendarID the ID of the patient's public Google calendar.  Null or empty string to ignore.
+	  * @param numDays Minimum number of days from now to schedule the appointment
+	  * @param ov the current office visit
+	  * @return an ApptBean containing information about the scheduled appointment
+	  * @throws GoogleSchedulerException if unable to automatically schedule an appointment
+	  */
+	 public static ApptBean scheduleObstetricsAppointment(long hcpid, long pid, String calendarID, int numDays, OfficeVisit ov) throws GoogleSchedulerException
+	 {
+		 try
+		 {
+			 int duration = factory.getApptTypeDAO().getApptType(APPT_TYPE).getDuration();
+			 return scheduleAppointment(hcpid, pid, calendarID, numDays, duration, ov);
+		 }
+		 catch (DBException | SQLException e)
+		 {
+			 throw new GoogleSchedulerException("Unable to determine the duration of the new appointment");
+		 }
+	 }
+	 
+	 /**
 	  * Schedules an appointment at least numDays from today at the same time of the current office visit.
+	  * Pass in a null calendarID or an empty string calendarID to ignore the patient's public calendar.
 	  * The algorithm takes into account the availability of both the patient and the HCP.
 	  * The appointment will occur at the same time T of the current office visit (hour and minute), unless this is outside the bounds 9 AM - 4 PM.
 	  * In this case, the visit will occur at 9 AM if the time of the current visit is before 9 AM, or at 4 PM if the time of the current visit if after 4 PM.
@@ -200,7 +227,7 @@ public class GoogleScheduler
 	  * If a patient gives a private calendar ID or nonexistent calendar ID, it is ignored.
 	  * @param hcpid the HCP's ID
 	  * @param pid the patient's ID
-	  * @param calendarID the ID of the patient's publicly available calendar. If this is not public, it is ignored.
+	  * @param calendarID the ID of the patient's publicly available calendar. If this is not public, it is ignored.  If it is null or the empty string, it is ignored
 	  * @param numDays the number of days the appointment should be made from now
 	  * @param duration length of the new appointment in minutes
 	  * @param ov the current office visit
@@ -219,7 +246,7 @@ public class GoogleScheduler
 			 
 			 
 			 //Make sure time is between 9 AM and 4 PM.  If not, round it to the nearest bound (9 AM or 4 PM)
-			 int timeOfAppt = hour + (int) Math.ceil((double)minute/60) + (int) Math.ceil((double) seconds/3600);
+			 double timeOfAppt = hour + ((double) minute)/60;
 			 if (timeOfAppt < LOWER_BOUND)
 			 {
 				 hour = 9;
@@ -249,13 +276,21 @@ public class GoogleScheduler
 			 DateTime dt_end = new DateTime(cal.getTimeInMillis() + DAY_TO_MILLI*(MAX_ATTEMPTS + 1));
 			 List<DateTime[]> conflicts = getAppts(hcpid, dt_start, dt_end);
 			 List<DateTime[]> conflictsPatient;
-			 try
-			 {
-				 conflictsPatient = getGoogleEvents(calendarID, dt_start, dt_end);
-			 }
-			 catch (JSONException | IOException e) //If the patient doesn't have a Google calendar, or an invalid ID
+			 //Check if we were passed in a calendarID
+			 if (calendarID == null || calendarID.equals(""))
 			 {
 				 conflictsPatient = new ArrayList<DateTime[]>(); //empty list
+			 }
+			 else
+			 {
+				 try
+				 {
+					 conflictsPatient = getGoogleEvents(calendarID, dt_start, dt_end);
+				 }
+				 catch (JSONException | IOException e) //If the patient doesn't have a public Google calendar, or an invalid ID
+				 {
+					 conflictsPatient = new ArrayList<DateTime[]>(); //empty list
+				 }
 			 }
 			 List<DateTime[]> conflictsHoliday = getGoogleEvents(HOLIDAY_CALENDAR_ID, dt_start, dt_end);
 			 conflicts.addAll(conflictsPatient);
