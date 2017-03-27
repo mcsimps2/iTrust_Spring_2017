@@ -19,6 +19,7 @@ import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.GoogleSchedulerExce
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.ApptDAO;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -35,14 +36,18 @@ public class GoogleSchedulerTest
 	{
 		DBBuilder.main(null);
 		TestDataGenerator.main(null);
-		GoogleScheduler.useTestFactory();
+
+		DAOFactory factory = TestDAOFactory.getTestInstance();
+		GoogleScheduler.useFactory(factory);
 		d_curr = new Date();
 	}
 	
 	@After
 	public void breakdown()
 	{
-		GoogleScheduler.useContextFactory();
+		
+		DAOFactory factory = DAOFactory.getProductionInstance();
+		GoogleScheduler.useFactory(factory);
 	}
 	
 	@SuppressWarnings("deprecation")

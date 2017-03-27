@@ -21,7 +21,6 @@ import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.ApptDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.ApptTypeDAO;
-import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 public class GoogleScheduler
 {
@@ -47,20 +46,12 @@ public class GoogleScheduler
 	private static final long MINUTE_TO_MILLI = 60000L;
 	
 	/**
-	 * Sets the DAOFactory used to the TestDAOFactory
-	 * Use this when testing
+	 * Uses the given factory instead of the default one
+	 * @param _factory the factory to use
 	 */
-	public static void useTestFactory()
+	public static void useFactory(DAOFactory _factory)
 	{
-		factory = TestDAOFactory.getTestInstance();
-	}
-	
-	/**
-	 * Sets the DAOFactory to the regular old DAOFactory
-	 */
-	public static void useContextFactory()
-	{
-		factory = DAOFactory.getProductionInstance();
+		factory = _factory;
 	}
 	
 	/**
