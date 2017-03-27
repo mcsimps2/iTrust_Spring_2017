@@ -27,6 +27,7 @@ public class ObstetricsInitTest {
 		Assert.assertEquals("2017-12-21", oi1.getEDD());
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testStringToSQLDate()
 	{

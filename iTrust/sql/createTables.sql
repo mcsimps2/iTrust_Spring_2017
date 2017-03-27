@@ -469,9 +469,9 @@ CREATE TABLE obstetricsVisit (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
 	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
 	weeksPregnant			INT				UNSIGNED NOT NULL,
-	fhr						INT				UNSIGNED NOT NULL,
-	multiplicity 			INT				UNSIGNED NOT NULL,
-	lowLyingPlacentaObserved BOOLEAN		NOT NULL,
+	fhr						INT				UNSIGNED,
+	multiplicity 			INT				UNSIGNED,
+	lowLyingPlacentaObserved BOOLEAN		DEFAULT FALSE,
 	imageOfUltrasound		BLOB,
 	PRIMARY KEY (id),
 	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)

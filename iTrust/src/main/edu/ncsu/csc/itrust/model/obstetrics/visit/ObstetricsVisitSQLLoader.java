@@ -33,7 +33,9 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		Long officeVisitID = rs.getLong("officeVisitID");
 		Integer weeksPregnant = rs.getInt("weeksPregnant");
 		Integer fhr = rs.getInt("fhr");
+		if (rs.wasNull()) fhr = null;
 		Integer multiplicity = rs.getInt("multiplicity");
+		if (rs.wasNull()) multiplicity = null;
 		Boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
 		Blob imageOfUltrasound = rs.getBlob("imageOfUltrasound");
 		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
@@ -47,14 +49,14 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
 					+ "VALUES (?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
-			long id = insertObject.getId().longValue();
-			stmt = "UPDATE obstetricsVisit SET "
+			long id = insertObject.getId();
+			stmt = "UPDATE obstetricsVisit SET  "
 					+ "officeVisitID=?, "
 					+ "weeksPregnant=?, "
 					+ "fhr=?, "
 					+ "multiplicity=?, "
 					+ "lowLyingPlacentaObserved=?, "
-					+ "imageOfUltrasound=? "
+					+ "imageOfUltrasound=?, "
 					+ "WHERE id=" + id + ";";
 		}
 		
