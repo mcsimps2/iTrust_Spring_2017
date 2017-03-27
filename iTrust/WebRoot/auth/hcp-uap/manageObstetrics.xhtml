@@ -50,6 +50,15 @@
 			</div>
 			<h:selectBooleanCheckbox value="#{obstetrics_visit_form.placentaObserved}" id="placenta"
 				style="height:34px; width:17px" disabled="#{!isOBGYN}"/>
+			
+			<ui:fragment rendered="#{obstetrics_visit_form.ov.id == null}">
+				<div class="form-group" style="margin-top:2rem">
+					<h:outputLabel for="calendarID">Google Calendar ID:</h:outputLabel>
+					<h:inputText value="#{obstetrics_visit_form.calendarID}" id="calendarID"
+						class="form-control inline" readonly="#{!isOBGYN}"/>
+				</div>
+			</ui:fragment>
+			
 			<div class="form-group form-button-group">
 				<h:commandButton id="submitObstetricsButton" value="Save"
 					action="#{obstetrics_visit_form.submitObstetrics}" disabled="#{!isOBGYN}"/>

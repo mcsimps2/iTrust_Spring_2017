@@ -13,47 +13,41 @@ import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 @ManagedBean(name = "obstetrics_visit_form")
 @ViewScoped
 public class ObstetricsVisitForm {
-	private ObstetricsVisitController obsVController;
-	private OfficeVisitController offVController;
+	private ObstetricsVisitController controller;
 	private Long officeVisitID;
-	private ObstetricsVisit obstetricsVisit;
-	private OfficeVisit officeVisit;
+	private ObstetricsVisit ov;
 	private Integer weeksPregnant;
-	private Float weight;
-	private String bloodPressure;
 	private Integer fhr;
 	private Integer multiplicity;
 	private Boolean placentaObserved;
+	private String calendarID;
 
 	/**
 	 * Default constructor for OfficeVisitForm.
 	 */
 	public ObstetricsVisitForm() {
-		this(null, null);
+		this(null);
 	}
 
 	/**
 	 * Constructor for OfficeVisitForm for testing purposes.
 	 */
-	public ObstetricsVisitForm(ObstetricsVisitController obsVC, OfficeVisitController offVC) {
+	public ObstetricsVisitForm(ObstetricsVisitController ovc) {
 		try {
-			obsVController = (obsVC == null) ? new ObstetricsVisitController() : obsVC;
-			offVController = (offVC == null) ? new OfficeVisitController() : offVC;
+			controller = (ovc == null) ? new ObstetricsVisitController() : ovc;
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
-			officeVisit = offVController.getVisitByID(officeVisitID.toString());
-			weight = officeVisit.getWeight();
-			bloodPressure = officeVisit.getBloodPressure();
-			obstetricsVisit = obsVController.getByOfficeVisit(officeVisitID);
-			if (obstetricsVisit == null) {
-				obstetricsVisit = new ObstetricsVisit(officeVisitID);
+			OfficeVisit officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
+			ov = controller.getByOfficeVisit(officeVisitID);
+			if (ov == null) {
+				ov = new ObstetricsVisit(officeVisitID);
 			}
-			weeksPregnant = obstetricsVisit.getWeeksPregnant();
+			weeksPregnant = ov.getWeeksPregnant();
 			if (weeksPregnant == null) {
-				weeksPregnant = obsVController.calculateWeeksPregnant(officeVisit);
+				weeksPregnant = controller.calculateWeeksPregnant(officeVisit);
 			}
-			fhr = obstetricsVisit.getFhr();
-			multiplicity = obstetricsVisit.getMultiplicity();
-			placentaObserved = obstetricsVisit.isLowLyingPlacentaObserved();
+			fhr = ov.getFhr();
+			multiplicity = ov.getMultiplicity();
+			placentaObserved = ov.isLowLyingPlacentaObserved();
 		} catch (Exception e) {
 			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
 					"Controller Error");
@@ -65,8 +59,9 @@ public class ObstetricsVisitForm {
 	 * Called when user updates obstetrics on officeVisitInfo.xhtml.
 	 */
 	public void submitObstetrics() {
-		boolean isNew = obstetricsVisit.getWeeksPregnant() == null;
+		boolean isNew = ov.getId() == null;
 		
+		// Update the OfficeVisit fields first
 		OfficeVisitForm offVForm = (OfficeVisitForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("office_visit_form");
 		if (isNew && (offVForm.getWeight() == null || offVForm.getBloodPressure() == null || offVForm.getBloodPressure().isEmpty())) {
 			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "All fields are required",
@@ -76,16 +71,19 @@ public class ObstetricsVisitForm {
 		}
 		offVForm.submitHealthMetrics();
 				
-		obstetricsVisit.setWeeksPregnant(weeksPregnant);
-		obstetricsVisit.setFhr(fhr);
-		obstetricsVisit.setMultiplicity(multiplicity);
-		obstetricsVisit.setLowLyingPlacentaObserved(placentaObserved);
+		// Now update the ObstetricsVisit fields
+		ov.setWeeksPregnant(weeksPregnant);
+		ov.setFhr(fhr);
+		ov.setMultiplicity(multiplicity);
+		ov.setLowLyingPlacentaObserved(placentaObserved);
 		if (isNew){
-			obsVController.add(obstetricsVisit);
-			obstetricsVisit = obsVController.getByOfficeVisit(officeVisitID);
+			controller.add(ov);
+			ov = controller.getByOfficeVisit(officeVisitID);
+			
 			// TODO probably add some stuff here regarding the scheduling of the next appointment
+			
 		} else {
-			obsVController.update(obstetricsVisit);
+			controller.update(ov);
 		}
 	}
 
@@ -95,22 +93,6 @@ public class ObstetricsVisitForm {
 
 	public void setWeeksPregnant(Integer weeksPregnant) {
 		this.weeksPregnant = weeksPregnant;
-	}
-
-	public Float getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-
-	public String getBloodPressure() {
-		return bloodPressure;
-	}
-
-	public void setBloodPressure(String bloodPressure) {
-		this.bloodPressure = bloodPressure;
 	}
 
 	public Integer getFhr() {
@@ -135,5 +117,17 @@ public class ObstetricsVisitForm {
 
 	public void setPlacentaObserved(Boolean placentaObserved) {
 		this.placentaObserved = placentaObserved;
+	}
+
+	public String getCalendarID() {
+		return calendarID;
+	}
+
+	public void setCalendarID(String calendarID) {
+		this.calendarID = calendarID;
+	}
+
+	public ObstetricsVisit getOv() {
+		return ov;
 	}
 }
