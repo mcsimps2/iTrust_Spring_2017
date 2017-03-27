@@ -45,33 +45,6 @@ public class GoogleSchedulerTest
 		GoogleScheduler.useContextFactory();
 	}
 	
-	
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testGetAppts()
-	{
-		Timestamp ts_start = new Timestamp(2011-1900, 8, 22, 13, 30, 0, 0);
-		
-		Timestamp ts_end = new Timestamp(d_curr.getTime() + 9*86400000);
-		//Timestamp ts_end = ts_start.setTime();
-		//DateTime dt = new DateTime((new Timestamp("2012-08-22 13:30:00")));
-		try
-		{
-			List<DateTime[]> list = GoogleScheduler.getAppts(9000000010L, new DateTime(ts_start.getTime()), new DateTime(ts_end.getTime()));
-			System.out.println("Size: " + list.size());
-			for (int i = 0; i < list.size(); i++)
-			{
-				System.out.println(list.get(i)[0].toStringRfc3339());
-				System.out.println(list.get(i)[1].toStringRfc3339());
-				System.out.println();
-			}
-		}
-		catch (Exception e)
-		{
-			Assert.fail(e.getMessage());
-		}
-	}
-	
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetGoogleEvents()
@@ -271,6 +244,18 @@ public class GoogleSchedulerTest
 		catch (GoogleSchedulerException | DBException | SQLException e)
 		{
 			Assert.fail(e.getMessage());
+		}
+		
+		//Ending at an invalid time - should never work. Appt is from 10:30 AM to 11:01 AM
+		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 10, 30));
+		try
+		{
+			GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 31, ov);
+			Assert.fail("Should have gotten an error");
+		}
+		catch (GoogleSchedulerException e)
+		{
+			Assert.assertEquals("Unable to schedule an appointment: Too many attempts", e.getMessage());
 		}
 	}
 	

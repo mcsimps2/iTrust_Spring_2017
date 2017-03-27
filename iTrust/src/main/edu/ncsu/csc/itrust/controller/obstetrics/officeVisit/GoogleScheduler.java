@@ -43,6 +43,8 @@ public class GoogleScheduler
 	private static final String APPT_TYPE = "Obstetrics";
 	/** Maximum attempts of scheduling before giving up */
 	private static final int MAX_ATTEMPTS = 75;
+	/** Minutes to Milliseconds */
+	private static final long MINUTE_TO_MILLI = 60000L;
 	
 	/**
 	 * Sets the DAOFactory used to the TestDAOFactory
@@ -138,7 +140,7 @@ public class GoogleScheduler
 			 int duration = apptTypeDAO.getApptType(type).getDuration();
 			 Timestamp date = appt.getDate();
 			 DateTime dt_start = new DateTime(date.getTime());
-			 DateTime dt_end = new DateTime(date.getTime() + duration*60000);
+			 DateTime dt_end = new DateTime(date.getTime() + duration*MINUTE_TO_MILLI);
 			 if (dt_start.getValue() >= startDate.getValue() && dt_end.getValue() < endDate.getValue())
 			 {
 				 DateTime[] toAdd = {dt_start, dt_end};
@@ -152,7 +154,7 @@ public class GoogleScheduler
 	  * Determines whether or not an appointment with a given duration can be scheduled at the given date
 	  * @param cal a calendar object set to the preferred datetime of the appointment (year, month, day, hour, minute, seconds)
 	  * @param conflicts a list of conflicts to avoid
-	  * @param duration how long the appointment should last
+	  * @param duration how long the appointment should last in minutes
 	  * @return true if the appointment can be scheduled, false otherwise
 	  */
 	 public static boolean isValidTime(Calendar cal, List<DateTime[]> conflicts, int duration)
@@ -174,7 +176,7 @@ public class GoogleScheduler
 			 {
 				 return false;
 			 }
-			 if ((timeOfAppt + duration) >= conflicts.get(i)[0].getValue() && (timeOfAppt + duration) < conflicts.get(i)[1].getValue()) //can't end at invalid time
+			 if ((timeOfAppt + duration*MINUTE_TO_MILLI) >= conflicts.get(i)[0].getValue() && (timeOfAppt + duration*MINUTE_TO_MILLI) < conflicts.get(i)[1].getValue()) //can't end at invalid time
 			 {
 				 return false;
 			 }
@@ -200,7 +202,7 @@ public class GoogleScheduler
 	  * @param pid the patient's ID
 	  * @param calendarID the ID of the patient's publicly available calendar. If this is not public, it is ignored.
 	  * @param numDays the number of days the appointment should be made from now
-	  * @param duration length of the new appointment
+	  * @param duration length of the new appointment in minutes
 	  * @param ov the current office visit
 	  * @return the ApptBean that was populated to the database
 	  * @throws GoogleSchedulerException if unable to schedule an appointment, especially if the max iterations has been exceeded
