@@ -213,9 +213,23 @@ public class GoogleSchedulerTest
 			Assert.fail(e.getMessage());
 		}
 		
-		//HCP 10 has an appointment scheduled 7 days from now at 1:45 PM
+		//Ending at an invalid time - should never work. Appt is from 10:30 AM to 11:01 AM
+		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 10, 30));
+		try
+		{
+			GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 31, ov);
+			Assert.fail("Should have gotten an error");
+		}
+		catch (GoogleSchedulerException e)
+		{
+			Assert.assertEquals("Unable to schedule an appointment: Too many attempts", e.getMessage());
+		}
+		
+		//HCP 10 has an appointment scheduled 7 days from now at 1:45 PM, and one from 8 days at 1:45 PM
 		//For CAL_ID, there is nothing during this time
-		//Make sure we can't schedule 7 days from now at 1:45 PM, but rather 8 days is OK
+		//Make sure we can't schedule 7-8 days from now at 1:45 PM, but rather 9 days is OK
+		//Reset calendar
+		cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 7);
 		cal.set(Calendar.HOUR_OF_DAY, 13);
 		cal.set(Calendar.MINUTE, 45);
@@ -246,17 +260,43 @@ public class GoogleSchedulerTest
 			Assert.fail(e.getMessage());
 		}
 		
-		//Ending at an invalid time - should never work. Appt is from 10:30 AM to 11:01 AM
-		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 10, 30));
+		//HCP 10 has an appointment scheduled 7 days from now at 1:45 PM
+		//For CAL_ID, there is nothing during this time
+		//Make sure we can't schedule 7 days from now at 1:30 PM for 30 minutes, but rather 8 days is OK
+		
+		//Reset calendar
+		cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 7);
+		cal.set(Calendar.HOUR_OF_DAY, 13);
+		cal.set(Calendar.MINUTE, 30);
+		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), 13, 30));
 		try
 		{
-			GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 31, ov);
-			Assert.fail("Should have gotten an error");
+			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID, 1, 30, ov);
+			Assert.assertNotNull(appt);
+			
+			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
+			boolean found = false;
+			for (int i = 0; i < appts.size(); i++)
+			{
+				if (appts.get(i).getDate().equals(appt.getDate()))
+				{
+					found = true;
+					break;
+				}
+			}
+			Assert.assertTrue(found);
+			Assert.assertTrue(appt.getDate().getHours() == 13);
+			Assert.assertTrue(appt.getDate().getMinutes() == 30);
+			cal.add(Calendar.DATE, 2); //Will need to move 2 days ahead
+			Assert.assertEquals(appt.getDate().getDate(), cal.get(Calendar.DATE));
 		}
-		catch (GoogleSchedulerException e)
+		catch (GoogleSchedulerException | DBException | SQLException e)
 		{
-			Assert.assertEquals("Unable to schedule an appointment: Too many attempts", e.getMessage());
+			Assert.fail(e.getMessage());
 		}
+		
+		
 	}
 	
 	
