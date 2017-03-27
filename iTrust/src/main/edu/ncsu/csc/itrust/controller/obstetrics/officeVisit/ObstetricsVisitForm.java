@@ -64,6 +64,7 @@ public class ObstetricsVisitForm {
 		ov.setLowLyingPlacentaObserved(placentaObserved);
 		if (isNew){
 			controller.add(ov);
+			ov = controller.getByOfficeVisit(officeVisitID);
 			// TODO probably add some stuff here regarding the scheduling of the next appointment
 		} else {
 			controller.update(ov);

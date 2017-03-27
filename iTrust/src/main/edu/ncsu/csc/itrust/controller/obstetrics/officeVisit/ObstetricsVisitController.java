@@ -156,6 +156,7 @@ public class ObstetricsVisitController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
 					null);
 		} catch (Exception e) {
+			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
 					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
 		}

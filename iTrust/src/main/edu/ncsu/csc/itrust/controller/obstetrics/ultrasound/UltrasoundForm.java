@@ -64,7 +64,6 @@ public class UltrasoundForm {
 	}
 	
 	public void fillInput(Long ultrasoundID, Float crl, Float bpd, Float hc, Float fl, Float ofd, Float ac, Float hl, Float efw){
-		System.out.println(ultrasoundID);
 		ultrasound.setId(ultrasoundID);
 		ultrasound.setCrl(crl);
 		ultrasound.setBpd(bpd);

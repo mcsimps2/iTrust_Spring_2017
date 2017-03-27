@@ -50,13 +50,13 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 					+ "VALUES (?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
-			stmt = "UPDATE obstetricsVisit SET  "
+			stmt = "UPDATE obstetricsVisit SET "
 					+ "officeVisitID=?, "
 					+ "weeksPregnant=?, "
 					+ "fhr=?, "
 					+ "multiplicity=?, "
 					+ "lowLyingPlacentaObserved=?, "
-					+ "imageOfUltrasound=?, "
+					+ "imageOfUltrasound=? "
 					+ "WHERE id=" + id + ";";
 		}
 		
@@ -66,7 +66,7 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		ps.setInt(3, insertObject.getFhr());
 		ps.setInt(4, insertObject.getMultiplicity());
 		ps.setBoolean(5, insertObject.isLowLyingPlacentaObserved());
-		ps.setBlob(6, insertObject.getImageOfUltrasound());		
+		ps.setBlob(6, insertObject.getImageOfUltrasound());
 		
 		return ps;
 	}

@@ -51,7 +51,7 @@ public class UltrasoundSQLLoader implements SQLLoader<Ultrasound> {
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
-			stmt = "UPDATE ultrasound SET  "
+			stmt = "UPDATE ultrasound SET "
 					+ "officeVisitID=?, "
 					+ "crl=?, "
 					+ "bpd=?, "
@@ -60,7 +60,7 @@ public class UltrasoundSQLLoader implements SQLLoader<Ultrasound> {
 					+ "ofd=?, "
 					+ "ac=?, "
 					+ "hl=?, "
-					+ "efw=?, "
+					+ "efw=? "
 					+ "WHERE id=" + id + ";";
 		}
 		
