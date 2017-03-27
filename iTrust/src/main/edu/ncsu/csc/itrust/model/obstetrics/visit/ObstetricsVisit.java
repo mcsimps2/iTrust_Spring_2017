@@ -72,6 +72,14 @@ public class ObstetricsVisit {
 		this.imageOfUltrasound = imageOfUltraSound;
 	}
 
+	/**
+	 * Constructor for creating a blank obstetrics visit with just an office visit ID
+	 * @param officeVisitID
+	 */
+	public ObstetricsVisit(Long officeVisitID) {
+		super();
+		this.officeVisitID = officeVisitID;
+	}
 
 	/**
 	 * @return the id

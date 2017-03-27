@@ -49,5 +49,11 @@
 	
 	<ui:fragment rendered="#{!isObstetricsPatient}">
 		<h2>Not an Obstetrics Patient</h2>
+		<h:form>
+			<div class="form-group form-button-group">
+				<h:commandButton id="cancelVisitButton" value="Cancel"
+					action="#{navigation_controller.baseOfficeVisit}" immediate="true" />
+			</div>
+		</h:form>
 	</ui:fragment>
 </html>

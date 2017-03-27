@@ -1,14 +1,20 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
+import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
+import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
 @ManagedBean(name = "obstetrics_visit_form")
 @ViewScoped
 public class ObstetricsVisitForm {
 	private ObstetricsVisitController controller;
 	private Long officeVisitID;
-	//private ObstetricsVisit ov; TODO
+	private ObstetricsVisit ov;
 	private Integer weeksPregnant;
 	private Integer fhr;
 	private Integer multiplicity;
@@ -25,57 +31,43 @@ public class ObstetricsVisitForm {
 	 * Constructor for OfficeVisitForm for testing purposes.
 	 */
 	public ObstetricsVisitForm(ObstetricsVisitController ovc) {
-		// Temporary code
-		weeksPregnant = 1;
-		fhr = 2;
-		multiplicity = 3;
-		placentaObserved = true;
-		
-		/* Real code TODO
 		try {
 			controller = (ovc == null) ? new ObstetricsVisitController() : ovc;
-			OfficeVisit officeVisit = new OfficeVisitController().getSelectedVisit();
-			officeVisitID = officeVisit.getVisitID();
-			ov = controller.getVisitWithID(officeVisitID);
+			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
+			OfficeVisit officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
+			ov = controller.getByOfficeVisit(officeVisitID);
 			if (ov == null) {
-				ov = new ObstetricsVisit();
-				ov.setOfficeVisitID(officeVisitID);
+				ov = new ObstetricsVisit(officeVisitID);
 			}
 			weeksPregnant = ov.getWeeksPregnant();
 			if (weeksPregnant == null) {
 				weeksPregnant = controller.calculateWeeksPregnant(officeVisit);
 			}
-			fhr = ov.getFHR();
+			fhr = ov.getFhr();
 			multiplicity = ov.getMultiplicity();
-			placentaObserved = ov.getPlacentaObserved();
+			placentaObserved = ov.isLowLyingPlacentaObserved();
 		} catch (Exception e) {
 			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
 					"Controller Error");
 			FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 		}
-		*/
 	}
 	
 	/**
 	 * Called when user updates obstetrics on officeVisitInfo.xhtml.
 	 */
 	public void submitObstetrics() {
-		// Temporary code
-		return;
-		
-		/* Real code TODO
 		boolean isNew = ov.getWeeksPregnant() == null;
 		ov.setWeeksPregnant(weeksPregnant);
-		ov.setFHR(fhr);
+		ov.setFhr(fhr);
 		ov.setMultiplicity(multiplicity);
-		ov.setPlacentaObserved(placentaObserved);
-		controller.edit(ov, isNew);
+		ov.setLowLyingPlacentaObserved(placentaObserved);
 		if (isNew){
-		    controller.logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+			controller.add(ov);
+			// TODO probably add some stuff here regarding the scheduling of the next appointment
 		} else {
-		    controller.logTransaction(TransactionType.EDIT_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+			controller.update(ov);
 		}
-		*/
 	}
 
 	public Integer getWeeksPregnant() {

@@ -17,7 +17,11 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
+import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitData;
+import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitMySQL;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "obstetrics_visit_controller")
@@ -30,14 +34,12 @@ public class ObstetricsVisitController extends iTrustController {
 	/** Constant for the message to be displayed if the obstetrics visit was successfully updated */
 	private static final String OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED = "Obstetrics Visit Successfully Updated";
 	
-	//private ObstetricsVisitData ovData; TODO
+	private ObstetricsVisitData ovData;
 	private ObstetricsInitData oiData;
-	private SessionUtils sessionUtils;
 
 	public ObstetricsVisitController() throws DBException {
-		//ovData = new ObstetricsVisitMySQL(); TODO
+		ovData = new ObstetricsVisitMySQL();
 		oiData = new ObstetricsInitMySQL();
-		sessionUtils = SessionUtils.getInstance();
 	}
 
 	/**
@@ -49,9 +51,8 @@ public class ObstetricsVisitController extends iTrustController {
 	 *            SessionUtils instance
 	 */
 	public ObstetricsVisitController(DataSource ds, SessionUtils sessionUtils) {
-		//ovData = new ObstetricsVisitMySQL(ds); TODO
+		ovData = new ObstetricsVisitMySQL(ds);
 		oiData = new ObstetricsInitMySQL(ds);
-		this.sessionUtils = sessionUtils;
 	}
 
 	/**
@@ -61,9 +62,8 @@ public class ObstetricsVisitController extends iTrustController {
 	 *            DataSource
 	 */
 	public ObstetricsVisitController(DataSource ds) {
-		//ovData = new ObstetricsVisitMySQL(ds); TODO
+		ovData = new ObstetricsVisitMySQL(ds);
 		oiData = new ObstetricsInitMySQL(ds);
-		sessionUtils = SessionUtils.getInstance();
 	}
 	
 	/**
@@ -72,11 +72,14 @@ public class ObstetricsVisitController extends iTrustController {
 	 * @param ovID ID of the OfficeVisit associated with the desired ObstetricsVisit
 	 * @return the ObstetricsVisit with the given officeVisitID, or null if not found
 	 */
-	/* TODO
-	public ObtetricsVisit getVisitWithID(Long ovID) {
-		return null;
+	public ObstetricsVisit getByOfficeVisit(Long ovID) {
+		try {
+			return ovData.getByOfficeVisit(ovID.longValue());
+		} catch (DBException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	*/
 	
 	/**
 	 * Calculates and returns the number of weeks pregnant at the time of the given OfficeVisit.
@@ -91,12 +94,18 @@ public class ObstetricsVisitController extends iTrustController {
 	 * @return the number of weeks pregnant, or null if not an obstetrics patient
 	 * @throws DBException 
 	 */
-	public Integer calculateWeeksPregnant(OfficeVisit ov) throws Exception { //TODO GET RID OF THROWS DECLARATION
+	public Integer calculateWeeksPregnant(OfficeVisit ov) {
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
 
 		// Get the list of initialization records for the patient
-		List<ObstetricsInit> oiList = oiData.getRecords(ov.getPatientMID());
+		List<ObstetricsInit> oiList;
+		try {
+			oiList = oiData.getRecords(ov.getPatientMID());
+		} catch (DBException e) {
+			e.printStackTrace();
+			return null;
+		}
 		if (oiList.isEmpty()) {
 			return null;
 		}
@@ -115,15 +124,15 @@ public class ObstetricsVisitController extends iTrustController {
 	}
 	
 	/**
-	 * TODO
+	 * Attempts to add the given ObstetricsVisit to the database.
 	 * @param ov
 	 */
-	/*
-	public void edit(ObstetricsVisit ov, boolean isNew) {
-		boolean res = false;
-
+	public void add(ObstetricsVisit ov) {
 		try {
-			res = ovData.update(ov, isNew);
+			ovData.add(ov);
+			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
+					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
+			logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
 					null);
@@ -131,13 +140,26 @@ public class ObstetricsVisitController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
 					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
 		}
-		if (res) {
-			// TODO probably add some stuff here regarding the scheduling of the next appointment
+	}
+	
+	/**
+	 * Attempts to update the given ObstetricsVisit in the database.
+	 * @param ov
+	 */
+	public void update(ObstetricsVisit ov) {
+		try {
+			ovData.update(ov);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
 					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
+			logTransaction(TransactionType.EDIT_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
+					null);
+		} catch (Exception e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
+					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
 		}
 	}
-	*/
 
 	/**
 	 * Sends a FacesMessage for FacesContext to display.

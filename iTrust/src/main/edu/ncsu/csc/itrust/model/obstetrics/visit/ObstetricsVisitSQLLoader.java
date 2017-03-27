@@ -47,14 +47,14 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
 					+ "VALUES (?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
-			long id = insertObject.getId();
-			stmt = "UPDATE obstetricsVisit SET  "
-					+ "officeVisitID=?"
-					+ "weeksPregnant=?"
-					+ "fhr=?"
-					+ "multiplicity=?"
-					+ "lowLyingPlacentaObserved=?"
-					+ "imageOfUltrasound=?"
+			long id = insertObject.getId().longValue();
+			stmt = "UPDATE obstetricsVisit SET "
+					+ "officeVisitID=?, "
+					+ "weeksPregnant=?, "
+					+ "fhr=?, "
+					+ "multiplicity=?, "
+					+ "lowLyingPlacentaObserved=?, "
+					+ "imageOfUltrasound=? "
 					+ "WHERE id=" + id + ";";
 		}
 		
