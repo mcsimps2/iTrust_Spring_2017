@@ -23,6 +23,8 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	private String lmp;
 	/** EDD - LMP in days*/
 	private final int EDD_LMP_DIFF = 280;
+	/** The RH flag */
+	private boolean RH = false;
 	
 	/**
 	 * Constructor to be used when adding a new record to the database
@@ -345,6 +347,16 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 		if (other == null)
 			throw new NullPointerException();
 		return this.timestamp.compareTo(other.timestamp) * -1;
+	}
+
+	public boolean getRH()
+	{
+		return RH;
+	}
+
+	public void setRH(boolean rH)
+	{
+		RH = rH;
 	}
 }
 
