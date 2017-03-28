@@ -100,6 +100,9 @@ public class ObstetricsVisitForm {
 	 */
 	public void upload() {
 		if (file == null) {
+			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No file selected",
+					"No file selected");
+			FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 			return;
 		}
 		

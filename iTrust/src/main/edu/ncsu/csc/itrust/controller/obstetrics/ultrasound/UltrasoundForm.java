@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.ObstetricsVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.Ultrasound;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
@@ -17,27 +18,34 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class UltrasoundForm {
 	
 	private UltrasoundController controller;
+	private ObstetricsVisitController ovc;
 	private Long officeVisitID;
 	private SessionUtils sessionUtils;
 	private Ultrasound ultrasound;
 
 	public UltrasoundForm() {
-	    this(null, SessionUtils.getInstance());
+	    this(null, null, SessionUtils.getInstance());
 	}
 
-	public UltrasoundForm(UltrasoundController uc, SessionUtils sessionUtils) {
-	    this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
+	public UltrasoundForm(UltrasoundController uc, ObstetricsVisitController ovc, SessionUtils sessionUtils) {
 		try {
+			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
+		    this.ovc = (ovc == null) ? new ObstetricsVisitController() : ovc;
 			controller = (uc == null) ? new UltrasoundController() : uc;
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
 			clearFields();
 		} catch (Exception e) {
-			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Ultrasound Controller Error",
-					"Ultrasound Controller Error", null);
+			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
+					"Controller Error", null);
 		}
 	}
 	
 	public void add(){
+		if (ovc.getByOfficeVisit(officeVisitID) == null) {
+			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "The Obstetrics tab must be saved before you can add an ultrasound",
+					"The Obstetrics tab must be saved before you can add an ultrasound", null);
+			return;
+		}
 		controller.add(ultrasound);
 		clearFields();
 	}
