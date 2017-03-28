@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.initialization;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +47,6 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class ObstetricsInitControllerTest {
 	
 	@Spy private ObstetricsInitController oic;
-	@Spy private ObstetricsInitController oicWithNullDataSource;
 	@Spy private SessionUtils sessionUtils;
 	
 	@Mock private HttpServletRequest mockHttpServletRequest;
@@ -119,9 +115,6 @@ public class ObstetricsInitControllerTest {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
-
-		// Initialize a office visit controller with null data source
-		oicWithNullDataSource = new ObstetricsInitController(null, sessionUtils, mockPatientDAO, mockPersonnelDAO);
 
 		// Mock HttpServletRequest
 		mockHttpServletRequest = Mockito.mock(HttpServletRequest.class);
