@@ -33,6 +33,10 @@ public class ObstetricsVisitController extends iTrustController {
 	private static final String OBSTETRICS_VISIT_CANNOT_BE_UPDATED = "Invalid Obstetrics Visit";
 	/** Constant for the message to be displayed if the obstetrics visit was successfully updated */
 	private static final String OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED = "Obstetrics Visit Successfully Updated";
+	/** Constant for the error message to be displayed if an image fails to upload */
+	private static final String FILE_UPLOAD_FAILED = "File Upload Failed";
+	/** Constant for the message to be displayed if an image is successfully uploaded */
+	private static final String FILE_UPLOAD_SUCCESS = "File Successfully Uploaded";
 	
 	private ObstetricsVisitData ovData;
 	private ObstetricsInitData oiData;
@@ -159,6 +163,21 @@ public class ObstetricsVisitController extends iTrustController {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
 					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
+		}
+	}
+	
+	public void upload(ObstetricsVisit ov) {
+		try {
+			ovData.update(ov);
+			printFacesMessage(FacesMessage.SEVERITY_INFO, FILE_UPLOAD_SUCCESS,
+					FILE_UPLOAD_SUCCESS, null);
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, FILE_UPLOAD_FAILED, e.getExtendedMessage(),
+					null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, FILE_UPLOAD_FAILED,
+					FILE_UPLOAD_FAILED, null);
 		}
 	}
 

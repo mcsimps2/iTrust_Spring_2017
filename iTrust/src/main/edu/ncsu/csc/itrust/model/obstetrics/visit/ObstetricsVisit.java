@@ -1,6 +1,6 @@
 package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
-import java.sql.Blob;
+import java.io.InputStream;
 
 /**
  * Model of info for obstetrics visit
@@ -27,7 +27,10 @@ public class ObstetricsVisit {
 	private Boolean lowLyingPlacentaObserved;
 	
 	/** Data for the image of the ultrasound */
-	private Blob imageOfUltrasound;
+	private InputStream imageOfUltrasound;
+	
+	/** Type of the image file (.png, .jpeg, .pdf, etc.) */
+	private String imageType;
 	
 	/**
 	 * Constructor for getting out of the db
@@ -41,7 +44,7 @@ public class ObstetricsVisit {
 	 * @param imageOfUltraSound
 	 */
 	public ObstetricsVisit(Long id, Long officeVisitID, Integer weeksPregnant, Integer fhr,
-			Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
+			Integer multiplicity, Boolean lowLyingPlacentaObserved, InputStream imageOfUltraSound, String imageType) {
 		super();
 		this.id = id;
 		this.officeVisitID = officeVisitID;
@@ -50,6 +53,7 @@ public class ObstetricsVisit {
 		this.multiplicity = multiplicity;
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
 		this.imageOfUltrasound = imageOfUltraSound;
+		this.imageType = imageType;
 	}
 	
 	/**
@@ -62,7 +66,7 @@ public class ObstetricsVisit {
 	 * @param imageOfUltraSound
 	 */
 	public ObstetricsVisit(Long officeVisitID, Integer weeksPregnant, Integer fhr,
-			Integer multiplicity, Boolean lowLyingPlacentaObserved, Blob imageOfUltraSound) {
+			Integer multiplicity, Boolean lowLyingPlacentaObserved, InputStream imageOfUltraSound, String imageType) {
 		super();
 		this.officeVisitID = officeVisitID;
 		this.weeksPregnant = weeksPregnant;
@@ -70,6 +74,7 @@ public class ObstetricsVisit {
 		this.multiplicity = multiplicity;
 		this.lowLyingPlacentaObserved = lowLyingPlacentaObserved;
 		this.imageOfUltrasound = imageOfUltraSound;
+		this.imageType = imageType;
 	}
 
 	/**
@@ -168,14 +173,22 @@ public class ObstetricsVisit {
 	/**
 	 * @return the imageOfUltrasound
 	 */
-	public Blob getImageOfUltrasound() {
+	public InputStream getImageOfUltrasound() {
 		return imageOfUltrasound;
 	}
 
 	/**
 	 * @param imageOfUltrasound the imageOfUltrasound to set
 	 */
-	public void setImageOfUltrasound(Blob imageOfUltrasound) {
+	public void setImageOfUltrasound(InputStream imageOfUltrasound) {
 		this.imageOfUltrasound = imageOfUltrasound;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 }

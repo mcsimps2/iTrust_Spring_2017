@@ -1,6 +1,6 @@
 package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
-import java.sql.Blob;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,8 +37,9 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		Integer multiplicity = rs.getInt("multiplicity");
 		if (rs.wasNull()) multiplicity = null;
 		Boolean lowLyingPlacentaObserved = rs.getBoolean("lowLyingPlacentaObserved");
-		Blob imageOfUltrasound = rs.getBlob("imageOfUltrasound");
-		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound);
+		InputStream imageOfUltrasound = rs.getBinaryStream("imageOfUltrasound");
+		String imageType = rs.getString("imageType");
+		return new ObstetricsVisit(id, officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound, imageType);
 	}
 
 	@Override
@@ -46,8 +47,8 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 			boolean newInstance) throws SQLException {
 		String stmt = "";
 		if( newInstance ){ // IS NEW CODE
-			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound) "
-					+ "VALUES (?, ?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageOfUltrasound, imageType) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
 			stmt = "UPDATE obstetricsVisit SET "
@@ -56,7 +57,8 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 					+ "fhr=?, "
 					+ "multiplicity=?, "
 					+ "lowLyingPlacentaObserved=?, "
-					+ "imageOfUltrasound=? "
+					+ "imageOfUltrasound=?, "
+					+ "imageType=? "
 					+ "WHERE id=" + id + ";";
 		}
 		
@@ -66,7 +68,8 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		ps.setInt(3, insertObject.getFhr());
 		ps.setInt(4, insertObject.getMultiplicity());
 		ps.setBoolean(5, insertObject.isLowLyingPlacentaObserved());
-		ps.setBlob(6, insertObject.getImageOfUltrasound());
+		ps.setBinaryStream(6, insertObject.getImageOfUltrasound());
+		ps.setString(7, insertObject.getImageType());
 		
 		return ps;
 	}
