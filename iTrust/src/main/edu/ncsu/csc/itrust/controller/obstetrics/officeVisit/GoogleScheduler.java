@@ -122,7 +122,7 @@ public class GoogleScheduler
 	 {
 		 ApptDAO apptDAO = factory.getApptDAO();
 		 ApptTypeDAO apptTypeDAO = factory.getApptTypeDAO();
-		 List<ApptBean> apptBeans = apptDAO.getApptsFor(mid);
+		 List<ApptBean> apptBeans = apptDAO.getAllApptsFor(mid);
 		 List<DateTime[]> list = new ArrayList<DateTime[]>();
 		 for (int i = 0; i < apptBeans.size(); i++)
 		 {
