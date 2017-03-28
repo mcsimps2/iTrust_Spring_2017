@@ -44,13 +44,11 @@ public class AddObstetricsRecordStepDefs {
 	
 	@When("^I enter an lmp in for the LMP field$")
 	public void enterLMP() {
-//		Calendar c = Calendar.getInstance();
-////		c.add(Calendar.DATE, -1);
-//		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-DD"); 
-//		ft.setLenient(false);
-//		String date = ft.format(c.getTime());
-//		System.out.println(date);
-		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys("2017-01-01");
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -1);
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+		String date = ft.format(c.getTime());
+		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys(date);
 	}
 	
 	@When("^I enter a prior pregnancy with values: conception year (.+), weeks pregnant (.+), hours in labor (.+), weight gain (.+), delivery type (.+), multiplicity (.+)$")

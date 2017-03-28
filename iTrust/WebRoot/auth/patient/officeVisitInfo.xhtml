@@ -40,6 +40,12 @@
 					
 					<input id="tab-immunizations" type="radio" name="ovtabs" />
 					<label for="tab-immunizations">Immunizations</label>
+					
+					<input id="tab-obstetrics" type="radio" name="ovtabs" />
+					<label for="tab-obstetrics">Obstetrics</label>
+					
+					<input id="tab-ultrasound" type="radio" name="ovtabs" />
+					<label for="tab-ultrasound">Ultrasound</label>
 				</c:if>
 
 				<div class="tab-content">
@@ -72,11 +78,20 @@
 							<ui:include src="/auth/patient/viewMedicalProcedures.xhtml"></ui:include>
 						</div>
 						
-						<!-- iMMUNIZATIONS -->
+						<!-- IMMUNIZATIONS -->
 						<div class="tab-panel" id="content-immunizations">
 							<ui:include src="/auth/patient/viewImmunizations.xhtml"></ui:include>
 						</div>
 						
+						<!-- OBSTETRICS -->
+						<div class="tab-panel" id="content-obstetrics">
+							<ui:include src="/auth/patient/viewObstetrics.xhtml"></ui:include>
+						</div>
+						
+						<!-- ULTRASOUND -->
+						<div class="tab-panel" id="content-ultrasound">
+							<ui:include src="/auth/patient/viewUltrasound.xhtml"></ui:include>
+						</div>
 					</c:if>
 				</div>
 			</div>
