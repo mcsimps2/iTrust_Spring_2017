@@ -358,5 +358,17 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	{
 		RH = rH;
 	}
+	
+	public String getPrettyRH()
+	{
+		if (RH)
+		{
+			return "True";
+		}
+		else
+		{
+			return "False";
+		}
+	}
 }
 
