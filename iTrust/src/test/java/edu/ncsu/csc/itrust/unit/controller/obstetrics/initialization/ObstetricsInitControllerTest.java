@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -233,13 +234,15 @@ public class ObstetricsInitControllerTest {
 		c = Calendar.getInstance();
 		oi.setDate(dateFormat.format(c.getTime()));
 		
-		
 		oic.viewAddObstetricsInit(oi, "a");
 		Assert.assertTrue(oic.getViewedOI()== null);
 		
 		oic.viewAddObstetricsInit(null, "9000000012");
 		Assert.assertTrue(oic.getViewedOI() == null);
-		Assert.assertTrue(oic.getDisplayedPregnancies().equals(oic.getPastPregnancies()));
+		List<PregnancyInfo> l = oic.getPastPregnancies();
+		Collections.sort(l,
+				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+		Assert.assertTrue(oic.getDisplayedPregnancies().equals(l));
 		
 		oic.viewAddObstetricsInit(oi, "9000000012");
 		Assert.assertTrue(oic.getViewedOI().equals(oi));
