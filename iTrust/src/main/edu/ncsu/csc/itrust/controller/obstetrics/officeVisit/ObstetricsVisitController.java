@@ -85,20 +85,7 @@ public class ObstetricsVisitController extends iTrustController {
 		}
 	}
 	
-	/**
-	 * Calculates and returns the number of weeks pregnant at the time of the given OfficeVisit.
-	 * Uses the date of the given office visit and the LMP from the most recent obstetrics
-	 * initialization record for the patient associated with the office visit.
-	 * 
-	 * If the number of weeks pregnant is 49 or greater, or if there are no initialization records
-	 * for the patient, then returns null as the patient would no longer be considered an
-	 * obstetrics patient.
-	 * 
-	 * @param ov the given OfficeVisit
-	 * @return the number of weeks pregnant, or null if not an obstetrics patient
-	 * @throws DBException 
-	 */
-	public Integer calculateWeeksPregnant(OfficeVisit ov) {
+	public ObstetricsInit getMostRecentOI(OfficeVisit ov) {
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
 
@@ -120,11 +107,38 @@ public class ObstetricsVisitController extends iTrustController {
 			Date lmpDate = oi.getJavaLMP();
 			long diff = ovDate.getTime() - lmpDate.getTime();
 			if (diff >= 0) {
-				int weeks = (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)/7);
-				return weeks < MAX_WEEKS_SINCE_LMP ? weeks : null;
+				return oi;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Calculates and returns the number of weeks pregnant at the time of the given OfficeVisit.
+	 * Uses the date of the given office visit and the LMP from the most recent obstetrics
+	 * initialization record for the patient associated with the office visit.
+	 * 
+	 * If the number of weeks pregnant is 49 or greater, or if there are no initialization records
+	 * for the patient, then returns null as the patient would no longer be considered an
+	 * obstetrics patient.
+	 * 
+	 * @param ov the given OfficeVisit
+	 * @return the number of weeks pregnant, or null if not an obstetrics patient
+	 * @throws DBException 
+	 */
+	public Integer calculateWeeksPregnant(OfficeVisit ov, ObstetricsInit oi) {
+		if (oi == null) {
+			return null;
+		}
+		
+		// Convert OfficeVisit LocalDateTime to java.util.Date
+		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
+		
+		// Calculate the time difference
+		Date lmpDate = oi.getJavaLMP();
+		long diff = ovDate.getTime() - lmpDate.getTime();
+		int weeks = (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)/7);
+		return weeks < MAX_WEEKS_SINCE_LMP ? weeks : null;
 	}
 	
 	/**

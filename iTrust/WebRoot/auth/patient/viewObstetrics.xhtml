@@ -10,6 +10,11 @@
 	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
 	
 	<ui:fragment rendered="#{isObstetricsPatient}">
+		<ui:fragment rendered="#{obstetrics_visit_form.needsShot()}">
+			<p style="font-size: large; color: red; background-color: whitesmoke; margin-bottom: 2rem;">
+			NOTICE: The patient should be given an RH immune globulin shot if they have not already</p>
+		</ui:fragment>
+		
 		<h:form id="obstetrics_form">
 			<div class="form-group">
 				<h:outputLabel for="weeksPregnant">Number of weeks pregnant:</h:outputLabel>

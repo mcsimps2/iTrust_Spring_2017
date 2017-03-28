@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitForm;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
@@ -29,6 +30,7 @@ public class ObstetricsVisitForm {
 	private Boolean placentaObserved;
 	private String calendarID;
 	private Part file;
+	private boolean rhFlag;
 
 	/**
 	 * Default constructor for OfficeVisitForm.
@@ -49,9 +51,15 @@ public class ObstetricsVisitForm {
 			if (ov == null) {
 				ov = new ObstetricsVisit(officeVisitID);
 			}
+			
+			ObstetricsInit oi = controller.getMostRecentOI(officeVisit);
+			if (oi != null) {
+				rhFlag = oi.getRH();
+			}
+			
 			weeksPregnant = ov.getWeeksPregnant();
 			if (weeksPregnant == null) {
-				weeksPregnant = controller.calculateWeeksPregnant(officeVisit);
+				weeksPregnant = controller.calculateWeeksPregnant(officeVisit, oi);
 			}
 			fhr = ov.getFhr();
 			multiplicity = ov.getMultiplicity();
@@ -144,6 +152,10 @@ public class ObstetricsVisitForm {
 	    }
 	    
 	    fc.responseComplete();
+	}
+	
+	public boolean needsShot() {
+		return rhFlag && weeksPregnant >= 28;
 	}
 
 	public Integer getWeeksPregnant() {
