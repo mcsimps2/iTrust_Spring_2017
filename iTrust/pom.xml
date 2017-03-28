@@ -518,6 +518,17 @@
 	    <artifactId>jsp-api</artifactId>
 	    <version>2.2.1-b03</version>
 	</dependency>
+	<dependency>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20160810</version>
+	</dependency>
+	<dependency>
+    	<groupId>com.google.apis</groupId>
+    	<artifactId>google-api-services-calendar</artifactId>
+    	<version>v3-rev239-1.22.0</version>
+	</dependency>
+	
   </dependencies>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

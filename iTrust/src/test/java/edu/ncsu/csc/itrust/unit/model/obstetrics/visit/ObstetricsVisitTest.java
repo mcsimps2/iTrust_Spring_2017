@@ -1,10 +1,9 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.visit;
 
-import java.sql.SQLException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
-
-import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,10 +27,12 @@ public class ObstetricsVisitTest {
 	public void setUp() throws Exception {
 		byte[] b1 = new byte[100];
 		Arrays.fill(b1, (byte)0);
-		byte[] b2 = new byte[12];
-		Arrays.fill(b2, (byte)1);
-		o1 = new ObstetricsVisit(new Long(1), new Long(2), new Integer(13), new Integer(54), new Integer(3), new Boolean(true), new SerialBlob(b1));
-		o2 = new ObstetricsVisit(new Long(3), new Integer(14), new Integer(55), new Integer(4), new Boolean(false), new SerialBlob(b2));
+		InputStream is1 = new ByteArrayInputStream(b1);
+		byte[] b2 = new byte[64];
+		Arrays.fill(b2, (byte)2);
+		InputStream is2 = new ByteArrayInputStream(b2);
+		o1 = new ObstetricsVisit(new Long(1), new Long(2), new Integer(13), new Integer(54), new Integer(3), new Boolean(true), is1, "o1.png");
+		o2 = new ObstetricsVisit(new Long(3), new Integer(14), new Integer(55), new Integer(4), new Boolean(false), is2, "o2.jpg");
 	}
 
 	@Test
@@ -81,16 +82,29 @@ public class ObstetricsVisitTest {
 	public void testGetSetImageOfUltrasound() {
 		byte[] b1 = new byte[100];
 		Arrays.fill(b1, (byte)0);
+		InputStream is1 = new ByteArrayInputStream(b1);
 		byte[] b2 = new byte[64];
 		Arrays.fill(b2, (byte)2);
+		InputStream is2 = new ByteArrayInputStream(b2);
+		
 		try {
-			Assert.assertTrue(o1.getImageOfUltrasound().equals(new SerialBlob(b1)));
-			o1.setImageOfUltrasound(new SerialBlob(b2));
-			Assert.assertTrue(o1.getImageOfUltrasound().equals(new SerialBlob(b2)));
-		} catch (SerialException e) {
-			Assert.fail(e.getMessage());
-		} catch (SQLException e) {
-			Assert.fail(e.getMessage());
+			int numBytes = is1.available();
+			InputStream o1is = o1.getImageOfUltrasound();
+			Assert.assertEquals(numBytes, o1is.available());
+			for (int i = 0; i < numBytes; i++) {
+				Assert.assertEquals(is1.read(), o1is.read());
+			}
+			
+			o1.setImageOfUltrasound(o2.getImageOfUltrasound());
+			
+			numBytes = is2.available();
+			o1is = o1.getImageOfUltrasound();
+			Assert.assertEquals(numBytes, o1is.available());
+			for (int i = 0; i < numBytes; i++) {
+				Assert.assertEquals(is2.read(), o1is.read());
+			}
+		} catch (IOException e) {
+			Assert.fail();
 		}
 	}
 

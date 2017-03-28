@@ -93,6 +93,9 @@ public class ObstetricsInitController extends iTrustController
 	/** List of pregnancy records added by the user */
 	private List<PregnancyInfo> addedPregnancies = new ArrayList<PregnancyInfo>();
 	
+	/** Temporary storage of RH flag */
+	private boolean RH;
+	
 	/** Temporary storage of the LMP for when the user is adding prior pregnancies */
 	private String lmp;
 	
@@ -330,6 +333,7 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyFields();
 		clearPregnancyLists();
 		clearLMP();
+		clearRH();
 		
 		if (oi != null) {
 			// We're viewing a record, so show past pregnancy records from it.
@@ -375,6 +379,14 @@ public class ObstetricsInitController extends iTrustController
 
 	public void setLmp(String lmp) {
 		this.lmp = lmp;
+	}
+	
+	public boolean getRH() {
+		return RH;
+	}
+	
+	public void setRH(boolean val) {
+		this.RH = val;
 	}
 
 	public String getYearOfConception() {
@@ -503,6 +515,7 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
+		oi.setRH(this.getRH());
 		try {
 			int oid = oiData.addAndReturnID(oi);
 			
@@ -525,6 +538,7 @@ public class ObstetricsInitController extends iTrustController
 			this.clearPregnancyFields();
 			this.clearPregnancyLists();
 			this.clearLMP();
+			this.clearRH();
 			
 			// Add success messages
 			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
@@ -548,6 +562,7 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyFields();
 		clearPregnancyLists();
 		clearLMP();
+		clearRH();
 		
 		// Go back to the overview page
 		try {
@@ -574,5 +589,9 @@ public class ObstetricsInitController extends iTrustController
 	
 	private void clearLMP() {
 		this.setLmp("");
+	}
+	
+	private void clearRH() {
+		this.setRH(false);
 	}
 }

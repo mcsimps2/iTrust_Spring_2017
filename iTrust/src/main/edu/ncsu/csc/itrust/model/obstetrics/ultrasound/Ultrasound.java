@@ -89,6 +89,14 @@ public class Ultrasound {
 	}
 
 	/**
+	 * Constructor for creating a blank Ultrasound with just an officeVisitID
+	 * @param officeVisitID2
+	 */
+	public Ultrasound(Long officeVisitID) {
+		this.officeVisitID = officeVisitID;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {

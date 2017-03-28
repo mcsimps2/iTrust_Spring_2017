@@ -472,7 +472,8 @@ CREATE TABLE obstetricsVisit (
 	fhr						INT				UNSIGNED,
 	multiplicity 			INT				UNSIGNED,
 	lowLyingPlacentaObserved BOOLEAN		DEFAULT FALSE,
-	imageOfUltrasound		BLOB,
+	imageOfUltrasound		MEDIUMBLOB,
+	imageType               VARCHAR(64),
 	PRIMARY KEY (id),
 	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
 ) ENGINE=MyISAM;
@@ -559,6 +560,7 @@ CREATE TABLE obstetricsInit
 	pid BIGINT UNSIGNED NOT NULL,
 	dateOfInit DATE,
 	LMP DATE,
+	RH BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id)
 ) ENGINE=MyISAM;
 
