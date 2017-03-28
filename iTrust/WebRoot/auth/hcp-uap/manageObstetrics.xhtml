@@ -22,6 +22,18 @@
 			</div>
 			
 			<div class="form-group">
+				<h:outputLabel for="weight">Weight:</h:outputLabel>
+				<h:inputText value="#{office_visit_form.weight}" id="weight"
+					class="form-control inline" readonly="#{!isOBGYN}"/>
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="bloodPressure">Blood Pressure:</h:outputLabel>
+				<h:inputText value="#{office_visit_form.bloodPressure}" id="bloodPressure"
+					class="form-control inline" readonly="#{!isOBGYN}"/>
+			</div>
+			
+			<div class="form-group">
 				<h:outputLabel for="fhr">Fetal Heart Rate (FHR):</h:outputLabel>
 				<h:inputText value="#{obstetrics_visit_form.fhr}" id="fhr"
 					class="form-control inline" readonly="#{!isOBGYN}"/>
@@ -38,6 +50,15 @@
 			</div>
 			<h:selectBooleanCheckbox value="#{obstetrics_visit_form.placentaObserved}" id="placenta"
 				style="height:34px; width:17px" disabled="#{!isOBGYN}"/>
+			
+			<ui:fragment rendered="#{obstetrics_visit_form.ov.id == null}">
+				<div class="form-group" style="margin-top:2rem">
+					<h:outputLabel for="calendarID">Google Calendar ID:</h:outputLabel>
+					<h:inputText value="#{obstetrics_visit_form.calendarID}" id="calendarID"
+						class="form-control inline" readonly="#{!isOBGYN}"/>
+				</div>
+			</ui:fragment>
+			
 			<div class="form-group form-button-group">
 				<h:commandButton id="submitObstetricsButton" value="Save"
 					action="#{obstetrics_visit_form.submitObstetrics}" disabled="#{!isOBGYN}"/>
@@ -49,5 +70,11 @@
 	
 	<ui:fragment rendered="#{!isObstetricsPatient}">
 		<h2>Not an Obstetrics Patient</h2>
+		<h:form>
+			<div class="form-group form-button-group">
+				<h:commandButton id="cancelVisitButton" value="Cancel"
+					action="#{navigation_controller.baseOfficeVisit}" immediate="true" />
+			</div>
+		</h:form>
 	</ui:fragment>
 </html>
