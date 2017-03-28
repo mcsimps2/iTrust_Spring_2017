@@ -28,7 +28,7 @@ public class EditApptTypeTest extends TestCase {
 	}
 
 	public void testGetApptTypes() throws SQLException, DBException {
-		assertEquals(6, action.getApptTypes().size());
+		assertEquals(8, action.getApptTypes().size());
 	}
 
 	public void testAddApptType() throws SQLException, FormValidationException, DBException {
@@ -37,7 +37,7 @@ public class EditApptTypeTest extends TestCase {
 		a.setDuration(30);
 
 		assertTrue(action.addApptType(a).startsWith("Success"));
-		assertEquals(7, action.getApptTypes().size());
+		assertEquals(9, action.getApptTypes().size());
 	}
 
 	public void testAddApptType2() throws SQLException, FormValidationException, DBException {

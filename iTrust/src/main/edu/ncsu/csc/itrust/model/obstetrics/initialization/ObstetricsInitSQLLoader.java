@@ -46,6 +46,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 		oi.setPid(rs.getLong("pid"));
 		oi.setDate(rs.getDate("dateOfInit"));
 		oi.setLMP(rs.getDate("LMP"));
+		oi.setRH(rs.getBoolean("RH"));
 		return oi;
 	}
 
@@ -65,13 +66,14 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 			boolean newInstance) throws SQLException {
 		String stmt = "";
 		if (newInstance) {
-			stmt = "INSERT INTO obstetricsInit(pid, dateOfInit, LMP) VALUES (?, ?, ?);";
+			stmt = "INSERT INTO obstetricsInit(pid, dateOfInit, LMP, RH) VALUES (?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			String dateOfInit = insertObject.getDate();
 			String dateOfLMP = insertObject.getLMP();
 			ps.setLong(1, insertObject.getPid());
 			ps.setDate(2, Date.valueOf(dateOfInit));
 			ps.setDate(3, Date.valueOf(dateOfLMP));
+			ps.setBoolean(4, insertObject.getRH());
 		}
 		else
 		{
