@@ -7,8 +7,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import edu.ncsu.csc.itrust.model.ConverterDAO;
-
 /**
  * Produces the JDBC connection from Tomcat's JDBC connection pool (defined in context.xml). Produces and
  * exception when running the unit tests because they're not being run through Tomcat.
@@ -36,7 +34,7 @@ public class ProductionConnectionDriver implements IConnectionDriver {
 			return ((DataSource) (((Context) initialContext.lookup("java:comp/env"))).lookup("jdbc/itrust"))
 					.getConnection();
 		} catch (NamingException e) {
-			return ConverterDAO.getDataSource().getConnection();
+			throw new SQLException(("Context Lookup Naming Exception: " + e.getMessage()));
 		}
 	}
 }
