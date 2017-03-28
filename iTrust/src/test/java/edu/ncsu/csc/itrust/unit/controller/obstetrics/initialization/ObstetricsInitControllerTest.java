@@ -45,7 +45,7 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 /**
  * Test class for the ObstetricsInitController class.
  * 
- * @author Aaron Cheshire
+ * @author Aaron Cheshire, James Gonzales
  */
 public class ObstetricsInitControllerTest {
 	
