@@ -123,6 +123,8 @@ public class ObstetricsVisitForm {
 	 * Called when the user clicks the button to download the image file on the Ultrasound tab of an Office Visit.
 	 */
 	public void download() {
+		ov = controller.getByOfficeVisit(officeVisitID);
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    ExternalContext ec = fc.getExternalContext();
 

@@ -16,19 +16,19 @@
 		</ui:fragment>
 		
 		<div style="text-align:center; margin-bottom:2rem">
-			<h:form class="upload-form" enctype="multipart/form-data">
-				<h:inputFile id="file" value="#{obstetrics_visit_form.file}" style="display:inline;"/>
-				<h:commandButton value="Upload" action="#{obstetrics_visit_form.upload()}" style="margin-left:10px;" disabled="#{!isOBGYN}"/>
-			</h:form>
-		</div>
-		
-		<ui:fragment rendered="#{obstetrics_visit_form.ov.imageOfUltrasound != null}">
-			<div style="text-align:center; margin-bottom:2rem">
-				<h:form class="download-form">
-					<h:commandButton value="Download" action="#{obstetrics_visit_form.download()}" style="margin-left:10px;" disabled="#{!isOBGYN}"/>
+			<ui:fragment rendered="#{isOBGYN}">
+				<h:form class="upload-form" enctype="multipart/form-data">
+					<h:inputFile id="file" value="#{obstetrics_visit_form.file}" style="display:inline;"/>
+					<h:commandButton value="Upload Ultrasound Image" action="#{obstetrics_visit_form.upload()}" style="margin-left:10px;"/>
 				</h:form>
-			</div>
-		</ui:fragment>
+			</ui:fragment>
+			
+			<ui:fragment rendered="#{obstetrics_visit_form.ov.imageOfUltrasound != null}">
+				<h:form style="display:inline; margin-left:2rem; margin-right:2rem; padding:2rem; background-color:#fcfcfc">
+					<h:commandLink value="Download Ultrasound Image" action="#{obstetrics_visit_form.download()}" style="color:cornflowerblue; font-size:larger"/>
+				</h:form>
+			</ui:fragment>
+		</div>
 		
 		<div class="duo-column-row">
 			<div class="duo-column duo-column-form well" style="border: thin solid grey; border-radius: 25px;">
