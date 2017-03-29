@@ -36,5 +36,5 @@ Scenario: bad obstetrics input
 Scenario: bad ultrasound input
 	Then this scenario is not implemented yet
 
-Scenario: add ultrasound before adding office visit info
+Scenario: add ultrasound before office visit info
 	Then this scenario is not implemented yet
