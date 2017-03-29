@@ -57,6 +57,40 @@ public class ObstetricsOfficeVisitStepDefs {
 		}
 	}
 	
+	@When("^enter (.+) for FHR, (.+) for multiplicity, and (.+) for low-lying placenta$")
+	public void enterDataToObstetricsOfficeVisitTab(String fhr, String mult, String llp) {
+		driver.findElement(By.id("obstetrics_form:fhr")).sendKeys(fhr);
+		driver.findElement(By.id("obstetrics_form:multiplicity")).sendKeys(mult);
+		boolean llpSelected = driver.findElement(By.id("obstetrics_form:placenta")).isSelected();
+		
+		if (!llp.equals("yes") && !llp.equals("no")) {
+			Assert.fail("The llp argument must be \"yes\" or \"no\", but it is \"" + llp + "\"");
+		}
+		
+		if ((llp.equals("yes") && !llpSelected) ||
+		    (llp.equals("no")  &&  llpSelected)) {
+			driver.findElement(By.id("obstetrics_form:placenta")).click();
+		}
+	}
+	
+	@When("^click Save on the obstetrics office visit tab$")
+	public void clickSaveOnObstetricsOfficeVisitTab() {
+		driver.findElement(By.id("obstetrics_form:submitObstetricsButton")).click();
+	}
+	
+	@When("^the obstetrics tab should have a FHR of (.+), a multiplicity of (.+), and (.+) for low-lying placenta$")
+	public void checkObstetricsForm(String expectedFHR, String expectedMult, String expectedLLP) {
+		String fhr = driver.findElement(By.id("obstetrics_form:fhr")).getAttribute("value");
+		String mult = driver.findElement(By.id("obstetrics_form:multiplicity")).getAttribute("value");
+		
+		boolean llpBoolean = driver.findElement(By.id("obstetrics_form:placenta")).isSelected();
+		String llp = llpBoolean ? "yes" : "no";
+		
+		Assert.assertTrue("fhr \"" + fhr + "\" should match expectedFHR \"" + expectedFHR + "\"", fhr.equals(expectedFHR));
+		Assert.assertTrue("mult \"" + mult + "\" should match expectedMult \"" + expectedMult + "\"", mult.equals(expectedMult));
+		Assert.assertTrue("llp \"" + llp + "\" should match expectedLLP \"" + expectedLLP + "\"", llp.equals(expectedLLP));
+	}
+	
 	@Then("^this scenario is not implemented yet$")
 	public void obstetricsOfficeVisitTestNotImplemented() {
 		Assert.assertTrue(true);

@@ -15,8 +15,18 @@ Scenario: obstetrics and ultrasound tabs exist
 	Then the obstetrics tab is there
 	And the ultrasound tab is there
 
-Scenario: add obstetrics data to office visit
-	Then this scenario is not implemented yet
+Scenario Outline: add obstetrics data to office visit
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And click on the first office visit on the office visits page
+	And enter <fhr> for FHR, <mult> for multiplicity, and <llp> for low-lying placenta
+	And click Save on the obstetrics office visit tab
+	Then the obstetrics tab should have a FHR of <fhr>, a multiplicity of <mult>, and <llp> for low-lying placenta
+Examples:
+	| fhr | mult | llp |
+	| 130 | 1    | no  |
+	| 130 | 1    | yes |
 
 Scenario: add ultrasound with images
 	Then this scenario is not implemented yet
