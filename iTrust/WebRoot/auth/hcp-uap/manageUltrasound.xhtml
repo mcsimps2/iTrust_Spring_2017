@@ -32,7 +32,7 @@
 		
 		<div class="duo-column-row">
 			<div class="duo-column duo-column-form well" style="border: thin solid grey; border-radius: 25px;">
-				<h:form>
+				<h:form id="ultrasound_form">
 					<div class="form-group-long">
 						<h:outputLabel for="crl">Crown rump length (CRL):</h:outputLabel>
 						<h:inputText id="crl" class="form-control" value="#{ultrasound_form.ultrasound.crl}" readonly="#{!isOBGYN}"/>
@@ -66,17 +66,17 @@
 						<h:inputText id="efw" class="form-control" value="#{ultrasound_form.ultrasound.efw}" readonly="#{!isOBGYN}"/>
 					</div>
 					<div class="form-action-group">
-						<h:commandButton class="btn btn-default" value="Add Fetus Data"    action="#{ultrasound_form.add()}"  disabled="#{!isOBGYN}"/>
-						<h:commandButton class="btn btn-default" value="Update Fetus Data" action="#{ultrasound_form.edit()}" disabled="#{!isOBGYN}"/>
+						<h:commandButton id="addFetusData"    class="btn btn-default" value="Add Fetus Data"    action="#{ultrasound_form.add()}"  disabled="#{!isOBGYN}"/>
+						<h:commandButton id="updateFetusData" class="btn btn-default" value="Update Fetus Data" action="#{ultrasound_form.edit()}" disabled="#{!isOBGYN}"/>
 					</div>	
 				</h:form>
 			</div>
 			
 			<div class="duo-column duo-column-table">
-				<h:form>
+				<h:form id="ultrasound_table_form">
 					<ui:param name="ultrasoundList" value="#{ultrasound_form.getUltrasounds()}" />
 					<ui:fragment rendered="${!empty ultrasoundList}">
-						<h:dataTable styleClass="fTable" value="#{ ultrasoundList }" var="u" border="1">
+						<h:dataTable id="ultrasound_table" styleClass="fTable" value="#{ ultrasoundList }" var="u" border="1">
 							<h:column>
 								<f:facet name="header">CRL</f:facet>
 								<h:outputText value="#{u.crl}" />

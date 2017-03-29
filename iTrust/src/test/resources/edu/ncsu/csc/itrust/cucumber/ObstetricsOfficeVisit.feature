@@ -29,9 +29,23 @@ Examples:
 	| 130 | 1    | yes |
 
 Scenario: add ultrasound without images
-	Then this scenario is not implemented yet
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And click on the first office visit on the office visits page
+	And enter 130 for FHR, 1 for multiplicity, and no for low-lying placenta
+	And click Save on the obstetrics office visit tab
+	And I check the number of ultrasounds already in the table
+	And I enter 1 for CRL, 1 for BPD, 1 for HC, 1 for FL, 1 for OFD, 1 for AC, 1 for HL, and 1 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	And I enter 2 for CRL, 2 for BPD, 2 for HC, 2 for FL, 2 for OFD, 2 for AC, 2 for HL, and 2 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	Then two more ultrasounds exist in the ultrasound table than before
 
 Scenario: add ultrasound with images
+	Then this scenario is not implemented yet
+
+Scenario: update and delete ultrasound data
 	Then this scenario is not implemented yet
 
 Scenario: schedule appointment

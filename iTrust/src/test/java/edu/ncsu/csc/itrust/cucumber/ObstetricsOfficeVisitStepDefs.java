@@ -1,8 +1,11 @@
 package edu.ncsu.csc.itrust.cucumber;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -10,6 +13,8 @@ import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
 
 public class ObstetricsOfficeVisitStepDefs {
 	private iTrustDriver driver;
+	
+	private int numUltrasounds = 0;
 	
 	public ObstetricsOfficeVisitStepDefs(iTrustDriver driver) {
 		this.driver = driver;
@@ -59,8 +64,12 @@ public class ObstetricsOfficeVisitStepDefs {
 	
 	@When("^enter (.+) for FHR, (.+) for multiplicity, and (.+) for low-lying placenta$")
 	public void enterDataToObstetricsOfficeVisitTab(String fhr, String mult, String llp) {
+		driver.findElement(By.id("obstetrics_form:fhr")).clear();
 		driver.findElement(By.id("obstetrics_form:fhr")).sendKeys(fhr);
+
+		driver.findElement(By.id("obstetrics_form:multiplicity")).clear();
 		driver.findElement(By.id("obstetrics_form:multiplicity")).sendKeys(mult);
+		
 		boolean llpSelected = driver.findElement(By.id("obstetrics_form:placenta")).isSelected();
 		
 		if (!llp.equals("yes") && !llp.equals("no")) {
@@ -89,6 +98,36 @@ public class ObstetricsOfficeVisitStepDefs {
 		Assert.assertTrue("fhr \"" + fhr + "\" should match expectedFHR \"" + expectedFHR + "\"", fhr.equals(expectedFHR));
 		Assert.assertTrue("mult \"" + mult + "\" should match expectedMult \"" + expectedMult + "\"", mult.equals(expectedMult));
 		Assert.assertTrue("llp \"" + llp + "\" should match expectedLLP \"" + expectedLLP + "\"", llp.equals(expectedLLP));
+	}
+	
+	@When("^I check the number of ultrasounds already in the table$")
+	public void checkNumUltrasounds() {
+		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
+		this.numUltrasounds = rows.size();
+	}
+	
+	@When("^I enter (.+) for CRL, (.+) for BPD, (.+) for HC, (.+) for FL, (.+) for OFD, (.+) for AC, (.+) for HL, and (.+) for EFW$")
+	public void enterUltrasoundData(String crl, String bpd, String hc, String fl, String ofd, String ac, String hl, String efw) {
+		driver.findElement(By.id("ultrasound_form:crl")).sendKeys(crl);
+		driver.findElement(By.id("ultrasound_form:bpd")).sendKeys(bpd);
+		driver.findElement(By.id("ultrasound_form:hc" )).sendKeys(hc);
+		driver.findElement(By.id("ultrasound_form:fl" )).sendKeys(fl);
+		driver.findElement(By.id("ultrasound_form:ofd")).sendKeys(ofd);
+		driver.findElement(By.id("ultrasound_form:ac" )).sendKeys(ac);
+		driver.findElement(By.id("ultrasound_form:hl" )).sendKeys(hl);
+		driver.findElement(By.id("ultrasound_form:efw")).sendKeys(efw);
+	}
+	
+	@When("^click Add Fetus Data on the ultrasound office visit tab$")
+	public void clickAddFetusData() {
+		driver.findElement(By.id("ultrasound_form:addFetusData")).click();
+	}
+	
+	@Then("^two more ultrasounds exist in the ultrasound table than before$")
+	public void twoUltrasoundsAppear() {
+		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
+		
+		Assert.assertEquals("Two more ultrasounds should exist in the ultrasound table", rows.size(), this.numUltrasounds + 2);
 	}
 	
 	@Then("^this scenario is not implemented yet$")
