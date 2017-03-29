@@ -57,7 +57,24 @@ Scenario: add ultrasound with images
 	Then the ultrasound images were uploaded successfully
 
 Scenario: update and delete ultrasound data
-	Then this scenario is not implemented yet
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And click on the first office visit on the office visits page
+	And enter 130 for FHR, 1 for multiplicity, and no for low-lying placenta
+	And click Save on the obstetrics office visit tab
+	And I enter 1 for CRL, 1 for BPD, 1 for HC, 1 for FL, 1 for OFD, 1 for AC, 1 for HL, and 1 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	And I enter 2 for CRL, 2 for BPD, 2 for HC, 2 for FL, 2 for OFD, 2 for AC, 2 for HL, and 2 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	And I check the number of ultrasounds already in the table
+	And click the first Delete button in the ultrasound table
+	And I check that there is one fewer ultrasound in the table
+	And I check the number of ultrasounds already in the table
+	And click the first Edit button in the ultrasound table
+	And I enter 3 for CRL, 3 for BPD, 3 for HC, 3 for FL, 3 for OFD, 3 for AC, 3 for HL, and 3 for EFW
+	And click Update Fetus Data
+	Then the same number of ultrasounds should be in the table
 
 Scenario: schedule appointment
 	Then this scenario is not implemented yet

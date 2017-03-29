@@ -123,6 +123,11 @@ public class ObstetricsOfficeVisitStepDefs {
 		driver.findElement(By.id("ultrasound_form:addFetusData")).click();
 	}
 	
+	@When("^click Update Fetus Data$")
+	public void clickUpdateFetusData() {
+		driver.findElement(By.id("ultrasound_form:updateFetusData")).click();
+	}
+	
 	@When("^upload the file (.+)$")
 	public void uploadUltrasoundFile(String filename) {
 		String cwd = System.getProperty("user.dir");
@@ -135,13 +140,39 @@ public class ObstetricsOfficeVisitStepDefs {
 		Assert.assertTrue(driver.getPageSource().contains("File Successfully Uploaded"));
 	}
 	
+	@When("^click the first Delete button in the ultrasound table$")
+	public void clickDeleteInUltrasoundTable() {
+		WebElement table = driver.findElement(By.id("ultrasound_table_form:ultrasound_table"));
+		table.findElement(By.cssSelector("#ultrasound_table_form input[value=\"Delete\"]")).click();
+	}
+	
+	@When("^click the first Edit button in the ultrasound table$")
+	public void clickEditInUltrasoundTable() {
+		WebElement table = driver.findElement(By.id("ultrasound_table_form:ultrasound_table"));
+		table.findElement(By.cssSelector("#ultrasound_table_form input[value=\"Edit\"]")).click();
+	}
+	
 	@Then("^the ultrasound images were uploaded successfully$")
 	public void ultrasoundImagesUploadedSuccessfully() {
 		Assert.assertTrue(driver.getPageSource().contains("Download Ultrasound Image"));
 	}
 	
+	@When("^I check that there is one fewer ultrasound in the table$")
+	public void oneFewerUltrasound() {
+		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
+		
+		Assert.assertEquals("One fewer ultrasound should exist in the ultrasound table", rows.size(), this.numUltrasounds - 1);
+	}
+	
+	@Then("^the same number of ultrasounds should be in the table$")
+	public void sameNumberOfUltrasounds() {
+		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
+		
+		Assert.assertEquals("The same number of ultrasounds should exist in the ultrasound table", rows.size(), this.numUltrasounds);
+	}
+	
 	@Then("^two more ultrasounds exist in the ultrasound table than before$")
-	public void twoUltrasoundsAppear() {
+	public void twoMoreUltrasoundsAppear() {
 		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
 		
 		Assert.assertEquals("Two more ultrasounds should exist in the ultrasound table", rows.size(), this.numUltrasounds + 2);
