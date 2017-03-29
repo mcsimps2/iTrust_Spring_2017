@@ -96,7 +96,7 @@ public class ObstetricsVisitMySQLTest {
 
 	@Test
 	public void testUpdate() {
-		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(51), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(1), new Long(51), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
 		try {
 			ovsql.update(toAdd);
 			Assert.fail("Mistake in validation");
