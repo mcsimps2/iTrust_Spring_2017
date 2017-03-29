@@ -8,7 +8,12 @@ Background:
 	And I have logged in as OBGYN with MID 9000000012 and password pw
 
 Scenario: obstetrics and ultrasound tabs exist
-	Then this scenario is not implemented yet
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And click on the first office visit on the office visits page
+	Then the obstetrics tab is there
+	And the ultrasound tab is there
 
 Scenario: add obstetrics data to office visit
 	Then this scenario is not implemented yet
