@@ -123,6 +123,23 @@ public class ObstetricsOfficeVisitStepDefs {
 		driver.findElement(By.id("ultrasound_form:addFetusData")).click();
 	}
 	
+	@When("^upload the file (.+)$")
+	public void uploadUltrasoundFile(String filename) {
+		String cwd = System.getProperty("user.dir");
+		String dir = "testing-files/sample_obstetrics/";
+		String filepath = cwd + dir + filename;
+		
+		driver.findElement(By.id("ultrasound_image_form:file")).sendKeys(filepath);
+		driver.findElement(By.id("ultrasound_image_form:uploadButton")).click();
+		
+		Assert.assertTrue(driver.getPageSource().contains("File Successfully Uploaded"));
+	}
+	
+	@Then("^the ultrasound images were uploaded successfully$")
+	public void ultrasoundImagesUploadedSuccessfully() {
+		Assert.assertTrue(driver.getPageSource().contains("Download Ultrasound Image"));
+	}
+	
 	@Then("^two more ultrasounds exist in the ultrasound table than before$")
 	public void twoUltrasoundsAppear() {
 		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));

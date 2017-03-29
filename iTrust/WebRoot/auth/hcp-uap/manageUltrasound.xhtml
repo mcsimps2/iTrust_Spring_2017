@@ -17,9 +17,9 @@
 		
 		<div style="text-align:center; margin-bottom:2rem">
 			<ui:fragment rendered="#{isOBGYN}">
-				<h:form class="upload-form" enctype="multipart/form-data">
+				<h:form id="ultrasound_image_form" class="upload-form" enctype="multipart/form-data">
 					<h:inputFile id="file" value="#{obstetrics_visit_form.file}" style="display:inline;"/>
-					<h:commandButton value="Upload Ultrasound Image" action="#{obstetrics_visit_form.upload()}" style="margin-left:10px;"/>
+					<h:commandButton id="uploadButton" value="Upload Ultrasound Image" action="#{obstetrics_visit_form.upload()}" style="margin-left:10px;"/>
 				</h:form>
 			</ui:fragment>
 			
