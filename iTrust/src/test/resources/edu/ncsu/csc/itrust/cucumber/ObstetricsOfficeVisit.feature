@@ -18,13 +18,16 @@ Scenario: obstetrics and ultrasound tabs exist
 Scenario: add obstetrics data to office visit
 	Then this scenario is not implemented yet
 
-Scenario: add ultrasound without images
-	Then this scenario is not implemented yet
-
 Scenario: add ultrasound with images
 	Then this scenario is not implemented yet
 
+Scenario: add ultrasound without images
+	Then this scenario is not implemented yet
+
 Scenario: schedule appointment
+	Then this scenario is not implemented yet
+
+Scenario: non OBGYN HCP
 	Then this scenario is not implemented yet
 
 Scenario: bad obstetrics input
