@@ -57,6 +57,7 @@ public class ObstetricsVisitForm {
 	 */
 	public ObstetricsVisitForm(ObstetricsVisitController ovc, DataSource ds) {
 		try {
+			// Use parameters if not null
 			if (ds == null) {
 				Context ctx = new InitialContext();
 				this.ds = ((DataSource) (((Context) ctx.lookup("java:comp/env"))).lookup("jdbc/itrust"));
@@ -64,18 +65,24 @@ public class ObstetricsVisitForm {
 				this.ds = ds;
 			}
 			controller = (ovc == null) ? new ObstetricsVisitController() : ovc;
+			
+			// Find the viewed office visit
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
 			officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
+			
+			// Get the existing ObstetricsVisit for this office visit if one exists
 			ov = controller.getByOfficeVisit(officeVisitID);
 			if (ov == null) {
 				ov = new ObstetricsVisit(officeVisitID);
 			}
 			
+			// Find the most recent ObstetricsInit record (as of the office visit date)
 			ObstetricsInit oi = controller.getMostRecentOI(officeVisit);
 			if (oi != null) {
 				rhFlag = oi.getRH();
 			}
 			
+			// Populate the ObstetricsVisit fields
 			weeksPregnant = ov.getWeeksPregnant();
 			if (weeksPregnant == null) {
 				weeksPregnant = controller.calculateWeeksPregnant(officeVisit, oi);
@@ -111,6 +118,7 @@ public class ObstetricsVisitForm {
 		ov.setMultiplicity(multiplicity);
 		ov.setLowLyingPlacentaObserved(placentaObserved);
 		if (isNew){
+			// Try adding the ObstetricsVisit
 			try {
 				controller.add(ov);
 			} catch (DBException e) {
@@ -119,9 +127,11 @@ public class ObstetricsVisitForm {
 				return;
 			} catch (FormValidationException e) {
 				System.out.println("FormValidationException");//TODO
-				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getLocalizedMessage()); //TODO try getLocalizedMessage
+				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getLocalizedMessage()); //TODO try to make this output look better
 				return;
 			}
+			
+			// Schedule the next appointment, if possible
 			ApptBean nextAppointment = scheduleNextAppointment();
 			if (nextAppointment != null) {
 				DateFormat dateFormat = new SimpleDateFormat();
@@ -130,13 +140,21 @@ public class ObstetricsVisitForm {
 						+ "The patient's next appointment has been scheduled for " + dateFormat.format(nextAppointment.getDate()));
 			}
 		} else {
-			controller.update(ov);
+			controller.update(ov); //just update like normal
 		}
+		
+		// Update the health metrics (weight and blood pressure) and reload the ObstetricsVisit
 		offVForm.submitHealthMetrics();
 		ov = controller.getByOfficeVisit(officeVisitID);
 	}
 	
+	/**
+	 * Returns true if the weight and blood pressure fields in the given OfficeVisitForm are populated and valid.
+	 * @param offVForm
+	 * @return true if populated and valid, false otherwise
+	 */
 	private boolean validateOfficeVisitFields(OfficeVisitForm offVForm) {
+		// Check that the fields are populated
 		if (offVForm.getWeight() == null) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Weight is required", "Weight is required");
 			return false;
@@ -146,6 +164,7 @@ public class ObstetricsVisitForm {
 			return false;
 		}
 		
+		// Now validate their format
 		OfficeVisitValidator validator = new OfficeVisitValidator(ds);
 		OfficeVisit bufferedOV = offVForm.getOv();
 		bufferedOV.setWeight(offVForm.getWeight());
@@ -159,6 +178,11 @@ public class ObstetricsVisitForm {
 		}
 	}
 
+	/**
+	 * Schedule the next appointment and return the corresponding ApptBean.
+	 * If the appointment cannot be automatically scheduled, returns null.
+	 * @return the schedules appointment bean or null if not able to schedule
+	 */
 	private ApptBean scheduleNextAppointment() {
 		String pid = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("pid");
 		Long hcpid = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("loggedInMID");
@@ -182,6 +206,12 @@ public class ObstetricsVisitForm {
 		}
 	}
 
+	/**
+	 * Get the number of days until the next appointment,
+	 * based on the current number of weeks pregnant.
+	 * Returns -1 if the next appointment should be a childbirth visit.
+	 * @return the number of days until the next appointment, or -1 if childbirth visit is next
+	 */
 	public int getNumDaysToNextAppointment() {
 		if (weeksPregnant < 14) {
 			return 28;
@@ -193,6 +223,7 @@ public class ObstetricsVisitForm {
 			return 7;
 		}
 		if (weeksPregnant < 42) {
+			// Calculations for "Every other week day"
 			Calendar cal = Calendar.getInstance();
 			int weekDays = 0;
 			int ret = 0;
@@ -212,18 +243,21 @@ public class ObstetricsVisitForm {
 	 * Called when the user clicks the button to upload a file on the Ultrasound tab of an Office Visit.
 	 */
 	public void upload() {
+		// Check that a file has been selected
 		if (file == null) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "No file selected",
 					"No file selected");
 			return;
 		}
 		
+		// Check that ObstetricsVisit has been submitted
 		if (ov.getId() == null) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "The Obstetrics tab must be saved before you can upload a file",
 					"The Obstetrics tab must be saved before you can upload a file");
 			return;
 		}
 		
+		// Upload the file
 		try {
 			ov.setImageOfUltrasound(file.getInputStream());
 			ov.setImageType(file.getSubmittedFileName());
@@ -238,6 +272,7 @@ public class ObstetricsVisitForm {
 	 * Called when the user clicks the button to download the image file on the Ultrasound tab of an Office Visit.
 	 */
 	public void download() {
+		// Prepare the OutputStream for download
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    ExternalContext ec = fc.getExternalContext();
 
@@ -246,6 +281,7 @@ public class ObstetricsVisitForm {
 	    ec.setResponseContentType(ec.getMimeType(filename)); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + filename + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
 
+	    // Copy the contents of the InputStream from database to the OutputStream for download
 	    try {
 	    	OutputStream output = ec.getResponseOutputStream();
 		    IOUtils.copy(ov.getImageOfUltrasound(), output);
@@ -255,14 +291,25 @@ public class ObstetricsVisitForm {
 	    
 	    fc.responseComplete();
 	    
+	    // Update ObstetricsVisit to repopulate InputStream
 		ov = controller.getByOfficeVisit(officeVisitID);
 	}
 	
+	/**
+	 * Print a faces message with the given severity, summary, and details.
+	 * @param severity
+	 * @param summary
+	 * @param detail
+	 */
 	public void printFacesMessage(Severity severity, String summary, String detail) {
 		FacesMessage throwMsg = new FacesMessage(severity, summary, detail);
 		FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 	}
 	
+	/**
+	 * Returns true if the patient needs an RH shot (assuming they haven't had one already)
+	 * @return
+	 */
 	public boolean needsShot() {
 		return rhFlag && weeksPregnant >= 28;
 	}

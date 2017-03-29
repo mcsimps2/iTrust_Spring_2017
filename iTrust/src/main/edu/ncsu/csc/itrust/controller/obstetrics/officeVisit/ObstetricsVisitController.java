@@ -42,6 +42,10 @@ public class ObstetricsVisitController extends iTrustController {
 	private ObstetricsVisitData ovData;
 	private ObstetricsInitData oiData;
 
+	/**
+	 * Default constructor.
+	 * @throws DBException
+	 */
 	public ObstetricsVisitController() throws DBException {
 		ovData = new ObstetricsVisitMySQL();
 		oiData = new ObstetricsInitMySQL();
@@ -86,6 +90,12 @@ public class ObstetricsVisitController extends iTrustController {
 		}
 	}
 	
+	/**
+	 * Return the most recent ObstetricsInit record using the date and pid from the given OfficeVisit.
+	 * If no record is found, returns null.
+	 * @param ov
+	 * @return
+	 */
 	public ObstetricsInit getMostRecentOI(OfficeVisit ov) {
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
@@ -173,6 +183,10 @@ public class ObstetricsVisitController extends iTrustController {
 		}
 	}
 	
+	/**
+	 * Updates the given ObstetricsVisit in the database (but now it should contain a new file).
+	 * @param ov
+	 */
 	public void upload(ObstetricsVisit ov) {
 		try {
 			ovData.update(ov);
