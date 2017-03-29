@@ -108,9 +108,10 @@ public class UltrasoundMySQLTest {
 			Assert.fail(e.getMessage());
 		}
 		
+		toAdd.setId(1L);
 		toAdd.setCrl(new Float(13.1));
 		try {
-			Assert.assertTrue(usql.add(toAdd));
+			Assert.assertTrue(usql.update(toAdd));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
 		} catch (FormValidationException e) {

@@ -95,5 +95,13 @@ public class UltrasoundTest {
 		ultrasound1.setEfw(new Float(2.4));
 		Assert.assertTrue(ultrasound1.getEfw().equals(new Float(2.4)));
 	}
+	
+	@Test
+	public void testGettersSetters()
+	{
+		Ultrasound us = new Ultrasound(1L);
+		Ultrasound us2 = new Ultrasound(1L);
+		Assert.assertEquals(us.hashCode(), us2.hashCode());
+	}
 
 }
