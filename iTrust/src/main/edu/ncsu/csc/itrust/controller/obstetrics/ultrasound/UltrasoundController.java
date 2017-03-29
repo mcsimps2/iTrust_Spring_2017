@@ -32,6 +32,10 @@ public class UltrasoundController extends iTrustController {
 	private static final String UNABLE_TO_RETRIEVE_ULTRASOUNDS = "Unable to Retrieve Ultrasounds";
 	private UltrasoundMySQL sql;
 
+	/**
+	 * Default constructor.
+	 * @throws DBException
+	 */
 	public UltrasoundController() throws DBException {
 		super();
 		sql = new UltrasoundMySQL();
@@ -48,6 +52,10 @@ public class UltrasoundController extends iTrustController {
 		this.sql = new UltrasoundMySQL(ds);
 	}
 
+	/**
+	 * Adds the given ultrasound to the database.
+	 * @param ultrasound
+	 */
 	public void add(Ultrasound ultrasound) {
 		try {
 			if (sql.add(ultrasound)) {
@@ -64,6 +72,10 @@ public class UltrasoundController extends iTrustController {
 		}
 	}
 
+	/**
+	 * Edits the given ultrasound in the database.
+	 * @param ultrasound
+	 */
 	public void edit(Ultrasound ultrasound) {
 		try {
 			if (sql.update(ultrasound)) {
@@ -80,6 +92,10 @@ public class UltrasoundController extends iTrustController {
 		}
 	}
 
+	/**
+	 * Deletes the ultrasound in the database with the given ID.
+	 * @param ultrasoundID
+	 */
 	public void delete(long ultrasoundID) {
         try {
         	if (sql.delete(ultrasoundID)) {
@@ -96,6 +112,12 @@ public class UltrasoundController extends iTrustController {
 		}
 	}
 	
+	/**
+	 * Returns a List of all of the Ultrasounds with the given officeVisitID.
+	 * @param officeVisitID
+	 * @return all of the ultrasounds for the office visit with the given ID
+	 * @throws DBException
+	 */
 	public List<Ultrasound> getUltrasoundsByOfficeVisit(Long officeVisitID) throws DBException {
 		List<Ultrasound> ultrasounds = Collections.emptyList();
 		try {

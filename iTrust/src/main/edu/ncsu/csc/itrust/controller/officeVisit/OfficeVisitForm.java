@@ -36,6 +36,10 @@ public class OfficeVisitForm {
 	private Integer householdSmokingStatus;
 	private Integer patientSmokingStatus;
 
+	public OfficeVisit getOv() {
+		return ov;
+	}
+
 	public Long getVisitID() {
 		return visitID;
 	}
