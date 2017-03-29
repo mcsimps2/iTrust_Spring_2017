@@ -107,5 +107,21 @@ public class ObstetricsVisitTest {
 			Assert.fail();
 		}
 	}
+	
+	@Test
+	public void testEqualsAndHashCode()
+	{
+		ObstetricsVisit obv1 = new ObstetricsVisit(5L);
+		ObstetricsVisit obv2 = new ObstetricsVisit(5L);
+		obv1.setFhr(1);
+		obv2.setFhr(1);
+		obv1.setLowLyingPlacentaObserved(false);
+		obv2.setLowLyingPlacentaObserved(false);
+		Assert.assertEquals(obv1.hashCode(), obv2.hashCode());
+		Assert.assertTrue(obv1.equals(obv2));
+		
+		obv1.setImageType(".jpg");
+		Assert.assertEquals(".jpg", obv1.getImageType());
+	}
 
 }

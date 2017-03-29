@@ -108,4 +108,17 @@ public class FitnessInfoTest
 		f.setSteps(5);
 		Assert.assertEquals("FitnessInfo [pid=100, steps=5, date=1996-01-02, caloriesBurned=0, miles=0.0, floors=0, activeCalories=0, minutesSedentary=0, minutesLightlyActive=0, minutesFairlyActive=0, minutesVeryActive=0, heartRateLow=0, heartRateHigh=0, heartRateAvg=0, activeHours=0, minutesUVExposure=0]", f.toString());
 	}
+	
+	@Test
+	public void testGettersSetters()
+	{
+		FitnessInfo ff = new FitnessInfo();
+		ff.setDate("2017-02-02");
+		java.util.Date d = ff.getJavaDate();
+		Assert.assertEquals("2017-2-2", FitnessInfo.dateToString(d));
+		java.sql.Date d2 = ff.getSQLDate();
+		Assert.assertEquals("2017-02-02", FitnessInfo.dateToString(d2));
+		ff.setDate(d2);
+		Assert.assertEquals(d2, ff.getSQLDate());
+	}
 }
