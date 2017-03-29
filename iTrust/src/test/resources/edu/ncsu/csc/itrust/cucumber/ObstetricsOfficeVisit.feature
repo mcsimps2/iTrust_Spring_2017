@@ -28,10 +28,10 @@ Examples:
 	| 130 | 1    | no  |
 	| 130 | 1    | yes |
 
-Scenario: add ultrasound with images
+Scenario: add ultrasound without images
 	Then this scenario is not implemented yet
 
-Scenario: add ultrasound without images
+Scenario: add ultrasound with images
 	Then this scenario is not implemented yet
 
 Scenario: schedule appointment
