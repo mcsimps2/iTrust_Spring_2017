@@ -884,6 +884,14 @@ public class TestDataGenerator {
 	public void priorPregnancies() throws FileNotFoundException, SQLException, IOException {
 		new DBBuilder(factory).executeSQLFile(DIR + "/priorPregnanciesData.sql");
 	}
+	
+	public void obstetricsVisit() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/obstetricsVisit.sql");
+	}
+	
+	public void ultrasound() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/ultrasound.sql");
+	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
 	
@@ -996,6 +1004,10 @@ public class TestDataGenerator {
 		obstetricsInit();
 		
 		priorPregnancies();
+		
+		obstetricsVisit();
+		
+		ultrasound();
 		
 		setMode();
 	}

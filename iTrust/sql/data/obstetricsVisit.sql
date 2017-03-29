@@ -1,0 +1,2 @@
+INSERT INTO officeVisit(patientMID, visitDate, locationID, apptTypeID) VALUES (1, "2017-02-22 00:00:00", 1, 7);
+INSERT INTO obstetricsVisit(officeVisitID, weeksPregnant, fhr, multiplicity, lowLyingPlacentaObserved, imageType) VALUES (51, 32, 41, 1, false, "image.jpg");
