@@ -122,7 +122,6 @@ public class ObstetricsVisitForm {
 				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getLocalizedMessage()); //TODO try getLocalizedMessage
 				return;
 			}
-			ov = controller.getByOfficeVisit(officeVisitID);
 			ApptBean nextAppointment = scheduleNextAppointment();
 			if (nextAppointment != null) {
 				DateFormat dateFormat = new SimpleDateFormat();
@@ -134,6 +133,7 @@ public class ObstetricsVisitForm {
 			controller.update(ov);
 		}
 		offVForm.submitHealthMetrics();
+		ov = controller.getByOfficeVisit(officeVisitID);
 	}
 	
 	private boolean validateOfficeVisitFields(OfficeVisitForm offVForm) {
@@ -228,6 +228,7 @@ public class ObstetricsVisitForm {
 			ov.setImageOfUltrasound(file.getInputStream());
 			ov.setImageType(file.getSubmittedFileName());
 			controller.upload(ov);
+			ov = controller.getByOfficeVisit(officeVisitID);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -237,8 +238,6 @@ public class ObstetricsVisitForm {
 	 * Called when the user clicks the button to download the image file on the Ultrasound tab of an Office Visit.
 	 */
 	public void download() {
-		ov = controller.getByOfficeVisit(officeVisitID);
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    ExternalContext ec = fc.getExternalContext();
 
@@ -255,6 +254,8 @@ public class ObstetricsVisitForm {
 	    }
 	    
 	    fc.responseComplete();
+	    
+		ov = controller.getByOfficeVisit(officeVisitID);
 	}
 	
 	public void printFacesMessage(Severity severity, String summary, String detail) {
