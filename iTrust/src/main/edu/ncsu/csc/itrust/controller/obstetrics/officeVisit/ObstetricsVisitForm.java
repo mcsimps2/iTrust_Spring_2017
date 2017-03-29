@@ -28,6 +28,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitValidator;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 
 @ManagedBean(name = "obstetrics_visit_form")
 @ViewScoped
@@ -195,6 +196,7 @@ public class ObstetricsVisitForm {
 						"The patient needs to make an appointment for a childbirth visit");
 				return null;
 			}
+			controller.logTransaction(TransactionType.SCHEDULE_NEXT_OFFICE_VISIT, officeVisit.getVisitID().toString());
 			return GoogleScheduler.scheduleObstetricsAppointment(hcpid, pidLong, calendarID, numDays, officeVisit);
 		} catch (NumberFormatException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Error loading patient information", "Error loading patient information");

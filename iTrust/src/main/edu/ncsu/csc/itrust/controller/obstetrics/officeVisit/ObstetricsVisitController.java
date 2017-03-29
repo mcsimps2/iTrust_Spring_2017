@@ -100,6 +100,8 @@ public class ObstetricsVisitController extends iTrustController {
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
 
+		//Log the transaction
+		logTransaction(TransactionType.VIEW_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getVisitID());
 		// Get the list of initialization records for the patient
 		List<ObstetricsInit> oiList;
 		try {
