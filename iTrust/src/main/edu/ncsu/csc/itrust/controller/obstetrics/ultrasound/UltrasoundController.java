@@ -65,8 +65,8 @@ public class UltrasoundController extends iTrustController {
 			} else {
 				throw new Exception();
 			}
-		} catch (SQLException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, e.getMessage(), null);
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, e.getExtendedMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, INVALID_ULTRASOUND, null);
 		}

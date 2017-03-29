@@ -123,12 +123,10 @@ public class ObstetricsVisitForm {
 			try {
 				controller.add(ov);
 			} catch (DBException e) {
-				System.out.println("DBException");//TODO
 				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getExtendedMessage());
 				return;
 			} catch (FormValidationException e) {
-				System.out.println("FormValidationException");//TODO
-				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getLocalizedMessage()); //TODO try to make this output look better
+				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid Obstetrics Visit", e.getMessage());
 				return;
 			}
 			

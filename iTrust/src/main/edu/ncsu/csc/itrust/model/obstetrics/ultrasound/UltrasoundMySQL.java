@@ -87,7 +87,7 @@ public class UltrasoundMySQL implements UltrasoundData {
 		try {
 			validator.validate(addObj);
 		} catch (FormValidationException e1) {
-			throw new DBException(new SQLException(e1));
+			throw new DBException(new SQLException(e1.getMessage()));
 		}
 		try (Connection conn = ds.getConnection();
 			PreparedStatement statement = loader.loadParameters(conn, null, addObj, true);) {
