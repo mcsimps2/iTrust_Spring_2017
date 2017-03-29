@@ -104,15 +104,16 @@ public class GoogleSchedulerTest
 		
 		//Appointment for 10 AM - should always work
 		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 10, 0));
-		
+		//Current office visit is today at 10:00 AM
 		try
 		{
+			//Try scheduling an appointment 1 day from now for 30 minutes
 			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 30, ov);
 			Assert.assertNotNull(appt);
 			
 			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
 			boolean found = false;
-			//Unforunate, the old equals method won't work for us
+			//Unfortunately, the old equals method won't work for us
 			for (int i = 0; i < appts.size(); i++)
 			{
 				if (appts.get(i).getDate().equals(appt.getDate()))
@@ -131,8 +132,10 @@ public class GoogleSchedulerTest
 		
 		//This one should never work, 11:00 AM is always taken
 		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 11, 0));
+		//Set the current office visit to be today at 11:00 AM
 		try
 		{
+			//Try scheduling 1 day from now
 			GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 30, ov);
 			Assert.fail("Should have gotten an error");
 		}
@@ -144,8 +147,10 @@ public class GoogleSchedulerTest
 		
 		//But this one should (right at the boundary, 4:00 is OK)
 		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 16, 0));
+		//Current office visit is today at 4:00 PM
 		try
 		{
+			//Try scheduling 1 day from now
 			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID2, 1, 30, ov);
 			Assert.assertNotNull(appt);
 			
@@ -235,13 +240,11 @@ public class GoogleSchedulerTest
 		//Make sure we can't schedule 7 days from now at 1:45 PM
 		//Reset calendar
 		cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 7);
-		cal.set(Calendar.HOUR_OF_DAY, 13);
-		cal.set(Calendar.MINUTE, 45);
 		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), 13, 45));
+		//The current office visit is today at 1:45 PM
 		try
 		{
-			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID, 1, 30, ov);
+			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, CAL_ID, 7, 30, ov); //try scheduling 7 days from now
 			Assert.assertNotNull(appt);
 			
 			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
@@ -258,6 +261,9 @@ public class GoogleSchedulerTest
 			Assert.assertTrue(appt.getDate().getHours() == 13);
 			Assert.assertTrue(appt.getDate().getMinutes() == 45);
 			//Make sure the appointment is scheduled strictly > than 7 days from now
+			cal.add(Calendar.DATE, 7);
+			cal.set(Calendar.HOUR_OF_DAY, 13);
+			cal.set(Calendar.MINUTE, 45);
 			Assert.assertTrue(appt.getDate().getTime() > cal.getTimeInMillis());
 		}
 		catch (GoogleSchedulerException | DBException | SQLException e)
@@ -268,13 +274,11 @@ public class GoogleSchedulerTest
 		//Pass in null for the calendar, ensure everything still works
 		//Conflicts exist here
 		cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 7);
-		cal.set(Calendar.HOUR_OF_DAY, 13);
-		cal.set(Calendar.MINUTE, 45);
 		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE), 13, 45));
+		//The current office visit is today at 1:45 PM
 		try
 		{
-			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, null, 1, 30, ov);
+			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, null, 7, 30, ov); //try scheduling 7 days from now
 			Assert.assertNotNull(appt);
 			
 			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
@@ -290,6 +294,10 @@ public class GoogleSchedulerTest
 			Assert.assertTrue(found);
 			Assert.assertTrue(appt.getDate().getHours() == 13);
 			Assert.assertTrue(appt.getDate().getMinutes() == 45);
+			//Make sure the appointment is scheduled strictly > than 7 days from now 
+			cal.add(Calendar.DATE, 7);
+			cal.set(Calendar.HOUR_OF_DAY, 13);
+			cal.set(Calendar.MINUTE, 45);
 			Assert.assertTrue(appt.getDate().getTime() > cal.getTimeInMillis());
 		}
 		catch (GoogleSchedulerException | DBException | SQLException e)
@@ -321,6 +329,81 @@ public class GoogleSchedulerTest
 			Assert.assertTrue(found);
 			Assert.assertTrue(appt.getDate().getHours() == 13);
 			Assert.assertTrue(appt.getDate().getMinutes() == 45);
+		}
+		catch (GoogleSchedulerException | DBException | SQLException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+		
+		
+		//Try a holiday, Christmas
+		cal = Calendar.getInstance();
+		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), 12, 24, 9, 0)); 
+		//Current office visit is one day bf Christmas day at 9:00 AM
+		try
+		{
+			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, "", 1, 30, ov); //try scheduling tomorrow (Christmas day)
+			Assert.assertNotNull(appt);
+			
+			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
+			boolean found = false;
+			for (int i = 0; i < appts.size(); i++)
+			{
+				if (appts.get(i).getDate().equals(appt.getDate()))
+				{
+					found = true;
+					break;
+				}
+			}
+			Assert.assertTrue(found);
+			Assert.assertTrue(appt.getDate().getHours() == 9);
+			Assert.assertTrue(appt.getDate().getMinutes() == 0);
+			//Assert this does not occur on Christmas
+			//Setting cal to be Christmas at 9:00 AM
+			cal.set(Calendar.MONTH, 11);
+			cal.set(Calendar.DATE, 25);
+			cal.set(Calendar.HOUR_OF_DAY, 9);
+			cal.set(Calendar.MINUTE, 0);
+			Assert.assertTrue(appt.getDate().getTime() > cal.getTimeInMillis()); 
+		}
+		catch (GoogleSchedulerException | DBException | SQLException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+		
+		//Try a holiday, New Years Day
+		cal = Calendar.getInstance();
+		ov.setDate(LocalDateTime.of(cal.get(Calendar.YEAR), 12, 31, 15, 30));
+		//Current office visit is 12/31 at 3:30 PM
+		try
+		{
+			ApptBean appt = GoogleScheduler.scheduleAppointment(9000000010L, 1, "", 1, 30, ov); //try scheduling tomorrow (New Years Day)
+			Assert.assertNotNull(appt);
+			
+			List<ApptBean> appts = apptdao.getApptsFor(9000000010L);
+			boolean found = false;
+			for (int i = 0; i < appts.size(); i++)
+			{
+				if (appts.get(i).getDate().equals(appt.getDate()))
+				{
+					found = true;
+					break;
+				}
+			}
+			Assert.assertTrue(found);
+			
+			//Assert this does not occur on New Years Day
+			//Setting cal to be New Years day at 3:30 PM
+			cal.add(Calendar.YEAR, 1);
+			cal.set(Calendar.MONTH, 0);
+			cal.set(Calendar.DATE, 1);
+			cal.set(Calendar.HOUR_OF_DAY, 15);
+			cal.set(Calendar.MINUTE, 30);
+			
+			Assert.assertTrue(appt.getDate().getHours() == 15);
+			Assert.assertTrue(appt.getDate().getMinutes() == 30);
+			System.out.println(appt.getDate().getTime() + "\t" + cal.getTimeInMillis());
+			Assert.assertTrue(appt.getDate().getTime() > cal.getTimeInMillis()); 
 		}
 		catch (GoogleSchedulerException | DBException | SQLException e)
 		{

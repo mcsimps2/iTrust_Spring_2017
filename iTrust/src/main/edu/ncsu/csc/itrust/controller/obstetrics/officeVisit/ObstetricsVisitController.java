@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
@@ -41,6 +42,10 @@ public class ObstetricsVisitController extends iTrustController {
 	private ObstetricsVisitData ovData;
 	private ObstetricsInitData oiData;
 
+	/**
+	 * Default constructor.
+	 * @throws DBException
+	 */
 	public ObstetricsVisitController() throws DBException {
 		ovData = new ObstetricsVisitMySQL();
 		oiData = new ObstetricsInitMySQL();
@@ -86,19 +91,12 @@ public class ObstetricsVisitController extends iTrustController {
 	}
 	
 	/**
-	 * Calculates and returns the number of weeks pregnant at the time of the given OfficeVisit.
-	 * Uses the date of the given office visit and the LMP from the most recent obstetrics
-	 * initialization record for the patient associated with the office visit.
-	 * 
-	 * If the number of weeks pregnant is 49 or greater, or if there are no initialization records
-	 * for the patient, then returns null as the patient would no longer be considered an
-	 * obstetrics patient.
-	 * 
-	 * @param ov the given OfficeVisit
-	 * @return the number of weeks pregnant, or null if not an obstetrics patient
-	 * @throws DBException 
+	 * Return the most recent ObstetricsInit record using the date and pid from the given OfficeVisit.
+	 * If no record is found, returns null.
+	 * @param ov
+	 * @return
 	 */
-	public Integer calculateWeeksPregnant(OfficeVisit ov) {
+	public ObstetricsInit getMostRecentOI(OfficeVisit ov) {
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
 
@@ -120,30 +118,49 @@ public class ObstetricsVisitController extends iTrustController {
 			Date lmpDate = oi.getJavaLMP();
 			long diff = ovDate.getTime() - lmpDate.getTime();
 			if (diff >= 0) {
-				int weeks = (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)/7);
-				return weeks < MAX_WEEKS_SINCE_LMP ? weeks : null;
+				return oi;
 			}
 		}
 		return null;
 	}
 	
 	/**
+	 * Calculates and returns the number of weeks pregnant at the time of the given OfficeVisit.
+	 * Uses the date of the given office visit and the LMP from the most recent obstetrics
+	 * initialization record for the patient associated with the office visit.
+	 * 
+	 * If the number of weeks pregnant is 49 or greater, or if there are no initialization records
+	 * for the patient, then returns null as the patient would no longer be considered an
+	 * obstetrics patient.
+	 * 
+	 * @param ov the given OfficeVisit
+	 * @return the number of weeks pregnant, or null if not an obstetrics patient
+	 * @throws DBException 
+	 */
+	public Integer calculateWeeksPregnant(OfficeVisit ov, ObstetricsInit oi) {
+		if (oi == null) {
+			return null;
+		}
+		
+		// Convert OfficeVisit LocalDateTime to java.util.Date
+		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
+		
+		// Calculate the time difference
+		Date lmpDate = oi.getJavaLMP();
+		long diff = ovDate.getTime() - lmpDate.getTime();
+		int weeks = (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)/7);
+		return weeks < MAX_WEEKS_SINCE_LMP ? weeks : null;
+	}
+	
+	/**
 	 * Attempts to add the given ObstetricsVisit to the database.
 	 * @param ov
+	 * @throws FormValidationException 
+	 * @throws DBException 
 	 */
-	public void add(ObstetricsVisit ov) {
-		try {
-			ovData.add(ov);
-			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
-					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
-			logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
-		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
-					null);
-		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
-					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
-		}
+	public void add(ObstetricsVisit ov) throws DBException, FormValidationException {
+		ovData.add(ov);
+		logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
 	}
 	
 	/**
@@ -166,6 +183,10 @@ public class ObstetricsVisitController extends iTrustController {
 		}
 	}
 	
+	/**
+	 * Updates the given ObstetricsVisit in the database (but now it should contain a new file).
+	 * @param ov
+	 */
 	public void upload(ObstetricsVisit ov) {
 		try {
 			ovData.update(ov);

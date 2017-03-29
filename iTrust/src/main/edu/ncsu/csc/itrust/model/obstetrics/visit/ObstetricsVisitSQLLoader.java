@@ -65,8 +65,17 @@ public class ObstetricsVisitSQLLoader implements SQLLoader<ObstetricsVisit> {
 		ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, insertObject.getOfficeVisitID());
 		ps.setInt(2, insertObject.getWeeksPregnant());
-		ps.setInt(3, insertObject.getFhr());
-		ps.setInt(4, insertObject.getMultiplicity());
+		
+		if (insertObject.getFhr() == null)
+			ps.setNull(3, java.sql.Types.INTEGER);
+		else
+			ps.setInt(3, insertObject.getFhr());
+		
+		if (insertObject.getMultiplicity() == null)
+			ps.setNull(4, java.sql.Types.INTEGER);
+		else
+			ps.setInt(4, insertObject.getMultiplicity());
+		
 		ps.setBoolean(5, insertObject.isLowLyingPlacentaObserved());
 		ps.setBinaryStream(6, insertObject.getImageOfUltrasound());
 		ps.setString(7, insertObject.getImageType());

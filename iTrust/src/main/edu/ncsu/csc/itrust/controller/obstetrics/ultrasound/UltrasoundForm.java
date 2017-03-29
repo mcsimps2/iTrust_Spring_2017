@@ -23,10 +23,19 @@ public class UltrasoundForm {
 	private SessionUtils sessionUtils;
 	private Ultrasound ultrasound;
 
+	/**
+	 * Constructor used in run time.
+	 */
 	public UltrasoundForm() {
 	    this(null, null, SessionUtils.getInstance());
 	}
 
+	/**
+	 * Constructor used for testing. Can pass mocked parameters to unit test.
+	 * @param uc
+	 * @param ovc
+	 * @param sessionUtils
+	 */
 	public UltrasoundForm(UltrasoundController uc, ObstetricsVisitController ovc, SessionUtils sessionUtils) {
 		try {
 			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
@@ -40,6 +49,10 @@ public class UltrasoundForm {
 		}
 	}
 	
+	/**
+	 * Adds the ultrasound to the database.
+	 * Only works if an ObstetricsVisit has been submitted for this office visit.
+	 */
 	public void add(){
 		if (ovc.getByOfficeVisit(officeVisitID) == null) {
 			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "The Obstetrics tab must be saved before you can add an ultrasound",
@@ -50,16 +63,27 @@ public class UltrasoundForm {
 		clearFields();
 	}
 	
+	/**
+	 * Edits the current ultrasound in the database.
+	 */
 	public void edit(){
 		controller.edit(ultrasound);
 		clearFields();
 	}
 	
+	/**
+	 * Deletes the ultrasound in the database with the given ID.
+	 * @param ultrasoundID
+	 */
 	public void delete(Long ultrasoundID){
 		controller.delete(ultrasoundID);
 		clearFields();
 	}
 	
+	/**
+	 * Returns a List of all of the Ultrasounds for the current office visit.
+	 * @return all of the ultrasounds for the current office visit
+	 */
 	public List<Ultrasound> getUltrasounds(){
 		List<Ultrasound> ultrasounds = Collections.emptyList();
 		try {
@@ -71,6 +95,19 @@ public class UltrasoundForm {
 		return ultrasounds;
 	}
 	
+	/**
+	 * Fills the fields in this form with the given parameters.
+	 * Used when editing an existing ultrasound on the page.
+	 * @param ultrasoundID
+	 * @param crl
+	 * @param bpd
+	 * @param hc
+	 * @param fl
+	 * @param ofd
+	 * @param ac
+	 * @param hl
+	 * @param efw
+	 */
 	public void fillInput(Long ultrasoundID, Float crl, Float bpd, Float hc, Float fl, Float ofd, Float ac, Float hl, Float efw){
 		ultrasound.setId(ultrasoundID);
 		ultrasound.setCrl(crl);
@@ -83,6 +120,9 @@ public class UltrasoundForm {
 		ultrasound.setEfw(efw);
 	}
 	
+	/**
+	 * Clears all of the fields in this form.
+	 */
 	public void clearFields(){
 		ultrasound = new Ultrasound(officeVisitID);
 	}
