@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
@@ -144,20 +145,12 @@ public class ObstetricsVisitController extends iTrustController {
 	/**
 	 * Attempts to add the given ObstetricsVisit to the database.
 	 * @param ov
+	 * @throws FormValidationException 
+	 * @throws DBException 
 	 */
-	public void add(ObstetricsVisit ov) {
-		try {
-			ovData.add(ov);
-			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
-					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
-			logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
-		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
-					null);
-		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
-					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
-		}
+	public void add(ObstetricsVisit ov) throws DBException, FormValidationException {
+		ovData.add(ov);
+		logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
 	}
 	
 	/**
