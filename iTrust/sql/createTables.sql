@@ -473,7 +473,7 @@ CREATE TABLE obstetricsVisit (
 	multiplicity 			INT				UNSIGNED,
 	lowLyingPlacentaObserved BOOLEAN		DEFAULT FALSE,
 	imageOfUltrasound		MEDIUMBLOB,
-	imageType               VARCHAR(64),
+	imageType               VARCHAR(255),
 	PRIMARY KEY (id),
 	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
 ) ENGINE=MyISAM;
