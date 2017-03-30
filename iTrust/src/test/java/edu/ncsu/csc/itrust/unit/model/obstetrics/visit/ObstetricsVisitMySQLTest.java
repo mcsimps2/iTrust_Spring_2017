@@ -31,8 +31,12 @@ public class ObstetricsVisitMySQLTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
 		ds = ConverterDAO.getDataSource();
 		ovsql = new ObstetricsVisitMySQL(ds);
 		

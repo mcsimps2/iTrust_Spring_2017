@@ -34,8 +34,11 @@ public class GoogleSchedulerTest
 	@Before
 	public void setup() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 
 		DAOFactory factory = TestDAOFactory.getTestInstance();
 		GoogleScheduler.useFactory(factory);

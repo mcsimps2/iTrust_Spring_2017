@@ -19,6 +19,7 @@ import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoMySQL;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoSQLLoader;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
@@ -47,7 +48,10 @@ public class FitnessInfoMySQLTest {
 	@Before
 	public void setup() throws DBException, SQLException, IOException
 	{
-		TestDataGenerator.main(null);
+		// Reset test data
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 		
 		ds = ConverterDAO.getDataSource();
 		fisql = new FitnessInfoMySQL(ds);
@@ -366,7 +370,7 @@ public class FitnessInfoMySQLTest {
 	public void testConstructor()
 	{
 		//The default constructor should not be working for JUnit test cases
-		FitnessInfoMySQL fisql = null;
+		fisql = null;
 		try
 		{
 			fisql = new FitnessInfoMySQL();

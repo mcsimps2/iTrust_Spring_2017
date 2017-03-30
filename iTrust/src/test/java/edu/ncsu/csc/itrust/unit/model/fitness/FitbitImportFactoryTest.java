@@ -20,6 +20,7 @@ import edu.ncsu.csc.itrust.model.fitness.FitbitImportFactory;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoFileFormatException;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoMySQL;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class FitbitImportFactoryTest
@@ -31,8 +32,10 @@ public class FitbitImportFactoryTest
 	@Before
 	public void setup() throws DBException, IOException, SQLException
 	{
-		//Clear the tables
-		TestDataGenerator.main(null);
+		//Clear the tables	
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 		
 		DataSource ds = ConverterDAO.getDataSource();
 		importer = new FitbitImportFactory(ds);

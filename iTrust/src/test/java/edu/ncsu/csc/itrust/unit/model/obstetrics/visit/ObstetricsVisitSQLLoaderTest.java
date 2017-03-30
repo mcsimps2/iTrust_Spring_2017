@@ -33,8 +33,12 @@ public class ObstetricsVisitSQLLoaderTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
 		loader = new ObstetricsVisitSQLLoader();
 		ds = ConverterDAO.getDataSource();
 		

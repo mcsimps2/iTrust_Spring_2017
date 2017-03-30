@@ -20,8 +20,12 @@ public class PregnancyInfoValidatorTest {
 	@Before
 	public void setup() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
 		validator = new PregnancyInfoValidator(ConverterDAO.getDataSource());
 	}
 	

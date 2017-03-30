@@ -26,8 +26,12 @@ public class PregnancyInfoMySQLTest {
 	@Before
 	public void setup() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+				
 		ds = ConverterDAO.getDataSource();
 		pisql = new PregnancyInfoMySQL(ds);
 		loader = new PregnancyInfoSQLLoader();
@@ -255,8 +259,10 @@ public class PregnancyInfoMySQLTest {
 		
 		
 		//Now rebuild everything to not screw up the whole system
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Test

@@ -7,6 +7,7 @@ import org.junit.*;
 
 import edu.ncsu.csc.itrust.model.fitness.DateFormatException;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class FitnessInfoTest
@@ -16,7 +17,11 @@ public class FitnessInfoTest
 	@Before
 	public void setup() throws IOException, SQLException
 	{
-		TestDataGenerator.main(null);
+		// Reset test data
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+				
 		fi = new FitnessInfo();
 	}
 	

@@ -14,6 +14,7 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoSQLLoader;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
@@ -31,7 +32,11 @@ public class FitnessInfoSQLLoaderTest {
 	@Before
 	public void setup() throws IOException, SQLException
 	{
-		TestDataGenerator.main(null);
+		// Reset test data
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
 		loader = new FitnessInfoSQLLoader();
 	}
 	
