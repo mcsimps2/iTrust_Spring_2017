@@ -144,7 +144,7 @@ public class ObstetricsOfficeVisitStepDefs {
 	@When("^I enter a date to the office visit date field$")
 	public void enterDateToDateField() {
 		driver.findElement(By.id("basic_ov_form:ovdate")).clear();
-		driver.findElement(By.id("basic_ov_form:ovdate")).sendKeys("3/27/2017 10:00 AM");
+		driver.findElement(By.id("basic_ov_form:ovdate")).sendKeys("6/27/2017 10:00 AM");
 	}
 	
 	@When("^I click Save to save the office visit$")
@@ -259,8 +259,9 @@ public class ObstetricsOfficeVisitStepDefs {
 		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:updateFetusData")).getAttribute("disabled").equals("true"));
 	}
 	
-	@Then("^this scenario is not implemented yet$")
-	public void obstetricsOfficeVisitTestNotImplemented() {
-		Assert.assertTrue(true);
+	@Then("^a message says I must add obstetrics data first and no ultrasound data is added$")
+	public void ultrasoundDataFailed() {
+		Assert.assertTrue(driver.getPageSource().contains("The Obstetrics tab must be saved before you can add an ultrasound"));
+		Assert.assertTrue(driver.getPageSource().contains("No Ultrasounds"));
 	}
 }

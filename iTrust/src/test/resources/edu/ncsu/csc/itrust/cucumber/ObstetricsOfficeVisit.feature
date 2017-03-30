@@ -102,11 +102,14 @@ Scenario: non OBGYN HCP
 	And the obstetrics form fields are disabled
 	And the ultrasound form fields are disabled
 
-Scenario: bad obstetrics input
-	Then this scenario is not implemented yet
-
-Scenario: bad ultrasound input
-	Then this scenario is not implemented yet
-
 Scenario: add ultrasound before office visit info
-	Then this scenario is not implemented yet
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And I go to the create new office visit page
+	And I enter a date to the office visit date field
+	And I click Save to save the office visit
+	And I enter 1 for CRL, 1 for BPD, 1 for HC, 1 for FL, 1 for OFD, 1 for AC, 1 for HL, and 1 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	Then a message says I must add obstetrics data first and no ultrasound data is added
