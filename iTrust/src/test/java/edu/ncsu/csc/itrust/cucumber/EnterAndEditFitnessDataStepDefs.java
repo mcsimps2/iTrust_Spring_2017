@@ -39,8 +39,11 @@ public class EnterAndEditFitnessDataStepDefs {
 	@After
 	public void resetDB() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Given("^the day (\\d+) has no fitness data$")

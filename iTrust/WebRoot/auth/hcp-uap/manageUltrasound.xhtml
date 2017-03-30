@@ -35,35 +35,51 @@
 				<h:form id="ultrasound_form">
 					<div class="form-group-long">
 						<h:outputLabel for="crl">Crown rump length (CRL):</h:outputLabel>
-						<h:inputText id="crl" class="form-control" value="#{ultrasound_form.ultrasound.crl}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="CRL" id="crl" class="form-control" value="#{ultrasound_form.ultrasound.crl}" readonly="#{!isOBGYN}"/>
+						<h:message for="crl" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="bpd">Biparietal diameter (BPD):</h:outputLabel>
-						<h:inputText id="bpd" class="form-control" value="#{ultrasound_form.ultrasound.bpd}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="BPD" id="bpd" class="form-control" value="#{ultrasound_form.ultrasound.bpd}" readonly="#{!isOBGYN}"/>
+						<h:message for="bpd" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="hc">Head circumference (HC):</h:outputLabel>
-						<h:inputText id="hc" class="form-control" value="#{ultrasound_form.ultrasound.hc}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="HC" id="hc" class="form-control" value="#{ultrasound_form.ultrasound.hc}" readonly="#{!isOBGYN}"/>
+						<h:message for="hc" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="fl">Femur length (FL):</h:outputLabel>
-						<h:inputText id="fl" class="form-control" value="#{ultrasound_form.ultrasound.fl}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="FL" id="fl" class="form-control" value="#{ultrasound_form.ultrasound.fl}" readonly="#{!isOBGYN}"/>
+						<h:message for="fl" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="ofd">Occipitofrontal diameter (OFD):</h:outputLabel>
-						<h:inputText id="ofd" class="form-control" value="#{ultrasound_form.ultrasound.ofd}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="OFD" id="ofd" class="form-control" value="#{ultrasound_form.ultrasound.ofd}" readonly="#{!isOBGYN}"/>
+						<h:message for="ofd" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="ac">Abdominal circumference (AC):</h:outputLabel>
-						<h:inputText id="ac" class="form-control" value="#{ultrasound_form.ultrasound.ac}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="AC" id="ac" class="form-control" value="#{ultrasound_form.ultrasound.ac}" readonly="#{!isOBGYN}"/>
+						<h:message for="ac" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="hl">Humerus length (HL):</h:outputLabel>
-						<h:inputText id="hl" class="form-control" value="#{ultrasound_form.ultrasound.hl}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="HL" id="hl" class="form-control" value="#{ultrasound_form.ultrasound.hl}" readonly="#{!isOBGYN}"/>
+						<h:message for="hl" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-group-long">
 						<h:outputLabel for="efw">Estimated fetal weight (EFW):</h:outputLabel>
-						<h:inputText id="efw" class="form-control" value="#{ultrasound_form.ultrasound.efw}" readonly="#{!isOBGYN}"/>
+						<h:inputText label="EFW" id="efw" class="form-control" value="#{ultrasound_form.ultrasound.efw}" readonly="#{!isOBGYN}"/>
+						<h:message for="efw" showSummary="true" showDetail="false"
+							style="color:red" />
 					</div>
 					<div class="form-action-group">
 						<h:commandButton id="addFetusData"    class="btn btn-default" value="Add Fetus Data"    action="#{ultrasound_form.add()}"  disabled="#{!isOBGYN}"/>

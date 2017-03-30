@@ -18,6 +18,7 @@ import org.junit.Test;
 import edu.ncsu.csc.itrust.controller.fitness.FitnessInfoController;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
@@ -50,7 +51,9 @@ public class FitnessInfoControllerTest {
 		   This will also populate the data tables, including the fitness tables
 		   See fitnessData.sql for the values in the table put in there
 		   by the test data generator */
-		TestDataGenerator.main(null);
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 		
 		// Get the dates for today, tomorrow, and yesterday
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

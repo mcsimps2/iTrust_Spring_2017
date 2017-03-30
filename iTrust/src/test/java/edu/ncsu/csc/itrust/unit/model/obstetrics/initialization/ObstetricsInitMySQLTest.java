@@ -33,8 +33,12 @@ public class ObstetricsInitMySQLTest {
 	@Before
 	public void setup() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+				
 		ds = ConverterDAO.getDataSource();
 		oisql = new ObstetricsInitMySQL(ds);
 		loader = new ObstetricsInitSQLLoader();
@@ -265,8 +269,10 @@ public class ObstetricsInitMySQLTest {
 		}
 		
 		//Now rebuild everything to not screw up the whole system
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Test

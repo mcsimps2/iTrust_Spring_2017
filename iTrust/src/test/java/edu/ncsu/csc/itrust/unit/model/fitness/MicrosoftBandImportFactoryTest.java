@@ -17,6 +17,7 @@ import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoFileFormatException;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoMySQL;
 import edu.ncsu.csc.itrust.model.fitness.MicrosoftBandImportFactory;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class MicrosoftBandImportFactoryTest {
@@ -27,7 +28,10 @@ public class MicrosoftBandImportFactoryTest {
 	@Before
 	public void setup() throws IOException, SQLException
 	{
-		TestDataGenerator.main(null);
+		// Reset test data
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 		DataSource ds = ConverterDAO.getDataSource();
 		fisql = new FitnessInfoMySQL(ds);
 		importer = new MicrosoftBandImportFactory(ds);

@@ -22,8 +22,11 @@ public class ViewObstetricsRecordsStepDefs {
 	@Given("^the databases have been reset$")
 	public void resetDB() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Given("^I have navigated to Patient Info -> Obstetrics Records$")

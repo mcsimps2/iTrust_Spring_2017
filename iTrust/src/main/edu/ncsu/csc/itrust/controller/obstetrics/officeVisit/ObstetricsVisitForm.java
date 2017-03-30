@@ -106,11 +106,9 @@ public class ObstetricsVisitForm {
 		
 		// Validate the OfficeVisit fields first
 		OfficeVisitForm offVForm = (OfficeVisitForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("office_visit_form");
-		if (isNew) {
-			boolean isValid = validateOfficeVisitFields(offVForm);
-			if (!isValid) {
-				return;
-			}
+		boolean isValid = validateOfficeVisitFields(offVForm, isNew);
+		if (!isValid) {
+			return;
 		}
 		
 		// Now update the ObstetricsVisit fields
@@ -152,15 +150,17 @@ public class ObstetricsVisitForm {
 	 * @param offVForm
 	 * @return true if populated and valid, false otherwise
 	 */
-	private boolean validateOfficeVisitFields(OfficeVisitForm offVForm) {
-		// Check that the fields are populated
-		if (offVForm.getWeight() == null) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Weight is required", "Weight is required");
-			return false;
-		}
-		if (offVForm.getBloodPressure() == null || offVForm.getBloodPressure().isEmpty()) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Blood Pressure is required", "Blood Pressure is required");
-			return false;
+	private boolean validateOfficeVisitFields(OfficeVisitForm offVForm, boolean isNew) {
+		// Check that the fields are populated if new
+		if (isNew) {
+			if (offVForm.getWeight() == null) {
+				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Weight is required", "Weight is required");
+				return false;
+			}
+			if (offVForm.getBloodPressure() == null || offVForm.getBloodPressure().isEmpty()) {
+				printFacesMessage(FacesMessage.SEVERITY_ERROR, "Blood Pressure is required", "Blood Pressure is required");
+				return false;
+			}
 		}
 		
 		// Now validate their format

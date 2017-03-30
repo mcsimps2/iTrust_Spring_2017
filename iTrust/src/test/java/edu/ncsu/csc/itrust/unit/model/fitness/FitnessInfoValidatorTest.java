@@ -14,6 +14,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfo;
 import edu.ncsu.csc.itrust.model.fitness.FitnessInfoValidator;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 /**
  * 
@@ -36,7 +37,11 @@ public class FitnessInfoValidatorTest {
 	@Before
 	public void setup() throws IOException, SQLException
 	{
-		TestDataGenerator.main(null);
+		// Reset test data
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+				
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date dcurrDate = new Date();
 		Date dyesterday = DateUtils.addDays(new Date(), -1);
@@ -46,7 +51,11 @@ public class FitnessInfoValidatorTest {
 		tmrw = formatter.format(dtmrw);
 		
 		validator = new FitnessInfoValidator(ConverterDAO.getDataSource());
-		TestDataGenerator.main(null);
+		
+		// Reset test data
+		gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	/**

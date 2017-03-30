@@ -16,6 +16,7 @@ import org.junit.Test;
 import edu.ncsu.csc.itrust.controller.fitness.FitnessGraphSubject;
 import edu.ncsu.csc.itrust.controller.fitness.FitnessInfoController.GraphKeyValue;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
@@ -42,7 +43,9 @@ public class FitnessGraphSubjectTest {
 		   This will also populate the data tables, including the fitness tables
 		   See fitnessData.sql for the values in the table put in there
 		   by the test data generator */
-		TestDataGenerator.main(null);
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 
 	/**

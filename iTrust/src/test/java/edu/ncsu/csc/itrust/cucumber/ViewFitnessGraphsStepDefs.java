@@ -30,8 +30,11 @@ public class ViewFitnessGraphsStepDefs {
 	@Before
 	public void setup() throws Exception
 	{
-		DBBuilder.main(null);
-		TestDataGenerator.main(null);
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Given("^I am at the iTrust login screen$")
