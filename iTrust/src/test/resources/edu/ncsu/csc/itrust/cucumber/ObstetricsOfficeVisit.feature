@@ -77,7 +77,15 @@ Scenario: update and delete ultrasound data
 	Then the same number of ultrasounds should be in the table
 
 Scenario: schedule appointment
-	Then this scenario is not implemented yet
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And I go to the create new office visit page
+	And I enter a date to the office visit date field
+	And I click Save to save the office visit
+	And I enter a weight of 150, blood pressure of 120/80, FHR of 130, multiplicity of 1, and a Google Calendar ID
+	And click Save on the obstetrics office visit tab
+	Then the visit was updated successfully and an appointment was scheduled
 
 Scenario: non OBGYN HCP
 	Then this scenario is not implemented yet

@@ -12,6 +12,8 @@ import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
 
 public class ObstetricsOfficeVisitStepDefs {
+	private static final String BASEURL = "http://localhost:8080/iTrust";
+	
 	private iTrustDriver driver;
 	
 	private int numUltrasounds = 0;
@@ -128,6 +130,41 @@ public class ObstetricsOfficeVisitStepDefs {
 		driver.findElement(By.id("ultrasound_form:updateFetusData")).click();
 	}
 	
+	@When("^I go to the create new office visit page$")
+	public void goToCreateNewOfficeVisitPage() {
+		driver.get(BASEURL + "/auth/hcp-uap/officeVisitInfo.xhtml");
+	}
+	
+	@When("^I enter a date to the office visit date field$")
+	public void enterDateToDateField() {
+		driver.findElement(By.id("basic_ov_form:ovdate")).clear();
+		driver.findElement(By.id("basic_ov_form:ovdate")).sendKeys("3/27/2017 10:00 AM");
+	}
+	
+	@When("^I click Save to save the office visit$")
+	public void saveOfficeVisit() {
+		driver.findElement(By.id("basic_ov_form:submitVisitButton")).click();
+	}
+	
+	@When("^I enter a weight of (.+), blood pressure of (.+), FHR of (.+), multiplicity of (.+), and a Google Calendar ID$")
+	public void enterObstetricsData(String weight, String bloodPressure, String fhr, String mult) {
+		driver.findElement(By.id("obstetrics_form:weight")).clear();
+		driver.findElement(By.id("obstetrics_form:weight")).sendKeys(weight);
+
+		driver.findElement(By.id("obstetrics_form:bloodPressure")).clear();
+		driver.findElement(By.id("obstetrics_form:bloodPressure")).sendKeys(bloodPressure);
+
+		driver.findElement(By.id("obstetrics_form:fhr")).clear();
+		driver.findElement(By.id("obstetrics_form:fhr")).sendKeys(fhr);
+
+		driver.findElement(By.id("obstetrics_form:multiplicity")).clear();
+		driver.findElement(By.id("obstetrics_form:multiplicity")).sendKeys(mult);
+
+		String calendarID = "ncsu.edu_flngq1u6biusd8qhces7tom0b0@group.calendar.google.com";
+		driver.findElement(By.id("obstetrics_form:calendarID")).clear();
+		driver.findElement(By.id("obstetrics_form:calendarID")).sendKeys(calendarID);
+	}
+	
 	@When("^upload the file (.+)$")
 	public void uploadUltrasoundFile(String filename) {
 		String cwd = System.getProperty("user.dir");
@@ -176,6 +213,14 @@ public class ObstetricsOfficeVisitStepDefs {
 		List<WebElement> rows = driver.findElements(By.cssSelector("#ultrasound_table_form table tbody tr"));
 		
 		Assert.assertEquals("Two more ultrasounds should exist in the ultrasound table", rows.size(), this.numUltrasounds + 2);
+	}
+	
+	@Then("^the visit was updated successfully and an appointment was scheduled$")
+	public void appointmentWasScheduled() {
+		Assert.assertTrue("Should have found 'Obstetrics Visit Successfully Updated' in page, but did not",
+				driver.getPageSource().contains("Obstetrics Visit Successfully Updated."));
+		Assert.assertTrue("Should have found 'The patient's next appointment has been scheduled' in page, but did not",
+				driver.getPageSource().contains("The patient's next appointment has been scheduled"));
 	}
 	
 	@Then("^this scenario is not implemented yet$")
