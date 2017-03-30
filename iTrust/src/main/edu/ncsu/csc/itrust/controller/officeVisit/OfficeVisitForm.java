@@ -36,6 +36,10 @@ public class OfficeVisitForm {
 	private Integer householdSmokingStatus;
 	private Integer patientSmokingStatus;
 
+	public OfficeVisit getOv() {
+		return ov;
+	}
+
 	public Long getVisitID() {
 		return visitID;
 	}
@@ -313,6 +317,8 @@ public class OfficeVisitForm {
 			patientSmokingStatus = ov.getPatientSmokingStatus();
 
 		} catch (Exception e) {
+			System.out.println(e.getMessage()); //TODO
+			System.out.println(e.getStackTrace()); //TODO
 			FacesMessage throwMsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Office Visit Controller Error",
 					"Office Visit Controller Error");
 			FacesContext.getCurrentInstance().addMessage(null, throwMsg);

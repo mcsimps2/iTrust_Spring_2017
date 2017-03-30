@@ -10,8 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -81,6 +83,10 @@ public class ObstetricsInitController extends iTrustController
 	PregnancyInfoData pregnancyData;
 	/** Used to obtain session variables and request parameters */
 	SessionUtils sessionUtils;
+	/** Patient DAO used to acess patient eligibility */
+	PatientDAO patientDAO;
+	/** Personnel DAO used to access hcp type */
+	private PersonnelDAO personnelDAO;
 	/** The most recently viewed ObstetricsInit record */
 	private ObstetricsInit viewedOI;
 	/** PregnancyInfoValidator used for validating on add, not just on save */
@@ -92,6 +98,9 @@ public class ObstetricsInitController extends iTrustController
 	
 	/** List of pregnancy records added by the user */
 	private List<PregnancyInfo> addedPregnancies = new ArrayList<PregnancyInfo>();
+	
+	/** Temporary storage of RH flag */
+	private boolean RH;
 	
 	/** Temporary storage of the LMP for when the user is adding prior pregnancies */
 	private String lmp;
@@ -120,6 +129,8 @@ public class ObstetricsInitController extends iTrustController
 	public ObstetricsInitController() {
 		super();
 		sessionUtils = SessionUtils.getInstance();
+		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
+		personnelDAO = new PersonnelDAO(DAOFactory.getProductionInstance());
 		try {
 			oiData = new ObstetricsInitMySQL();
 			pregnancyData = new PregnancyInfoMySQL();
@@ -138,6 +149,26 @@ public class ObstetricsInitController extends iTrustController
 	public ObstetricsInitController(DataSource ds) {
 		super();
 		sessionUtils = SessionUtils.getInstance();
+		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
+		personnelDAO = new PersonnelDAO(DAOFactory.getProductionInstance());
+		oiData = new ObstetricsInitMySQL(ds);
+		pregnancyData = new PregnancyInfoMySQL(ds);
+		pregnancyInfoValidator = new PregnancyInfoValidator(ds);
+	}
+	
+	/**
+	 * For testing purposes
+	 * 
+	 * @param ds
+	 *            DataSource
+	 * @param sessionUtils
+	 *            SessionUtils instance
+	 */
+	public ObstetricsInitController(DataSource ds, SessionUtils sessionUtils, PatientDAO patientDAO, PersonnelDAO personnelDAO) {
+		super();
+		this.sessionUtils = sessionUtils;
+		this.patientDAO = patientDAO;
+		this.personnelDAO = personnelDAO;
 		oiData = new ObstetricsInitMySQL(ds);
 		pregnancyData = new PregnancyInfoMySQL(ds);
 		pregnancyInfoValidator = new PregnancyInfoValidator(ds);
@@ -161,9 +192,8 @@ public class ObstetricsInitController extends iTrustController
 		}
 		
 		// Check patient eligibility
-		PatientDAO dao = new PatientDAO(DAOFactory.getProductionInstance());
 		try {
-			PatientBean p = dao.getPatient(pidLong);
+			PatientBean p = patientDAO.getPatient(pidLong);
 			if (p == null) return false;
 			return p.getObstetricsCareEligibility();
 		} catch (DBException e) {
@@ -192,10 +222,9 @@ public class ObstetricsInitController extends iTrustController
 		}
 		
 		// Get the patient bean from the database
-		PatientDAO dao = new PatientDAO(DAOFactory.getProductionInstance());
 		PatientBean patient;
 		try {
-			patient = dao.getPatient(pidLong);
+			patient = patientDAO.getPatient(pidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
@@ -210,7 +239,7 @@ public class ObstetricsInitController extends iTrustController
 		// Change eligibility and update database
 		patient.setObstetricsCareEligibility(true);
 		try {
-			dao.editPatient(patient, hcpidLong);
+			patientDAO.editPatient(patient, hcpidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
@@ -249,7 +278,11 @@ public class ObstetricsInitController extends iTrustController
 		return list;
 	}
 
-	private List<PregnancyInfo> getPastPregnancies() {
+	/**
+	 * Get the past pregnancies for the patient in session utils
+	 * @return list of past pregnancies
+	 */
+	public List<PregnancyInfo> getPastPregnancies() {
 		try {
 			return this.pregnancyData.getRecords(sessionUtils.getCurrentPatientMIDLong());
 		} catch (DBException e) {
@@ -259,6 +292,11 @@ public class ObstetricsInitController extends iTrustController
 		}
 	}
 	
+	/**
+	 * Get the past pregnancies for the patient in session utils
+	 * @param oid obstetrics init id
+	 * @return list of past pregnancies
+	 */
 	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
 		try {
 			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(oid);
@@ -289,10 +327,9 @@ public class ObstetricsInitController extends iTrustController
 		}
 		
 		// Get the personnel bean from the database
-		PersonnelDAO dao = new PersonnelDAO(DAOFactory.getProductionInstance());
 		PersonnelBean personnel;
 		try {
-			personnel = dao.getPersonnel(hcpidLong);
+			personnel = personnelDAO.getPersonnel(hcpidLong);
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
@@ -305,6 +342,10 @@ public class ObstetricsInitController extends iTrustController
 		return personnel.getSpecialty().equals(OBGYN);
 	}
 
+	/**
+	 * Get viewed OI. Used for whether it is view or add.
+	 * @return the OI
+	 */
 	public ObstetricsInit getViewedOI() {
 		return viewedOI;
 	}
@@ -330,6 +371,7 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyFields();
 		clearPregnancyLists();
 		clearLMP();
+		clearRH();
 		
 		if (oi != null) {
 			// We're viewing a record, so show past pregnancy records from it.
@@ -347,84 +389,29 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Navigate to the view/add page
 		try {
-			NavigationController.viewAddObstetricsRecord();
+			navigateToViewAdd();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
 	}
 	
+	/**
+	 * Navigates the the add/view obstetrics init record page.
+	 * @throws IOException
+	 */
+	public void navigateToViewAdd() throws IOException {
+		NavigationController.viewAddObstetricsRecord();
+	}
+
+	/**
+	 * Gets the delivery method options for the dropdown
+	 * @return the delivery method options
+	 */
 	public List<DeliveryMethod> getDeliveryMethods() {
 		return Arrays.asList(DeliveryMethod.values());
 	}
 	
-	public List<PregnancyInfo> getDisplayedPregnancies() {
-		Collections.sort(displayedPregnancies,
-				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
-		
-		return displayedPregnancies;
-	}
-
-	public void setDisplayedPregnancies(List<PregnancyInfo> displayedPregnancies) {
-		this.displayedPregnancies = displayedPregnancies;
-	}
-
-	public String getLmp() {
-		return lmp;
-	}
-
-	public void setLmp(String lmp) {
-		this.lmp = lmp;
-	}
-
-	public String getYearOfConception() {
-		return yearOfConception;
-	}
-
-	public void setYearOfConception(String yearOfConception) {
-		this.yearOfConception = yearOfConception;
-	}
-
-	public String getNumWeeksPregnant() {
-		return numWeeksPregnant;
-	}
-
-	public void setNumWeeksPregnant(String numWeeksPregnant) {
-		this.numWeeksPregnant = numWeeksPregnant;
-	}
-
-	public String getNumHoursInLabor() {
-		return numHoursInLabor;
-	}
-
-	public void setNumHoursInLabor(String numHoursInLabor) {
-		this.numHoursInLabor = numHoursInLabor;
-	}
-
-	public String getWeightGain() {
-		return weightGain;
-	}
-
-	public void setWeightGain(String weightGain) {
-		this.weightGain = weightGain;
-	}
-
-	public String getDeliveryType() {
-		return deliveryType;
-	}
-
-	public void setDeliveryType(String deliveryType) {
-		this.deliveryType = deliveryType;
-	}
-
-	public String getMultiplicity() {
-		return multiplicity;
-	}
-
-	public void setMultiplicity(String multiplicity) {
-		this.multiplicity = multiplicity;
-	}
-
 	/**
 	 * Add pregnancy record based on the fields
 	 * @return success
@@ -474,6 +461,9 @@ public class ObstetricsInitController extends iTrustController
 		return;
 	}
 	
+	/**
+	 * Add obstetrics record based on the fields
+	 */
 	public void addObstetricsRecord() {
 		// if (they're all empty) or (they're all filled)
 		if (!StringUtils.isEmpty(yearOfConception)
@@ -503,6 +493,7 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Make a new ObstetricsInit record with the LMP and save it in the database
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
+		oi.setRH(this.getRH());
 		try {
 			int oid = oiData.addAndReturnID(oi);
 			
@@ -525,12 +516,13 @@ public class ObstetricsInitController extends iTrustController
 			this.clearPregnancyFields();
 			this.clearPregnancyLists();
 			this.clearLMP();
+			this.clearRH();
 			
 			// Add success messages
 			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
 			
 			// Redirect to the overview page with the navigation controller
-			NavigationController.viewObstetricsOverview();
+			redirectToObstetricsRecordsOverview();
 		} catch (DBException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_RECORD, e.getMessage(), null);
@@ -543,6 +535,14 @@ public class ObstetricsInitController extends iTrustController
 		}
 	}
 	
+	/**
+	 * Navigates to the obstetrics init records overview page.
+	 * @throws IOException
+	 */
+	public void redirectToObstetricsRecordsOverview() throws IOException {
+		NavigationController.viewObstetricsOverview();
+	}
+
 	public void cancelAddObstetricsRecord() {
 		// Clear pregnancy lists (we're not going to submit them) and pregnancy fields
 		clearPregnancyFields();
@@ -551,7 +551,7 @@ public class ObstetricsInitController extends iTrustController
 		
 		// Go back to the overview page
 		try {
-			NavigationController.viewObstetricsOverview();
+			redirectToObstetricsRecordsOverview();
 		} catch (IOException e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_OVERVIEW, e.getMessage(), null);
@@ -574,5 +574,111 @@ public class ObstetricsInitController extends iTrustController
 	
 	private void clearLMP() {
 		this.setLmp("");
+	}
+	
+	private void clearRH() {
+		this.setRH(false);
+	}
+	
+	/**
+	 * Sends a FacesMessage for FacesContext to display.
+	 * 
+	 * @param severity
+	 *            severity of the message
+	 * @param summary
+	 *            localized summary message text
+	 * @param detail
+	 *            localized detail message text
+	 * @param clientId
+	 *            The client identifier with which this message is associated
+	 *            (if any)
+	 */
+	@Override
+	public void printFacesMessage(Severity severity, String summary, String detail, String clientId) {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (ctx == null) {
+			return;
+		}
+		ctx.getExternalContext().getFlash().setKeepMessages(true);
+		ctx.addMessage(clientId, new FacesMessage(severity, summary, detail));
+	}
+	
+	/**
+	 * Get the displayed pregnancies
+	 * @return
+	 */
+	public List<PregnancyInfo> getDisplayedPregnancies() {
+		Collections.sort(displayedPregnancies,
+				(o1, o2) -> o2.getYearOfConception() - o1.getYearOfConception());
+		
+		return displayedPregnancies;
+	}
+
+	public void setDisplayedPregnancies(List<PregnancyInfo> displayedPregnancies) {
+		this.displayedPregnancies = displayedPregnancies;
+	}
+
+	public String getLmp() {
+		return lmp;
+	}
+
+	public void setLmp(String lmp) {
+		this.lmp = lmp;
+	}
+	
+	 public boolean getRH() {
+		 return RH;
+	 }
+	 	
+	 public void setRH(boolean val) {
+	 	this.RH = val;
+	 }
+
+	public String getYearOfConception() {
+		return yearOfConception;
+	}
+
+	public void setYearOfConception(String yearOfConception) {
+		this.yearOfConception = yearOfConception;
+	}
+
+	public String getNumWeeksPregnant() {
+		return numWeeksPregnant;
+	}
+
+	public void setNumWeeksPregnant(String numWeeksPregnant) {
+		this.numWeeksPregnant = numWeeksPregnant;
+	}
+
+	public String getNumHoursInLabor() {
+		return numHoursInLabor;
+	}
+
+	public void setNumHoursInLabor(String numHoursInLabor) {
+		this.numHoursInLabor = numHoursInLabor;
+	}
+
+	public String getWeightGain() {
+		return weightGain;
+	}
+
+	public void setWeightGain(String weightGain) {
+		this.weightGain = weightGain;
+	}
+
+	public String getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(String deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+
+	public String getMultiplicity() {
+		return multiplicity;
+	}
+
+	public void setMultiplicity(String multiplicity) {
+		this.multiplicity = multiplicity;
 	}
 }

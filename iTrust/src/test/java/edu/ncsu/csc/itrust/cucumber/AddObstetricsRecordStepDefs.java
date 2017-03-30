@@ -44,34 +44,32 @@ public class AddObstetricsRecordStepDefs {
 	
 	@When("^I enter an lmp in for the LMP field$")
 	public void enterLMP() {
-//		Calendar c = Calendar.getInstance();
-////		c.add(Calendar.DATE, -1);
-//		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-DD"); 
-//		ft.setLenient(false);
-//		String date = ft.format(c.getTime());
-//		System.out.println(date);
-		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys("2017-01-01");
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -1);
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+		String date = ft.format(c.getTime());
+		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys(date);
 	}
 	
 	@When("^I enter a prior pregnancy with values: conception year (.+), weeks pregnant (.+), hours in labor (.+), weight gain (.+), delivery type (.+), multiplicity (.+)$")
 	public void enterPriorPregnancy(String cYear, String weeksPreg, String hrsLabor, String weightGain, String deliveryType, String mult) {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt42\"]")).sendKeys(cYear);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt44\"]")).sendKeys(weeksPreg);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt46\"]")).sendKeys(hrsLabor);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt48\"]")).sendKeys(weightGain);
-		Select s = new Select(driver.findElement(By.cssSelector("select[name=\"j_idt20:j_idt50\"]")));
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt47\"]")).sendKeys(cYear);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt49\"]")).sendKeys(weeksPreg);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt51\"]")).sendKeys(hrsLabor);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt53\"]")).sendKeys(weightGain);
+		Select s = new Select(driver.findElement(By.cssSelector("select[name=\"j_idt20:j_idt55\"]")));
 		s.selectByVisibleText(deliveryType);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt53\"]")).sendKeys(mult);
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt58\"]")).sendKeys(mult);
 	}
 	
 	@When("^I click add pregnancy$")
 	public void addPregnancy() {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt55\"]")).submit();
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt60\"]")).submit();
 	}
 	
 	@When("^I click Save Record")
 	public void saveRecord() {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt62\"]")).click();
+		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt67\"]")).click();
 	}
 	
 	@Then("^I am redirected to obstetrics records page$")
@@ -97,10 +95,10 @@ public class AddObstetricsRecordStepDefs {
 	@Then("^all the fields are empty")
 	public void allFieldsEmpty() {
 		Assert.assertTrue(driver.findElement(By.cssSelector(".record-info-table input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt42\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt44\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt46\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt48\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt47\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt49\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt51\"]")).getText().length() == 0);
 		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt53\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt58\"]")).getText().length() == 0);
 	}
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+	
+	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
+	
+	<ui:fragment rendered="#{isObstetricsPatient}">
+		<div style="text-align:center; margin-bottom:2rem">
+			<ui:fragment rendered="#{obstetrics_visit_form.ov.imageOfUltrasound != null}">
+				<h:form style="display:inline; margin-left:2rem; margin-right:2rem; padding:2rem; background-color:#fcfcfc">
+					<h:commandLink value="Download Ultrasound Image" action="#{obstetrics_visit_form.download()}"
+						style="color:cornflowerblue; font-size:larger"/>
+				</h:form>
+			</ui:fragment>
+		</div>
+		<div align="center">
+			<h:form>
+				<ui:param name="ultrasoundList" value="#{ultrasound_form.getUltrasounds()}" />
+				
+				<ui:fragment rendered="${!empty ultrasoundList}">
+					<h:dataTable styleClass="fTable" value="#{ ultrasoundList }" var="ultrasound" border="1">
+					
+						<h:column>
+							<f:facet name="header">Crown rump length (CRL)</f:facet>
+							<h:outputText value="#{1}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Biparietal diameter (BPD)</f:facet>
+							<h:outputText value="#{2}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Head circumference (HC)</f:facet>
+							<h:outputText value="#{3}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Femur length (FL)</f:facet>
+							<h:outputText value="#{4}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Occipitofrontal diameter (OFD)</f:facet>
+							<h:outputText value="#{5}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Abdominal circumference (AC)</f:facet>
+							<h:outputText value="#{6}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Humerus length (HL)</f:facet>
+							<h:outputText value="#{7}" />
+						</h:column>
+					
+						<h:column>
+							<f:facet name="header">Estimated fetal weight (EFW)</f:facet>
+							<h:outputText value="#{8}" />
+						</h:column>
+					
+					</h:dataTable>
+				</ui:fragment>
+				
+				<ui:fragment rendered="${empty ultrasoundList}">
+					<h2>No Ultrasounds</h2> 
+				</ui:fragment>
+			</h:form>
+		</div>
+	</ui:fragment>
+	
+	<ui:fragment rendered="#{!isObstetricsPatient}">
+		<h2>Not an Obstetrics Patient</h2>
+	</ui:fragment>
+</html>

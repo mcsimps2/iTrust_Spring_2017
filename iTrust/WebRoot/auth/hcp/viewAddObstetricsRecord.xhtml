@@ -81,6 +81,17 @@
 											<td>Weeks pregnant at initialization date:</td>
 											<td>#{oiRecord.numWeeksPregnant}</td>
 										</tr>
+										<tr>
+											<td>RH Flag:</td>
+											<td>
+												<ui:fragment rendered="#{addingRecord}">
+													<h:selectBooleanCheckbox class="form-control" value="#{obstetrics_init_controller.RH}" />
+												</ui:fragment>
+												<ui:fragment rendered="#{viewingRecord}">
+													#{oiRecord.getPrettyRH()}
+												</ui:fragment>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
