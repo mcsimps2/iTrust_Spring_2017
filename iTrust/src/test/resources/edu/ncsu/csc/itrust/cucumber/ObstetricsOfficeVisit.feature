@@ -5,9 +5,9 @@ Feature: Add obstetrics records to office visit
 Background:
 	Given the databases have been reset
 	Given I am at the iTrust login screen
-	And I have logged in as OBGYN with MID 9000000012 and password pw
 
 Scenario: obstetrics and ultrasound tabs exist
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -16,6 +16,7 @@ Scenario: obstetrics and ultrasound tabs exist
 	And the ultrasound tab is there
 
 Scenario Outline: add obstetrics data to office visit
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -29,6 +30,7 @@ Examples:
 	| 130 | 1    | yes |
 
 Scenario: add ultrasound without images
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -43,6 +45,7 @@ Scenario: add ultrasound without images
 	Then two more ultrasounds exist in the ultrasound table than before
 
 Scenario: add ultrasound with images
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -57,6 +60,7 @@ Scenario: add ultrasound with images
 	Then the ultrasound images were uploaded successfully
 
 Scenario: update and delete ultrasound data
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -77,6 +81,7 @@ Scenario: update and delete ultrasound data
 	Then the same number of ultrasounds should be in the table
 
 Scenario: schedule appointment
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
 	When I navigate to Office Visit -> Document Office Visit
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -88,13 +93,23 @@ Scenario: schedule appointment
 	Then the visit was updated successfully and an appointment was scheduled
 
 Scenario: non OBGYN HCP
-	Then this scenario is not implemented yet
-
-Scenario: bad obstetrics input
-	Then this scenario is not implemented yet
-
-Scenario: bad ultrasound input
-	Then this scenario is not implemented yet
+	Given I have logged in as OBGYN with MID 9000000000 and password pw
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And click on the first office visit on the office visits page
+	Then a message indicates that only OBGYN HCPs can edit obstetrics data
+	And the obstetrics form fields are disabled
+	And the ultrasound form fields are disabled
 
 Scenario: add ultrasound before office visit info
-	Then this scenario is not implemented yet
+	Given I have logged in as OBGYN with MID 9000000012 and password pw
+	When I navigate to Office Visit -> Document Office Visit
+	And I search for the patient with name Random
+	And click on the link for patient with pid 1
+	And I go to the create new office visit page
+	And I enter a date to the office visit date field
+	And I click Save to save the office visit
+	And I enter 1 for CRL, 1 for BPD, 1 for HC, 1 for FL, 1 for OFD, 1 for AC, 1 for HL, and 1 for EFW
+	And click Add Fetus Data on the ultrasound office visit tab
+	Then a message says I must add obstetrics data first and no ultrasound data is added
