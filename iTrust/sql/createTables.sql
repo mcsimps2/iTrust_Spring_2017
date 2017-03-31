@@ -578,3 +578,29 @@ CREATE TABLE priorPregnancies
 	PRIMARY KEY (id),
 	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
+
+CREATE TABLE childbirthVisits
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+	officeVisitID BIGINT UNSIGNED NOT NULL,
+	deliveryType VARCHAR(255) DEFAULT '',
+	pitocin BIGINT UNSIGNED,
+	nitrousOxide BIGINT UNSIGNED,
+	pethidine BIGINT UNSIGNED,
+	epiduralAnaesthesia BIGINT UNSIGNED,
+	magnesiumSulfide BIGINT UNSIGNED,
+	PRIMARY KEY (id),
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
+) ENGINE=MyISAM;
+
+CREATE TABLE childbirthInfants
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+	officeVisitID BIGINT UNSIGNED NOT NULL,
+	dateOfBirth DATE,
+	timeOfBirth TIME,
+	sex VARCHAR(255) DEFAULT 'Not Specified',
+	timeEstimated BOOLEAN DEFAULT FALSE,
+	PRIMARY KEY (id),
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
+) ENGINE=MyISAM;
