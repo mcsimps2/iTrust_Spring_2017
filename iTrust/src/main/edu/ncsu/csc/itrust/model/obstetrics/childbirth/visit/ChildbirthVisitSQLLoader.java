@@ -42,7 +42,7 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		ChildbirthVisit cv = new ChildbirthVisit();
 		cv.setId(rs.getLong("id"));
 		cv.setOfficeVisitID(rs.getLong("officeVisitID"));
-		cv.setDeliveryMethod(DeliveryMethod.matchString(rs.getString("deliveryType")));
+		cv.setDeliveryType(DeliveryMethod.matchString(rs.getString("deliveryType")));
 		cv.setPitocin(rs.getInt("pitocin"));
 		cv.setNitrousOxide(rs.getInt("nitrousOxide"));
 		cv.setPethidine(rs.getInt("pethidine"));
@@ -71,26 +71,25 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfide) VALUES (?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
-			ps.setString(2, insertObject.getDeliveryMethod().toString());
+			ps.setString(2, insertObject.getDeliveryType().toString());
 			ps.setInt(3, insertObject.getPitocin());
 			ps.setInt(4, insertObject.getNitrousOxide());
-			ps.setInt(5, insertObject.getNitrousOxide());
-			ps.setInt(6, insertObject.getPethidine());
-			ps.setInt(7, insertObject.getEpiduralAnaesthesia());
-			ps.setInt(8, insertObject.getMagnesiumSulfide());
+			ps.setInt(5, insertObject.getPethidine());
+			ps.setInt(6, insertObject.getEpiduralAnaesthesia());
+			ps.setInt(7, insertObject.getMagnesiumSulfide());
 		}
 		else
 		{
 			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfide=? WHERE id=?;";
+			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
-			ps.setString(2, insertObject.getDeliveryMethod().toString());
+			ps.setString(2, insertObject.getDeliveryType().toString());
 			ps.setInt(3, insertObject.getPitocin());
 			ps.setInt(4, insertObject.getNitrousOxide());
-			ps.setInt(5, insertObject.getNitrousOxide());
-			ps.setInt(6, insertObject.getPethidine());
-			ps.setInt(7, insertObject.getEpiduralAnaesthesia());
-			ps.setInt(8, insertObject.getMagnesiumSulfide());
-			ps.setLong(9, insertObject.getId());
+			ps.setInt(5, insertObject.getPethidine());
+			ps.setInt(6, insertObject.getEpiduralAnaesthesia());
+			ps.setInt(7, insertObject.getMagnesiumSulfide());
+			ps.setLong(8, insertObject.getId());
 		}
 		return ps;
 	}

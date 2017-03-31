@@ -51,6 +51,12 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 	{
 		ErrorList errs = new ErrorList();
 		
+		if (obj.getOfficeVisitID() == null)
+		{
+			errs.addIfNotNull("Null office visit ID");
+			throw new FormValidationException(errs);
+		}
+		
 		//Make sure the office visit ID corresponds to something in the DB
 		try
 		{
@@ -69,28 +75,44 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		
 		//DeliveryMethod is set by default, can't be invalid
 		
-		//Check other fields
-		if (obj.getPitocin() < 0)
+		//Check other fields for non-null and non-negativity
+		if (obj.getPitocin() == null)
+		{
+			errs.addIfNotNull("Pitocin value cannot be null");
+		}
+		else if (obj.getPitocin() < 0)
 		{
 			errs.addIfNotNull("Pitocin must be a non-negative integer");
 		}
-		
-		if (obj.getNitrousOxide() < 0)
+		if (obj.getNitrousOxide() == null)
+		{
+			errs.addIfNotNull("Nitrous Oxide value cannot be null");
+		}
+		else if (obj.getNitrousOxide() < 0)
 		{
 			errs.addIfNotNull("Nitrous oxide must be a non-negative integer");
 		}
-		
-		if (obj.getPethidine() < 0)
+		if (obj.getPethidine() == null)
+		{
+			errs.addIfNotNull("Pethidine value cannot be null");
+		}
+		else if (obj.getPethidine() < 0)
 		{
 			errs.addIfNotNull("Pethidine must be a non-negative integer");
 		}
-		
-		if (obj.getEpiduralAnaesthesia() < 0)
+		if (obj.getEpiduralAnaesthesia() == null)
+		{
+			errs.addIfNotNull("Epidural anaesthesia value cannot be null");
+		}
+		else if (obj.getEpiduralAnaesthesia() < 0)
 		{
 			errs.addIfNotNull("Epidural anaesthesia must be a non-negative integer");
 		}
-		
-		if (obj.getMagnesiumSulfide() < 0)
+		if (obj.getMagnesiumSulfide() == null)
+		{
+			errs.addIfNotNull("Magnesium sulfide value cannot be null");
+		}
+		else if (obj.getMagnesiumSulfide() < 0)
 		{
 			errs.addIfNotNull("Magnesium sulfide must be a non-negative integer");
 		}

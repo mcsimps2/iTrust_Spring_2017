@@ -6,7 +6,7 @@ public class ChildbirthVisit
 {
 	private Long id;
 	private Long officeVisitID;
-	private DeliveryMethod deliveryMethod;
+	private DeliveryMethod deliveryType;
 	private Integer pitocin;
 	private Integer nitrousOxide;
 	private Integer pethidine;
@@ -18,18 +18,30 @@ public class ChildbirthVisit
 		super();
 	}
 	
-	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryMethod, Integer pitocin, Integer nitrousOxide,
+	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryType, Integer pitocin, Integer nitrousOxide,
 			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfide)
 	{
 		super();
 		this.officeVisitID = officeVisitID;
-		this.deliveryMethod = deliveryMethod;
+		this.deliveryType = deliveryType;
 		this.pitocin = pitocin;
 		this.nitrousOxide = nitrousOxide;
 		this.pethidine = pethidine;
 		this.epiduralAnaesthesia = epiduralAnaesthesia;
 		this.magnesiumSulfide = magnesiumSulfide;
 	}
+	
+	
+	public DeliveryMethod getDeliveryType()
+	{
+		return deliveryType;
+	}
+
+	public void setDeliveryType(DeliveryMethod deliveryType)
+	{
+		this.deliveryType = deliveryType;
+	}
+
 	public Long getId()
 	{
 		return id;
@@ -45,14 +57,6 @@ public class ChildbirthVisit
 	public void setOfficeVisitID(Long officeVisitID)
 	{
 		this.officeVisitID = officeVisitID;
-	}
-	public DeliveryMethod getDeliveryMethod()
-	{
-		return deliveryMethod;
-	}
-	public void setDeliveryMethod(DeliveryMethod deliveryMethod)
-	{
-		this.deliveryMethod = deliveryMethod;
 	}
 	public Integer getPitocin()
 	{
@@ -94,10 +98,4 @@ public class ChildbirthVisit
 	{
 		this.magnesiumSulfide = magnesiumSulfide;
 	}
-	
-	
-	
-	
-	
-	
 }

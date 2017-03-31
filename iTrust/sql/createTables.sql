@@ -584,22 +584,22 @@ CREATE TABLE childbirthVisits
 	id BIGINT UNSIGNED AUTO_INCREMENT,
 	officeVisitID BIGINT UNSIGNED NOT NULL,
 	deliveryType VARCHAR(255) DEFAULT '',
-	pitocin BIGINT UNSIGNED,
-	nitrousOxide BIGINT UNSIGNED,
-	pethidine BIGINT UNSIGNED,
-	epiduralAnaesthesia BIGINT UNSIGNED,
-	magnesiumSulfide BIGINT UNSIGNED,
+	pitocin BIGINT UNSIGNED DEFAULT 0,
+	nitrousOxide BIGINT UNSIGNED DEFAULT 0,
+	pethidine BIGINT UNSIGNED DEFAULT 0,
+	epiduralAnaesthesia BIGINT UNSIGNED DEFAULT 0,
+	magnesiumSulfide BIGINT UNSIGNED DEFAULT 0,
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;
 
-CREATE TABLE childbirthInfants
+CREATE TABLE childbirthNewborns
 (
 	id BIGINT UNSIGNED AUTO_INCREMENT,
 	officeVisitID BIGINT UNSIGNED NOT NULL,
 	dateOfBirth DATE,
 	timeOfBirth TIME,
-	sex VARCHAR(255) DEFAULT 'Not Specified',
+	sex VARCHAR(255) DEFAULT 'Unspecified',
 	timeEstimated BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
