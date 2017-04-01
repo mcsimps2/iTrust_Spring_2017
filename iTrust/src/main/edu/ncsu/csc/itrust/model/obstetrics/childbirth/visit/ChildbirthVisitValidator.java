@@ -63,7 +63,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			OfficeVisit ov = ovsql.getByID(obj.getOfficeVisitID());
 			if (ov == null)
 			{
-				errs.addIfNotNull("Could not find the patient with the specified PID");
+				errs.addIfNotNull("Could not find the office visit with the specified ID");
 				throw new FormValidationException(errs);
 			}
 		}

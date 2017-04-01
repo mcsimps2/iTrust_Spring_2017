@@ -84,7 +84,7 @@ public class NewbornMySQL implements NewbornData
 	}
 
 	@Override
-	public boolean add(Newborn addObj) throws FormValidationException, DBException
+	public boolean add(Newborn addObj) throws DBException
 	{
 		try {
 			validator.validate(addObj);
@@ -101,7 +101,7 @@ public class NewbornMySQL implements NewbornData
 	}
 
 	@Override
-	public boolean update(Newborn updateObj) throws DBException, FormValidationException
+	public boolean update(Newborn updateObj) throws DBException
 	{
 		try {
 			validator.validate(updateObj);
@@ -126,9 +126,9 @@ public class NewbornMySQL implements NewbornData
 				ResultSet resultSet = statement.executeQuery()) {
 				List<Newborn> list = loader.loadList(resultSet);
 				return list;
-			} catch (SQLException e) {
+		} catch (SQLException e) {
 				throw new DBException(e);
-			}
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -94,7 +95,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			}
 			catch (Exception e)
 			{
-				errs.addIfNotNull("Date must be in the format yyyy-M-d");
+				errs.addIfNotNull("Date must be a real date in the format yyyy-M-d");
 			}
 		}
 		
@@ -107,20 +108,25 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		{
 			try
 			{
-				//Format: hh:mm:ss, or h:m:s
-				SimpleDateFormat sdf = new SimpleDateFormat("h:m:s");
+				//Format: H:m:s
+				SimpleDateFormat sdf = new SimpleDateFormat("H:m:s");
 				sdf.setLenient(false);
 				sdf.parse(obj.getTimeOfBirth());
 			}
 			catch (ParseException e)
 			{
-				errs.addIfNotNull("Time must valid and in format h:m:s");
+				errs.addIfNotNull("Time must be a real time and in the format H:m:s (hour 0-23, minute 0-59, second 0-59)");
 			}
 		}
 		
 		if (obj.getTimeEstimated() == null)
 		{
 			errs.addIfNotNull("Time estimated is null");
+		}
+		
+		if(errs.hasErrors())
+		{
+			throw new FormValidationException(errs);
 		}
 		
 		//Sex is set by default, has to be an enum, no check needed

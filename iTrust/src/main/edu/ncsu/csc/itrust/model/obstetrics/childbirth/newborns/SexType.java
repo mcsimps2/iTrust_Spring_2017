@@ -5,8 +5,7 @@ public enum SexType
 {
 	MALE("Male"),
 	FEMALE("Female"),
-	OTHER("Other"),
-	UNSPECIFIED("Unspecified");
+	OTHER("Other");
 
 	private final String text;
 

@@ -99,7 +99,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 	}
 
 	@Override
-	public boolean add(ChildbirthVisit addObj) throws FormValidationException, DBException
+	public boolean add(ChildbirthVisit addObj) throws DBException
 	{
 		Connection conn = null;
 		PreparedStatement pstring = null;
@@ -130,7 +130,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 	}
 
 	@Override
-	public boolean update(ChildbirthVisit updateObj) throws DBException, FormValidationException
+	public boolean update(ChildbirthVisit updateObj) throws DBException
 	{
 		Connection conn = null;
 		PreparedStatement pstring = null;
