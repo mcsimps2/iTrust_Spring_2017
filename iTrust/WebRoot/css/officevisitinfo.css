@@ -1,6 +1,6 @@
 /*
- * officevisitinfo.css 
- * 
+ * officevisitinfo.css
+ *
  * Show/hide tabbed panels on officevisitinfo.xhtml when clicked
  */
 
@@ -12,7 +12,7 @@
 #tab-medical-procedures:checked ~ .tab-content > #content-medical-procedures, 
 #tab-immunizations:checked ~ .tab-content > #content-immunizations,
 #tab-obstetrics:checked ~ .tab-content > #content-obstetrics,
-#tab-ultrasound:checked ~ .tab-content > #content-ultrasound {
+#tab-ultrasound:checked ~ .tab-content > #content-ultrasound,
+#tab-childbirth:checked ~ .tab-content > #content-childbirth {
 	display: block;
 }
-
