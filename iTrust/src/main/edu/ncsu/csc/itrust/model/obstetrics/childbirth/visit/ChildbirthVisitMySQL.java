@@ -48,7 +48,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 		ResultSet results = null;
 		try {
 			conn = ds.getConnection();
-			pstring = conn.prepareStatement("SELECT * FROM childbirthVisits;");
+			pstring = conn.prepareStatement("SELECT * FROM childbirthVisits ORDER BY id DESC;");
 			results = pstring.executeQuery();
 			final List<ChildbirthVisit> list = loader.loadList(results);
 			return list;
@@ -136,7 +136,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 		PreparedStatement pstring = null;
 		try
 		{
-			validator.validate(updateObj);
+			validator.validateUpdate(updateObj);
 		}
 		catch (FormValidationException e)
 		{
@@ -189,6 +189,40 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 				DBUtil.closeConnection(conn, pstring);
 			}
 		}
+	}
+	
+	@Override
+	public long addReturnGeneratedId(ChildbirthVisit addObj) throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		long generatedId = -1;
+		try
+		{
+			validator.validate(addObj);
+		}
+		catch (FormValidationException e)
+		{
+			throw new DBException(new SQLException(e));
+		}
+		try
+		{
+			conn = ds.getConnection();
+			pstring = loader.loadParameters(conn, pstring, addObj, true);
+			int results = pstring.executeUpdate();
+			if (results != 0) {
+				ResultSet generatedKeys = pstring.getGeneratedKeys();
+				if(generatedKeys.next()) {
+					generatedId = generatedKeys.getLong(1);
+				}
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+		return generatedId;
 	}
 
 }

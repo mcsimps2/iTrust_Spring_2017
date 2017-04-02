@@ -11,6 +11,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.DBUtil;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 
@@ -57,7 +58,7 @@ public class NewbornMySQL implements NewbornData
 	public List<Newborn> getAll() throws DBException
 	{
 		try (Connection conn = ds.getConnection();
-				PreparedStatement pstring = conn.prepareStatement("SELECT * FROM childbirthNewborns;");
+				PreparedStatement pstring = conn.prepareStatement("SELECT * FROM childbirthNewborns ORDER BY id DESC;");
 				ResultSet results = pstring.executeQuery()) {
 			List<Newborn> list = loader.loadList(results);
 			return list;
@@ -104,7 +105,7 @@ public class NewbornMySQL implements NewbornData
 	public boolean update(Newborn updateObj) throws DBException
 	{
 		try {
-			validator.validate(updateObj);
+			validator.validateUpdate(updateObj);
 		} catch (FormValidationException e1) {
 			throw new DBException(new SQLException(e1.getMessage()));
 		}
@@ -122,7 +123,7 @@ public class NewbornMySQL implements NewbornData
 	public List<Newborn> getByOfficeVisit(long officeVisitID) throws DBException
 	{
 		try (Connection conn = ds.getConnection();
-				PreparedStatement statement = conn.prepareStatement("SELECT * FROM childbirthNewborns WHERE officeVisitID="+officeVisitID+";");
+				PreparedStatement statement = conn.prepareStatement("SELECT * FROM childbirthNewborns WHERE officeVisitID="+officeVisitID+" ORDER BY id DESC;");
 				ResultSet resultSet = statement.executeQuery()) {
 				List<Newborn> list = loader.loadList(resultSet);
 				return list;
@@ -130,5 +131,38 @@ public class NewbornMySQL implements NewbornData
 				throw new DBException(e);
 		}
 	}
-
+	
+	@Override
+	public long addReturnGeneratedId(Newborn addObj) throws DBException {
+		Connection conn = null;
+		PreparedStatement pstring = null;
+		long generatedId = -1;
+		try
+		{
+			validator.validate(addObj);
+		}
+		catch (FormValidationException e)
+		{
+			throw new DBException(new SQLException(e));
+		}
+		try
+		{
+			conn = ds.getConnection();
+			pstring = loader.loadParameters(conn, pstring, addObj, true);
+			int results = pstring.executeUpdate();
+			if (results != 0) {
+				ResultSet generatedKeys = pstring.getGeneratedKeys();
+				if(generatedKeys.next()) {
+					generatedId = generatedKeys.getLong(1);
+				}
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+		} finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
+		return generatedId;
+	}
 }

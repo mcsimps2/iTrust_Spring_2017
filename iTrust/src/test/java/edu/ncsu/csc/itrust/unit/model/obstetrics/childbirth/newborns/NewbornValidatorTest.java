@@ -72,4 +72,53 @@ public class NewbornValidatorTest
 			}
 		}
 	}
+	
+	@Test
+	public void testValidateUpdate()
+	{
+		NewbornValidator validator = new NewbornValidator(ConverterDAO.getDataSource());
+		
+		//Valid data
+		Newborn[] newborns = {
+				new Newborn(1L, "2017-8-19", "1:5:15", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", SexType.MALE, true),
+				new Newborn(2L, "", "09:00:09", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", "", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", null, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", SexType.MALE, null),
+				new Newborn(2L, null, "09:00:09", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", null, SexType.MALE, true),
+		};
+		for (int i = 0; i < newborns.length; i++)
+		{
+			try
+			{
+				validator.validateUpdate(newborns[i]);
+				Assert.assertTrue(true); //passed validation
+			}
+			catch (FormValidationException e)
+			{
+				Assert.fail(e.getMessage());
+			}
+		}
+		
+		//Invalid data
+		Newborn[] newbornsInv = {
+				new Newborn(1L, "2017-12-32", "1:5:15", SexType.MALE, true), //invalid date
+				new Newborn(1L, "2017-8-19", "25:5:15", SexType.MALE, true), //invalid time
+				new Newborn(0L, "2017-8-19", "1:5:15", SexType.MALE, true) //invalid office visit
+		};
+		for (int i = 0; i < newbornsInv.length; i++)
+		{
+			try
+			{
+				validator.validateUpdate(newbornsInv[i]);
+				Assert.fail("Did not catch invalid object");
+			}
+			catch (FormValidationException e)
+			{
+				Assert.assertNotNull(e);
+			}
+		}
+	}
 }

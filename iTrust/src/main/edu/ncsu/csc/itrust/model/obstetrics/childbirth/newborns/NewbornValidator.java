@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -57,7 +56,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		
 		if (obj.getOfficeVisitID() == null)
 		{
-			errs.addIfNotNull("Null office visit ID");
+			errs.addIfNotNull("No office visit ID specified");
 			throw new FormValidationException(errs);
 		}
 		
@@ -78,7 +77,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		}
 		
 		//Make sure DOB is a valid date
-		if (obj.getDateOfBirth() == null)
+		if (obj.getDateOfBirth() == null || obj.getDateOfBirth().equals(""))
 		{
 			errs.addIfNotNull("No date specified");
 		}
@@ -100,7 +99,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		}
 		
 		//Make sure time is valid
-		if (obj.getTimeOfBirth() == null)
+		if (obj.getTimeOfBirth() == null || obj.getTimeOfBirth().equals(""))
 		{
 			errs.addIfNotNull("No time specified");
 		}
@@ -121,14 +120,83 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		
 		if (obj.getTimeEstimated() == null)
 		{
-			errs.addIfNotNull("Time estimated is null");
+			errs.addIfNotNull("No time estimated flag specified");
+		}
+		
+		if (obj.getSex() == null)
+		{
+			errs.addIfNotNull("No sex specified");
 		}
 		
 		if(errs.hasErrors())
 		{
 			throw new FormValidationException(errs);
 		}
+	}
+	
+	public void validateUpdate(Newborn obj) throws FormValidationException
+	{
+		ErrorList errs = new ErrorList();
 		
-		//Sex is set by default, has to be an enum, no check needed
+		if (obj.getOfficeVisitID() == null)
+		{
+			errs.addIfNotNull("No office visit ID specified");
+			throw new FormValidationException(errs);
+		}
+		
+		//Make sure the office visit ID corresponds to something in the DB
+		try
+		{
+			OfficeVisit ov = ovsql.getByID(obj.getOfficeVisitID());
+			if (ov == null)
+			{
+				errs.addIfNotNull("Could not find the patient with the specified PID");
+				throw new FormValidationException(errs);
+			}
+		}
+		catch (DBException e)
+		{
+			errs.addIfNotNull("Could not find the patient with the specified PID");
+			throw new FormValidationException(errs);
+		}
+		
+		//Make sure DOB is a valid date
+		if (obj.getDateOfBirth() != null && !obj.getDateOfBirth().equals(""))
+		{
+			try
+			{
+				Calendar cal = Calendar.getInstance();
+				cal.setLenient(false);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
+				sdf.setLenient(false);
+				cal.setTime(sdf.parse(obj.getDateOfBirth()));
+				cal.getTime();
+			}
+			catch (Exception e)
+			{
+				errs.addIfNotNull("Date must be a real date in the format yyyy-M-d");
+			}
+		}
+		
+		//Make sure time is valid
+		if (obj.getTimeOfBirth() != null && !obj.getTimeOfBirth().equals(""))
+		{
+			try
+			{
+				//Format: H:m:s
+				SimpleDateFormat sdf = new SimpleDateFormat("H:m:s");
+				sdf.setLenient(false);
+				sdf.parse(obj.getTimeOfBirth());
+			}
+			catch (ParseException e)
+			{
+				errs.addIfNotNull("Time must be a real time and in the format H:m:s (hour 0-23, minute 0-59, second 0-59)");
+			}
+		}
+		
+		if(errs.hasErrors())
+		{
+			throw new FormValidationException(errs);
+		}
 	}
 }

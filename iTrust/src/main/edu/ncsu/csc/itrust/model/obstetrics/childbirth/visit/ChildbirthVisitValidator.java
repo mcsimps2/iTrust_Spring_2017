@@ -53,7 +53,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		
 		if (obj.getOfficeVisitID() == null)
 		{
-			errs.addIfNotNull("Null office visit ID");
+			errs.addIfNotNull("No office visit ID specified");
 			throw new FormValidationException(errs);
 		}
 		
@@ -78,7 +78,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		//Check other fields for non-null and non-negativity
 		if (obj.getPitocin() == null)
 		{
-			errs.addIfNotNull("Pitocin value cannot be null");
+			errs.addIfNotNull("No pitocin value specified");
 		}
 		else if (obj.getPitocin() < 0)
 		{
@@ -86,7 +86,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		}
 		if (obj.getNitrousOxide() == null)
 		{
-			errs.addIfNotNull("Nitrous Oxide value cannot be null");
+			errs.addIfNotNull("No nitrous oxide value specified");
 		}
 		else if (obj.getNitrousOxide() < 0)
 		{
@@ -94,7 +94,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		}
 		if (obj.getPethidine() == null)
 		{
-			errs.addIfNotNull("Pethidine value cannot be null");
+			errs.addIfNotNull("No pethidine value specified");
 		}
 		else if (obj.getPethidine() < 0)
 		{
@@ -102,7 +102,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		}
 		if (obj.getEpiduralAnaesthesia() == null)
 		{
-			errs.addIfNotNull("Epidural anaesthesia value cannot be null");
+			errs.addIfNotNull("No epidural anethesia value specified");
 		}
 		else if (obj.getEpiduralAnaesthesia() < 0)
 		{
@@ -110,7 +110,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		}
 		if (obj.getMagnesiumSulfide() == null)
 		{
-			errs.addIfNotNull("Magnesium sulfide value cannot be null");
+			errs.addIfNotNull("No magnesium sulfide value specified");
 		}
 		else if (obj.getMagnesiumSulfide() < 0)
 		{
@@ -122,6 +122,63 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			throw new FormValidationException(errs);
 		}
 		
+	}
+	
+	public void validateUpdate(ChildbirthVisit obj) throws FormValidationException
+	{
+		ErrorList errs = new ErrorList();
+		
+		if (obj.getOfficeVisitID() == null)
+		{
+			errs.addIfNotNull("No office visit ID specified");
+			throw new FormValidationException(errs);
+		}
+		
+		//Make sure the office visit ID corresponds to something in the DB
+		try
+		{
+			OfficeVisit ov = ovsql.getByID(obj.getOfficeVisitID());
+			if (ov == null)
+			{
+				errs.addIfNotNull("Could not find the office visit with the specified ID");
+				throw new FormValidationException(errs);
+			}
+		}
+		catch (DBException e)
+		{
+			errs.addIfNotNull("Could not find the patient with the specified PID");
+			throw new FormValidationException(errs);
+		}
+		
+		
+		
+		//Check other fields for non-negativity
+		if (obj.getPitocin() != null && obj.getPitocin() < 0)
+		{
+			errs.addIfNotNull("Pitocin must be a non-negative integer");
+		}
+		if (obj.getNitrousOxide() != null && obj.getNitrousOxide() < 0)
+		{
+			errs.addIfNotNull("Nitrous Oxide must be a non-negative integer");
+		}
+		if (obj.getPethidine() != null && obj.getPethidine() < 0)
+		{
+			errs.addIfNotNull("Pethidine must be a non-negative integer");
+		}
+		if (obj.getEpiduralAnaesthesia() != null && obj.getEpiduralAnaesthesia() < 0)
+		{
+			errs.addIfNotNull("Epidural anaesthesia must be a non-negative integer");
+		}
+		if (obj.getMagnesiumSulfide() != null && obj.getMagnesiumSulfide() < 0)
+		{
+			errs.addIfNotNull("Magnesium sulfide must be a non-negative integer");
+		}
+		
+		if (errs.hasErrors())
+		{
+			throw new FormValidationException(errs);
+		}
+			
 	}
 	
 }

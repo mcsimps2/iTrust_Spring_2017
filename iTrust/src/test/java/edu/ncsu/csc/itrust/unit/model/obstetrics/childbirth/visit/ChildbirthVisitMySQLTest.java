@@ -7,9 +7,11 @@ import java.util.List;
 import org.junit.*;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitValidator;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -112,6 +114,20 @@ public class ChildbirthVisitMySQLTest
 	}
 	
 	@Test
+	public void testAddReturnID()
+	{
+		ChildbirthVisit cv = new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1); 
+		try
+		{
+			Assert.assertEquals(3, sql.addReturnGeneratedId(cv));
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
 	public void testUpdate()
 	{
 		//Update cvArr[0]
@@ -147,6 +163,57 @@ public class ChildbirthVisitMySQLTest
 		catch (DBException e)
 		{
 			Assert.assertNotNull(e);
+		}
+		
+		//Valid values
+		ChildbirthVisit[] cvArrValid = {
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 1, 1, 1, 1, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, null, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, null, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, null, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, null, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, 0, null)
+		};
+		for (int i = 0; i < cvArrValid.length; i++)
+		{
+			try
+			{
+				cvArrValid[i].setId(1L);
+				sql.update(cvArrValid[i]);
+				//Find the object
+				Assert.assertEquals(cvArrValid[i], sql.getByID(1L));
+			}
+			catch (DBException e)
+			{
+				Assert.fail(e.getMessage());
+			}
+		}
+		
+		//Invaild values
+		ChildbirthVisit[] cvArrInvalid = {
+				new ChildbirthVisit(-1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1), //invalid office visit
+				new ChildbirthVisit(null, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1), //null office visit
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, -1, 4, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, -1, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, -1, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, -1, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, -1)
+		};
+		for (int i = 0; i < cvArrInvalid.length; i++)
+		{
+			try
+			{
+				cvArrInvalid[i].setId(1L);
+				sql.update(cvArrInvalid[i]);
+				Assert.fail("Did not catch an invalid object: " + i);
+			}
+			catch (DBException e)
+			{
+				Assert.assertNotNull(e);
+			}
 		}
 		
 	}

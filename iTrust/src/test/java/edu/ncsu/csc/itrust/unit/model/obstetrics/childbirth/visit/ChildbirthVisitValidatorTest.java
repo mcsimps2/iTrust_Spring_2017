@@ -26,7 +26,60 @@ public class ChildbirthVisitValidatorTest
 	}
 	
 	@Test
-	public void testValidator()
+	public void testValidateUpdate()
+	{
+		ChildbirthVisitValidator validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
+		//Valid values
+		ChildbirthVisit[] cvArrValid = {
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 1, 1, 1, 1, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, null, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, null, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, null, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, null, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, 0, null)
+		};
+		for (int i = 0; i < cvArrValid.length; i++)
+		{
+			try
+			{
+				validator.validateUpdate(cvArrValid[i]);
+				Assert.assertTrue(true); //passed if we got to here
+			}
+			catch (FormValidationException e)
+			{
+				Assert.fail(e.getMessage());
+			}
+		}
+		
+		//Invaild values
+		ChildbirthVisit[] cvArrInvalid = {
+				new ChildbirthVisit(0L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1), //invalid office visit
+				new ChildbirthVisit(null, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1), //null office visit
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, -1, 4, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, -1, 3, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, -1, 2, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, -1, 1),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, -1)
+		};
+		for (int i = 0; i < cvArrInvalid.length; i++)
+		{
+			try
+			{
+				validator.validateUpdate(cvArrInvalid[i]);
+				Assert.fail("Did not catch an invalid object");
+			}
+			catch (FormValidationException e)
+			{
+				Assert.assertNotNull(e);
+			}
+		}
+	}
+	
+	@Test
+	public void testValidate()
 	{
 		ChildbirthVisitValidator validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
 		//Valid values
@@ -76,4 +129,5 @@ public class ChildbirthVisitValidatorTest
 			}
 		}
 	}
+	
 }

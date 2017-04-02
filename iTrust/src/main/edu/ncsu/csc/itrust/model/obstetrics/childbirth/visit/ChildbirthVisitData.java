@@ -10,4 +10,12 @@ public interface ChildbirthVisitData extends DataBean<ChildbirthVisit>
 	 * @return the ChildbirthVisit
 	 */
 	public ChildbirthVisit getByOfficeVisit(long officeVisitID) throws DBException;
+	
+	/**
+	 * Returns the ID from the childbirth visit
+	 * @param ov
+	 * @return
+	 * @throws DBException
+	 */
+	public long addReturnGeneratedId(ChildbirthVisit ov) throws DBException;
 }

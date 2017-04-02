@@ -28,13 +28,25 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 	public Newborn loadSingle(ResultSet rs) throws SQLException
 	{
 		Newborn nb = new Newborn();
-		//All fields must be non-null
-		nb.setId(rs.getLong("id"));
-		nb.setOfficeVisitID(rs.getLong("officeVisitID"));
-		nb.setDateOfBirth(rs.getString("dateOfBirth"));
-		nb.setTimeOfBirth(rs.getString("timeOfBirth"));
-		nb.setSex(SexType.matchString(rs.getString("sex")));
-		nb.setTimeEstimated(rs.getBoolean("timeEstimated"));
+		Long id = rs.getLong("id");
+		nb.setId(rs.wasNull() ? null : id);
+		Long oid = rs.getLong("officeVisitID");
+		nb.setOfficeVisitID(rs.wasNull() ? null : oid);
+		String dob = rs.getString("dateOfBirth");
+		nb.setDateOfBirth(rs.wasNull() ? null : dob);
+		String tob = rs.getString("timeOfBirth");
+		nb.setTimeOfBirth(rs.wasNull() ? null : tob);
+		String sex = rs.getString("sex");
+		if (rs.wasNull())
+		{
+			nb.setSex(null);
+		}
+		else
+		{
+			nb.setSex(SexType.matchString(sex));
+		}
+		Boolean te = rs.getBoolean("timeEstimated");
+		nb.setTimeEstimated(rs.wasNull() ? null : te);
 		return nb;
 	}
 
@@ -58,11 +70,38 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		
 		ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, insertObject.getOfficeVisitID());
-		ps.setDate(2, java.sql.Date.valueOf(insertObject.getDateOfBirth()));
-		ps.setTime(3, java.sql.Time.valueOf(insertObject.getTimeOfBirth()));
-		ps.setString(4, insertObject.getSex().toString());
-		ps.setBoolean(5, insertObject.getTimeEstimated());
-		
+		if (insertObject.getDateOfBirth() == null || insertObject.getDateOfBirth().equals(""))
+		{
+			ps.setNull(2, java.sql.Types.DATE);
+		}
+		else
+		{
+			ps.setDate(2, java.sql.Date.valueOf(insertObject.getDateOfBirth()));
+		}
+		if (insertObject.getTimeOfBirth() == null || insertObject.getTimeOfBirth().equals(""))
+		{
+			ps.setNull(3, java.sql.Types.TIME);
+		}
+		else
+		{
+			ps.setTime(3, java.sql.Time.valueOf(insertObject.getTimeOfBirth()));
+		}
+		if (insertObject.getSex() == null)
+		{
+			ps.setNull(4, java.sql.Types.VARCHAR);
+		}
+		else
+		{
+			ps.setString(4, insertObject.getSex().toString());
+		}
+		if (insertObject.getTimeEstimated() == null)
+		{
+			ps.setNull(5, java.sql.Types.BOOLEAN);
+		}
+		else
+		{
+			ps.setBoolean(5, insertObject.getTimeEstimated());
+		}
 		return ps;
 	}
 

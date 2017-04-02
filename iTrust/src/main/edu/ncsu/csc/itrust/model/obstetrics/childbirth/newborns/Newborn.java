@@ -151,4 +151,13 @@ public class Newborn
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Newborn [id=" + id + ", officeVisitID=" + officeVisitID + ", dateOfBirth=" + dateOfBirth
+				+ ", timeOfBirth=" + timeOfBirth + ", sex=" + sex + ", timeEstimated=" + timeEstimated + "]";
+	}
+	
+	
 }

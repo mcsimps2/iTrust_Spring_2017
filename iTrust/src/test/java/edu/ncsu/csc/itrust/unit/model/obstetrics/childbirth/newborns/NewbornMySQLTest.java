@@ -7,9 +7,11 @@ import java.util.List;
 import org.junit.*;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornValidator;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -111,6 +113,20 @@ public class NewbornMySQLTest
 	}
 	
 	@Test
+	public void testAddReturnID()
+	{
+		Newborn nb = new Newborn(1L, "2015-11-15", "5:05:5", SexType.OTHER, false);
+		try
+		{
+			Assert.assertEquals(3, sql.addReturnGeneratedId(nb));
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
 	public void testUpdate()
 	{
 		newborns[0].setDateOfBirth("1999-1-1");
@@ -135,6 +151,49 @@ public class NewbornMySQLTest
 		catch (DBException e)
 		{
 			Assert.assertNotNull(e);
+		}
+		
+		//Valid data
+		Newborn[] newborns = {
+				new Newborn(1L, "2017-08-19", "01:05:15", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", null, true),
+				new Newborn(2L, "2015-12-31", "09:00:09", SexType.MALE, null),
+				new Newborn(2L, null, "09:00:09", SexType.MALE, true),
+				new Newborn(2L, "2015-12-31", null, SexType.MALE, true),
+		};
+		for (int i = 0; i < newborns.length; i++)
+		{
+			try
+			{
+				newborns[i].setId(1L);
+				sql.update(newborns[i]);
+				Assert.assertEquals(newborns[i], sql.getByID(1L));
+			}
+			catch (DBException e)
+			{
+				Assert.fail(e.getMessage());
+			}
+		}
+		
+		//Invalid data
+		Newborn[] newbornsInv = {
+				new Newborn(1L, "2017-12-32", "1:5:15", SexType.MALE, true), //invalid date
+				new Newborn(1L, "2017-8-19", "25:5:15", SexType.MALE, true), //invalid time
+				new Newborn(0L, "2017-8-19", "1:5:15", SexType.MALE, true) //invalid office visit
+		};
+		for (int i = 0; i < newbornsInv.length; i++)
+		{
+			try
+			{
+				newbornsInv[i].setId(1L);
+				sql.update(newbornsInv[i]);
+				Assert.fail("Did not catch invalid object " + i);
+			}
+			catch (DBException e)
+			{
+				Assert.assertNotNull(e);
+			}
 		}
 	}
 	
