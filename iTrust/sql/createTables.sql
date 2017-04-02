@@ -123,7 +123,8 @@ CREATE TABLE appointment (
 	patient_id          BIGINT UNSIGNED NOT NULL,
 	sched_date          DATETIME NOT NULL,
 	appt_type           VARCHAR(30) NOT NULL,
-	comment				TEXT
+	comment				TEXT,
+	delivery_method		VARCHAR(100)
 ) ENGINE=MyISAM;
 
 CREATE TABLE appointmenttype (
