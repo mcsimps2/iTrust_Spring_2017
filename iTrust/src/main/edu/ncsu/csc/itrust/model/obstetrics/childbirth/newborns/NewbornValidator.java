@@ -107,14 +107,20 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		{
 			try
 			{
-				//Format: H:m:s
-				SimpleDateFormat sdf = new SimpleDateFormat("H:m:s");
+				//Format: H:m
+				SimpleDateFormat sdf = new SimpleDateFormat("H:m");
 				sdf.setLenient(false);
-				sdf.parse(obj.getTimeOfBirth());
+				obj.setTimeOfBirth(sdf.format(sdf.parse(obj.getTimeOfBirth())));
+				/* The reason for this last statement
+				 * A time could be passed in as xx:yy:zz:tt
+				 * This would pass sdf.parse(xx:yy:zz:tt) as it provides an hour and minute (along with extra stuff)
+				 * But we want to set the time of birth explicitly to H:m
+				 */
+				
 			}
 			catch (ParseException e)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format H:m:s (hour 0-23, minute 0-59, second 0-59)");
+				errs.addIfNotNull("Time must be a real time and in the format H:m (hour 0-23, minute 0-59)");
 			}
 		}
 		
@@ -183,14 +189,20 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		{
 			try
 			{
-				//Format: H:m:s
-				SimpleDateFormat sdf = new SimpleDateFormat("H:m:s");
+				//Format: H:m
+				SimpleDateFormat sdf = new SimpleDateFormat("H:m");
 				sdf.setLenient(false);
 				sdf.parse(obj.getTimeOfBirth());
+				obj.setTimeOfBirth(sdf.format(sdf.parse(obj.getTimeOfBirth())));
+				/* The reason for this last statement
+				 * A time could be passed in as xx:yy:zz:tt
+				 * This would pass sdf.parse(xx:yy:zz:tt) as it provides an hour and minute (along with extra stuff)
+				 * But we want to set the time of birth explicitly to H:m
+				 */
 			}
 			catch (ParseException e)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format H:m:s (hour 0-23, minute 0-59, second 0-59)");
+				errs.addIfNotNull("Time must be a real time and in the format H:m (hour 0-23, minute 0-59)");
 			}
 		}
 		

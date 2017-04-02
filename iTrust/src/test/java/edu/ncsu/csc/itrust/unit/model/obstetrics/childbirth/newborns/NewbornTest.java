@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.childbirth.newborns;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.junit.*;
 
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;

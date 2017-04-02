@@ -124,7 +124,7 @@ public class Newborn
 			if (other.dateOfBirth != null)
 				return false;
 		}
-		else if (!dateOfBirth.equals(other.dateOfBirth))
+		else if (!dateOfBirth.contains(other.dateOfBirth) && !other.dateOfBirth.contains(dateOfBirth))
 			return false;
 		if (officeVisitID == null)
 		{
@@ -147,17 +147,8 @@ public class Newborn
 			if (other.timeOfBirth != null)
 				return false;
 		}
-		else if (!timeOfBirth.equals(other.timeOfBirth))
+		else if (!timeOfBirth.contains(other.timeOfBirth) && !other.timeOfBirth.contains(timeOfBirth))
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString()
-	{
-		return "Newborn [id=" + id + ", officeVisitID=" + officeVisitID + ", dateOfBirth=" + dateOfBirth
-				+ ", timeOfBirth=" + timeOfBirth + ", sex=" + sex + ", timeEstimated=" + timeEstimated + "]";
-	}
-	
-	
 }

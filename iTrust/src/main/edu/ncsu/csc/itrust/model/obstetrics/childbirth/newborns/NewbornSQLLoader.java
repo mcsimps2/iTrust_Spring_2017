@@ -35,7 +35,7 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		String dob = rs.getString("dateOfBirth");
 		nb.setDateOfBirth(rs.wasNull() ? null : dob);
 		String tob = rs.getString("timeOfBirth");
-		nb.setTimeOfBirth(rs.wasNull() ? null : tob);
+		nb.setTimeOfBirth(rs.wasNull() ? null : tob.substring(0, tob.length() - 3)); //take off the seconds
 		String sex = rs.getString("sex");
 		if (rs.wasNull())
 		{
@@ -84,7 +84,7 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		}
 		else
 		{
-			ps.setTime(3, java.sql.Time.valueOf(insertObject.getTimeOfBirth()));
+			ps.setTime(3, java.sql.Time.valueOf(insertObject.getTimeOfBirth() + ":00"));
 		}
 		if (insertObject.getSex() == null)
 		{
