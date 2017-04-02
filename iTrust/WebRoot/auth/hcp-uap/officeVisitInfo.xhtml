@@ -53,6 +53,9 @@
 					
 					<input id="tab-ultrasound" type="radio" name="ovtabs" />
 					<label for="tab-ultrasound">Ultrasound</label>
+					
+					<input id="tab-childbirth" type="radio" name="ovtabs" />
+					<label for="tab-childbirth">Childbirth</label>
 				</c:if>
 				
 				<div class="tab-content">
@@ -90,6 +93,10 @@
 						
 						<div class="tab-panel" id="content-ultrasound">
 							<ui:include src="/auth/hcp-uap/manageUltrasound.xhtml"></ui:include>
+						</div>
+						
+						<div class="tab-panel" id="content-childbirth">
+							<ui:include src="/auth/hcp-uap/manageChildbirth.xhtml"></ui:include>
 						</div>
 					</c:if>
 				</div>
