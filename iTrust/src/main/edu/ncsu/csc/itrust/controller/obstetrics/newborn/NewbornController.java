@@ -12,6 +12,10 @@ import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 
 @ManagedBean(name = "newborn_controller")
@@ -20,6 +24,8 @@ public class NewbornController extends iTrustController {
 	
 	/** Newborn mysql class to access the db */
 	NewbornMySQL sql;
+	/** Patient DAO used to create and delete patients */
+	PatientDAO patientDAO;
 	
 	/** Constant for the message to be displayed if the newborn is invalid */
 	private static final String INVALID_NEWBORN = "Invalid Newborn";
@@ -27,6 +33,8 @@ public class NewbornController extends iTrustController {
 	private static final String NEWBORN_SUCCESSFULLY_CREATED = "Newborn was successfully created";
 	/** Constant for the message to be displayed if newborns are unable to be retrieved */
 	private static final String UNABLE_TO_RETRIEVE_NEWBORNS = "Unable to retrieve newborns";
+	/** Constant for the message to be displayed if newborn was successfully deleted */
+	private static final String NEWBORN_SUCCESSFULLY_DELETED = "Newborn was successfully deleted";
 
 	/**
 	 * Default constructor.
@@ -35,6 +43,7 @@ public class NewbornController extends iTrustController {
 	public NewbornController() throws DBException {
 		super();
 		sql = new NewbornMySQL();
+		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
 	}
 
 	/**
@@ -43,9 +52,10 @@ public class NewbornController extends iTrustController {
 	 * @param ds
 	 *            The injected DataSource dependency
 	 */
-	public NewbornController(DataSource ds) throws DBException {
+	public NewbornController(DataSource ds, PatientDAO patientDAO) throws DBException {
 		super();
 		this.sql = new NewbornMySQL(ds);
+		this.patientDAO = patientDAO;
 	}
 
 	/**
@@ -53,13 +63,17 @@ public class NewbornController extends iTrustController {
 	 * @param newborn
 	 */
 	public void add(Newborn newborn) {
-		//TODO: Add interaction with Patient stuffs
-		
 		try {
 			if (sql.add(newborn)) {
-				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
-						NEWBORN_SUCCESSFULLY_CREATED, null);
-				logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
+				long pid = patientDAO.addEmptyPatient();
+				newborn.setPid();
+				if (sql.update(newborn)) {
+					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
+							NEWBORN_SUCCESSFULLY_CREATED, null);
+					logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
+				} else {
+					throw new Exception();
+				}
 			} else {
 				throw new Exception();
 			}
@@ -97,8 +111,8 @@ public class NewbornController extends iTrustController {
 	public void delete(long newbornID) {
         try {
         	if (sql.delete(newbornID)) {
-				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
-						NEWBORN_SUCCESSFULLY_CREATED, null);
+				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_DELETED,
+						NEWBORN_SUCCESSFULLY_DELETED, null);
 				//logTransaction(TransactionType.NEWBORN, getSessionUtils().getCurrentOfficeVisitId().toString());
         	} else {
         		throw new Exception();

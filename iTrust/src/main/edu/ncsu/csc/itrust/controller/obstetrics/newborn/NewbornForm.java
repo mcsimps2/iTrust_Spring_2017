@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 
 import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.ChildbirthVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "newborn_form")
@@ -40,8 +42,8 @@ public class NewbornForm {
 	public NewbornForm(NewbornController nc, ChildbirthVisitController cvc, SessionUtils sessionUtils) {
 		try {
 			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
-		    this.cvc = (ovc == null) ? new ChildbirthVisitController() : cvc;
-			this.controller = (uc == null) ? new NewbornController() : nc;
+		    this.cvc = (cvc == null) ? new ChildbirthVisitController() : cvc;
+			this.controller = (nc == null) ? new NewbornController() : nc;
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
 			clearFields();
 		} catch (Exception e) {
@@ -55,7 +57,7 @@ public class NewbornForm {
 	 * Only works if an Childbirth has been submitted for this office visit.
 	 */
 	public void add(){
-		if (cc.getByOfficeVisit(officeVisitID) == null) {
+		if (cvc.getByOfficeVisit(officeVisitID) == null) {
 			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
 					SAVE_CHILDBIRTH_FIRST_ERROR, null);
 			return;
@@ -117,7 +119,7 @@ public class NewbornForm {
 	 * Clears all of the fields in this form.
 	 */
 	public void clearFields(){
-		newborn = new Ultrasound(officeVisitID);
+		newborn = new Newborn(officeVisitID);
 	}
 
 	public Newborn getNewborn() {
