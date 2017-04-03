@@ -30,8 +30,8 @@ public class NewbornMySQLTest
 		
 		sql = new NewbornMySQL(ConverterDAO.getDataSource());
 		newborns = new Newborn[2];
-		newborns[0] = new Newborn(1L, "2017-05-05", "15:15", SexType.OTHER, false);
-		newborns[1] = new Newborn(1L, "2017-01-01", "01:12", SexType.FEMALE, true);
+		newborns[0] = new Newborn(999L, 1L, "2017-05-05", "15:15", SexType.OTHER, false);
+		newborns[1] = new Newborn(1999L, 1L, "2017-01-01", "01:12", SexType.FEMALE, true);
 		for (int i = 0; i < newborns.length; i++)
 		{
 			try
@@ -98,7 +98,7 @@ public class NewbornMySQLTest
 	public void testAdd()
 	{
 		//Have already added valid ones in setup, try invalid ones
-		Newborn nb = new Newborn(0L, "2015-blah", "hithere", SexType.OTHER, null);
+		Newborn nb = new Newborn(999L, 0L, "2015-blah", "hithere", SexType.OTHER, null);
 		try
 		{
 			sql.add(nb);
@@ -113,7 +113,7 @@ public class NewbornMySQLTest
 	@Test
 	public void testAddReturnID()
 	{
-		Newborn nb = new Newborn(1L, "2015-11-15", "5:05", SexType.OTHER, false);
+		Newborn nb = new Newborn(1515L, 1L, "2015-11-15", "5:05", SexType.OTHER, false);
 		try
 		{
 			Assert.assertEquals(3, sql.addReturnGeneratedId(nb));
@@ -153,12 +153,12 @@ public class NewbornMySQLTest
 		
 		//Valid data
 		Newborn[] newborns = {
-				new Newborn(1L, "2017-08-19", "01:45", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "09:00", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "09:00", null, true),
-				new Newborn(2L, "2015-12-31", "09:00", SexType.MALE, null),
-				new Newborn(2L, null, "09:00", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", null, SexType.MALE, true),
+				new Newborn(999L, 1L, "2017-08-19", "01:45", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", null, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", SexType.MALE, null),
+				new Newborn(999L, 2L, null, "09:00", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", null, SexType.MALE, true),
 		};
 		for (int i = 0; i < newborns.length; i++)
 		{
@@ -176,9 +176,9 @@ public class NewbornMySQLTest
 		
 		//Invalid data
 		Newborn[] newbornsInv = {
-				new Newborn(1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
-				new Newborn(1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
-				new Newborn(0L, "2017-8-19", "1:5", SexType.MALE, true) //invalid office visit
+				new Newborn(999L, 1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
+				new Newborn(999L, 1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
+				new Newborn(999L, 0L, "2017-8-19", "1:5", SexType.MALE, true) //invalid office visit
 		};
 		for (int i = 0; i < newbornsInv.length; i++)
 		{
@@ -208,6 +208,22 @@ public class NewbornMySQLTest
 			}
 			list = sql.getByOfficeVisit(2L);
 			Assert.assertEquals(0, list.size());
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testDelete()
+	{
+		try
+		{
+			sql.delete(2L);
+			List<Newborn> list = sql.getAll();
+			Assert.assertEquals(1, list.size());
+			Assert.assertEquals(newborns[0], list.get(0));
 		}
 		catch (DBException e)
 		{

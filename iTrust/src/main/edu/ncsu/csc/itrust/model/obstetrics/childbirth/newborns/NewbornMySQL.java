@@ -165,4 +165,14 @@ public class NewbornMySQL implements NewbornData
 		}
 		return generatedId;
 	}
+	
+	@Override
+	public boolean delete(long id) throws DBException {
+		try (Connection conn = ds.getConnection();
+		PreparedStatement pstring = conn.prepareStatement("DELETE FROM childbirthNewborns WHERE id=" + id);) {
+            return pstring.executeUpdate() > 0;
+        } catch (SQLException e) {
+        	throw new DBException(e);
+        }
+	}
 }

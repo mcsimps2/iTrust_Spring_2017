@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.childbirth.newborns;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.junit.*;
 
@@ -13,8 +11,8 @@ public class NewbornTest
 	@Test
 	public void testEqualsAndHashCode()
 	{
-		Newborn nb1 = new Newborn(1L, "2017-01-01", "15:15:15", SexType.FEMALE, false);
-		Newborn nb2 = new Newborn(1L, "2017-01-01", "15:15:15", SexType.FEMALE, false);
+		Newborn nb1 = new Newborn(999L, 1L, "2017-01-01", "15:15:15", SexType.FEMALE, false);
+		Newborn nb2 = new Newborn(999L, 1L, "2017-01-01", "15:15:15", SexType.FEMALE, false);
 		Assert.assertEquals(nb1.hashCode(), nb2.hashCode());
 		Assert.assertNotEquals(nb1, null);
 		Assert.assertNotEquals(nb1, this);
