@@ -20,8 +20,8 @@
 		
 		<h:form id="childbirth_form">
 			<div class="form-group">
-				<h:outputLabel for="preferredChildbirthMethod">Preferred childbirth method</h:outputLabel>
-				<h:selectOneMenu id="preferredChildbirthMethod" class="selectpicker" disabled="#{!isOBGYN}"
+				<h:outputLabel for="childbirthMethod">Childbirth method</h:outputLabel>
+				<h:selectOneMenu id="childbirthMethod" class="selectpicker" disabled="#{!isOBGYN}"
 				                 value="#{obstetrics_init_controller.deliveryType}">
 					<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
 								   value="#{obstetrics_init_controller.getDeliveryMethods()}" />

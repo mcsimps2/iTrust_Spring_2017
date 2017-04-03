@@ -603,7 +603,7 @@ CREATE TABLE childbirthNewborns
 	timeOfBirth TIME,
 	sex VARCHAR(255),
 	timeEstimated BOOLEAN,
-	pid BIGINT NOT NULL,
+	pid BIGINT,
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;

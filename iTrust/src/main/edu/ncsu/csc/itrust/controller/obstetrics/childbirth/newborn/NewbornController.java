@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.newborn;
+package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn;
 
 
 import java.sql.SQLException;
@@ -64,23 +64,25 @@ public class NewbornController extends iTrustController {
 	 */
 	public void add(Newborn newborn) {
 		try {
-			if (sql.add(newborn)) {
+			long id = sql.addReturnGeneratedId(newborn);
+			if (id != -1) {
+				newborn.setId(id);
 				long pid = patientDAO.addEmptyPatient();
-				newborn.setPid();
+				newborn.setPid(pid);
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 							NEWBORN_SUCCESSFULLY_CREATED, null);
 					logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
 				} else {
-					throw new Exception();
+					throw new Exception("update failed");
 				}
 			} else {
-				throw new Exception();
+				throw new Exception("add failed");
 			}
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage(), null);
 		}
 	}
 
@@ -130,12 +132,12 @@ public class NewbornController extends iTrustController {
 	 * @return all of the newborns for the office visit with the given ID
 	 * @throws DBException
 	 */
-	public List<Newborn> getUltrasoundsByOfficeVisit(Long officeVisitID) throws DBException {
+	public List<Newborn> getNewbornsByOfficeVisit(Long officeVisitID) throws DBException {
 		List<Newborn> newborns = Collections.emptyList();
 		try {
 			newborns = sql.getByOfficeVisit(officeVisitID);
 		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, UNABLE_TO_RETRIEVE_NEWBORNS, UNABLE_TO_RETRIEVE_NEWBORNS, null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, UNABLE_TO_RETRIEVE_NEWBORNS + officeVisitID, UNABLE_TO_RETRIEVE_NEWBORNS + officeVisitID, null);
 		}
 		return newborns;
 	}

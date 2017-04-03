@@ -13,6 +13,7 @@
 #tab-immunizations:checked ~ .tab-content > #content-immunizations,
 #tab-obstetrics:checked ~ .tab-content > #content-obstetrics,
 #tab-ultrasound:checked ~ .tab-content > #content-ultrasound,
-#tab-childbirth:checked ~ .tab-content > #content-childbirth {
+#tab-childbirth:checked ~ .tab-content > #content-childbirth,
+#tab-newborns:checked ~ .tab-content > #content-newborns {
 	display: block;
 }

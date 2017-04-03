@@ -29,7 +29,7 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 	{
 		Newborn nb = new Newborn();
 		Long pid = rs.getLong("pid");
-		nb.setPID(rs.wasNull() ? null : pid);
+		nb.setPid(rs.wasNull() ? null : pid);
 		Long id = rs.getLong("id");
 		nb.setId(rs.wasNull() ? null : id);
 		Long oid = rs.getLong("officeVisitID");
@@ -105,13 +105,13 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		{
 			ps.setBoolean(5, insertObject.getTimeEstimated());
 		}
-		if (insertObject.getPID() == null)
+		if (insertObject.getPid() == null)
 		{
 			ps.setNull(6, java.sql.Types.BIGINT);
 		}
 		else
 		{
-			ps.setLong(6, insertObject.getPID());
+			ps.setLong(6, insertObject.getPid());
 		}
 		return ps;
 	}
