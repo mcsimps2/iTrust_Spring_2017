@@ -14,8 +14,8 @@ import org.junit.*;
 
 import com.google.api.client.util.DateTime;
 
-import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.GoogleScheduler;
-import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.GoogleSchedulerException;
+import edu.ncsu.csc.itrust.controller.obstetrics.visit.GoogleScheduler;
+import edu.ncsu.csc.itrust.controller.obstetrics.visit.GoogleSchedulerException;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;

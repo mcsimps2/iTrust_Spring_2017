@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
+package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;

@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.ObstetricsVisitController;
+import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.Ultrasound;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
