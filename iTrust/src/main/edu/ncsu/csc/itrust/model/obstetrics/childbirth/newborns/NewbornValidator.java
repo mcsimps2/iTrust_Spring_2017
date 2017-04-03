@@ -67,13 +67,11 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			if (ov == null)
 			{
 				errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
-				throw new FormValidationException(errs);
 			}
 		}
 		catch (DBException e)
 		{
 			errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
-			throw new FormValidationException(errs);
 		}
 		
 		//Make sure DOB is a valid date
@@ -156,14 +154,12 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			OfficeVisit ov = ovsql.getByID(obj.getOfficeVisitID());
 			if (ov == null)
 			{
-				errs.addIfNotNull("Could not find the patient with the specified PID");
-				throw new FormValidationException(errs);
+				errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
 			}
 		}
 		catch (DBException e)
 		{
-			errs.addIfNotNull("Could not find the patient with the specified PID");
-			throw new FormValidationException(errs);
+			errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
 		}
 		
 		//Make sure DOB is a valid date
