@@ -10,15 +10,17 @@ public class Newborn
 	private String timeOfBirth;
 	private SexType sex;
 	private Boolean timeEstimated;
+	private Long pid;
 	
 	public Newborn()
 	{
 		super();
 	}
 	
-	public Newborn(Long officeVisitID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean timeEstimated)
+	public Newborn(Long pid, Long officeVisitID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean timeEstimated)
 	{
 		super();
+		this.pid = pid;
 		this.officeVisitID = officeVisitID;
 		this.dateOfBirth = dateOfBirth;
 		this.timeOfBirth = timeOfBirth;
@@ -26,6 +28,20 @@ public class Newborn
 		this.timeEstimated = timeEstimated;
 	}
 	
+	public Newborn(Long officeVisitID)
+	{
+		super();
+		this.officeVisitID = officeVisitID;
+	}
+	
+	public Long getPID()
+	{
+		return pid;
+	}
+	public void setPID(Long pid)
+	{
+		this.pid = pid;
+	}
 	public Long getId()
 	{
 		return id;
@@ -96,8 +112,8 @@ public class Newborn
 		this.timeEstimated = timeEstimated;
 	}
 
-	@Override
-	public int hashCode()
+	
+	public int hashCode1()
 	{
 		final int prime = 31;
 		int result = 1;
@@ -109,8 +125,7 @@ public class Newborn
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj)
+	public boolean equals1(Object obj)
 	{
 		if (this == obj)
 			return true;
@@ -151,4 +166,70 @@ public class Newborn
 			return false;
 		return true;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
+		result = prime * result + ((pid == null) ? 0 : pid.hashCode());
+		result = prime * result + ((sex == null) ? 0 : sex.hashCode());
+		result = prime * result + ((timeEstimated == null) ? 0 : timeEstimated.hashCode());
+		result = prime * result + ((timeOfBirth == null) ? 0 : timeOfBirth.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Newborn other = (Newborn) obj;
+		if (dateOfBirth == null)
+		{
+			if (other.dateOfBirth != null)
+				return false;
+		}
+		else if (!dateOfBirth.contains(other.dateOfBirth) && !other.dateOfBirth.contains(dateOfBirth))
+			return false;
+		if (officeVisitID == null)
+		{
+			if (other.officeVisitID != null)
+				return false;
+		}
+		else if (!officeVisitID.equals(other.officeVisitID))
+			return false;
+		if (pid == null)
+		{
+			if (other.pid != null)
+				return false;
+		}
+		else if (!pid.equals(other.pid))
+			return false;
+		if (sex != other.sex)
+			return false;
+		if (timeEstimated == null)
+		{
+			if (other.timeEstimated != null)
+				return false;
+		}
+		else if (!timeEstimated.equals(other.timeEstimated))
+			return false;
+		if (timeOfBirth == null)
+		{
+			if (other.timeOfBirth != null)
+				return false;
+		}
+		else if (!timeOfBirth.contains(other.timeOfBirth) && !other.timeOfBirth.contains(timeOfBirth))
+			return false;
+		return true;
+	}
+	
+	
 }

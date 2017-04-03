@@ -33,8 +33,8 @@ public class NewbornValidatorTest
 		
 		//Valid data
 		Newborn[] newborns = {
-				new Newborn(1L, "2017-8-19", "1:5", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "09:00", SexType.MALE, true),
+				new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", SexType.MALE, true),
 		};
 		for (int i = 0; i < newborns.length; i++)
 		{
@@ -51,13 +51,13 @@ public class NewbornValidatorTest
 		
 		//Invalid data
 		Newborn[] newbornsInv = {
-				new Newborn(1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
-				new Newborn(1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
-				new Newborn(0L, "2017-8-19", "1:5", SexType.MALE, true), //invalid office visit
-				new Newborn(null, "2017-8-19", "1:5", SexType.MALE, true),
-				new Newborn(1L, null, "1:5", SexType.MALE, true),
-				new Newborn(1L, "2017-8-19", null, SexType.MALE, true),
-				new Newborn(1L, "2017-8-19", "1:5", SexType.MALE, null)
+				new Newborn(999L, 1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
+				new Newborn(999L, 1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
+				new Newborn(999L, 0L, "2017-8-19", "1:5", SexType.MALE, true), //invalid office visit
+				new Newborn(999L, null, "2017-8-19", "1:5", SexType.MALE, true),
+				new Newborn(999L, 1L, null, "1:5", SexType.MALE, true),
+				new Newborn(999L, 1L, "2017-8-19", null, SexType.MALE, true),
+				new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.MALE, null)
 		};
 		for (int i = 0; i < newbornsInv.length; i++)
 		{
@@ -80,14 +80,14 @@ public class NewbornValidatorTest
 		
 		//Valid data
 		Newborn[] newborns = {
-				new Newborn(1L, "2017-8-19", "1:5", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "09:00", SexType.MALE, true),
-				new Newborn(2L, "", "09:00", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", "09:00", null, true),
-				new Newborn(2L, "2015-12-31", "09:00", SexType.MALE, null),
-				new Newborn(2L, null, "09:00", SexType.MALE, true),
-				new Newborn(2L, "2015-12-31", null, SexType.MALE, true),
+				new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", SexType.MALE, true),
+				new Newborn(999L, 2L, "", "09:00", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", null, true),
+				new Newborn(999L, 2L, "2015-12-31", "09:00", SexType.MALE, null),
+				new Newborn(999L, 2L, null, "09:00", SexType.MALE, true),
+				new Newborn(999L, 2L, "2015-12-31", null, SexType.MALE, true),
 		};
 		for (int i = 0; i < newborns.length; i++)
 		{
@@ -104,9 +104,9 @@ public class NewbornValidatorTest
 		
 		//Invalid data
 		Newborn[] newbornsInv = {
-				new Newborn(1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
-				new Newborn(1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
-				new Newborn(0L, "2017-8-19", "1:5", SexType.MALE, true) //invalid office visit
+				new Newborn(999L, 1L, "2017-12-32", "1:5", SexType.MALE, true), //invalid date
+				new Newborn(999L, 1L, "2017-8-19", "25:5", SexType.MALE, true), //invalid time
+				new Newborn(999L, 0L, "2017-8-19", "1:5", SexType.MALE, true) //invalid office visit
 		};
 		for (int i = 0; i < newbornsInv.length; i++)
 		{
@@ -126,8 +126,8 @@ public class NewbornValidatorTest
 	public void testTimes()
 	{
 		NewbornValidator validator = new NewbornValidator(ConverterDAO.getDataSource());
-		Newborn nb1 = new Newborn(1L, "2017-8-19", "1:5:10:15:20:25:30", SexType.FEMALE, false);
-		Newborn nb2 = new Newborn(1L, "2017-8-19", "1:5", SexType.FEMALE, false);
+		Newborn nb1 = new Newborn(999L, 1L, "2017-8-19", "1:5:10:15:20:25:30", SexType.FEMALE, false);
+		Newborn nb2 = new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.FEMALE, false);
 		try
 		{
 			validator.validate(nb1);

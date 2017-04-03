@@ -20,4 +20,12 @@ public interface NewbornData extends DataBean<Newborn>
 	 * @throws DBException
 	 */
 	public long addReturnGeneratedId(Newborn nb) throws DBException;
+
+	/**
+	 * Deletes the record with the given ID
+	 * @param id the ID of the record
+	 * @return true if the record was deleted
+	 * @throws DBException
+	 */
+	public boolean delete(long id) throws DBException;
 }

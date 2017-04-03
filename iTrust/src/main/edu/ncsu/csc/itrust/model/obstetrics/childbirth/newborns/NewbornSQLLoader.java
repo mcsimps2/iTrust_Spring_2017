@@ -28,6 +28,8 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 	public Newborn loadSingle(ResultSet rs) throws SQLException
 	{
 		Newborn nb = new Newborn();
+		Long pid = rs.getLong("pid");
+		nb.setPID(rs.wasNull() ? null : pid);
 		Long id = rs.getLong("id");
 		nb.setId(rs.wasNull() ? null : id);
 		Long oid = rs.getLong("officeVisitID");
@@ -56,7 +58,7 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 	{
 		String stmt = "";
 		if( newInstance ){ // IS NEW CODE
-			stmt = "INSERT INTO childbirthNewborns(officeVisitID, dateOfBirth, timeOfBirth, sex, timeEstimated) VALUES (?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO childbirthNewborns(officeVisitID, dateOfBirth, timeOfBirth, sex, timeEstimated, pid) VALUES (?, ?, ?, ?, ?, ?);";
 		} else { // NOT NEW
 			long id = insertObject.getId();
 			stmt = "UPDATE childbirthNewborns SET "
@@ -64,7 +66,8 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 					+ "dateOfBirth=?, "
 					+ "timeOfBirth=?, "
 					+ "sex=?, "
-					+ "timeEstimated=? "
+					+ "timeEstimated=?, "
+					+ "pid=? "
 					+ "WHERE id=" + id + ";";
 		}
 		
@@ -101,6 +104,14 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		else
 		{
 			ps.setBoolean(5, insertObject.getTimeEstimated());
+		}
+		if (insertObject.getPID() == null)
+		{
+			ps.setNull(6, java.sql.Types.BIGINT);
+		}
+		else
+		{
+			ps.setLong(6, insertObject.getPID());
 		}
 		return ps;
 	}
