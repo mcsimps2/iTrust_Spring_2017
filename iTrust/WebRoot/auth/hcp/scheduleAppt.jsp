@@ -190,7 +190,7 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 		</select>
 		<br /><br />
 		<div id="delivery-method" style="display:none;">
-			<span >Preferred Delivery Method</span>
+			<span>Preferred Delivery Method</span>
 			<select name="delivery-method">
 				<%
 					List<DeliveryMethod> deliveryMethods = Arrays.asList(DeliveryMethod.values());
@@ -252,7 +252,6 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 <%	} %>
 
 <script>
-
 function hideShowDeliveryMethod() {
 	var e = document.getElementById("apptType");
 	if (e.options[e.selectedIndex].value === "Childbirth") {
