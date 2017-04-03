@@ -34,11 +34,11 @@ public class Newborn
 		this.officeVisitID = officeVisitID;
 	}
 	
-	public Long getPID()
+	public Long getPid()
 	{
 		return pid;
 	}
-	public void setPID(Long pid)
+	public void setPid(Long pid)
 	{
 		this.pid = pid;
 	}

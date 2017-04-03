@@ -64,23 +64,25 @@ public class NewbornController extends iTrustController {
 	 */
 	public void add(Newborn newborn) {
 		try {
-			if (sql.add(newborn)) {
+			long id = sql.addReturnGeneratedId(newborn);
+			if (id != -1) {
+				newborn.setId(id);
 				long pid = patientDAO.addEmptyPatient();
-				newborn.setPID(pid);
+				newborn.setPid(pid);
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 							NEWBORN_SUCCESSFULLY_CREATED, null);
 					logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
 				} else {
-					throw new Exception();
+					throw new Exception("update failed");
 				}
 			} else {
-				throw new Exception();
+				throw new Exception("add failed");
 			}
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage(), null);
 		}
 	}
 

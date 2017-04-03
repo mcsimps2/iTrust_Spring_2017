@@ -58,11 +58,12 @@ public class NewbornForm {
 	 * Only works if an Childbirth has been submitted for this office visit.
 	 */
 	public void add(){
-		if (cvc.getByOfficeVisit(officeVisitID) == null) {
-			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
-					SAVE_CHILDBIRTH_FIRST_ERROR, null);
-			return;
-		}
+		//TODO: Add this back once Josh adds his functionality in
+//		if (cvc.getByOfficeVisit(officeVisitID) == null) {
+//			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
+//					SAVE_CHILDBIRTH_FIRST_ERROR, null);
+//			return;
+//		}
 		controller.add(newborn);
 		clearFields();
 	}
