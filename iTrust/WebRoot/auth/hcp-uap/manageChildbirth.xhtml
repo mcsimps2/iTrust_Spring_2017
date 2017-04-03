@@ -17,7 +17,7 @@
 		<h:form id="childbirth_form">
 			<div class="form-group">
 				<h:outputLabel for="preferredChildbirthMethod">Preferred childbirth method</h:outputLabel>
-				<h:selectOneMenu id="preferredChildbirthMethod" class="selectpicker"
+				<h:selectOneMenu id="preferredChildbirthMethod" class="selectpicker" disabled="#{!isOBGYN}"
 				                 value="#{obstetrics_init_controller.deliveryType}">
 					<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
 								   value="#{obstetrics_init_controller.getDeliveryMethods()}" />
@@ -26,32 +26,34 @@
 			
 			<div class="form-group">
 				<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
-				<h:inputText id="pitocin" class="form-control inline" />
+				<h:inputText id="pitocin" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
-				<h:inputText id="nitrousOxide" class="form-control inline" />
+				<h:inputText id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
-				<h:inputText id="pethidine" class="form-control inline" />
+				<h:inputText id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
-				<h:inputText id="epiduralAnaesthesia" class="form-control inline" />
+				<h:inputText id="epiduralAnaesthesia" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
-				<h:inputText id="magnesiumSulfate" class="form-control inline" />
+				<h:inputText id="magnesiumSulfate" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
-			<div class="form-group form-button-group">
-				<h:commandButton id="submitChildbirthButton" value="Save" />
-			</div>
+			<ui:fragment rendered="#{isOBGYN}">
+				<div class="form-group form-button-group">
+					<h:commandButton id="submitChildbirthButton" value="Save" />
+				</div>
+			</ui:fragment>
 		</h:form>
 		
 		<h2>Obstetrics records</h2>
