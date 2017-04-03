@@ -95,7 +95,7 @@ Scenario: Non-OB/GYN HCP
 	And I search for the patient with name Random
 	And click on the link for patient with pid 1
 	And click on the first office visit on the office visits page
-	Then a message indicates that only OBGYN HCPs can edit obstetrics data
+	Then a message indicates that only OBGYN HCPs can edit childbirth data
 	And the childbirth form fields are disabled
 	And the newborns form fields are disabled
 

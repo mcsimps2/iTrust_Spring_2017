@@ -7,11 +7,13 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
@@ -25,6 +27,9 @@ public class ChildbirthVisitStepDefs {
 	private static final Long TEST_OFFICE_VISIT_ID = 51L;
 
 	private iTrustDriver driver;
+	private ChildbirthVisitData cvd;
+	private NewbornData nd;
+
 
 	private int numNewborns;
 	private Newborn recentNewborn;
@@ -33,6 +38,10 @@ public class ChildbirthVisitStepDefs {
 		
 	public ChildbirthVisitStepDefs(iTrustDriver driver) {
 		this.driver = driver;
+		this.cvd = new ChildbirthVisitMySQL(ConverterDAO.getDataSource());
+		this.nd = new NewbornMySQL(ConverterDAO.getDataSource());
+		
+		this.newbornList = new ArrayList<Newborn>();
 	}
 	
 	@Then("^the childbirth tab is there$")
@@ -63,36 +72,36 @@ public class ChildbirthVisitStepDefs {
 	
 	@When("^I check the number of newborns in the table$")
 	public void checkNumNewborns() {
-		List<WebElement> rows = driver.findElements(By.cssSelector("#newborns_table_form table tbody tr"));
+		List<WebElement> rows = driver.findElements(By.cssSelector("#newborn_table_form table tbody tr"));
 		this.numNewborns = rows.size();
 	}
 	
 	@When("^click Add Newborn on the newborns tab$")
 	public void clickAddNewborn() {
-		driver.findElement(By.id("newborns_form:addNewborn")).click();
+		driver.findElement(By.id("newborn_form:addNewbornData")).click();
 		newbornList.add(recentNewborn);
 	}
 	
 	@When("^click Update Newborn$")
 	public void clickUpdateNewborn() {
-		driver.findElement(By.id("newborns_form:updateNewborn")).click();
+		driver.findElement(By.id("newborn_form:updateNewbornData")).click();
 	}
 	
 	@When("^click the first Delete button in the newborns table$")
 	public void clickDeleteInNewbornsTable() {
-		WebElement table = driver.findElement(By.id("newborns_table_form:newborns_table"));
-		table.findElement(By.cssSelector("#newborns_table_form input[value=\"Delete\"]")).click();
+		WebElement table = driver.findElement(By.id("newborn_table_form:newborn_table"));
+		table.findElement(By.cssSelector("#newborn_table_form input[value=\"Delete\"]")).click();
 	}
 	
 	@When("^click the first Edit button in the newborns table$")
 	public void clickEditInNewbornsTable() {
-		WebElement table = driver.findElement(By.id("newborns_table_form:newborns_table"));
-		table.findElement(By.cssSelector("#newborns_table_form input[value=\"Edit\"]")).click();
+		WebElement table = driver.findElement(By.id("newborn_table_form:newborn_table"));
+		table.findElement(By.cssSelector("#newborn_table_form input[value=\"Edit\"]")).click();
 	}
 	
 	@When("^I check that there is one fewer newborn in the table$")
 	public void oneFewerNewborn() {
-		List<WebElement> rows = driver.findElements(By.cssSelector("#newborns_table_form table tbody tr"));
+		List<WebElement> rows = driver.findElements(By.cssSelector("#newborn_table_form table tbody tr"));
 		
 		Assert.assertEquals("One fewer newborn should exist in the newborns table", rows.size(), this.numNewborns - 1);
 		
@@ -101,14 +110,20 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the same number of newborns should be in the table$")
 	public void sameNumberOfNewborns() {
-		List<WebElement> rows = driver.findElements(By.cssSelector("#newborns_table_form table tbody tr"));
+		List<WebElement> rows = driver.findElements(By.cssSelector("#newborn_table_form table tbody tr"));
 		
 		Assert.assertEquals("The same number of newborns should exist in the newborns table", rows.size(), this.numNewborns);
 	}
 	
+	@Then("^a message indicates that only OBGYN HCPs can edit childbirth data$")
+	public void obgynMessageAppears() {
+		Assert.assertTrue(driver.getPageSource().contains("Only OB/GYN HCPs can edit childbirth information"));
+		Assert.assertTrue(driver.getPageSource().contains("Only an OB/GYN can edit newborn information"));
+	}
+	
 	@Then("^(\\d+) more newborns exist in the newborns table$")
 	public void moreNewbornsAppear(int numMoreNewborns) {
-		List<WebElement> rows = driver.findElements(By.cssSelector("#newborns_table_form table tbody tr"));
+		List<WebElement> rows = driver.findElements(By.cssSelector("#newborn_table_form table tbody tr"));
 		
 		Assert.assertEquals(numMoreNewborns + " more newborns should exist in the newborns table", rows.size(), this.numNewborns + numMoreNewborns);
 		
@@ -117,12 +132,23 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the childbirth form fields are disabled$")
 	public void obstetricsFormFieldsAreDisabled() {
-		//TODO
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:childbirthMethod")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:pitocin")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:nitrousOxide")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:pethidine")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:magnesiumSulfate")).getAttribute("readonly").equals("true"));
 	}
 	
 	@Then("^the newborns form fields are disabled$")
 	public void ultrasoundFormFieldsAreDisabled() {
 		//TODO
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:date")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:time")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:sex")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:estimated-time")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:addNewbornData")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:updateNewbornData")).getAttribute("disabled").equals("true"));
 	}
 	
 	@Then("^a message says I must add childbirth data first and no newborn data is added$")
@@ -131,7 +157,6 @@ public class ChildbirthVisitStepDefs {
 		Assert.assertTrue(driver.getPageSource().contains("No Newborns"));
 		
 		try {
-			NewbornData nd = new NewbornMySQL();
 			List<Newborn> results = nd.getByOfficeVisit(TEST_OFFICE_VISIT_ID);
 			Assert.assertFalse("Newborn was added to database", results.contains(recentNewborn));
 		} catch (DBException e) {
@@ -151,7 +176,8 @@ public class ChildbirthVisitStepDefs {
 		cv.setOfficeVisitID(TEST_OFFICE_VISIT_ID);
 		cv.setDeliveryType(DeliveryMethod.matchString(birthMethod));
 		
-		//TODO
+		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:childbirthMethod")));
+		dropdown.selectByVisibleText(birthMethod);
 	}
 	
 	@When("^I enter (.+) for Pitocin, (.+) for Nitrous Oxide, (.+) for Pethidine, (.+) for Epidural Anaesthesia, and (.+) for Magnesium Sulfate$")
@@ -162,20 +188,20 @@ public class ChildbirthVisitStepDefs {
 		cv.setEpiduralAnaesthesia(Integer.parseInt(epi));
 		cv.setMagnesiumSulfide(Integer.parseInt(MgSO4));
 		
-		driver.findElement(By.id("childbirth_form:pit")).clear();
-		driver.findElement(By.id("childbirth_form:pit")).sendKeys(pit);
+		driver.findElement(By.id("childbirth_form:pitocin")).clear();
+		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(pit);
 		
-		driver.findElement(By.id("childbirth_form:N2O")).clear();
-		driver.findElement(By.id("childbirth_form:N2O")).sendKeys(N2O);
+		driver.findElement(By.id("childbirth_form:nitrousOxide")).clear();
+		driver.findElement(By.id("childbirth_form:nitrousOxide")).sendKeys(N2O);
 		
-		driver.findElement(By.id("childbirth_form:peth")).clear();
-		driver.findElement(By.id("childbirth_form:peth")).sendKeys(peth);
+		driver.findElement(By.id("childbirth_form:pethidine")).clear();
+		driver.findElement(By.id("childbirth_form:pethidine")).sendKeys(peth);
 		
-		driver.findElement(By.id("childbirth_form:epi")).clear();
-		driver.findElement(By.id("childbirth_form:epi")).sendKeys(epi);
+		driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).clear();
+		driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).sendKeys(epi);
 		
-		driver.findElement(By.id("childbirth_form:MgSO4")).clear();
-		driver.findElement(By.id("childbirth_form:MgSO4")).sendKeys(MgSO4);
+		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).clear();
+		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).sendKeys(MgSO4);
 	}
 	
 	@When("^I enter (.+) for all childbirth drug fields$")
@@ -186,47 +212,47 @@ public class ChildbirthVisitStepDefs {
 		cv.setEpiduralAnaesthesia(Integer.parseInt(dosage));
 		cv.setMagnesiumSulfide(Integer.parseInt(dosage));
 		
-		driver.findElement(By.id("childbirth_form:pit")).clear();
-		driver.findElement(By.id("childbirth_form:pit")).sendKeys(dosage);
+		driver.findElement(By.id("childbirth_form:pitocin")).clear();
+		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(dosage);
 		
-		driver.findElement(By.id("childbirth_form:N2O")).clear();
-		driver.findElement(By.id("childbirth_form:N2O")).sendKeys(dosage);
+		driver.findElement(By.id("childbirth_form:nitrousOxide")).clear();
+		driver.findElement(By.id("childbirth_form:nitrousOxide")).sendKeys(dosage);
 		
-		driver.findElement(By.id("childbirth_form:peth")).clear();
-		driver.findElement(By.id("childbirth_form:peth")).sendKeys(dosage);
+		driver.findElement(By.id("childbirth_form:pethidine")).clear();
+		driver.findElement(By.id("childbirth_form:pethidine")).sendKeys(dosage);
 		
-		driver.findElement(By.id("childbirth_form:epi")).clear();
-		driver.findElement(By.id("childbirth_form:epi")).sendKeys(dosage);
+		driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).clear();
+		driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).sendKeys(dosage);
 		
-		driver.findElement(By.id("childbirth_form:MgSO4")).clear();
-		driver.findElement(By.id("childbirth_form:MgSO4")).sendKeys(dosage);
+		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).clear();
+		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).sendKeys(dosage);
 	}
 	
 	@Then("^the childbirth tab has those fields$")
 	public void checkChildbirthFields() {
-		String birthMethod = driver.findElement(By.id("childbirth_form:birthMethod")).getAttribute("value"); //TODO value or text?
-		Assert.assertEquals(cv.getDeliveryType(), DeliveryMethod.matchString(birthMethod));
+		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:childbirthMethod")));
+		String selectedOption = dropdown.getFirstSelectedOption().getAttribute("value");
+		Assert.assertEquals(cv.getDeliveryType(), DeliveryMethod.matchString(selectedOption));
 		
-		String pit = driver.findElement(By.id("childbirth_form:pit")).getAttribute("value");
+		String pit = driver.findElement(By.id("childbirth_form:pitocin")).getAttribute("value");
 		Assert.assertEquals(cv.getPitocin().toString(), pit);
 		
-		String N2O = driver.findElement(By.id("childbirth_form:N2O")).getAttribute("value");
+		String N2O = driver.findElement(By.id("childbirth_form:nitrousOxide")).getAttribute("value");
 		Assert.assertEquals(cv.getNitrousOxide().toString(), N2O);
 		
-		String peth = driver.findElement(By.id("childbirth_form:peth")).getAttribute("value");
+		String peth = driver.findElement(By.id("childbirth_form:pethidine")).getAttribute("value");
 		Assert.assertEquals(cv.getPethidine().toString(), peth);
 		
-		String epi = driver.findElement(By.id("childbirth_form:epi")).getAttribute("value");
+		String epi = driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).getAttribute("value");
 		Assert.assertEquals(cv.getEpiduralAnaesthesia().toString(), epi);
 		
-		String MgSO4 = driver.findElement(By.id("childbirth_form:MgSO4")).getAttribute("value");
+		String MgSO4 = driver.findElement(By.id("childbirth_form:magnesiumSulfate")).getAttribute("value");
 		Assert.assertEquals(cv.getMagnesiumSulfide().toString(), MgSO4);
 	}
 	
 	@Then("^the childbirth visit is in the database$")
 	public void childbirthIsInDatabase() {
 		try {
-			ChildbirthVisitData cvd = new ChildbirthVisitMySQL();
 			Assert.assertEquals(cv, cvd.getByOfficeVisit(TEST_OFFICE_VISIT_ID));
 		} catch (DBException e) {
 			e.printStackTrace();
@@ -247,13 +273,13 @@ public class ChildbirthVisitStepDefs {
 	public void selectSex(String sex) {
 		recentNewborn.setSex(SexType.matchString(sex));
 		
-		//TODO find and populate the fields
+		Select dropdown = new Select(driver.findElement(By.id("newborn_form:sex")));
+		dropdown.selectByVisibleText(sex);
 	}
 	
 	@Then("^the newborns are in the database$")
 	public void newbornsAreInDatabase() {
 		try {
-			NewbornData nd = new NewbornMySQL();
 			List<Newborn> results = nd.getByOfficeVisit(TEST_OFFICE_VISIT_ID);
 			Assert.assertTrue("Missing a newborn in the database", results.containsAll(newbornList));
 		} catch (DBException e) {
@@ -265,5 +291,6 @@ public class ChildbirthVisitStepDefs {
 	@Then("^the first newborn in the table should have those field values$")
 	public void checkFirstNewbornInTable() {
 		//TODO find fields and compare them to those in recentNewborn (ignore PID)
+		
 	}
 }
