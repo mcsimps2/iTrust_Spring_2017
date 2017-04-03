@@ -8,104 +8,118 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 	
 	<ui:param name="pid" value="#{session.getAttribute('pid')}"/>
+	<ui:param name="isOBGYN" value="#{obstetrics_init_controller.isOBGYN(session.getAttribute('loggedInMID'))}"/>
+	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
 	
-	<h2>Add a childbirth</h2>
-	
-	<h:form id="childbirth_form">
-		<div class="form-group">
-			<h:outputLabel for="preferredChildbirthMethod">Preferred childbirth method</h:outputLabel>
-			<h:selectOneMenu id="preferredChildbirthMethod" class="selectpicker"
-			                 value="#{obstetrics_init_controller.deliveryType}">
-				<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
-							   value="#{obstetrics_init_controller.getDeliveryMethods()}" />
-			</h:selectOneMenu>
-		</div>
+	<ui:fragment rendered="#{isObstetricsPatient}">
+		<ui:fragment rendered="#{!isOBGYN}">
+			<h4 style="color:indianred; margin-bottom:2rem;">Only OB/GYN HCPs can edit childbirth information.</h4>
+		</ui:fragment>
 		
-		<div class="form-group">
-			<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
-			<h:inputText id="pitocin" class="form-control inline" />
-		</div>
+		<h2>Add a childbirth</h2>
 		
-		<div class="form-group">
-			<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
-			<h:inputText id="nitrousOxide" class="form-control inline" />
-		</div>
+		<h:form id="childbirth_form">
+			<div class="form-group">
+				<h:outputLabel for="preferredChildbirthMethod">Preferred childbirth method</h:outputLabel>
+				<h:selectOneMenu id="preferredChildbirthMethod" class="selectpicker" disabled="#{!isOBGYN}"
+				                 value="#{obstetrics_init_controller.deliveryType}">
+					<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
+								   value="#{obstetrics_init_controller.getDeliveryMethods()}" />
+				</h:selectOneMenu>
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
+				<h:inputText id="pitocin" class="form-control inline" readonly="#{!isOBGYN}" />
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
+				<h:inputText id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
+				<h:inputText id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
+				<h:inputText id="epiduralAnaesthesia" class="form-control inline" readonly="#{!isOBGYN}" />
+			</div>
+			
+			<div class="form-group">
+				<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
+				<h:inputText id="magnesiumSulfate" class="form-control inline" readonly="#{!isOBGYN}" />
+			</div>
+			
+			<ui:fragment rendered="#{isOBGYN}">
+				<div class="form-group form-button-group">
+					<h:commandButton id="submitChildbirthButton" value="Save" />
+				</div>
+			</ui:fragment>
+		</h:form>
 		
-		<div class="form-group">
-			<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
-			<h:inputText id="pethidine" class="form-control inline" />
-		</div>
+		<h2>Obstetrics records</h2>
 		
-		<div class="form-group">
-			<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
-			<h:inputText id="epiduralAnaesthesia" class="form-control inline" />
-		</div>
+		<c:set var="obstetricsRecords" value="#{obstetrics_init_controller.getRecords(pid)}" />
 		
-		<div class="form-group">
-			<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
-			<h:inputText id="magnesiumSulfate" class="form-control inline" />
-		</div>
-		
-		<div class="form-group form-button-group">
-			<h:commandButton id="submitChildbirthButton" value="Save" />
-		</div>
-	</h:form>
-	
-	<h2>Obstetrics records</h2>
-	
-	<c:set var="obstetricsRecords" value="#{obstetrics_init_controller.getRecords(pid)}" />
-	
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Initialization date</th>
-				<th>LMP</th>
-				<th>EDD</th>
-				<th>Weeks pregnant at init</th>
-				<th>RH flag</th>
-			</tr>
-		</thead>
-	
-		<tbody>
-			<ui:repeat var="oi_record" value="#{obstetricsRecords}">
+		<table class="table table-hover">
+			<thead>
 				<tr>
-					<td>#{oi_record.prettyDate}</td>
-					<td>#{oi_record.prettyLMP}</td>
-					<td>#{oi_record.prettyEDD}</td>
-					<td>#{oi_record.numWeeksPregnant}</td>
-					<td>#{oi_record.prettyRH}</td>
+					<th>Initialization date</th>
+					<th>LMP</th>
+					<th>EDD</th>
+					<th>Weeks pregnant at init</th>
+					<th>RH flag</th>
 				</tr>
-			</ui:repeat>
-		</tbody>
-	</table>
-	
-	<h2>Prior pregnancies</h2>
-	
-	<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnancies()}" />
-	
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Conception year</th>
-				<th>Weeks pregnant</th>
-				<th>Hours in labor</th>
-				<th>Weight gain</th>
-				<th>Delivery type</th>
-				<th>Multiplicity</th>
-			</tr>
-		</thead>
-	
-		<tbody>
-			<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
+			</thead>
+		
+			<tbody>
+				<ui:repeat var="oi_record" value="#{obstetricsRecords}">
+					<tr>
+						<td>#{oi_record.prettyDate}</td>
+						<td>#{oi_record.prettyLMP}</td>
+						<td>#{oi_record.prettyEDD}</td>
+						<td>#{oi_record.numWeeksPregnant}</td>
+						<td>#{oi_record.prettyRH}</td>
+					</tr>
+				</ui:repeat>
+			</tbody>
+		</table>
+		
+		<h2>Prior pregnancies</h2>
+		
+		<c:set var="priorPregnancies" value="#{obstetrics_init_controller.getPastPregnancies()}" />
+		
+		<table class="table table-hover">
+			<thead>
 				<tr>
-					<td>#{pregnancyInfo.yearOfConception}</td>
-					<td>#{pregnancyInfo.numWeeksPregnant}</td>
-					<td>#{pregnancyInfo.numHoursInLabor}</td>
-					<td>#{pregnancyInfo.weightGain}</td>
-					<td>#{pregnancyInfo.deliveryType.toString()}</td>
-					<td>#{pregnancyInfo.multiplicity}</td>
+					<th>Conception year</th>
+					<th>Weeks pregnant</th>
+					<th>Hours in labor</th>
+					<th>Weight gain</th>
+					<th>Delivery type</th>
+					<th>Multiplicity</th>
 				</tr>
-			</ui:repeat>
-		</tbody>
-	</table>
+			</thead>
+		
+			<tbody>
+				<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
+					<tr>
+						<td>#{pregnancyInfo.yearOfConception}</td>
+						<td>#{pregnancyInfo.numWeeksPregnant}</td>
+						<td>#{pregnancyInfo.numHoursInLabor}</td>
+						<td>#{pregnancyInfo.weightGain}</td>
+						<td>#{pregnancyInfo.deliveryType.toString()}</td>
+						<td>#{pregnancyInfo.multiplicity}</td>
+					</tr>
+				</ui:repeat>
+			</tbody>
+		</table>
+	</ui:fragment>
+	
+	<ui:fragment rendered="#{!isObstetricsPatient}">
+		<h2>Not an Obstetrics Patient</h2>
+	</ui:fragment>
 </html>
