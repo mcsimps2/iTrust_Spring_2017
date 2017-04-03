@@ -1,5 +1,6 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.newborn;
+package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import edu.ncsu.csc.itrust.controller.obstetrics.officeVisit.ChildbirthVisitController;
+import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit.ChildbirthVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
@@ -24,7 +25,7 @@ public class NewbornForm {
 	private SessionUtils sessionUtils;
 	private Newborn newborn;
 	
-	private static final String SAVE_CHILDBIRTH_FIRST_ERROR = "The Childbirth tab must be saved before you can add an ultrasound";
+	private static final String SAVE_CHILDBIRTH_FIRST_ERROR = "The Childbirth tab must be saved before you can add a newborn";
 
 	/**
 	 * Constructor used in run time.
@@ -90,7 +91,7 @@ public class NewbornForm {
 	public List<Newborn> getNewborns(){
 		List<Newborn> newborns = Collections.emptyList();
 		try {
-			newborns = controller.getUltrasoundsByOfficeVisit(officeVisitID);
+			newborns = controller.getNewbornsByOfficeVisit(officeVisitID);
 		} catch (DBException e) {
 			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Newborn Controller Error", "Newborn Controller Error",
 					null);
@@ -113,6 +114,10 @@ public class NewbornForm {
 		newborn.setTimeOfBirth(timeOfBirth);
 		newborn.setSex(sex);
 		newborn.setTimeEstimated(estimatedTime);
+	}
+	
+	public List<SexType> getSexTypes() {
+		return Arrays.asList(SexType.values());
 	}
 	
 	/**

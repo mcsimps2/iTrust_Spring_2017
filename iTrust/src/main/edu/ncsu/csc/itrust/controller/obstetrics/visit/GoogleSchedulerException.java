@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
+package edu.ncsu.csc.itrust.controller.obstetrics.visit;
 
 public class GoogleSchedulerException extends Exception
 {

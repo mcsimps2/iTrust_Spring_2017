@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.newborn;
+package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn;
 
 
 import java.sql.SQLException;
@@ -66,7 +66,7 @@ public class NewbornController extends iTrustController {
 		try {
 			if (sql.add(newborn)) {
 				long pid = patientDAO.addEmptyPatient();
-				newborn.setPid();
+				newborn.setPID(pid);
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 							NEWBORN_SUCCESSFULLY_CREATED, null);
@@ -130,12 +130,12 @@ public class NewbornController extends iTrustController {
 	 * @return all of the newborns for the office visit with the given ID
 	 * @throws DBException
 	 */
-	public List<Newborn> getUltrasoundsByOfficeVisit(Long officeVisitID) throws DBException {
+	public List<Newborn> getNewbornsByOfficeVisit(Long officeVisitID) throws DBException {
 		List<Newborn> newborns = Collections.emptyList();
 		try {
 			newborns = sql.getByOfficeVisit(officeVisitID);
 		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, UNABLE_TO_RETRIEVE_NEWBORNS, UNABLE_TO_RETRIEVE_NEWBORNS, null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, UNABLE_TO_RETRIEVE_NEWBORNS + officeVisitID, UNABLE_TO_RETRIEVE_NEWBORNS + officeVisitID, null);
 		}
 		return newborns;
 	}
