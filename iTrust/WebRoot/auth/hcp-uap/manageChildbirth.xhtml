@@ -12,6 +12,10 @@
 	<ui:param name="isObstetricsPatient" value="#{obstetrics_visit_form.weeksPregnant != null}"/>
 	
 	<ui:fragment rendered="#{isObstetricsPatient}">
+		<ui:fragment rendered="#{!isOBGYN}">
+			<h4 style="color:indianred; margin-bottom:2rem;">Only OB/GYN HCPs can edit childbirth information.</h4>
+		</ui:fragment>
+		
 		<h2>Add a childbirth</h2>
 		
 		<h:form id="childbirth_form">
