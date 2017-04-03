@@ -3,6 +3,7 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.Arrays"%>
 
 <%@page import="edu.ncsu.csc.itrust.action.AddApptRequestAction"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.beans.ApptBean"%>
@@ -11,6 +12,7 @@
 <%@page import="edu.ncsu.csc.itrust.model.old.beans.PersonnelBean"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.mysql.ApptTypeDAO"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO"%>
+<%@page import="edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod"%>
 
 <%@page errorPage="/auth/exceptionHandler.jsp"%>
 
@@ -36,6 +38,7 @@
 	String minuteI = "";
 	String tod = "";
 	String apptType = "";
+	String preferredDeliveryMethod = "";
 	String prompt = "";
 	long hcpid = -1;
 	
@@ -48,11 +51,16 @@
 		apptType = request.getParameter("apptType");
 		hcpid    = Long.parseLong(request.getParameter("hcpid"));
 		
+		if (apptType.equals("Childbirth"))
+			preferredDeliveryMethod = request.getParameter("delivery-method");
+		
 		ApptBean appt = new ApptBean();
 		appt.setPatient(loggedInMID);
 		appt.setHcp(hcpid);
 		appt.setComment(comment);
 		appt.setApptType(apptType);
+		if (apptType.equals("Childbirth"))
+			appt.setDeliveryMethod(preferredDeliveryMethod);
 		
 		SimpleDateFormat frmt = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 
@@ -119,7 +127,7 @@
 	</select>
 	
 	<p>Appointment Type:</p>
-	<select name="apptType">
+	<select name="apptType" id="apptType">
 		<% for (ApptTypeBean appt : apptTypes) { %>
 			<% String selected = appt.getName().equals(apptType) ? "selected='selected'" : ""; %>
 			<% String name = appt.getName(); %>
@@ -127,6 +135,22 @@
 		<% } %>
 		<% String startDate = ""; %>
 	</select>
+	
+	<div id="delivery-method" style="display:none;">
+		<p >Preferred Delivery Method</p>
+		<select name="delivery-method">
+			<%
+				List<DeliveryMethod> deliveryMethods = Arrays.asList(DeliveryMethod.values());
+				for(DeliveryMethod m : deliveryMethods) {
+					if (!m.toString().equals("Miscarriage")) {
+						%>
+						<option value="<%= m.toString() %>"><%= m.toString() %></option>
+						<%	
+					}
+				}
+			%>
+		</select>
+	</div>
 	
 	<p>Date:</p>
 	<% String value = StringEscapeUtils.escapeHtml("" + (date)); %>
@@ -179,5 +203,22 @@
 	
 	<input type="submit" name="request" value="Request" />
 </form>
+
+<script>
+function hideShowDeliveryMethod() {
+	var e = document.getElementById("apptType");
+	if (e.options[e.selectedIndex].value === "Childbirth") {
+		document.getElementById("delivery-method").style.display = "block";
+	} else {
+		document.getElementById("delivery-method").style.display = "none";
+	}
+} 
+
+hideShowDeliveryMethod();
+
+document.querySelector("#apptType").addEventListener('change', function(ev) {
+	hideShowDeliveryMethod();
+});
+</script>
 
 <%@include file="/footer.jsp"%>

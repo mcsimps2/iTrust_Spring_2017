@@ -25,6 +25,10 @@ public class ApptBeanLoader implements BeanLoader<ApptBean> {
 		ps.setLong(3, bean.getHcp());
 		ps.setTimestamp(4, bean.getDate());
 		ps.setString(5, bean.getComment());
+		if (bean.getDeliveryMethod() == null)
+			ps.setNull(6, java.sql.Types.VARCHAR);
+		else
+			ps.setString(6, bean.getDeliveryMethod());
 		return ps;
 	}
 
@@ -37,6 +41,8 @@ public class ApptBeanLoader implements BeanLoader<ApptBean> {
 		bean.setHcp(rs.getLong("doctor_id"));
 		bean.setDate(rs.getTimestamp("sched_date"));
 		bean.setComment(rs.getString("comment"));
+		bean.setDeliveryMethod(rs.getString("delivery_method"));
+		if (rs.wasNull()) bean.setDeliveryMethod(null);
 		return bean;
 	}
 

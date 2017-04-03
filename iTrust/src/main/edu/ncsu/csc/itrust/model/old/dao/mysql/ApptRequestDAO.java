@@ -57,7 +57,7 @@ public class ApptRequestDAO {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(
 						"INSERT INTO appointmentrequests (appt_type, patient_id, doctor_id, sched_date, "
-								+ "comment, pending, accepted) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+								+ "comment, delivery_method, pending, accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 			loader.loadParameters(stmt, req);
 			stmt.executeUpdate();
 		} catch (SQLException e) {

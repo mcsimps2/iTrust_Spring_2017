@@ -76,8 +76,8 @@ public class ApptDAO {
 	public void scheduleAppt(final ApptBean appt) throws SQLException, DBException {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = this.abloader.loadParameters(conn.prepareStatement(
-						"INSERT INTO appointment (appt_type, patient_id, doctor_id, sched_date, comment) "
-								+ "VALUES (?, ?, ?, ?, ?)"),
+						"INSERT INTO appointment (appt_type, patient_id, doctor_id, sched_date, comment, delivery_method) "
+								+ "VALUES (?, ?, ?, ?, ?, ?)"),
 						appt)) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -88,11 +88,15 @@ public class ApptDAO {
 	public void editAppt(final ApptBean appt) throws SQLException, DBException {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = conn
-						.prepareStatement("UPDATE appointment SET appt_type=?, sched_date=?, comment=? WHERE appt_id=?")) {
+						.prepareStatement("UPDATE appointment SET appt_type=?, sched_date=?, comment=?, delivery_method=? WHERE appt_id=?")) {
 			stmt.setString(1, appt.getApptType());
 			stmt.setTimestamp(2, appt.getDate());
 			stmt.setString(3, appt.getComment());
 			stmt.setInt(4, appt.getApptID());
+			if (appt.getDeliveryMethod() == null)
+				stmt.setNull(5, java.sql.Types.VARCHAR);
+			else
+				stmt.setString(5, appt.getDeliveryMethod());
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
