@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.cucumber;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +127,7 @@ public class ChildbirthVisitStepDefs {
 	public void moreNewbornsAppear(int numMoreNewborns) {
 		List<WebElement> rows = driver.findElements(By.cssSelector("#newborn_table_form table tbody tr"));
 		
-		Assert.assertEquals(numMoreNewborns + " more newborns should exist in the newborns table", rows.size(), this.numNewborns + numMoreNewborns);
+		Assert.assertEquals(numMoreNewborns + " more newborns should exist in the newborns table", this.numNewborns + numMoreNewborns, rows.size());
 		
 		numNewborns += numMoreNewborns;
 	}
@@ -142,7 +144,6 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the newborns form fields are disabled$")
 	public void ultrasoundFormFieldsAreDisabled() {
-		//TODO
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:date")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:time")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:sex")).getAttribute("disabled").equals("true"));
@@ -263,10 +264,23 @@ public class ChildbirthVisitStepDefs {
 	@When("^I enter (.+) for Date and (.+) for Time$")
 	public void enterNewbornDateAndTime(String date, String time) {
 		recentNewborn = new Newborn(TEST_OFFICE_VISIT_ID);
-		recentNewborn.setDateOfBirth(date);
-		recentNewborn.setTimeOfBirth(time);
+		recentNewborn.setTimeEstimated(false);
 		
-		//TODO find and populate the fields
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			recentNewborn.setDateOfBirth(sdf.format(sdf.parse(date)));
+			sdf = new SimpleDateFormat("h:mm a");
+			recentNewborn.setTimeOfBirth(sdf.format(sdf.parse(time)));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+		
+		driver.findElement(By.id("newborn_form:date")).clear();
+		driver.findElement(By.id("newborn_form:date")).sendKeys(date);
+		
+		driver.findElement(By.id("newborn_form:time")).clear();
+		driver.findElement(By.id("newborn_form:time")).sendKeys(time);
 	}
 	
 	@When("^I select (.+) for Sex$")
@@ -281,7 +295,10 @@ public class ChildbirthVisitStepDefs {
 	public void newbornsAreInDatabase() {
 		try {
 			List<Newborn> results = nd.getByOfficeVisit(TEST_OFFICE_VISIT_ID);
-			Assert.assertTrue("Missing a newborn in the database", results.containsAll(newbornList));
+			Assert.assertTrue("Missing newborn(s) in the database", results.size() >= newbornList.size());
+			for (Newborn n : newbornList) {
+				Assert.assertTrue("Missing a newborn in the database", results.contains(n));
+			}
 		} catch (DBException e) {
 			e.printStackTrace();
 			Assert.fail("DBException");

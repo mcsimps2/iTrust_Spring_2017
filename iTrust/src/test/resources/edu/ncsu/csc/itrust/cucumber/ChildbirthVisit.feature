@@ -54,15 +54,15 @@ Scenario: Add newborns
 	And I enter 0 for all childbirth drug fields
 	And click Save on the childbirth tab
 	And I check the number of newborns in the table
-	And I enter 2017-4-2 for Date and 10:00 for Time
+	And I enter 2017-4-2 for Date and 10:00 AM for Time
 	And I select Male for Sex
 	And click Add Newborn on the newborns tab
-	And I enter 2017-4-2 for Date and 10:01 for Time
+	And I enter 2017-4-2 for Date and 10:01 AM for Time
 	And I select Female for Sex
 	And click Add Newborn on the newborns tab
-	Then the newborns are in the database
-	And 2 more newborns exist in the newborns table
+	Then 2 more newborns exist in the newborns table
 	And a success message appears
+	And the newborns are in the database
 
 Scenario: Update and Delete newborn data
 	Given I have logged in as OBGYN with MID 9000000012 and password pw
@@ -73,17 +73,17 @@ Scenario: Update and Delete newborn data
 	And I select Vaginal Delivery for Childbirth Method
 	And I enter 0 for all childbirth drug fields
 	And click Save on the childbirth tab
-	And I enter 2017-4-2 for Date and 10:00 for Time
+	And I enter 2017-4-2 for Date and 10:00 AM for Time
 	And I select Male for Sex
 	And click Add Newborn on the newborns tab
-	And I enter 2017-4-2 for Date and 10:01 for Time
+	And I enter 2017-4-2 for Date and 10:01 AM for Time
 	And I select Female for Sex
 	And click Add Newborn on the newborns tab
 	And I check the number of newborns in the table
 	And click the first Delete button in the newborns table
 	And I check that there is one fewer newborn in the table
 	And click the first Edit button in the newborns table
-	And I enter 2017-4-2 for Date and 10:02 for Time
+	And I enter 2017-4-2 for Date and 10:02 AM for Time
 	And I select Female for Sex
 	And click Update Newborn
 	Then the first newborn in the table should have those field values
@@ -107,7 +107,7 @@ Scenario: Add newborn before childbirth visit info
 	And I go to the create new office visit page
 	And I enter a date to the office visit date field
 	And I click Save to save the office visit
-	And I enter 2017-4-2 for Date and 10:00 for Time
+	And I enter 2017-4-2 for Date and 10:00 AM for Time
 	And I select Male for Sex
 	And click Add Newborn on the newborns tab
 	Then a message says I must add childbirth data first and no newborn data is added
