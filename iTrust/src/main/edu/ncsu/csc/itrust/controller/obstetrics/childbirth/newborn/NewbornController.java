@@ -17,6 +17,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "newborn_controller")
 @SessionScoped
@@ -26,6 +27,8 @@ public class NewbornController extends iTrustController {
 	NewbornMySQL sql;
 	/** Patient DAO used to create and delete patients */
 	PatientDAO patientDAO;
+	/** Session utils */
+	SessionUtils sessionUtils;
 	
 	/** Constant for the message to be displayed if the newborn is invalid */
 	private static final String INVALID_NEWBORN = "Invalid Newborn";
@@ -43,6 +46,7 @@ public class NewbornController extends iTrustController {
 	public NewbornController() throws DBException {
 		super();
 		sql = new NewbornMySQL();
+		sessionUtils = SessionUtils.getInstance();
 		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
 	}
 
@@ -52,9 +56,10 @@ public class NewbornController extends iTrustController {
 	 * @param ds
 	 *            The injected DataSource dependency
 	 */
-	public NewbornController(DataSource ds, PatientDAO patientDAO) throws DBException {
+	public NewbornController(DataSource ds, SessionUtils sessionUtils, PatientDAO patientDAO) throws DBException {
 		super();
 		this.sql = new NewbornMySQL(ds);
+		this.sessionUtils = sessionUtils;
 		this.patientDAO = patientDAO;
 	}
 
@@ -72,8 +77,8 @@ public class NewbornController extends iTrustController {
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 							NEWBORN_SUCCESSFULLY_CREATED, null);
-					logTransaction(TransactionType.NEWBORN, getSessionUtils().getSessionLoggedInMIDLong(), getSessionUtils().getCurrentPatientMIDLong(), null);
-					logTransaction(TransactionType.BABY_RECORD, getSessionUtils().getSessionLoggedInMIDLong(), getSessionUtils().getCurrentPatientMIDLong(), "" + pid);
+					logTransaction(TransactionType.NEWBORN, sessionUtils.getSessionLoggedInMIDLong(), sessionUtils.getCurrentPatientMIDLong(), null);
+					logTransaction(TransactionType.BABY_RECORD, sessionUtils.getSessionLoggedInMIDLong(), sessionUtils.getCurrentPatientMIDLong(), "" + pid);
 				} else {
 					throw new Exception();
 				}
@@ -115,7 +120,6 @@ public class NewbornController extends iTrustController {
         	if (sql.delete(newbornID)) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_DELETED,
 						NEWBORN_SUCCESSFULLY_DELETED, null);
-				//logTransaction(TransactionType.NEWBORN, getSessionUtils().getCurrentOfficeVisitId().toString());
         	} else {
         		throw new Exception();
         	}

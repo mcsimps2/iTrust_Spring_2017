@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.junit.Assert;
@@ -50,8 +48,6 @@ public class ObstetricsInitControllerTest {
 	@Spy private ObstetricsInitController oic;
 	@Spy private SessionUtils sessionUtils;
 	
-	@Mock private HttpServletRequest mockHttpServletRequest;
-	@Mock private HttpSession mockHttpSession;
 	@Mock private SessionUtils mockSessionUtils;
 	@Mock private PatientDAO mockPatientDAO;
 	@Mock private PersonnelDAO mockPersonnelDAO;
@@ -116,12 +112,6 @@ public class ObstetricsInitControllerTest {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
-
-		// Mock HttpServletRequest
-		mockHttpServletRequest = Mockito.mock(HttpServletRequest.class);
-
-		// Mock HttpSession
-		mockHttpSession = Mockito.mock(HttpSession.class);
 	}
 
 	/**
