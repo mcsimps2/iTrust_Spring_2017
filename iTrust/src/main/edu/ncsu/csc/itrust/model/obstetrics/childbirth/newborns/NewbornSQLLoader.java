@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +39,25 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		String dob = rs.getString("dateOfBirth");
 		nb.setDateOfBirth(rs.wasNull() ? null : dob);
 		String tob = rs.getString("timeOfBirth");
-		nb.setTimeOfBirth(rs.wasNull() ? null : tob.substring(0, tob.length() - 3)); //take off the seconds
+		if (rs.wasNull())
+		{
+			nb.setTimeOfBirth(null);
+		}
+		else
+		{
+			try
+			{
+				//Format the TOB into AM/PM format
+				SimpleDateFormat sdf = new SimpleDateFormat("H:m:s");
+				java.util.Date d = sdf.parse(tob);
+				sdf = new SimpleDateFormat("h:mm a");
+				nb.setTimeOfBirth(sdf.format(d));
+			}
+			catch (ParseException e)
+			{
+				throw new SQLException("Invalid time format");
+			}
+		}
 		String sex = rs.getString("sex");
 		if (rs.wasNull())
 		{
@@ -87,7 +107,19 @@ public class NewbornSQLLoader implements SQLLoader<Newborn>
 		}
 		else
 		{
-			ps.setTime(3, java.sql.Time.valueOf(insertObject.getTimeOfBirth() + ":00"));
+			try
+			{
+				SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+				sdf.setLenient(false);
+				java.util.Date d = sdf.parse(insertObject.getTimeOfBirth());
+				sdf = new SimpleDateFormat("HH:mm:ss");
+				String tob = sdf.format(d);
+				ps.setTime(3, java.sql.Time.valueOf(tob));
+			}
+			catch (ParseException e)
+			{
+				throw new SQLException("Invalid date");
+			}
 		}
 		if (insertObject.getSex() == null)
 		{

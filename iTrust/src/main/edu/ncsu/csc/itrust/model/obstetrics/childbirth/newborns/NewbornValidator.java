@@ -67,13 +67,11 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			if (ov == null)
 			{
 				errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
-				throw new FormValidationException(errs);
 			}
 		}
 		catch (DBException e)
 		{
 			errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
-			throw new FormValidationException(errs);
 		}
 		
 		//Make sure DOB is a valid date
@@ -107,20 +105,15 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		{
 			try
 			{
-				//Format: H:m
-				SimpleDateFormat sdf = new SimpleDateFormat("H:m");
+				//First, try format: h:mm a
+				SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
 				sdf.setLenient(false);
-				obj.setTimeOfBirth(sdf.format(sdf.parse(obj.getTimeOfBirth())));
-				/* The reason for this last statement
-				 * A time could be passed in as xx:yy:zz:tt
-				 * This would pass sdf.parse(xx:yy:zz:tt) as it provides an hour and minute (along with extra stuff)
-				 * But we want to set the time of birth explicitly to H:m
-				 */
-				
+				sdf.parse(obj.getTimeOfBirth());
+				//We have a valid AM/PM time
 			}
-			catch (ParseException e)
+			catch (ParseException e1)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format H:m (hour 0-23, minute 0-59)");
+				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM (hour 1-12) or H:m (hour 0-23)");
 			}
 		}
 		
@@ -156,14 +149,12 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			OfficeVisit ov = ovsql.getByID(obj.getOfficeVisitID());
 			if (ov == null)
 			{
-				errs.addIfNotNull("Could not find the patient with the specified PID");
-				throw new FormValidationException(errs);
+				errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
 			}
 		}
 		catch (DBException e)
 		{
-			errs.addIfNotNull("Could not find the patient with the specified PID");
-			throw new FormValidationException(errs);
+			errs.addIfNotNull("Could not find the office visit with the specified office visit ID");
 		}
 		
 		//Make sure DOB is a valid date
@@ -189,20 +180,15 @@ public class NewbornValidator extends POJOValidator<Newborn>
 		{
 			try
 			{
-				//Format: H:m
-				SimpleDateFormat sdf = new SimpleDateFormat("H:m");
+				//First, try format: h:mm a
+				SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
 				sdf.setLenient(false);
 				sdf.parse(obj.getTimeOfBirth());
-				obj.setTimeOfBirth(sdf.format(sdf.parse(obj.getTimeOfBirth())));
-				/* The reason for this last statement
-				 * A time could be passed in as xx:yy:zz:tt
-				 * This would pass sdf.parse(xx:yy:zz:tt) as it provides an hour and minute (along with extra stuff)
-				 * But we want to set the time of birth explicitly to H:m
-				 */
+				//We have a valid AM/PM time
 			}
-			catch (ParseException e)
+			catch (ParseException e1)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format H:m (hour 0-23, minute 0-59)");
+				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM (hour 1-12) or H:m (hour 0-23)");
 			}
 		}
 		

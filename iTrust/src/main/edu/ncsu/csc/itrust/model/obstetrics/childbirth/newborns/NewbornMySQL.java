@@ -143,7 +143,7 @@ public class NewbornMySQL implements NewbornData
 		}
 		catch (FormValidationException e)
 		{
-			throw new DBException(new SQLException(e));
+			throw new DBException(new SQLException(e.getMessage()));
 		}
 		try
 		{
