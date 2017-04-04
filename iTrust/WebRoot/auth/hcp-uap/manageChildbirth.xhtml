@@ -22,7 +22,7 @@
 			<div class="form-group">
 				<h:outputLabel for="childbirthMethod">Childbirth method</h:outputLabel>
 				<h:selectOneMenu id="childbirthMethod" class="selectpicker" disabled="#{!isOBGYN}"
-				                 value="#{obstetrics_init_controller.deliveryType}">
+				                 value="#{childbirth_visit_form.deliveryType}">
 					<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
 								   value="#{obstetrics_init_controller.getDeliveryMethods()}" />
 				</h:selectOneMenu>
@@ -30,27 +30,27 @@
 			
 			<div class="form-group">
 				<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
-				<h:inputText id="pitocin" class="form-control inline" readonly="#{!isOBGYN}" />
+				<h:inputText value="#{childbirth_visit_form.pitocin}" id="pitocin" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
-				<h:inputText id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
+				<h:inputText value="#{childbirth_visit_form.nitrousOxide}" id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
-				<h:inputText id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
+				<h:inputText value="#{childbirth_visit_form.pethidine}" id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
-				<h:inputText id="epiduralAnaesthesia" class="form-control inline" readonly="#{!isOBGYN}" />
+				<h:inputText value="#{childbirth_visit_form.epiduralAnaesthesia}" id="epiduralAnaesthesia" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
-				<h:inputText id="magnesiumSulfate" class="form-control inline" readonly="#{!isOBGYN}" />
+				<h:inputText value="#{childbirth_visit_form.magnesiumSulfate}" id="magnesiumSulfate" class="form-control inline" readonly="#{!isOBGYN}" />
 			</div>
 			
 			<ui:fragment rendered="#{isOBGYN}">

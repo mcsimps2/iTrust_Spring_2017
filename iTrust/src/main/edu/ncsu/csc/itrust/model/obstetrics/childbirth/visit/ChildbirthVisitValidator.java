@@ -108,13 +108,13 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		{
 			errs.addIfNotNull("Epidural anaesthesia must be a non-negative integer");
 		}
-		if (obj.getMagnesiumSulfide() == null)
+		if (obj.getMagnesiumSulfate() == null)
 		{
-			errs.addIfNotNull("No magnesium sulfide value specified");
+			errs.addIfNotNull("No magnesium sulfate value specified");
 		}
-		else if (obj.getMagnesiumSulfide() < 0)
+		else if (obj.getMagnesiumSulfate() < 0)
 		{
-			errs.addIfNotNull("Magnesium sulfide must be a non-negative integer");
+			errs.addIfNotNull("Magnesium sulfate must be a non-negative integer");
 		}
 		
 		if (errs.hasErrors())
@@ -169,9 +169,9 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		{
 			errs.addIfNotNull("Epidural anaesthesia must be a non-negative integer");
 		}
-		if (obj.getMagnesiumSulfide() != null && obj.getMagnesiumSulfide() < 0)
+		if (obj.getMagnesiumSulfate() != null && obj.getMagnesiumSulfate() < 0)
 		{
-			errs.addIfNotNull("Magnesium sulfide must be a non-negative integer");
+			errs.addIfNotNull("Magnesium sulfate must be a non-negative integer");
 		}
 		
 		if (errs.hasErrors())
