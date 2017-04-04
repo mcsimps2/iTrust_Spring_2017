@@ -3,8 +3,6 @@ package edu.ncsu.csc.itrust.unit.controller.obstetrics.childbirth.newborn;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.junit.Assert;
@@ -36,8 +34,6 @@ public class NewbornControllerTest {
 	@Spy private NewbornController nc;
 	@Spy private SessionUtils sessionUtils;
 	
-	@Mock private HttpServletRequest mockHttpServletRequest;
-	@Mock private HttpSession mockHttpSession;
 	@Mock private SessionUtils mockSessionUtils;
 	@Mock private PatientDAO mockPatientDAO;
 	
@@ -68,15 +64,15 @@ public class NewbornControllerTest {
 		gen.standardData();
 	}
 
-	@Test
-	public void testNewbornController() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testNewbornControllerDataSourcePatientDAO() {
-		//fail("Not yet implemented");
-	}
+//	@Test
+//	public void testNewbornController() {
+//		//fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	public void testNewbornControllerDataSourcePatientDAO() {
+//		//fail("Not yet implemented");
+//	}
 
 	@Test
 	public void testAdd() {

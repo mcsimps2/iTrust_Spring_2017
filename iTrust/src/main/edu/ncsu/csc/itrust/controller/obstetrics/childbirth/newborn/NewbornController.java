@@ -66,8 +66,9 @@ public class NewbornController extends iTrustController {
 	/**
 	 * Adds the given newborn to the database and creates a patient
 	 * @param newborn
+	 * @return success
 	 */
-	public void add(Newborn newborn) {
+	public boolean add(Newborn newborn) {
 		try {
 			long id = sql.addReturnGeneratedId(newborn);
 			if (id != -1) {
@@ -79,6 +80,7 @@ public class NewbornController extends iTrustController {
 							NEWBORN_SUCCESSFULLY_CREATED, null);
 					logTransaction(TransactionType.NEWBORN, sessionUtils.getSessionLoggedInMIDLong(), sessionUtils.getCurrentPatientMIDLong(), null);
 					logTransaction(TransactionType.BABY_RECORD, sessionUtils.getSessionLoggedInMIDLong(), sessionUtils.getCurrentPatientMIDLong(), "" + pid);
+					return true;
 				} else {
 					throw new Exception();
 				}
@@ -90,17 +92,20 @@ public class NewbornController extends iTrustController {
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
 		}
+		return false;
 	}
 
 	/**
 	 * Edits the given newborn in the database.
 	 * @param newborn
+	 * @return success
 	 */
-	public void edit(Newborn newborn) {
+	public boolean edit(Newborn newborn) {
 		try {
 			if (sql.update(newborn)) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 						NEWBORN_SUCCESSFULLY_CREATED, null);
+				return true;
 			} else {
 				throw new Exception();
 			}
@@ -109,6 +114,7 @@ public class NewbornController extends iTrustController {
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
 		}
+		return false;
 	}
 
 	/**
