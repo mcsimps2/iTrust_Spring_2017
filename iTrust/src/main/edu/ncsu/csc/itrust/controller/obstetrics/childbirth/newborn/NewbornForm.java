@@ -108,13 +108,15 @@ public class NewbornForm {
 	 * @param time
 	 * @param sex
 	 * @param estimatedTime
+	 * @param pid
 	 */
-	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime){
+	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime, Long pid){
 		newborn.setId(newbornID);
 		newborn.setDateOfBirth(dateOfBirth);
 		newborn.setTimeOfBirth(timeOfBirth);
 		newborn.setSex(sex);
 		newborn.setTimeEstimated(estimatedTime);
+		newborn.setPid(pid);
 	}
 	
 	public List<SexType> getSexTypes() {

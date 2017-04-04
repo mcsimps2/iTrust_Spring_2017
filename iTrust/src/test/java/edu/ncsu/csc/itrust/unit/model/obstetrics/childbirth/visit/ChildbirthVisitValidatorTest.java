@@ -10,6 +10,14 @@ import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 
 public class ChildbirthVisitValidatorTest
 {
+	ChildbirthVisitValidator validator;
+	
+	@Before
+	public void setup()
+	{
+		validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
+	}
+	
 	@Test
 	public void testConstructors()
 	{
@@ -28,10 +36,9 @@ public class ChildbirthVisitValidatorTest
 	@Test
 	public void testValidateUpdate()
 	{
-		ChildbirthVisitValidator validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
 		//Valid values
 		ChildbirthVisit[] cvArrValid = {
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 1, 1, 1, 1, 1),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 0, 0, 0, 0, 0),
 				new ChildbirthVisit(1L, null, 0, 0, 0, 0, 0),
@@ -81,7 +88,6 @@ public class ChildbirthVisitValidatorTest
 	@Test
 	public void testValidate()
 	{
-		ChildbirthVisitValidator validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
 		//Valid values
 		ChildbirthVisit[] cvArrValid = {
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, 5, 4, 3, 2, 1),

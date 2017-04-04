@@ -72,7 +72,8 @@ public class NewbornController extends iTrustController {
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 							NEWBORN_SUCCESSFULLY_CREATED, null);
-					logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
+					logTransaction(TransactionType.NEWBORN, getSessionUtils().getSessionLoggedInMIDLong(), getSessionUtils().getCurrentPatientMIDLong(), null);
+					logTransaction(TransactionType.BABY_RECORD, getSessionUtils().getSessionLoggedInMIDLong(), getSessionUtils().getCurrentPatientMIDLong(), "" + pid);
 				} else {
 					throw new Exception();
 				}
@@ -95,7 +96,6 @@ public class NewbornController extends iTrustController {
 			if (sql.update(newborn)) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
 						NEWBORN_SUCCESSFULLY_CREATED, null);
-				//logTransaction(TransactionType.NEWBORN, getSessionUtils().getCurrentOfficeVisitId().toString());
 			} else {
 				throw new Exception();
 			}
