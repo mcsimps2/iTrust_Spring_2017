@@ -74,15 +74,15 @@ public class NewbornController extends iTrustController {
 							NEWBORN_SUCCESSFULLY_CREATED, null);
 					logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
 				} else {
-					throw new Exception("update failed");
+					throw new Exception();
 				}
 			} else {
-				throw new Exception("add failed");
+				throw new Exception();
 			}
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
 		}
 	}
 
