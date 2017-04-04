@@ -11,6 +11,15 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 
 public class NewbornValidatorTest
 {
+	
+	NewbornValidator validator;
+	
+	@Before
+	public void setup()
+	{
+		validator = new NewbornValidator(ConverterDAO.getDataSource());
+	}
+	
 	@Test
 	public void testConstructors()
 	{
@@ -28,9 +37,7 @@ public class NewbornValidatorTest
 	
 	@Test
 	public void testValidate()
-	{
-		NewbornValidator validator = new NewbornValidator(ConverterDAO.getDataSource());
-		
+	{		
 		//Valid data
 		Newborn[] newborns = {
 				new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.MALE, true),
@@ -76,8 +83,6 @@ public class NewbornValidatorTest
 	@Test
 	public void testValidateUpdate()
 	{
-		NewbornValidator validator = new NewbornValidator(ConverterDAO.getDataSource());
-		
 		//Valid data
 		Newborn[] newborns = {
 				new Newborn(999L, 1L, "2017-8-19", "1:5", SexType.MALE, true),
