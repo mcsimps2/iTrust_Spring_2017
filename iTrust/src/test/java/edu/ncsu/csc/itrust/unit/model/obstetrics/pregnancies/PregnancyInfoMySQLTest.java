@@ -48,7 +48,7 @@ public class PregnancyInfoMySQLTest {
 			List<PregnancyInfo> results = pisql.getRecords(1);
 			for (int i = 0; i < piArr.length; i++)
 			{
-				Assert.assertTrue(results.get(i).equals(piArr[i]));
+				Assert.assertTrue(results.contains(piArr[i]));
 			}
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
@@ -65,7 +65,7 @@ public class PregnancyInfoMySQLTest {
 			List<PregnancyInfo> results = pisql.getRecords(1);
 			for (int i = 0; i < piArr.length; i++)
 			{
-				Assert.assertTrue(results.get(i).equals(piArr[i]));
+				Assert.assertTrue(results.contains(piArr[i]));
 			}
 			PregnancyInfo result = results.get(0);
 			//Now try to get that same record by id
