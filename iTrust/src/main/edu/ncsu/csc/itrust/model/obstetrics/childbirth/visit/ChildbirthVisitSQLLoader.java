@@ -58,6 +58,16 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			cv.setDeliveryType(DeliveryMethod.matchString(devType));
 		}
 		
+		String visitType = rs.getString("visitType");
+		if (rs.wasNull())
+		{
+			cv.setVisitType(null);
+		}
+		else
+		{
+			cv.setVisitType(VisitType.matchString(visitType));
+		}
+		
 		Integer pitocin = rs.getInt("pitocin");
 		if (rs.wasNull()) pitocin = null;
 		cv.setPitocin(pitocin);
@@ -98,7 +108,7 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		String stmt = "";
 		if (newInstance)
 		{
-			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfate) VALUES (?, ?, ?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, visitType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -109,50 +119,58 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			{
 				ps.setString(2, insertObject.getDeliveryType().toString());
 			}
-			if (insertObject.getPitocin() == null)
+			if (insertObject.getVisitType() == null)
 			{
-				ps.setNull(3, java.sql.Types.BIGINT);
+				ps.setNull(3, java.sql.Types.VARCHAR);
 			}
 			else
 			{
-				ps.setInt(3, insertObject.getPitocin());
+				ps.setString(3, insertObject.getVisitType().toString());
 			}
-			if (insertObject.getNitrousOxide() == null)
+			if (insertObject.getPitocin() == null)
 			{
 				ps.setNull(4, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(4, insertObject.getNitrousOxide());
+				ps.setInt(4, insertObject.getPitocin());
 			}
-			if (insertObject.getPethidine() == null)
+			if (insertObject.getNitrousOxide() == null)
 			{
 				ps.setNull(5, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(5, insertObject.getPethidine());
+				ps.setInt(5, insertObject.getNitrousOxide());
 			}
-			if (insertObject.getEpiduralAnaesthesia() == null)
+			if (insertObject.getPethidine() == null)
 			{
 				ps.setNull(6, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(6, insertObject.getEpiduralAnaesthesia());
+				ps.setInt(6, insertObject.getPethidine());
 			}
-			if (insertObject.getMagnesiumSulfate() == null)
+			if (insertObject.getEpiduralAnaesthesia() == null)
 			{
 				ps.setNull(7, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(7, insertObject.getMagnesiumSulfate());
+				ps.setInt(7, insertObject.getEpiduralAnaesthesia());
+			}
+			if (insertObject.getMagnesiumSulfate() == null)
+			{
+				ps.setNull(8, java.sql.Types.BIGINT);
+			}
+			else
+			{
+				ps.setInt(8, insertObject.getMagnesiumSulfate());
 			}
 		}
 		else
 		{
-			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfate=? WHERE id=?;";
+			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, visitType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfate=? WHERE id=?;";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -163,47 +181,55 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			{
 				ps.setString(2, insertObject.getDeliveryType().toString());
 			}
-			if (insertObject.getPitocin() == null)
+			if (insertObject.getVisitType() == null)
 			{
-				ps.setNull(3, java.sql.Types.BIGINT);
+				ps.setNull(3, java.sql.Types.VARCHAR);
 			}
 			else
 			{
-				ps.setInt(3, insertObject.getPitocin());
+				ps.setString(3, insertObject.getVisitType().toString());
 			}
-			if (insertObject.getNitrousOxide() == null)
+			if (insertObject.getPitocin() == null)
 			{
 				ps.setNull(4, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(4, insertObject.getNitrousOxide());
+				ps.setInt(4, insertObject.getPitocin());
 			}
-			if (insertObject.getPethidine() == null)
+			if (insertObject.getNitrousOxide() == null)
 			{
 				ps.setNull(5, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(5, insertObject.getPethidine());
+				ps.setInt(5, insertObject.getNitrousOxide());
 			}
-			if (insertObject.getEpiduralAnaesthesia() == null)
+			if (insertObject.getPethidine() == null)
 			{
 				ps.setNull(6, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(6, insertObject.getEpiduralAnaesthesia());
+				ps.setInt(6, insertObject.getPethidine());
 			}
-			if (insertObject.getMagnesiumSulfate() == null)
+			if (insertObject.getEpiduralAnaesthesia() == null)
 			{
 				ps.setNull(7, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(7, insertObject.getMagnesiumSulfate());
+				ps.setInt(7, insertObject.getEpiduralAnaesthesia());
 			}
-			ps.setLong(8, insertObject.getId());
+			if (insertObject.getMagnesiumSulfate() == null)
+			{
+				ps.setNull(8, java.sql.Types.BIGINT);
+			}
+			else
+			{
+				ps.setInt(8, insertObject.getMagnesiumSulfate());
+			}
+			ps.setLong(9, insertObject.getId());
 		}
 		return ps;
 	}
