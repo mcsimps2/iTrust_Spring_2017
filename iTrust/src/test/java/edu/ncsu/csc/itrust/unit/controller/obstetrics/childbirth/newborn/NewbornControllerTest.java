@@ -64,16 +64,6 @@ public class NewbornControllerTest {
 		gen.standardData();
 	}
 
-//	@Test
-//	public void testNewbornController() {
-//		//fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testNewbornControllerDataSourcePatientDAO() {
-//		//fail("Not yet implemented");
-//	}
-
 	@Test
 	public void testAdd() {
 		try {
