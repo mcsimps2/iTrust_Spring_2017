@@ -43,15 +43,15 @@
 						<h:selectBooleanCheckbox label="ESTIMATED-TIME" id="estimated-time" class="form-control" value="#{newborn_form.newborn.timeEstimated}" disabled="#{!isOBGYN}" style="width:15px;height:15px;display:inline-block;margin:0px 0px 0px 10px;vertical-align:text-bottom;"/>
 					</div>
 					<div class="form-action-group">
-						<h:commandButton id="addNewbornData" class="btn btn-default" value="Add Newborn Data" action="#{newborn_form.add()}"  disabled="#{!isOBGYN}"/>
-						<h:commandButton id="updateNewbornData" class="btn btn-default" value="Update Newborn Data" action="#{newborn_form.edit()}" disabled="#{!isOBGYN}"/>
+						<h:commandButton id="addNewbornData" class="btn btn-default" value="Add Newborn Data" action="#{newborn_form.add(office_visit_form.visitID)}"  disabled="#{!isOBGYN}"/>
+						<h:commandButton id="updateNewbornData" class="btn btn-default" value="Update Newborn Data" action="#{newborn_form.edit(office_visit_form.visitID)}" disabled="#{!isOBGYN}"/>
 					</div>	
 				</h:form>
 			</div>
 			
 			<div class="duo-column duo-column-table">
 				<h:form id="newborn_table_form">
-					<ui:param name="newbornList" value="#{newborn_form.getNewborns()}" />
+					<ui:param name="newbornList" value="#{newborn_form.getNewborns(office_visit_form.visitID)}" />
 					<ui:fragment rendered="${!empty newbornList}">
 						<h:dataTable id="newborn_table" styleClass="fTable" value="#{ newbornList }" var="newborn" border="1">
 							<h:column>
