@@ -66,8 +66,8 @@ public class NewbornMySQLTest
 		try
 		{
 			List<Newborn> list = sql.getAll();
-			Assert.assertEquals(newborns.length, list.size());
-			for (int i = 0; i < list.size(); i++)
+			Assert.assertEquals(newborns.length + 1, list.size());
+			for (int i = 0; i < newborns.length; i++)
 			{
 				Assert.assertTrue(list.contains(newborns[i]));
 			}
@@ -85,7 +85,7 @@ public class NewbornMySQLTest
 		{
 			for (int i = 0; i < newborns.length; i++)
 			{
-				Assert.assertEquals(newborns[i], sql.getByID(i + 1));
+				Assert.assertEquals(newborns[i], sql.getByID(i + 2));
 			}
 		}
 		catch (DBException e)
@@ -116,7 +116,7 @@ public class NewbornMySQLTest
 		Newborn nb = new Newborn(1515L, 1L, "2015-11-15", "5:05 PM", SexType.OTHER, false);
 		try
 		{
-			Assert.assertEquals(3, sql.addReturnGeneratedId(nb));
+			Assert.assertEquals(4, sql.addReturnGeneratedId(nb));
 		}
 		catch (DBException e)
 		{
@@ -220,10 +220,11 @@ public class NewbornMySQLTest
 	{
 		try
 		{
-			sql.delete(2L);
+			sql.delete(3L);
 			List<Newborn> list = sql.getAll();
-			Assert.assertEquals(1, list.size());
-			Assert.assertEquals(newborns[0], list.get(0));
+			Assert.assertEquals(2, list.size());
+			Assert.assertTrue(list.contains(newborns[0]));
+			Assert.assertFalse(list.contains(newborns[1]));
 		}
 		catch (DBException e)
 		{

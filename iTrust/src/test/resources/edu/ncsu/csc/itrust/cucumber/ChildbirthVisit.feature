@@ -30,6 +30,7 @@ Scenario Outline: Add childbirth data to office visit
 	And click on the link for patient with pid 1
 	And click on the first office visit on the office visits page
 	And I select <birthMethod> for Childbirth Method
+	And I select <visitType> for Visit Type
 	And I enter <pit> for Pitocin, <N2O> for Nitrous Oxide, <peth> for Pethidine, <epi> for Epidural Anaesthesia, and <MgSO4> for Magnesium Sulfate
 	And click Save on the childbirth tab
 	Then the childbirth tab has those fields
@@ -37,12 +38,12 @@ Scenario Outline: Add childbirth data to office visit
 	And a success message appears
 
 Examples:
-	| birthMethod                     | pit | N2O | peth | epi | MgSO4 |
-	| Vaginal Delivery                | 100 | 0   | 0    | 0   | 0     |
-	| Vaginal Delivery Vacuum Assist  | 0   | 100 | 0    | 0   | 0     |
-	| Vaginal Delivery Forceps Assist | 0   | 0   | 100  | 0   | 0     |
-	| Caesarean section               | 0   | 0   | 0    | 100 | 0     |
-	| Miscarriage                     | 0   | 0   | 0    | 0   | 100   |
+	| birthMethod                     | visitType                 | pit | N2O | peth | epi | MgSO4 |
+	| Vaginal Delivery                | Emergency appointment     | 100 | 0   | 0    | 0   | 0     |
+	| Vaginal Delivery Vacuum Assist  | Emergency appointment     | 0   | 100 | 0    | 0   | 0     |
+	| Vaginal Delivery Forceps Assist | Emergency appointment     | 0   | 0   | 100  | 0   | 0     |
+	| Caesarean section               | Pre-scheduled appointment | 0   | 0   | 0    | 100 | 0     |
+	| Miscarriage                     | Emergency appointment     | 0   | 0   | 0    | 0   | 100   |
 
 Scenario: Add newborns
 	Given I have logged in as OBGYN with MID 9000000012 and password pw
@@ -51,6 +52,7 @@ Scenario: Add newborns
 	And click on the link for patient with pid 1
 	And click on the first office visit on the office visits page
 	And I select Vaginal Delivery for Childbirth Method
+	And I select Emergency appointment for Visit Type
 	And I enter 0 for all childbirth drug fields
 	And click Save on the childbirth tab
 	And I check the number of newborns in the table
@@ -71,6 +73,7 @@ Scenario: Update and Delete newborn data
 	And click on the link for patient with pid 1
 	And click on the first office visit on the office visits page
 	And I select Vaginal Delivery for Childbirth Method
+	And I select Emergency appointment for Visit Type
 	And I enter 0 for all childbirth drug fields
 	And click Save on the childbirth tab
 	And I enter 2017-4-2 for Date and 10:00 AM for Time

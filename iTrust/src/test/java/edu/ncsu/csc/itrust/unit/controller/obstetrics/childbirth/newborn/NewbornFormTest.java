@@ -37,6 +37,7 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class NewbornFormTest {
 
 	@Spy private NewbornController nc;
+	@Spy private ChildbirthVisitController cvc;
 	@Spy private SessionUtils sessionUtils;
 	
 	@Mock private SessionUtils mockSessionUtils;
@@ -44,7 +45,6 @@ public class NewbornFormTest {
 	
 	private DataSource ds;
 	private NewbornData newbornData;
-	private ChildbirthVisitController cvc;
 	
 	private NewbornForm nf;
 	
@@ -58,12 +58,14 @@ public class NewbornFormTest {
 		Mockito.when(mockPatientDAO.addEmptyPatient()).thenReturn(1L);
 		
 		nc = Mockito.spy(new NewbornController(ds, mockSessionUtils, mockPatientDAO));
-		cvc = new ChildbirthVisitController(ds, mockSessionUtils);
+		cvc = Mockito.spy(new ChildbirthVisitController(ds, mockSessionUtils));
 		
 		nf = new NewbornForm(nc, cvc, mockSessionUtils, 51L);
 		
 		Mockito.doNothing().when(nc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing().when(cvc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
+				Mockito.anyString());
 		Mockito.when(mockSessionUtils.getSessionLoggedInMIDLong()).thenReturn(9000000012L);
 		
 		newbornData = new NewbornMySQL(ds);

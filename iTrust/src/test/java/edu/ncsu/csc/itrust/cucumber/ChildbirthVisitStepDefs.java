@@ -23,6 +23,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitMySQL;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 
 public class ChildbirthVisitStepDefs {	
@@ -135,6 +136,7 @@ public class ChildbirthVisitStepDefs {
 	@Then("^the childbirth form fields are disabled$")
 	public void obstetricsFormFieldsAreDisabled() {
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:childbirthMethod")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:visitType")).getAttribute("disabled").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:pitocin")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:nitrousOxide")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:pethidine")).getAttribute("readonly").equals("true"));
@@ -179,6 +181,14 @@ public class ChildbirthVisitStepDefs {
 		
 		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:childbirthMethod")));
 		dropdown.selectByVisibleText(birthMethod);
+	}
+	
+	@When("^I select (.+) for Visit Type$")
+	public void selectVisitType(String visitType) {
+		cv.setVisitType(VisitType.matchString(visitType));
+		
+		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:visitType")));
+		dropdown.selectByVisibleText(visitType);
 	}
 	
 	@When("^I enter (.+) for Pitocin, (.+) for Nitrous Oxide, (.+) for Pethidine, (.+) for Epidural Anaesthesia, and (.+) for Magnesium Sulfate$")
@@ -233,7 +243,11 @@ public class ChildbirthVisitStepDefs {
 	public void checkChildbirthFields() {
 		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:childbirthMethod")));
 		String selectedOption = dropdown.getFirstSelectedOption().getAttribute("value");
-		Assert.assertEquals(cv.getDeliveryType(), DeliveryMethod.matchString(selectedOption));
+		Assert.assertEquals(cv.getDeliveryType(), DeliveryMethod.valueOf(selectedOption));
+		
+		dropdown = new Select(driver.findElement(By.id("childbirth_form:visitType")));
+		selectedOption = dropdown.getFirstSelectedOption().getAttribute("value");
+		Assert.assertEquals(cv.getVisitType(), VisitType.valueOf(selectedOption));
 		
 		String pit = driver.findElement(By.id("childbirth_form:pitocin")).getAttribute("value");
 		Assert.assertEquals(cv.getPitocin().toString(), pit);
