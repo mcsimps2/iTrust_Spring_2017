@@ -85,7 +85,7 @@ public class NewbornFormTest {
 		Assert.assertTrue(nf.getNewborn().equals(n));
 		
 		n.setOfficeVisitID(51L);
-		cvc.add(new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1));
+		cvc.add(new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 1));
 		nf.add(51L);
 		Assert.assertTrue(nf.getNewborn().equals(n));
 		
