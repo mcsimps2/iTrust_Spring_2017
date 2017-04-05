@@ -23,6 +23,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
@@ -82,7 +83,7 @@ public class NewbornFormTest {
 		Assert.assertTrue(nf.getNewborn().equals(n));
 		
 		n.setOfficeVisitID(51L);
-		cvc.add(new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, 1, 1, 1, 1, 1));
+		cvc.add(new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1));
 		nf.add(51L);
 		Assert.assertTrue(nf.getNewborn().equals(n));
 		
