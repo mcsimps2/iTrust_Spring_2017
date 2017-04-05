@@ -17,35 +17,51 @@
 			<div class="form-group">
 				<h:outputLabel for="preferredChildbirthMethod">Preferred childbirth method</h:outputLabel>
 				<h:selectOneMenu id="preferredChildbirthMethod" disabled="true" class="selectpicker"
-				                 value="#{obstetrics_init_controller.deliveryType}">
+				                 value="#{childbirth_visit_form.deliveryType}">
 					<f:selectItems var="method" itemLabel="#{method.toString()}" itemValue="#{method.toString()}"
 								   value="#{obstetrics_init_controller.getDeliveryMethods()}" />
 				</h:selectOneMenu>
 			</div>
+		
+			<div class="form-group">
+				<h:outputLabel for="visitType">Visit Type</h:outputLabel>
+				<h:selectOneMenu id="visitType" class="selectpicker"
+					disabled="true" value="#{childbirth_visit_form.visitType}">
+					<f:selectItems var="type" itemLabel="#{type.toString()}"
+						itemValue="#{type}"
+						value="#{obstetrics_init_controller.getVisitTypes()}" />
+				</h:selectOneMenu>
+				<h:message for="visitType" />
+			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
-				<h:inputText id="pitocin" class="form-control inline" readonly="true" />
+				<h:inputText label="Pitocin" value="#{childbirth_visit_form.pitocin}"
+				             id="pitocin" class="form-control inline" readonly="true" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
-				<h:inputText id="nitrousOxide" class="form-control inline" readonly="true" />
+				<h:inputText label="Nitrous oxide" value="#{childbirth_visit_form.nitrousOxide}"
+				             id="nitrousOxide" class="form-control inline" readonly="true" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
-				<h:inputText id="pethidine" class="form-control inline" readonly="true" />
+				<h:inputText label="Pethidine" value="#{childbirth_visit_form.pethidine}"
+				             id="pethidine" class="form-control inline" readonly="true" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
-				<h:inputText id="epiduralAnaesthesia" class="form-control inline" readonly="true" />
+				<h:inputText label="Epidural anaesthesia" value="#{childbirth_visit_form.epiduralAnaesthesia}"
+				             id="epiduralAnaesthesia" class="form-control inline" readonly="true" />
 			</div>
 			
 			<div class="form-group">
 				<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
-				<h:inputText id="magnesiumSulfate" class="form-control inline" readonly="true" />
+				<h:inputText label="Magnesium sulfate" value="#{childbirth_visit_form.magnesiumSulfate}"
+				             id="magnesiumSulfate" class="form-control inline" readonly="true" />
 			</div>
 		</h:form>
 		

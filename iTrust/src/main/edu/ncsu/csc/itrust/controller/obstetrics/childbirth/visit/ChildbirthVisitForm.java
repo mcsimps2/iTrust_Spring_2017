@@ -5,26 +5,19 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
 @ManagedBean(name = "childbirth_visit_form")
 @ViewScoped
 public class ChildbirthVisitForm {
 	private ChildbirthVisitController controller;
-	private DataSource ds;
 
 	private Long officeVisitID;
-	private OfficeVisit officeVisit;
 	private ChildbirthVisit cv;
 	
 	private DeliveryMethod deliveryType;
@@ -41,17 +34,10 @@ public class ChildbirthVisitForm {
 	
 	public ChildbirthVisitForm(ChildbirthVisitController controller, DataSource ds) {
 		try {
-			if (ds == null) {
-				Context ctx = new InitialContext();
-				this.ds = ((DataSource) (((Context) ctx.lookup("java:comp/env"))).lookup("jdbc/itrust"));
-			} else {
-				this.ds = ds;
-			}
 			this.controller = (controller == null) ? new ChildbirthVisitController() : controller;
 			
 			// Find the viewed office visit
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
-			officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
 			
 			// Get the existing ChildbirthVisit for this office visit if one exists
 			this.cv = this.controller.getByOfficeVisit(officeVisitID);
@@ -68,18 +54,14 @@ public class ChildbirthVisitForm {
 			this.pethidine = this.cv.getPethidine();
 			this.epiduralAnaesthesia = this.cv.getEpiduralAnaesthesia();
 			this.magnesiumSulfate = this.cv.getMagnesiumSulfate();
-		} catch (NamingException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
 		} catch (DBException ex) {
-			// TODO handle this
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
 			ex.printStackTrace();
 		}
 	}
 	
 	public void submitChildbirth() {
 		boolean isNew = cv.getId() == null;
-		
-		// TODO Validate fields
 		
 		cv.setDeliveryType(this.deliveryType);
 		cv.setVisitType(this.visitType);
@@ -96,8 +78,7 @@ public class ChildbirthVisitForm {
 		}
 		
 		ChildbirthVisit dbCV = this.controller.getByOfficeVisit(officeVisitID);
-		if (dbCV != null)
-			cv = dbCV;
+		if (dbCV != null) cv = dbCV;
 	}
 	
 	/**
