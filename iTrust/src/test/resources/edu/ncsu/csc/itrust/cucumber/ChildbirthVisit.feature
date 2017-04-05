@@ -89,8 +89,7 @@ Scenario: Update and Delete newborn data
 	And I enter 2017-4-2 for Date and 10:02 AM for Time
 	And I select Female for Sex
 	And click Update Newborn
-	Then the first newborn in the table should have those field values
-	And the same number of newborns should be in the table
+	Then the same number of newborns should be in the table
 
 Scenario: Non-OB/GYN HCP
 	Given I have logged in as OBGYN with MID 9000000000 and password pw

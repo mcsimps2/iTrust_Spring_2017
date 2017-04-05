@@ -170,7 +170,9 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the patient's obstetrics history is present$")
 	public void checkObstetricsHistory() {
-		//TODO
+		String pageSource = driver.getPageSource();
+		Assert.assertTrue(pageSource.contains("Obstetrics records"));
+		Assert.assertTrue(pageSource.contains("Prior pregnancies"));
 	}
 	
 	@When("^I select (.+) for Childbirth Method$")
@@ -317,11 +319,5 @@ public class ChildbirthVisitStepDefs {
 			e.printStackTrace();
 			Assert.fail("DBException");
 		}
-	}
-	
-	@Then("^the first newborn in the table should have those field values$")
-	public void checkFirstNewbornInTable() {
-		//TODO find fields and compare them to those in recentNewborn (ignore PID)
-		
 	}
 }
