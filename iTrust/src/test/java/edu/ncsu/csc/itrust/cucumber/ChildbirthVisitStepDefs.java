@@ -187,7 +187,7 @@ public class ChildbirthVisitStepDefs {
 		cv.setNitrousOxide(Integer.parseInt(N2O));
 		cv.setPethidine(Integer.parseInt(peth));
 		cv.setEpiduralAnaesthesia(Integer.parseInt(epi));
-		cv.setMagnesiumSulfide(Integer.parseInt(MgSO4));
+		cv.setMagnesiumSulfate(Integer.parseInt(MgSO4));
 		
 		driver.findElement(By.id("childbirth_form:pitocin")).clear();
 		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(pit);
@@ -211,7 +211,7 @@ public class ChildbirthVisitStepDefs {
 		cv.setNitrousOxide(Integer.parseInt(dosage));
 		cv.setPethidine(Integer.parseInt(dosage));
 		cv.setEpiduralAnaesthesia(Integer.parseInt(dosage));
-		cv.setMagnesiumSulfide(Integer.parseInt(dosage));
+		cv.setMagnesiumSulfate(Integer.parseInt(dosage));
 		
 		driver.findElement(By.id("childbirth_form:pitocin")).clear();
 		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(dosage);
@@ -248,7 +248,7 @@ public class ChildbirthVisitStepDefs {
 		Assert.assertEquals(cv.getEpiduralAnaesthesia().toString(), epi);
 		
 		String MgSO4 = driver.findElement(By.id("childbirth_form:magnesiumSulfate")).getAttribute("value");
-		Assert.assertEquals(cv.getMagnesiumSulfide().toString(), MgSO4);
+		Assert.assertEquals(cv.getMagnesiumSulfate().toString(), MgSO4);
 	}
 	
 	@Then("^the childbirth visit is in the database$")

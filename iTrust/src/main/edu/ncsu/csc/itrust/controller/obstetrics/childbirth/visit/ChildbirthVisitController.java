@@ -53,12 +53,13 @@ public class ChildbirthVisitController extends iTrustController {
 	public void add(ChildbirthVisit cv) {
 		try {
 			this.cvData.add(cv);
+			printFacesMessage(FacesMessage.SEVERITY_INFO, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED);
 			// TODO log 9600, 9601
 		} catch (DBException e) {
-			// TODO write a message
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage());
 			e.printStackTrace();
 		} catch (FormValidationException e) {
-			// TODO write a message
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -70,10 +71,10 @@ public class ChildbirthVisitController extends iTrustController {
 					CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED);
 			// TODO log 9604
 		} catch (DBException e) {
-			// TODO write a message
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage());
 			e.printStackTrace();
 		} catch (FormValidationException e) {
-			// TODO write a message
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 			e.printStackTrace();
 		}
 	}

@@ -109,7 +109,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 		}
 		catch (FormValidationException e)
 		{
-			throw new DBException(new SQLException(e));
+			throw new DBException(new SQLException(e.getMessage()));
 		}
 		try
 		{
@@ -140,7 +140,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 		}
 		catch (FormValidationException e)
 		{
-			throw new DBException(new SQLException(e));
+			throw new DBException(new SQLException(e.getMessage()));
 		}
 		try
 		{
@@ -202,7 +202,7 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 		}
 		catch (FormValidationException e)
 		{
-			throw new DBException(new SQLException(e));
+			throw new DBException(new SQLException(e.getMessage()));
 		}
 		try
 		{

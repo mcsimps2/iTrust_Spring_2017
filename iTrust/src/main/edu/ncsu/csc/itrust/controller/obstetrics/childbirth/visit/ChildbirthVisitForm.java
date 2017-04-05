@@ -89,8 +89,10 @@ public class ChildbirthVisitForm {
 		} else {
 			controller.update(cv);
 		}
-
-		this.cv = this.controller.getByOfficeVisit(officeVisitID);
+		
+		ChildbirthVisit dbCV = this.controller.getByOfficeVisit(officeVisitID);
+		if (dbCV != null)
+			cv = dbCV;
 	}
 	
 	/**
