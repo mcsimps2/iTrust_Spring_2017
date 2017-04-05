@@ -13,6 +13,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitMySQL;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "childbirth_visit_controller")
@@ -54,7 +55,9 @@ public class ChildbirthVisitController extends iTrustController {
 		try {
 			this.cvData.add(cv);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED);
-			// TODO log 9600, 9601
+
+			logTransaction(TransactionType.CREATE_CHILDBIRTH_VISIT, "Office Visit ID: " + cv.getOfficeVisitID());
+			logTransaction(TransactionType.ADD_CHILDBIRTH_DRUGS, "Office Visit ID: " + cv.getOfficeVisitID());
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage());
 			e.printStackTrace();
@@ -69,7 +72,8 @@ public class ChildbirthVisitController extends iTrustController {
 			this.cvData.update(cv);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED,
 					CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED);
-			// TODO log 9604
+			
+			logTransaction(TransactionType.EDIT_CHILDBIRTH_VISIT, "Office Visit ID: " + cv.getOfficeVisitID());
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage());
 			e.printStackTrace();
