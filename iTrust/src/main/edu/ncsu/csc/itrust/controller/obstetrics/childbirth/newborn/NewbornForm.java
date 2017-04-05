@@ -21,7 +21,6 @@ public class NewbornForm {
 	
 	private NewbornController controller;
 	private ChildbirthVisitController cvc;
-	private Long officeVisitID;
 	private SessionUtils sessionUtils;
 	private Newborn newborn;
 	
@@ -31,7 +30,7 @@ public class NewbornForm {
 	 * Constructor used in run time.
 	 */
 	public NewbornForm() {
-	    this(null, null, SessionUtils.getInstance());
+	    this(null, null, SessionUtils.getInstance(), (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"));
 	}
 
 	/**
@@ -40,13 +39,12 @@ public class NewbornForm {
 	 * @param ovc
 	 * @param sessionUtils
 	 */
-	public NewbornForm(NewbornController nc, ChildbirthVisitController cvc, SessionUtils sessionUtils) {
+	public NewbornForm(NewbornController nc, ChildbirthVisitController cvc, SessionUtils sessionUtils, Long officeVisitID) {
 		try {
 			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
 		    this.cvc = (cvc == null) ? new ChildbirthVisitController() : cvc;
 			this.controller = (nc == null) ? new NewbornController() : nc;
-			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
-			clearFields();
+			clearFields(officeVisitID);
 		} catch (Exception e) {
 			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
 					"Controller Error", null);
@@ -56,24 +54,25 @@ public class NewbornForm {
 	/**
 	 * Adds the newborn to the database.
 	 * Only works if an Childbirth has been submitted for this office visit.
+	 * @param officeVisitID
 	 */
-	public void add(){
-		//TODO: Add this back once Josh adds his functionality in
-//		if (cvc.getByOfficeVisit(officeVisitID) == null) {
-//			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
-//					SAVE_CHILDBIRTH_FIRST_ERROR, null);
-//			return;
-//		}
-		controller.add(newborn);
-		clearFields();
+	public void add(Long officeVisitID){
+		if (cvc.getByOfficeVisit(officeVisitID) == null) {
+			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
+					SAVE_CHILDBIRTH_FIRST_ERROR, null);
+			return;
+		}
+		if (controller.add(newborn))
+			clearFields(officeVisitID);
 	}
 	
 	/**
 	 * Edits the current newborn in the database.
+	 * @param officeVisitID
 	 */
-	public void edit(){
-		controller.edit(newborn);
-		clearFields();
+	public void edit(Long officeVisitID){
+		if (controller.edit(newborn))
+			clearFields(officeVisitID);
 	}
 	
 	/**
@@ -82,14 +81,14 @@ public class NewbornForm {
 	 */
 	public void delete(Long newbornID){
 		controller.delete(newbornID);
-		clearFields();
 	}
 	
 	/**
 	 * Returns a List of all of the newborns for the current office visit.
+	 * @param officeVisitID
 	 * @return all of the newborns for the current office visit
 	 */
-	public List<Newborn> getNewborns(){
+	public List<Newborn> getNewborns(Long officeVisitID){
 		List<Newborn> newborns = Collections.emptyList();
 		try {
 			newborns = controller.getNewbornsByOfficeVisit(officeVisitID);
@@ -108,13 +107,15 @@ public class NewbornForm {
 	 * @param time
 	 * @param sex
 	 * @param estimatedTime
+	 * @param pid
 	 */
-	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime){
+	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime, Long pid){
 		newborn.setId(newbornID);
 		newborn.setDateOfBirth(dateOfBirth);
 		newborn.setTimeOfBirth(timeOfBirth);
 		newborn.setSex(sex);
 		newborn.setTimeEstimated(estimatedTime);
+		newborn.setPid(pid);
 	}
 	
 	public List<SexType> getSexTypes() {
@@ -123,8 +124,9 @@ public class NewbornForm {
 	
 	/**
 	 * Clears all of the fields in this form.
+	 * @param officeVisitID
 	 */
-	public void clearFields(){
+	public void clearFields(Long officeVisitID){
 		newborn = new Newborn(officeVisitID);
 	}
 

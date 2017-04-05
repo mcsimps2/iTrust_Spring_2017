@@ -11,7 +11,7 @@ public class ChildbirthVisit
 	private Integer nitrousOxide;
 	private Integer pethidine;
 	private Integer epiduralAnaesthesia;
-	private Integer magnesiumSulfide;
+	private Integer magnesiumSulfate;
 	
 	public ChildbirthVisit()
 	{
@@ -19,7 +19,7 @@ public class ChildbirthVisit
 	}
 	
 	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryType, Integer pitocin, Integer nitrousOxide,
-			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfide)
+			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfate)
 	{
 		super();
 		this.officeVisitID = officeVisitID;
@@ -28,7 +28,7 @@ public class ChildbirthVisit
 		this.nitrousOxide = nitrousOxide;
 		this.pethidine = pethidine;
 		this.epiduralAnaesthesia = epiduralAnaesthesia;
-		this.magnesiumSulfide = magnesiumSulfide;
+		this.magnesiumSulfate = magnesiumSulfate;
 	}
 	
 	
@@ -90,13 +90,13 @@ public class ChildbirthVisit
 	{
 		this.epiduralAnaesthesia = epiduralAnaesthesia;
 	}
-	public Integer getMagnesiumSulfide()
+	public Integer getMagnesiumSulfate()
 	{
-		return magnesiumSulfide;
+		return magnesiumSulfate;
 	}
-	public void setMagnesiumSulfide(Integer magnesiumSulfide)
+	public void setMagnesiumSulfate(Integer magnesiumSulfate)
 	{
-		this.magnesiumSulfide = magnesiumSulfide;
+		this.magnesiumSulfate = magnesiumSulfate;
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class ChildbirthVisit
 		int result = 1;
 		result = prime * result + ((deliveryType == null) ? 0 : deliveryType.hashCode());
 		result = prime * result + ((epiduralAnaesthesia == null) ? 0 : epiduralAnaesthesia.hashCode());
-		result = prime * result + ((magnesiumSulfide == null) ? 0 : magnesiumSulfide.hashCode());
+		result = prime * result + ((magnesiumSulfate == null) ? 0 : magnesiumSulfate.hashCode());
 		result = prime * result + ((nitrousOxide == null) ? 0 : nitrousOxide.hashCode());
 		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
 		result = prime * result + ((pethidine == null) ? 0 : pethidine.hashCode());
@@ -133,12 +133,12 @@ public class ChildbirthVisit
 		}
 		else if (!epiduralAnaesthesia.equals(other.epiduralAnaesthesia))
 			return false;
-		if (magnesiumSulfide == null)
+		if (magnesiumSulfate == null)
 		{
-			if (other.magnesiumSulfide != null)
+			if (other.magnesiumSulfate != null)
 				return false;
 		}
-		else if (!magnesiumSulfide.equals(other.magnesiumSulfide))
+		else if (!magnesiumSulfate.equals(other.magnesiumSulfate))
 			return false;
 		if (nitrousOxide == null)
 		{
