@@ -49,6 +49,9 @@
 					
 					<input id="tab-childbirth" type="radio" name="ovtabs" />
 					<label for="tab-childbirth">Childbirth</label>
+					
+					<input id="tab-newborns" type="radio" name="ovtabs" />
+					<label for="tab-newborns">Newborns</label>
 				</c:if>
 
 				<div class="tab-content">
@@ -99,6 +102,11 @@
 						<!-- CHILDBIRTH -->
 						<div class="tab-panel" id="content-childbirth">
 							<ui:include src="/auth/patient/viewChildbirth.xhtml"></ui:include>
+						</div>
+						
+						<!-- NEWBORNS -->
+						<div class="tab-panel" id="content-newborns">
+							<ui:include src="/auth/patient/viewNewborns.xhtml"></ui:include>
 						</div>
 					</c:if>
 				</div>

@@ -21,11 +21,11 @@ public class ChildbirthVisitTest
 		cv2.setEpiduralAnaesthesia(null);
 		Assert.assertNotEquals(cv2, cv1);
 		cv2.setEpiduralAnaesthesia(2);
-		cv2.setMagnesiumSulfide(10);
+		cv2.setMagnesiumSulfate(10);
 		Assert.assertNotEquals(cv1, cv2);
-		cv2.setMagnesiumSulfide(null);
+		cv2.setMagnesiumSulfate(null);
 		Assert.assertNotEquals(cv2, cv1);
-		cv2.setMagnesiumSulfide(1);
+		cv2.setMagnesiumSulfate(1);
 		cv2.setDeliveryType(DeliveryMethod.MISCARRIAGE);
 		Assert.assertNotEquals(cv1, cv2);
 		cv2.setDeliveryType(DeliveryMethod.VAGINAL_DELIVERY);

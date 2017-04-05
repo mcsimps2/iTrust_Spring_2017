@@ -590,7 +590,7 @@ CREATE TABLE childbirthVisits
 	nitrousOxide BIGINT UNSIGNED,
 	pethidine BIGINT UNSIGNED,
 	epiduralAnaesthesia BIGINT UNSIGNED,
-	magnesiumSulfide BIGINT UNSIGNED,
+	magnesiumSulfate BIGINT UNSIGNED,
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;

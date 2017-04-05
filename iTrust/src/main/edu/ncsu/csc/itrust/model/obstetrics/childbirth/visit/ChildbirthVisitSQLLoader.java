@@ -74,9 +74,9 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		if (rs.wasNull()) ea = null;
 		cv.setEpiduralAnaesthesia(ea);
 		
-		Integer ms = rs.getInt("magnesiumSulfide");
+		Integer ms = rs.getInt("magnesiumSulfate");
 		if (rs.wasNull()) ms = null;
-		cv.setMagnesiumSulfide(ms);
+		cv.setMagnesiumSulfate(ms);
 		
 		return cv;
 	}
@@ -98,7 +98,7 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		String stmt = "";
 		if (newInstance)
 		{
-			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfide) VALUES (?, ?, ?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfate) VALUES (?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -141,18 +141,18 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			{
 				ps.setInt(6, insertObject.getEpiduralAnaesthesia());
 			}
-			if (insertObject.getMagnesiumSulfide() == null)
+			if (insertObject.getMagnesiumSulfate() == null)
 			{
 				ps.setNull(7, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(7, insertObject.getMagnesiumSulfide());
+				ps.setInt(7, insertObject.getMagnesiumSulfate());
 			}
 		}
 		else
 		{
-			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfide=? WHERE id=?;";
+			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfate=? WHERE id=?;";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -195,13 +195,13 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			{
 				ps.setInt(6, insertObject.getEpiduralAnaesthesia());
 			}
-			if (insertObject.getMagnesiumSulfide() == null)
+			if (insertObject.getMagnesiumSulfate() == null)
 			{
 				ps.setNull(7, java.sql.Types.BIGINT);
 			}
 			else
 			{
-				ps.setInt(7, insertObject.getMagnesiumSulfide());
+				ps.setInt(7, insertObject.getMagnesiumSulfate());
 			}
 			ps.setLong(8, insertObject.getId());
 		}
