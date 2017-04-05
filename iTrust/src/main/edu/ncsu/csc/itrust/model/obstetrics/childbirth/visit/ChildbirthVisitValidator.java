@@ -73,7 +73,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			throw new FormValidationException(errs);
 		}
 		
-		//DeliveryMethod is set by default, can't be invalid
+		//DeliveryMethod and VisitType is set by default, can't be invalid
 		
 		//Check other fields for non-null and non-negativity
 		if (obj.getPitocin() == null)
@@ -121,7 +121,6 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		{
 			throw new FormValidationException(errs);
 		}
-		
 	}
 	
 	public void validateUpdate(ChildbirthVisit obj) throws FormValidationException
@@ -150,8 +149,6 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			throw new FormValidationException(errs);
 		}
 		
-		
-		
 		//Check other fields for non-negativity
 		if (obj.getPitocin() != null && obj.getPitocin() < 0)
 		{
@@ -178,7 +175,5 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		{
 			throw new FormValidationException(errs);
 		}
-			
 	}
-	
 }

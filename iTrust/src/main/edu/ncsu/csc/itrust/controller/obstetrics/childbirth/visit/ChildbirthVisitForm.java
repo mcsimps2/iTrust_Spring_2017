@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
@@ -27,6 +28,7 @@ public class ChildbirthVisitForm {
 	private ChildbirthVisit cv;
 	
 	private DeliveryMethod deliveryType;
+	private VisitType visitType;
 	private Integer pitocin;
 	private Integer nitrousOxide;
 	private Integer pethidine;
@@ -60,6 +62,7 @@ public class ChildbirthVisitForm {
 			
 			// Populate the ObstetricsVisit fields
 			this.deliveryType = this.cv.getDeliveryType();
+			this.visitType = this.cv.getVisitType();
 			this.pitocin = this.cv.getPitocin();
 			this.nitrousOxide = this.cv.getNitrousOxide();
 			this.pethidine = this.cv.getPethidine();
@@ -68,7 +71,8 @@ public class ChildbirthVisitForm {
 		} catch (NamingException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
 		} catch (DBException ex) {
-			// 48, 52
+			// TODO handle this
+			ex.printStackTrace();
 		}
 	}
 	
@@ -78,6 +82,7 @@ public class ChildbirthVisitForm {
 		// TODO Validate fields
 		
 		cv.setDeliveryType(this.deliveryType);
+		cv.setVisitType(this.visitType);
 		cv.setPitocin(this.pitocin);
 		cv.setNitrousOxide(this.nitrousOxide);
 		cv.setPethidine(this.pethidine);
@@ -103,12 +108,18 @@ public class ChildbirthVisitForm {
 		FacesMessage throwMsg = new FacesMessage(severity, summary, detail);
 		FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 	}
-	
+
 	public DeliveryMethod getDeliveryType() {
 		return deliveryType;
 	}
 	public void setDeliveryType(DeliveryMethod deliveryType) {
 		this.deliveryType = deliveryType;
+	}
+	public VisitType getVisitType() {
+		return visitType;
+	}
+	public void setVisitType(VisitType visitType) {
+		this.visitType = visitType;
 	}
 	public Integer getPitocin() {
 		return pitocin;
