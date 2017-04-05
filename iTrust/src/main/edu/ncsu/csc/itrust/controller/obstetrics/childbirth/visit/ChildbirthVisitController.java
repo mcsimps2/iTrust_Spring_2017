@@ -39,7 +39,6 @@ public class ChildbirthVisitController extends iTrustController {
 		this.cvData = new ChildbirthVisitMySQL(ds);
 	}
 	
-	
 	public ChildbirthVisit getByOfficeVisit(long officeVisitID) {
 		try {
 			return cvData.getByOfficeVisit(officeVisitID);
@@ -57,10 +56,8 @@ public class ChildbirthVisitController extends iTrustController {
 			logTransaction(TransactionType.ADD_CHILDBIRTH_DRUGS, "Office Visit ID: " + cv.getOfficeVisitID());
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage(), null);
-			e.printStackTrace();
 		} catch (FormValidationException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage(), null);
-			e.printStackTrace();
 		}
 	}
 	
@@ -73,10 +70,8 @@ public class ChildbirthVisitController extends iTrustController {
 			logTransaction(TransactionType.EDIT_CHILDBIRTH_VISIT, "Office Visit ID: " + cv.getOfficeVisitID());
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getExtendedMessage(), e.getExtendedMessage(), null);
-			e.printStackTrace();
 		} catch (FormValidationException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage(), null);
-			e.printStackTrace();
 		}
 	}
 }

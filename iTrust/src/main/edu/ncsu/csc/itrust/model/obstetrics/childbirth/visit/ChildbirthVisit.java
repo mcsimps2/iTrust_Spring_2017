@@ -21,20 +21,6 @@ public class ChildbirthVisit
 	}
 	
 	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryType, VisitType visitType, Integer pitocin, Integer nitrousOxide,
-			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfate)
-	{
-		super();
-		this.officeVisitID = officeVisitID;
-		this.deliveryType = deliveryType;
-		this.visitType = visitType;
-		this.pitocin = pitocin;
-		this.nitrousOxide = nitrousOxide;
-		this.pethidine = pethidine;
-		this.epiduralAnaesthesia = epiduralAnaesthesia;
-		this.magnesiumSulfate = magnesiumSulfate;
-	}
-	
-	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryType, VisitType visitType, Integer pitocin, Integer nitrousOxide,
 			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfate, Integer rh)
 	{
 		super();
