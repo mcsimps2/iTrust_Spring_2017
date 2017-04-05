@@ -592,6 +592,7 @@ CREATE TABLE childbirthVisits
 	pethidine BIGINT UNSIGNED,
 	epiduralAnaesthesia BIGINT UNSIGNED,
 	magnesiumSulfate BIGINT UNSIGNED,
+	rh BIGINT UNSIGNED,
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;

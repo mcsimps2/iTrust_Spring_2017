@@ -116,6 +116,14 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		{
 			errs.addIfNotNull("Magnesium sulfate must be a non-negative integer");
 		}
+		if (obj.getRH() == null)
+		{
+			errs.addIfNotNull("No RH immune globulin value specified");
+		}
+		else if (obj.getRH() < 0)
+		{
+			errs.addIfNotNull("RH immune globulin must be a non-negative integer");
+		}
 		
 		if (errs.hasErrors())
 		{
@@ -169,6 +177,10 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 		if (obj.getMagnesiumSulfate() != null && obj.getMagnesiumSulfate() < 0)
 		{
 			errs.addIfNotNull("Magnesium sulfate must be a non-negative integer");
+		}
+		if (obj.getRH() != null && obj.getRH() < 0)
+		{
+			errs.addIfNotNull("RH immune globulin must be a non-negative integer");
 		}
 		
 		if (errs.hasErrors())

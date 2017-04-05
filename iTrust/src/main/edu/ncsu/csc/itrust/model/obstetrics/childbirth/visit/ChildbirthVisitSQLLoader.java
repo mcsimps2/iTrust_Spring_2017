@@ -88,6 +88,10 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		if (rs.wasNull()) ms = null;
 		cv.setMagnesiumSulfate(ms);
 		
+		Integer rh = rs.getInt("rh");
+		if (rs.wasNull()) rh = null;
+		cv.setRH(rh);
+		
 		return cv;
 	}
 
@@ -108,7 +112,7 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 		String stmt = "";
 		if (newInstance)
 		{
-			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, visitType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+			stmt = "INSERT INTO childbirthVisits (officeVisitID, deliveryType, visitType, pitocin, nitrousOxide, pethidine, epiduralAnaesthesia, magnesiumSulfate, rh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -166,11 +170,19 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			else
 			{
 				ps.setInt(8, insertObject.getMagnesiumSulfate());
+			}
+			if (insertObject.getRH() == null)
+			{
+				ps.setNull(9, java.sql.Types.BIGINT);
+			}
+			else
+			{
+				ps.setInt(9, insertObject.getRH());
 			}
 		}
 		else
 		{
-			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, visitType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfate=? WHERE id=?;";
+			stmt = "UPDATE childbirthVisits SET officeVisitID=?, deliveryType=?, visitType=?, pitocin=?, nitrousOxide=?, pethidine=?, epiduralAnaesthesia=?, magnesiumSulfate=?, rh=? WHERE id=?;";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			ps.setLong(1, insertObject.getOfficeVisitID());
 			if (insertObject.getDeliveryType() == null)
@@ -229,7 +241,15 @@ public class ChildbirthVisitSQLLoader implements SQLLoader<ChildbirthVisit>
 			{
 				ps.setInt(8, insertObject.getMagnesiumSulfate());
 			}
-			ps.setLong(9, insertObject.getId());
+			if (insertObject.getRH() == null)
+			{
+				ps.setNull(9, java.sql.Types.BIGINT);
+			}
+			else
+			{
+				ps.setInt(9, insertObject.getRH());
+			}
+			ps.setLong(10, insertObject.getId());
 		}
 		return ps;
 	}
