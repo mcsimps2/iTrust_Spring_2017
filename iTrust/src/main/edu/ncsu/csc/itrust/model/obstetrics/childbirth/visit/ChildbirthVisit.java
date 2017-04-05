@@ -112,7 +112,6 @@ public class ChildbirthVisit
 		int result = 1;
 		result = prime * result + ((deliveryType == null) ? 0 : deliveryType.hashCode());
 		result = prime * result + ((epiduralAnaesthesia == null) ? 0 : epiduralAnaesthesia.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((magnesiumSulfate == null) ? 0 : magnesiumSulfate.hashCode());
 		result = prime * result + ((nitrousOxide == null) ? 0 : nitrousOxide.hashCode());
 		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
@@ -137,11 +136,6 @@ public class ChildbirthVisit
 			if (other.epiduralAnaesthesia != null)
 				return false;
 		} else if (!epiduralAnaesthesia.equals(other.epiduralAnaesthesia))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (magnesiumSulfate == null) {
 			if (other.magnesiumSulfate != null)
