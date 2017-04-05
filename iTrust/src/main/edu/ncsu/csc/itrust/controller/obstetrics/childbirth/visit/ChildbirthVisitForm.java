@@ -1,7 +1,6 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -30,15 +29,15 @@ public class ChildbirthVisitForm {
 	private Integer rh;
 	
 	public ChildbirthVisitForm() {
-		this(null, null);
+		this(null, null, (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"));
 	}
 	
-	public ChildbirthVisitForm(ChildbirthVisitController controller, DataSource ds) {
+	public ChildbirthVisitForm(ChildbirthVisitController controller, DataSource ds, Long officeVisitID) {
 		try {
 			this.controller = (controller == null) ? new ChildbirthVisitController() : controller;
 			
 			// Find the viewed office visit
-			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
+			this.officeVisitID = officeVisitID;
 			
 			// Get the existing ChildbirthVisit for this office visit if one exists
 			this.cv = this.controller.getByOfficeVisit(officeVisitID);
@@ -57,7 +56,7 @@ public class ChildbirthVisitForm {
 			this.magnesiumSulfate = this.cv.getMagnesiumSulfate();
 			this.rh = this.cv.getRH();
 		} catch (DBException ex) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
+			this.controller.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error", null);
 			ex.printStackTrace();
 		}
 	}
@@ -82,17 +81,6 @@ public class ChildbirthVisitForm {
 		
 		ChildbirthVisit dbCV = this.controller.getByOfficeVisit(officeVisitID);
 		if (dbCV != null) cv = dbCV;
-	}
-	
-	/**
-	 * Print a faces message with the given severity, summary, and details.
-	 * @param severity
-	 * @param summary
-	 * @param detail
-	 */
-	public void printFacesMessage(Severity severity, String summary, String detail) {
-		FacesMessage throwMsg = new FacesMessage(severity, summary, detail);
-		FacesContext.getCurrentInstance().addMessage(null, throwMsg);
 	}
 
 	public DeliveryMethod getDeliveryType() {

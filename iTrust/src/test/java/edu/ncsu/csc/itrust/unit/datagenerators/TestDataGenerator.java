@@ -893,6 +893,10 @@ public class TestDataGenerator {
 		new DBBuilder(factory).executeSQLFile(DIR + "/ultrasound.sql");
 	}
 	
+	public void childbirthVisit() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/childbirthVisit.sql");
+	}
+	
 	public void newborns() throws FileNotFoundException, SQLException, IOException {
 		new DBBuilder(factory).executeSQLFile(DIR + "/newborns.sql");
 	}
@@ -1012,6 +1016,8 @@ public class TestDataGenerator {
 		obstetricsVisit();
 		
 		ultrasound();
+		
+		childbirthVisit();
 		
 		newborns();
 		

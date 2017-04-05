@@ -67,7 +67,7 @@ public class ChildbirthVisitMySQLTest
 		try
 		{
 			List<ChildbirthVisit> list = sql.getAll();
-			Assert.assertEquals(cvArr.length, list.size());
+			Assert.assertEquals(cvArr.length, list.size() - 1);
 			for (int i = 0; i < cvArr.length; i++)
 			{
 				Assert.assertTrue(list.contains(cvArr[i]));
@@ -86,7 +86,7 @@ public class ChildbirthVisitMySQLTest
 		{
 			for (int i = 0; i < cvArr.length; i++)
 			{
-				Assert.assertEquals(cvArr[i], sql.getByID(i + 1));
+				Assert.assertEquals(cvArr[i], sql.getByID(i + 2));
 			}
 		} 
 		catch (DBException e)
@@ -118,7 +118,7 @@ public class ChildbirthVisitMySQLTest
 		ChildbirthVisit cv = new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.EMERGENCY_APPOINTMENT, 5, 4, 3, 2, 1, 1); 
 		try
 		{
-			Assert.assertEquals(3, sql.addReturnGeneratedId(cv));
+			Assert.assertEquals(4, sql.addReturnGeneratedId(cv));
 		}
 		catch (DBException e)
 		{
@@ -169,8 +169,8 @@ public class ChildbirthVisitMySQLTest
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 2),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 2),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 2),
-				new ChildbirthVisit(1L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0, 0),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, null, 0, 0, 0, 0, 3),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, null, 0, 0, 0, 3),
 				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, null, 0, 0, 3),

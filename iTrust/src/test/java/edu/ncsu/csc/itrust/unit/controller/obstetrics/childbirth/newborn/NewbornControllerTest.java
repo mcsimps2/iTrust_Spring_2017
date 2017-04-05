@@ -21,6 +21,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
@@ -32,7 +33,6 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class NewbornControllerTest {
 
 	@Spy private NewbornController nc;
-	@Spy private SessionUtils sessionUtils;
 	
 	@Mock private SessionUtils mockSessionUtils;
 	@Mock private PatientDAO mockPatientDAO;
@@ -53,6 +53,7 @@ public class NewbornControllerTest {
 		
 		Mockito.doNothing().when(nc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing().when(nc).logTransaction(Matchers.any(TransactionType.class), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString());
 		Mockito.when(mockSessionUtils.getSessionLoggedInMIDLong()).thenReturn(9000000012L);
 		
 		newbornData = new NewbornMySQL(ds);

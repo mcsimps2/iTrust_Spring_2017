@@ -8,6 +8,8 @@ import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornValidator;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class NewbornValidatorTest
 {
@@ -15,9 +17,15 @@ public class NewbornValidatorTest
 	NewbornValidator validator;
 	
 	@Before
-	public void setup()
+	public void setup() throws Exception
 	{
 		validator = new NewbornValidator(ConverterDAO.getDataSource());
+		
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Test
@@ -40,8 +48,8 @@ public class NewbornValidatorTest
 	{		
 		//Valid data
 		Newborn[] newborns = {
-				new Newborn(999L, 1L, "2017-8-19", "1:05 PM", SexType.MALE, true),
-				new Newborn(999L, 2L, "2015-12-31", "9:00 AM", SexType.MALE, true),
+				new Newborn(999L, 51L, "2017-8-19", "1:05 PM", SexType.MALE, true),
+				new Newborn(999L, 51L, "2015-12-31", "9:00 AM", SexType.MALE, true),
 		};
 		for (int i = 0; i < newborns.length; i++)
 		{
@@ -86,14 +94,14 @@ public class NewbornValidatorTest
 	{
 		//Valid data
 		Newborn[] newborns = {
-				new Newborn(999L, 1L, "2017-8-19", "1:50 PM", SexType.MALE, true),
-				new Newborn(999L, 2L, "2015-12-31", "9:00 PM", SexType.MALE, true),
-				new Newborn(999L, 2L, "", "9:00 PM", SexType.MALE, true),
-				new Newborn(999L, 2L, "2015-12-31", "", SexType.MALE, true),
-				new Newborn(999L, 2L, "2015-12-31", "9:00 PM", null, true),
-				new Newborn(999L, 2L, "2015-12-31", "9:00 PM", SexType.MALE, null),
-				new Newborn(999L, 2L, null, "9:00 AM", SexType.MALE, true),
-				new Newborn(999L, 2L, "2015-12-31", null, SexType.MALE, true)
+				new Newborn(999L, 51L, "2017-8-19", "1:50 PM", SexType.MALE, true),
+				new Newborn(999L, 51L, "2015-12-31", "9:00 PM", SexType.MALE, true),
+				new Newborn(999L, 51L, "", "9:00 PM", SexType.MALE, true),
+				new Newborn(999L, 51L, "2015-12-31", "", SexType.MALE, true),
+				new Newborn(999L, 51L, "2015-12-31", "9:00 PM", null, true),
+				new Newborn(999L, 51L, "2015-12-31", "9:00 PM", SexType.MALE, null),
+				new Newborn(999L, 51L, null, "9:00 AM", SexType.MALE, true),
+				new Newborn(999L, 51L, "2015-12-31", null, SexType.MALE, true)
 		};
 		for (int i = 0; i < newborns.length; i++)
 		{
