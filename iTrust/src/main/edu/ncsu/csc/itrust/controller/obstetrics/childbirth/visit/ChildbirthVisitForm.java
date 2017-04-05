@@ -27,6 +27,7 @@ public class ChildbirthVisitForm {
 	private Integer pethidine;
 	private Integer epiduralAnaesthesia;
 	private Integer magnesiumSulfate;
+	private Integer rh;
 	
 	public ChildbirthVisitForm() {
 		this(null, null);
@@ -54,6 +55,7 @@ public class ChildbirthVisitForm {
 			this.pethidine = this.cv.getPethidine();
 			this.epiduralAnaesthesia = this.cv.getEpiduralAnaesthesia();
 			this.magnesiumSulfate = this.cv.getMagnesiumSulfate();
+			this.rh = this.cv.getRH();
 		} catch (DBException ex) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
 			ex.printStackTrace();
@@ -70,6 +72,7 @@ public class ChildbirthVisitForm {
 		cv.setPethidine(this.pethidine);
 		cv.setEpiduralAnaesthesia(this.epiduralAnaesthesia);
 		cv.setMagnesiumSulfate(this.magnesiumSulfate);
+		cv.setRH(this.rh);
 		
 		if (isNew) {
 			controller.add(cv);
@@ -133,5 +136,13 @@ public class ChildbirthVisitForm {
 	}
 	public void setMagnesiumSulfate(Integer magnesiumSulfate) {
 		this.magnesiumSulfate = magnesiumSulfate;
+	}
+
+	public Integer getRh() {
+		return rh;
+	}
+
+	public void setRh(Integer rh) {
+		this.rh = rh;
 	}
 }
