@@ -32,7 +32,18 @@
 			</h:selectOneMenu>
 			<h:message for="childbirthMethod" />
 		</div>
-
+		
+		<div class="form-group">
+			<h:outputLabel for="visitType">Visit Type</h:outputLabel>
+			<h:selectOneMenu id="visitType" class="selectpicker"
+				disabled="#{!isOBGYN}" value="#{childbirth_visit_form.visitType}">
+				<f:selectItems var="type" itemLabel="#{type.toString()}"
+					itemValue="#{type}"
+					value="#{obstetrics_init_controller.getVisitTypes()}" />
+			</h:selectOneMenu>
+			<h:message for="visitType" />
+		</div>
+		
 		<div class="form-group">
 			<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
 			<h:inputText value="#{childbirth_visit_form.pitocin}" id="pitocin"
