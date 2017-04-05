@@ -32,37 +32,58 @@
 			</h:selectOneMenu>
 			<h:message for="childbirthMethod" />
 		</div>
-
+		
+		<div class="form-group">
+			<h:outputLabel for="visitType">Visit Type</h:outputLabel>
+			<h:selectOneMenu id="visitType" class="selectpicker"
+				disabled="#{!isOBGYN}" value="#{childbirth_visit_form.visitType}">
+				<f:selectItems var="type" itemLabel="#{type.toString()}"
+					itemValue="#{type}"
+					value="#{obstetrics_init_controller.getVisitTypes()}" />
+			</h:selectOneMenu>
+			<h:message for="visitType" />
+		</div>
+		
 		<div class="form-group">
 			<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
-			<h:inputText value="#{childbirth_visit_form.pitocin}" id="pitocin"
+			<h:inputText label="Pitocin" value="#{childbirth_visit_form.pitocin}" id="pitocin"
 				class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="pitocin" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
 		</div>
 
 		<div class="form-group">
 			<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
-			<h:inputText value="#{childbirth_visit_form.nitrousOxide}"
+			<h:inputText label="Nitrous oxide" value="#{childbirth_visit_form.nitrousOxide}"
 				id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="nitrousOxide" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
 		</div>
 
 		<div class="form-group">
 			<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
-			<h:inputText value="#{childbirth_visit_form.pethidine}"
+			<h:inputText label="Pethidine" value="#{childbirth_visit_form.pethidine}"
 				id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="pethidine" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
 		</div>
 
 		<div class="form-group">
 			<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
-			<h:inputText value="#{childbirth_visit_form.epiduralAnaesthesia}"
+			<h:inputText label="Epidural anaesthesia" value="#{childbirth_visit_form.epiduralAnaesthesia}"
 				id="epiduralAnaesthesia" class="form-control inline"
 				readonly="#{!isOBGYN}" />
+			<h:message for="epiduralAnaesthesia" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
 		</div>
 
 		<div class="form-group">
 			<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
-			<h:inputText value="#{childbirth_visit_form.magnesiumSulfate}"
+			<h:inputText label="Magnesium sulfate" value="#{childbirth_visit_form.magnesiumSulfate}"
 				id="magnesiumSulfate" class="form-control inline"
 				readonly="#{!isOBGYN}" />
+			<h:message for="magnesiumSulfate" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
 		</div>
 
 		<ui:fragment rendered="#{isOBGYN}">

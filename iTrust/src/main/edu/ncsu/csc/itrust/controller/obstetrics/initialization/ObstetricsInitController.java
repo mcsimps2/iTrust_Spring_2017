@@ -23,6 +23,7 @@ import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.logger.TransactionLogger;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
@@ -410,6 +411,14 @@ public class ObstetricsInitController extends iTrustController
 	 */
 	public List<DeliveryMethod> getDeliveryMethods() {
 		return Arrays.asList(DeliveryMethod.values());
+	}
+
+	/**
+	 * Gets the visit type options for the dropdown
+	 * @return the visit type options
+	 */
+	public List<VisitType> getVisitTypes() {
+		return Arrays.asList(VisitType.values());
 	}
 	
 	/**

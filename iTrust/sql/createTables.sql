@@ -586,6 +586,7 @@ CREATE TABLE childbirthVisits
 	id BIGINT UNSIGNED AUTO_INCREMENT,
 	officeVisitID BIGINT UNSIGNED NOT NULL,
 	deliveryType VARCHAR(255),
+	visitType VARCHAR(255),
 	pitocin BIGINT UNSIGNED,
 	nitrousOxide BIGINT UNSIGNED,
 	pethidine BIGINT UNSIGNED,
