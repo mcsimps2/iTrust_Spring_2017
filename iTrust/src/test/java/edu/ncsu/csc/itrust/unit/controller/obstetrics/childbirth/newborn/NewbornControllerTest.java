@@ -32,7 +32,6 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class NewbornControllerTest {
 
 	@Spy private NewbornController nc;
-	@Spy private SessionUtils sessionUtils;
 	
 	@Mock private SessionUtils mockSessionUtils;
 	@Mock private PatientDAO mockPatientDAO;

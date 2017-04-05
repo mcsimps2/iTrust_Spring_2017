@@ -53,7 +53,6 @@ public class ChildbirthVisitController extends iTrustController {
 		try {
 			this.cvData.add(cv);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED, CHILDBIRTH_VISIT_SUCCESSFULLY_UPDATED, null);
-
 			logTransaction(TransactionType.CREATE_CHILDBIRTH_VISIT, "Office Visit ID: " + cv.getOfficeVisitID());
 			logTransaction(TransactionType.ADD_CHILDBIRTH_DRUGS, "Office Visit ID: " + cv.getOfficeVisitID());
 		} catch (DBException e) {
