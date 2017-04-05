@@ -13,7 +13,7 @@
 		
 		<div>
 			<h:form id="newborn_table_form">
-				<ui:param name="newbornList" value="#{newborn_form.getNewborns()}" />
+				<ui:param name="newbornList" value="#{newborn_form.getNewborns(office_visit_form.visitID)}" />
 				<ui:fragment rendered="${!empty newbornList}">
 					<h:dataTable id="newborn_table" styleClass="fTable" value="#{ newbornList }" var="newborn" border="1" style="width:100%;">
 						<h:column>
@@ -35,16 +35,6 @@
 						<h:column>
 							<f:facet name="header">Patient ID</f:facet>
 							<h:outputText value="#{newborn.pid}" />
-						</h:column>
-						<h:column>
-							<f:facet name="header">Actions</f:facet>
-							<h:commandButton value="Edit" class="btn btn-default" disabled="#{!isOBGYN}"
-									action="#{ newborn_form.fillInput(newborn.id, newborn.dateOfBirth, newborn.timeOfBirth, newborn.sex, newborn.timeEstimated) }"
-									>&nbsp;
-							</h:commandButton>
-							<h:commandButton value="Delete" class="btn btn-default" disabled="#{!isOBGYN}"
-									action="#{ newborn_form.delete(newborn.id)}"
-									onclick="return confirm('Are you sure that you want to delete this newborn?)" />
 						</h:column>
 					</h:dataTable>
 				</ui:fragment>
