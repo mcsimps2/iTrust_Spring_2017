@@ -1,10 +1,5 @@
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.childbirth.visit;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
@@ -24,10 +19,9 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitData
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitData;
-import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -42,7 +36,6 @@ public class ChildbirthVisitFormTest {
 	
 	private DataSource ds;
 	private ChildbirthVisitData childbirthVisitData;
-	private OfficeVisitData officeVisitData;
 	
 	private ChildbirthVisitForm cvf;
 	
@@ -61,7 +54,12 @@ public class ChildbirthVisitFormTest {
 				Mockito.anyString(), Mockito.anyString());
 		
 		childbirthVisitData = new ChildbirthVisitMySQL(ds);
-		officeVisitData = new OfficeVisitMySQL(ds);
+		
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Test
@@ -92,19 +90,10 @@ public class ChildbirthVisitFormTest {
 			Assert.fail(e.getMessage());
 		}
 		
-		cvf = new ChildbirthVisitForm(cvc, ds, 52L);
-		cvf.setDeliveryType(DeliveryMethod.MISCARRIAGE);
-		cvf.setVisitType(VisitType.EMERGENCY_APPOINTMENT);
-		cvf.setPitocin(1);
-		cvf.setNitrousOxide(2);
-		cvf.setPethidine(3);
-		cvf.setEpiduralAnaesthesia(4);
-		cvf.setMagnesiumSulfate(5);
-		cvf.setRh(6);
-		
+		cvf.setRh(66);
 		cvf.submitChildbirth();
 		try {
-			Assert.assertTrue(childbirthVisitData.getByOfficeVisit(52L).getRH().equals(6));
+			Assert.assertTrue(childbirthVisitData.getByOfficeVisit(51L).getRH().equals(66));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -125,11 +114,6 @@ public class ChildbirthVisitFormTest {
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
 		}
-		
-//		OfficeVisit ov = new OfficeVisit();
-//		ov.setPatientMID(1l);
-//		ov.setDate(new LocalDateTime(new LocalDate(12, 12, 2012), null));
-//		officeVisitData.add()
 		
 	}
 

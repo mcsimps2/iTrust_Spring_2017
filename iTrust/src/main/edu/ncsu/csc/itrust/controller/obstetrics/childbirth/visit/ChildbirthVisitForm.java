@@ -82,17 +82,6 @@ public class ChildbirthVisitForm {
 		ChildbirthVisit dbCV = this.controller.getByOfficeVisit(officeVisitID);
 		if (dbCV != null) cv = dbCV;
 	}
-	
-//	/**
-//	 * Print a faces message with the given severity, summary, and details.
-//	 * @param severity
-//	 * @param summary
-//	 * @param detail
-//	 */
-//	public void printFacesMessage(Severity severity, String summary, String detail) {
-//		FacesMessage throwMsg = new FacesMessage(severity, summary, detail);
-//		FacesContext.getCurrentInstance().addMessage(null, throwMsg);
-//	}
 
 	public DeliveryMethod getDeliveryType() {
 		return deliveryType;

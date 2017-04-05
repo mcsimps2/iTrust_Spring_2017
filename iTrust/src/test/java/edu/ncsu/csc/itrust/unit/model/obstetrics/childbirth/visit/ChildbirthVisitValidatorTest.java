@@ -8,15 +8,23 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitValidator;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class ChildbirthVisitValidatorTest
 {
 	ChildbirthVisitValidator validator;
 	
 	@Before
-	public void setup()
+	public void setup() throws Exception
 	{
 		validator = new ChildbirthVisitValidator(ConverterDAO.getDataSource());
+		
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 	
 	@Test
@@ -40,16 +48,16 @@ public class ChildbirthVisitValidatorTest
 		//Valid values
 		ChildbirthVisit[] cvArrValid = {
 				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, null, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, null, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, null, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, null, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, null, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, null)
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 1),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(51L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, null, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, null, 0, 0, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, null, 0, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, null, 0, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, null, 0),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, null)
 		};
 		for (int i = 0; i < cvArrValid.length; i++)
 		{
@@ -94,9 +102,9 @@ public class ChildbirthVisitValidatorTest
 	{
 		// Valid values
 		ChildbirthVisit[] cvArrValid = {
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 5),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 5),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 5)
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 5),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 5),
+				new ChildbirthVisit(51L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 5)
 		};
 		for (int i = 0; i < cvArrValid.length; i++)
 		{
