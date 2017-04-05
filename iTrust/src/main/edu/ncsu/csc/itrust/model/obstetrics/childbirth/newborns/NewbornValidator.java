@@ -113,7 +113,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			}
 			catch (ParseException e1)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM (hour 1-12) or H:m (hour 0-23)");
+				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM");
 			}
 		}
 		
@@ -188,7 +188,7 @@ public class NewbornValidator extends POJOValidator<Newborn>
 			}
 			catch (ParseException e1)
 			{
-				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM (hour 1-12) or H:m (hour 0-23)");
+				errs.addIfNotNull("Time must be a real time and in the format h:mm AM/PM");
 			}
 		}
 		

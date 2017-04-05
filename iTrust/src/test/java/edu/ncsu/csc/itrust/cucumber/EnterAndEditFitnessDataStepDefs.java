@@ -241,7 +241,8 @@ public class EnterAndEditFitnessDataStepDefs {
 	@Then("^a success message appears$")
 	public void checkForSuccess()
 	{
-		Assert.assertTrue(driver.getPageSource().contains("Success"));
+		String pageSource = driver.getPageSource();
+		Assert.assertTrue(pageSource.contains("Success") || pageSource.contains("success"));
 	}
 	
 	@Then("^the information is saved$")

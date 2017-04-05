@@ -174,7 +174,6 @@ public class Newborn
 		int result = 1;
 		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
 		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
-		result = prime * result + ((pid == null) ? 0 : pid.hashCode());
 		result = prime * result + ((sex == null) ? 0 : sex.hashCode());
 		result = prime * result + ((timeEstimated == null) ? 0 : timeEstimated.hashCode());
 		result = prime * result + ((timeOfBirth == null) ? 0 : timeOfBirth.hashCode());
@@ -204,13 +203,6 @@ public class Newborn
 				return false;
 		}
 		else if (!officeVisitID.equals(other.officeVisitID))
-			return false;
-		if (pid == null)
-		{
-			if (other.pid != null)
-				return false;
-		}
-		else if (!pid.equals(other.pid))
 			return false;
 		if (sex != other.sex)
 			return false;
