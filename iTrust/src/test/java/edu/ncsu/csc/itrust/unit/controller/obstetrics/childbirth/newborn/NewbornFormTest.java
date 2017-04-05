@@ -22,6 +22,8 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
+import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
+import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -41,6 +43,7 @@ public class NewbornFormTest {
 	
 	private DataSource ds;
 	private NewbornData newbornData;
+	private ChildbirthVisitController cvc;
 	
 	private NewbornForm nf;
 	
@@ -54,7 +57,7 @@ public class NewbornFormTest {
 		Mockito.when(mockPatientDAO.addEmptyPatient()).thenReturn(1L);
 		
 		nc = Mockito.spy(new NewbornController(ds, mockSessionUtils, mockPatientDAO));
-		ChildbirthVisitController cvc = new ChildbirthVisitController(ds, mockSessionUtils);
+		cvc = new ChildbirthVisitController(ds, mockSessionUtils);
 		
 		nf = new NewbornForm(nc, cvc, mockSessionUtils, 51L);
 		
@@ -71,27 +74,17 @@ public class NewbornFormTest {
 		gen.standardData();
 	}
 
-//	@Test
-//	public void testNewbornForm() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testNewbornFormNewbornControllerChildbirthVisitControllerSessionUtils() {
-//		fail("Not yet implemented");
-//	}
-
 	@Test
 	public void testAdd() {
-		Newborn n = new Newborn(1L, 51L, "2012-01-01", "ab", SexType.FEMALE, true);
+		Newborn n = new Newborn(1L, 1000L, "2012-01-01", "ab", SexType.FEMALE, true);
 		nf.setNewborn(n);
 		nf.add(51L);
 		Assert.assertTrue(nf.getNewborn().equals(n));
 		
-		//TODO: Add this back and change ^^ to 1000L once Josh adds his functionality
-//		n.setOfficeVisitID(51L);
-//		nf.add();
-//		Assert.assertTrue(nf.getNewborn().equals(n));
+		n.setOfficeVisitID(51L);
+		cvc.add(new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, 1, 1, 1, 1, 1));
+		nf.add(51L);
+		Assert.assertTrue(nf.getNewborn().equals(n));
 		
 		n.setTimeOfBirth("8:00 AM");
 		nf.add(51L);

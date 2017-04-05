@@ -21,7 +21,6 @@ public class NewbornForm {
 	
 	private NewbornController controller;
 	private ChildbirthVisitController cvc;
-	//private Long officeVisitID;
 	private SessionUtils sessionUtils;
 	private Newborn newborn;
 	
@@ -58,12 +57,11 @@ public class NewbornForm {
 	 * @param officeVisitID
 	 */
 	public void add(Long officeVisitID){
-		//TODO: Add this back once Josh adds his functionality in
-//		if (cvc.getByOfficeVisit(officeVisitID) == null) {
-//			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
-//					SAVE_CHILDBIRTH_FIRST_ERROR, null);
-//			return;
-//		}
+		if (cvc.getByOfficeVisit(officeVisitID) == null) {
+			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
+					SAVE_CHILDBIRTH_FIRST_ERROR, null);
+			return;
+		}
 		if (controller.add(newborn))
 			clearFields(officeVisitID);
 	}
