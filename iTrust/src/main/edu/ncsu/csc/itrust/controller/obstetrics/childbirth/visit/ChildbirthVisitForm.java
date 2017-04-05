@@ -7,14 +7,13 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitController;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
-import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
-import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
 @ManagedBean(name = "childbirth_visit_form")
@@ -28,11 +27,11 @@ public class ChildbirthVisitForm {
 	private ChildbirthVisit cv;
 	
 	private DeliveryMethod deliveryType;
-	private int pitocin;
-	private int nitrousOxide;
-	private int pethidine;
-	private int epiduralAnaesthesia;
-	private int magnesiumSulfate;
+	private Integer pitocin;
+	private Integer nitrousOxide;
+	private Integer pethidine;
+	private Integer epiduralAnaesthesia;
+	private Integer magnesiumSulfate;
 	
 	public ChildbirthVisitForm() {
 		this(null, null);
@@ -53,22 +52,45 @@ public class ChildbirthVisitForm {
 			officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
 			
 			// Get the existing ChildbirthVisit for this office visit if one exists
-			this.cv = controller.getByOfficeVisit(officeVisitID);
+			this.cv = this.controller.getByOfficeVisit(officeVisitID);
 			if (this.cv == null) {
 				this.cv = new ChildbirthVisit();
 				this.cv.setOfficeVisitID(officeVisitID);
 			}
 			
 			// Populate the ObstetricsVisit fields
-			this.deliveryType = cv.getDeliveryType();
-			this.pitocin = cv.getPitocin();
-			this.nitrousOxide = cv.getNitrousOxide();
-			this.pethidine = cv.getPethidine();
-			this.epiduralAnaesthesia = cv.getEpiduralAnaesthesia();
-			this.magnesiumSulfate = cv.getMagnesiumSulfate();
-		} catch (Exception e) {
+			this.deliveryType = this.cv.getDeliveryType();
+			this.pitocin = this.cv.getPitocin();
+			this.nitrousOxide = this.cv.getNitrousOxide();
+			this.pethidine = this.cv.getPethidine();
+			this.epiduralAnaesthesia = this.cv.getEpiduralAnaesthesia();
+			this.magnesiumSulfate = this.cv.getMagnesiumSulfate();
+		} catch (NamingException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error", "Controller Error");
+		} catch (DBException ex) {
+			// 48, 52
 		}
+	}
+	
+	public void submitChildbirth() {
+		boolean isNew = cv.getId() == null;
+		
+		// TODO Validate fields
+		
+		cv.setDeliveryType(this.deliveryType);
+		cv.setPitocin(this.pitocin);
+		cv.setNitrousOxide(this.nitrousOxide);
+		cv.setPethidine(this.pethidine);
+		cv.setEpiduralAnaesthesia(this.epiduralAnaesthesia);
+		cv.setMagnesiumSulfate(this.magnesiumSulfate);
+		
+		if (isNew) {
+			controller.add(cv);
+		} else {
+			controller.update(cv);
+		}
+
+		this.cv = this.controller.getByOfficeVisit(officeVisitID);
 	}
 	
 	/**
@@ -88,34 +110,34 @@ public class ChildbirthVisitForm {
 	public void setDeliveryType(DeliveryMethod deliveryType) {
 		this.deliveryType = deliveryType;
 	}
-	public int getPitocin() {
+	public Integer getPitocin() {
 		return pitocin;
 	}
-	public void setPitocin(int pitocin) {
+	public void setPitocin(Integer pitocin) {
 		this.pitocin = pitocin;
 	}
-	public int getNitrousOxide() {
+	public Integer getNitrousOxide() {
 		return nitrousOxide;
 	}
-	public void setNitrousOxide(int nitrousOxide) {
+	public void setNitrousOxide(Integer nitrousOxide) {
 		this.nitrousOxide = nitrousOxide;
 	}
-	public int getPethidine() {
+	public Integer getPethidine() {
 		return pethidine;
 	}
-	public void setPethidine(int pethidine) {
+	public void setPethidine(Integer pethidine) {
 		this.pethidine = pethidine;
 	}
-	public int getEpiduralAnaesthesia() {
+	public Integer getEpiduralAnaesthesia() {
 		return epiduralAnaesthesia;
 	}
-	public void setEpiduralAnaesthesia(int epiduralAnaesthesia) {
+	public void setEpiduralAnaesthesia(Integer epiduralAnaesthesia) {
 		this.epiduralAnaesthesia = epiduralAnaesthesia;
 	}
-	public int getMagnesiumSulfate() {
+	public Integer getMagnesiumSulfate() {
 		return magnesiumSulfate;
 	}
-	public void setMagnesiumSulfate(int magnesiumSulfate) {
+	public void setMagnesiumSulfate(Integer magnesiumSulfate) {
 		this.magnesiumSulfate = magnesiumSulfate;
 	}
 }
