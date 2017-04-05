@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.cucumber.util.iTrustDriver;
@@ -20,6 +21,11 @@ public class ObstetricsOfficeVisitStepDefs {
 	
 	public ObstetricsOfficeVisitStepDefs(iTrustDriver driver) {
 		this.driver = driver;
+	}
+	
+	@Given("^I've logged out$")
+	public void logout() {
+		driver.findElement(By.cssSelector("body > div.navbar.navbar-inverse.navbar-fixed-top.top-border > div > div.navbar-collapse.collapse > ul > li:nth-child(3) > a")).click();
 	}
 	
 	@When("^I navigate to Office Visit -> Document Office Visit$")
@@ -138,7 +144,7 @@ public class ObstetricsOfficeVisitStepDefs {
 	@When("^I enter a date to the office visit date field$")
 	public void enterDateToDateField() {
 		driver.findElement(By.id("basic_ov_form:ovdate")).clear();
-		driver.findElement(By.id("basic_ov_form:ovdate")).sendKeys("3/27/2017 10:00 AM");
+		driver.findElement(By.id("basic_ov_form:ovdate")).sendKeys("6/27/2017 10:00 AM");
 	}
 	
 	@When("^I click Save to save the office visit$")
@@ -223,8 +229,39 @@ public class ObstetricsOfficeVisitStepDefs {
 				driver.getPageSource().contains("The patient's next appointment has been scheduled"));
 	}
 	
-	@Then("^this scenario is not implemented yet$")
-	public void obstetricsOfficeVisitTestNotImplemented() {
-		Assert.assertTrue(true);
+	@Then("^a message indicates that only OBGYN HCPs can edit obstetrics data$")
+	public void obgynMessageAppears() {
+		Assert.assertTrue(driver.getPageSource().contains("Only an OB/GYN can edit Obstetrics information"));
+	}
+	
+	@Then("^the obstetrics form fields are disabled$")
+	public void obstetricsFormFieldsAreDisabled() {
+		Assert.assertTrue(driver.findElement(By.id("obstetrics_form:weight")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("obstetrics_form:bloodPressure")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("obstetrics_form:fhr")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("obstetrics_form:multiplicity")).getAttribute("readonly").equals("true"));
+		
+		Assert.assertTrue(driver.findElement(By.id("obstetrics_form:placenta")).getAttribute("disabled").equals("true"));
+	}
+	
+	@Then("^the ultrasound form fields are disabled$")
+	public void ultrasoundFormFieldsAreDisabled() {
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:crl")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:bpd")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:hc")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:fl")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:ofd")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:ac")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:hl")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:efw")).getAttribute("readonly").equals("true"));
+
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:addFetusData")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:updateFetusData")).getAttribute("disabled").equals("true"));
+	}
+	
+	@Then("^a message says I must add obstetrics data first and no ultrasound data is added$")
+	public void ultrasoundDataFailed() {
+		Assert.assertTrue(driver.getPageSource().contains("The Obstetrics tab must be saved before you can add an ultrasound"));
+		Assert.assertTrue(driver.getPageSource().contains("No Ultrasounds"));
 	}
 }

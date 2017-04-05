@@ -16,6 +16,7 @@ public class ApptBean implements Serializable {
 	private Timestamp date;
 	private String comment;
 	private int price;
+	private String deliveryMethod;
 	
 	/**
 	 * @return the price
@@ -103,7 +104,19 @@ public class ApptBean implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+	/**
+	 * @return the deliveryMethod
+	 */
+	public String getDeliveryMethod() {
+		return deliveryMethod;
+	}
+	/**
+	 * @param deliveryMethod the deliveryMethod to set
+	 */
+	public void setDeliveryMethod(String deliveryMethod) {
+		this.deliveryMethod = deliveryMethod;
+	}
+
 	@Override
 	public int hashCode() {
 		return apptID; // any arbitrary constant will do

@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.controller.obstetrics.officeVisit;
+package edu.ncsu.csc.itrust.controller.obstetrics.visit;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,9 +35,11 @@ import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 public class ObstetricsVisitForm {
 	private ObstetricsVisitController controller;
 	private DataSource ds;
+	
 	private Long officeVisitID;
 	private OfficeVisit officeVisit;
 	private ObstetricsVisit ov;
+	
 	private Integer weeksPregnant;
 	private Integer fhr;
 	private Integer multiplicity;

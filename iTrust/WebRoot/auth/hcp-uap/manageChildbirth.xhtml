@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:param name="pid" value="#{session.getAttribute('pid')}" />
+<ui:param name="isOBGYN"
+	value="#{obstetrics_init_controller.isOBGYN(session.getAttribute('loggedInMID'))}" />
+<ui:param name="isObstetricsPatient"
+	value="#{obstetrics_visit_form.weeksPregnant != null}" />
+
+<ui:fragment rendered="#{isObstetricsPatient}">
+	<ui:fragment rendered="#{!isOBGYN}">
+		<h4 style="color: indianred; margin-bottom: 2rem;">
+			Only OB/GYN HCPs can edit childbirth information.</h4>
+	</ui:fragment>
+
+	<h2>Enter a childbirth</h2>
+
+	<h:form id="childbirth_form">
+		<div class="form-group">
+			<h:outputLabel for="childbirthMethod">Childbirth method</h:outputLabel>
+			<h:selectOneMenu id="childbirthMethod" class="selectpicker"
+				disabled="#{!isOBGYN}" value="#{childbirth_visit_form.deliveryType}">
+				<f:selectItems var="method" itemLabel="#{method.toString()}"
+					itemValue="#{method}"
+					value="#{obstetrics_init_controller.getDeliveryMethods()}" />
+			</h:selectOneMenu>
+			<h:message for="childbirthMethod" />
+		</div>
+		
+		<div class="form-group">
+			<h:outputLabel for="visitType">Visit Type</h:outputLabel>
+			<h:selectOneMenu id="visitType" class="selectpicker"
+				disabled="#{!isOBGYN}" value="#{childbirth_visit_form.visitType}">
+				<f:selectItems var="type" itemLabel="#{type.toString()}"
+					itemValue="#{type}"
+					value="#{obstetrics_init_controller.getVisitTypes()}" />
+			</h:selectOneMenu>
+			<h:message for="visitType" />
+		</div>
+		
+		<div class="form-group">
+			<h:outputLabel for="pitocin">Pitocin (mg)</h:outputLabel>
+			<h:inputText label="Pitocin" value="#{childbirth_visit_form.pitocin}" id="pitocin"
+				class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="pitocin" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+
+		<div class="form-group">
+			<h:outputLabel for="nitrousOxide">Nitrous oxide (mg)</h:outputLabel>
+			<h:inputText label="Nitrous oxide" value="#{childbirth_visit_form.nitrousOxide}"
+				id="nitrousOxide" class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="nitrousOxide" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+
+		<div class="form-group">
+			<h:outputLabel for="pethidine">Pethidine (mg)</h:outputLabel>
+			<h:inputText label="Pethidine" value="#{childbirth_visit_form.pethidine}"
+				id="pethidine" class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="pethidine" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+
+		<div class="form-group">
+			<h:outputLabel for="epiduralAnaesthesia">Epidural anaesthesia (mg)</h:outputLabel>
+			<h:inputText label="Epidural anaesthesia" value="#{childbirth_visit_form.epiduralAnaesthesia}"
+				id="epiduralAnaesthesia" class="form-control inline"
+				readonly="#{!isOBGYN}" />
+			<h:message for="epiduralAnaesthesia" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+
+		<div class="form-group">
+			<h:outputLabel for="magnesiumSulfate">Magnesium sulfate (mg)</h:outputLabel>
+			<h:inputText label="Magnesium sulfate" value="#{childbirth_visit_form.magnesiumSulfate}"
+				id="magnesiumSulfate" class="form-control inline"
+				readonly="#{!isOBGYN}" />
+			<h:message for="magnesiumSulfate" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+		
+		<div class="form-group">
+			<h:outputLabel for="rh">RH immune globulin (mg)</h:outputLabel>
+			<h:inputText label="RH immune globulin" value="#{childbirth_visit_form.rh}"
+				id="rh" class="form-control inline" readonly="#{!isOBGYN}" />
+			<h:message for="rh" showSummary="true" showDetail="false"
+					style="color:red; margin-left:22.5rem;" />
+		</div>
+
+		<ui:fragment rendered="#{isOBGYN}">
+			<div class="form-group form-button-group">
+				<h:commandButton id="submitChildbirthButton" value="Save"
+					action="#{childbirth_visit_form.submitChildbirth}" />
+			</div>
+		</ui:fragment>
+	</h:form>
+
+	<h2>Obstetrics records</h2>
+
+	<c:set var="obstetricsRecords"
+		value="#{obstetrics_init_controller.getRecords(pid)}" />
+
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Initialization date</th>
+				<th>LMP</th>
+				<th>EDD</th>
+				<th>Weeks pregnant at init</th>
+				<th>RH flag</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<ui:repeat var="oi_record" value="#{obstetricsRecords}">
+				<tr>
+					<td>#{oi_record.prettyDate}</td>
+					<td>#{oi_record.prettyLMP}</td>
+					<td>#{oi_record.prettyEDD}</td>
+					<td>#{oi_record.numWeeksPregnant}</td>
+					<td>#{oi_record.prettyRH}</td>
+				</tr>
+			</ui:repeat>
+		</tbody>
+	</table>
+
+	<h2>Prior pregnancies</h2>
+
+	<c:set var="priorPregnancies"
+		value="#{obstetrics_init_controller.getPastPregnancies()}" />
+
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Conception year</th>
+				<th>Weeks pregnant</th>
+				<th>Hours in labor</th>
+				<th>Weight gain</th>
+				<th>Delivery type</th>
+				<th>Multiplicity</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<ui:repeat var="pregnancyInfo" value="#{priorPregnancies}">
+				<tr>
+					<td>#{pregnancyInfo.yearOfConception}</td>
+					<td>#{pregnancyInfo.numWeeksPregnant}</td>
+					<td>#{pregnancyInfo.numHoursInLabor}</td>
+					<td>#{pregnancyInfo.weightGain}</td>
+					<td>#{pregnancyInfo.deliveryType.toString()}</td>
+					<td>#{pregnancyInfo.multiplicity}</td>
+				</tr>
+			</ui:repeat>
+		</tbody>
+	</table>
+</ui:fragment>
+
+<ui:fragment rendered="#{!isObstetricsPatient}">
+	<h2>Not an Obstetrics Patient</h2>
+</ui:fragment>
+</html>

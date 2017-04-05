@@ -35,6 +35,8 @@ public class AddApptAction extends ApptAction {
 		try {
 			apptDAO.scheduleAppt(appt);
 			TransactionLogger.getInstance().logTransaction(TransactionType.APPOINTMENT_ADD, loggedInMID, appt.getPatient(), "");
+			if (appt.getApptType().equals("Childbirth"))
+				TransactionLogger.getInstance().logTransaction(TransactionType.SCHEDULE_CHILDBIRTH, loggedInMID, appt.getPatient(), "");
 			if(ignoreConflicts){
 				TransactionLogger.getInstance().logTransaction(TransactionType.APPOINTMENT_CONFLICT_OVERRIDE, loggedInMID, appt.getPatient(), "");
 			}

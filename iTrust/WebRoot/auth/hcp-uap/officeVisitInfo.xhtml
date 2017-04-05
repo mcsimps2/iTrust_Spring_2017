@@ -22,7 +22,7 @@
 			<ui:include src="/auth/hcp/menu.xhtml" />
 		</ui:define>
 		<ui:define name="mainContent">
-			<h:message for="" id="officevisitinfo-message" class="iTrustError" />
+			<h:message for="" id="officevisitinfo-message" infoClass="iTrustMessage" errorClass="iTrustError"/>
 			<h3>Document Office Visit</h3>
 			<div class="tab-group">
 				<input id="tab-general" type="radio" name="ovtabs" checked="checked" />
@@ -53,6 +53,12 @@
 					
 					<input id="tab-ultrasound" type="radio" name="ovtabs" />
 					<label for="tab-ultrasound">Ultrasound</label>
+					
+					<input id="tab-childbirth" type="radio" name="ovtabs" />
+					<label for="tab-childbirth">Childbirth</label>
+					
+					<input id="tab-newborns" type="radio" name="ovtabs" />
+					<label for="tab-newborns">Newborns</label>
 				</c:if>
 				
 				<div class="tab-content">
@@ -90,6 +96,14 @@
 						
 						<div class="tab-panel" id="content-ultrasound">
 							<ui:include src="/auth/hcp-uap/manageUltrasound.xhtml"></ui:include>
+						</div>
+						
+						<div class="tab-panel" id="content-childbirth">
+							<ui:include src="/auth/hcp-uap/manageChildbirth.xhtml"></ui:include>
+						</div>
+						
+						<div class="tab-panel" id="content-newborns">
+							<ui:include src="/auth/hcp-uap/manageNewborns.xhtml"></ui:include>
 						</div>
 					</c:if>
 				</div>

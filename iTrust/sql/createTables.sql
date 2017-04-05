@@ -123,7 +123,8 @@ CREATE TABLE appointment (
 	patient_id          BIGINT UNSIGNED NOT NULL,
 	sched_date          DATETIME NOT NULL,
 	appt_type           VARCHAR(30) NOT NULL,
-	comment				TEXT
+	comment				TEXT,
+	delivery_method		VARCHAR(100)
 ) ENGINE=MyISAM;
 
 CREATE TABLE appointmenttype (
@@ -140,6 +141,7 @@ CREATE TABLE appointmentrequests(
 	sched_date          DATETIME NOT NULL,
 	appt_type           VARCHAR(30) NOT NULL,
 	comment				TEXT,
+	delivery_method		VARCHAR(100),
 	pending				BOOLEAN NOT NULL,
 	accepted			BOOLEAN NOT NULL
 ) ENGINE=MyISAM;
@@ -577,4 +579,33 @@ CREATE TABLE priorPregnancies
 	multiplicity BIGINT UNSIGNED,
 	PRIMARY KEY (id),
 	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
+) ENGINE=MyISAM;
+
+CREATE TABLE childbirthVisits
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+	officeVisitID BIGINT UNSIGNED NOT NULL,
+	deliveryType VARCHAR(255),
+	visitType VARCHAR(255),
+	pitocin BIGINT UNSIGNED,
+	nitrousOxide BIGINT UNSIGNED,
+	pethidine BIGINT UNSIGNED,
+	epiduralAnaesthesia BIGINT UNSIGNED,
+	magnesiumSulfate BIGINT UNSIGNED,
+	rh BIGINT UNSIGNED,
+	PRIMARY KEY (id),
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
+) ENGINE=MyISAM;
+
+CREATE TABLE childbirthNewborns
+(
+	id BIGINT UNSIGNED AUTO_INCREMENT,
+	officeVisitID BIGINT UNSIGNED NOT NULL,
+	dateOfBirth DATE,
+	timeOfBirth TIME,
+	sex VARCHAR(255),
+	timeEstimated BOOLEAN,
+	pid BIGINT,
+	PRIMARY KEY (id),
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;

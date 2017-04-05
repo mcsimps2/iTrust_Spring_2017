@@ -3,6 +3,7 @@
 
 <%@page import="java.util.List"%>
 <%@page import="java.util.Date"%>
+<%@page import="java.util.Arrays"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -13,10 +14,11 @@
 <%@page import="edu.ncsu.csc.itrust.action.ViewMyApptsAction"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.mysql.ApptTypeDAO"%>
+<%@page import="edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod"%>
 <%@page import="edu.ncsu.csc.itrust.exception.ITrustException"%>
 <%@page import="edu.ncsu.csc.itrust.exception.FormValidationException"%>
 
-<%@include file="/global.jsp" %>
+<%@include file="/global.jsp"%>
 
 <%
 	pageTitle = "iTrust - Schedule an Appointment";
@@ -61,7 +63,7 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 			String lastTime2="";
 			String lastTime3="";
 			String lastComment="";
-
+			String preferredDeliveryMethod = "";
 			
 			if (patientID == 0L) {
 				response.sendRedirect("/iTrust/auth/getPatientID.jsp?forward=hcp/scheduleAppt.jsp");
@@ -82,6 +84,10 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 				lastTime2 = request.getParameter("time2");
 				lastTime3 = request.getParameter("time3");
 				lastComment = request.getParameter("comment");
+				
+				if (lastApptType.equals("Childbirth")) {
+					preferredDeliveryMethod = request.getParameter("delivery-method");
+				}
 				
 				ApptBean appt = new ApptBean();
 				DateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
@@ -107,6 +113,11 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 					else 
 						comment = request.getParameter("comment");
 					appt.setComment(comment);
+					
+					if (appt.getApptType().equals("Childbirth")) {
+						appt.setDeliveryMethod(preferredDeliveryMethod);
+					}
+					
 					try {
 						headerMessage = action.addAppt(appt, ignoreConflicts);
 						if(headerMessage.startsWith("Success")) {
@@ -168,7 +179,7 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 	<h4>with <%= StringEscapeUtils.escapeHtml("" + ( action.getName(patientID) )) %> (<a href="/iTrust/auth/getPatientID.jsp?forward=hcp/scheduleAppt.jsp">someone else</a>):</h4>
 	<span class="iTrustMessage"><%= StringEscapeUtils.escapeHtml("" + (headerMessage )) %></span><br /><br />
 	<span>Appointment Type: </span>
-		<select name="apptType">
+		<select name="apptType" id="apptType">
 			<%
 				for(ApptTypeBean b : apptTypes) {
 					%>
@@ -178,6 +189,22 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 			%>
 		</select>
 		<br /><br />
+		<div id="delivery-method" style="display:none;">
+			<span>Preferred Delivery Method</span>
+			<select name="delivery-method">
+				<%
+					List<DeliveryMethod> deliveryMethods = Arrays.asList(DeliveryMethod.values());
+					for(DeliveryMethod m : deliveryMethods) {
+						if (!m.toString().equals("Miscarriage")) {
+							%>
+							<option value="<%= m.toString() %>"><%= m.toString() %></option>
+							<%	
+						}
+					}
+				%>
+			</select>
+			<br /><br />
+		</div>
 		<span>Schedule Date: </span><input type="text" name="schedDate" 
 		<% if (error) {%>
             value="<%= StringEscapeUtils.escapeHtml(lastSchedDate) %>"
@@ -223,5 +250,22 @@ String headerMessage = "Please fill out the form properly - comments are optiona
 </div>
 	</form>
 <%	} %>
+
+<script>
+function hideShowDeliveryMethod() {
+	var e = document.getElementById("apptType");
+	if (e.options[e.selectedIndex].value === "Childbirth") {
+		document.getElementById("delivery-method").style.display = "block";
+	} else {
+		document.getElementById("delivery-method").style.display = "none";
+	}
+} 
+
+hideShowDeliveryMethod();
+
+document.querySelector("#apptType").addEventListener('change', function(ev) {
+	hideShowDeliveryMethod();
+});
+</script>
 
 <%@include file="/footer.jsp" %>

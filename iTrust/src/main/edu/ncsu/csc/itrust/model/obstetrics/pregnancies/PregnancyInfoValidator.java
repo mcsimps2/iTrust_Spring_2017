@@ -101,7 +101,7 @@ public class PregnancyInfoValidator extends POJOValidator<PregnancyInfo>
 					errs.addIfNotNull("The given ObstetricsInitID does not correspond to an actual entry in the database");
 					throw new FormValidationException(errs);
 				}
-			} catch (DBException e)
+			} catch (DBException e) 
 			{
 				errs.addIfNotNull("Unable to access the database");
 				throw new FormValidationException(errs);

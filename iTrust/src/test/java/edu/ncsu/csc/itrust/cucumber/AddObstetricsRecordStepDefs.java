@@ -21,14 +21,14 @@ public class AddObstetricsRecordStepDefs {
 		this.driver = driver;
 	}
 	
-	@Given("^I have logged in as OBGYN with MID 9000000012 and password pw")
-	public void loggedInOBGYN() {
+	@Given("^I have logged in as OBGYN with MID (.+) and password (.+)")
+	public void loggedInOBGYN(String mid, String pw) {
 		// Make sure we are at the login screen
 		Assert.assertTrue(driver.verifyLocation("/iTrust/auth/forwardUser.jsp"));
 				
 		//login with the given mid and password
-		driver.findElement(By.name("j_username")).sendKeys("9000000012");
-		driver.findElement(By.name("j_password")).sendKeys("pw");
+		driver.findElement(By.name("j_username")).sendKeys(mid);
+		driver.findElement(By.name("j_password")).sendKeys(pw);
 		driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
 
 		//Check if we logged in correctly

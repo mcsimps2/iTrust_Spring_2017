@@ -48,8 +48,8 @@ public class ApptRequestBeanLoader implements BeanLoader<ApptRequestBean> {
 	@Override
 	public PreparedStatement loadParameters(PreparedStatement ps, ApptRequestBean bean) throws SQLException {
 		PreparedStatement ps2 = loader.loadParameters(ps, bean.getRequestedAppt());
-		ps2.setBoolean(6, bean.isPending());
-		ps2.setBoolean(7, bean.isAccepted());
+		ps2.setBoolean(7, bean.isPending());
+		ps2.setBoolean(8, bean.isAccepted());
 		return ps2;
 	}
 
