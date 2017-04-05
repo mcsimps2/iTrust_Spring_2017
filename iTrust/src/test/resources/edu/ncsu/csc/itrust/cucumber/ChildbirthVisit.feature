@@ -31,19 +31,19 @@ Scenario Outline: Add childbirth data to office visit
 	And click on the first office visit on the office visits page
 	And I select <birthMethod> for Childbirth Method
 	And I select <visitType> for Visit Type
-	And I enter <pit> for Pitocin, <N2O> for Nitrous Oxide, <peth> for Pethidine, <epi> for Epidural Anaesthesia, and <MgSO4> for Magnesium Sulfate
+	And I enter <pit> for Pitocin, <N2O> for Nitrous Oxide, <peth> for Pethidine, <epi> for Epidural Anaesthesia, <MgSO4> for Magnesium Sulfate, and <rh> for RH
 	And click Save on the childbirth tab
 	Then the childbirth tab has those fields
 	And the childbirth visit is in the database
 	And a success message appears
 
 Examples:
-	| birthMethod                     | visitType                 | pit | N2O | peth | epi | MgSO4 |
-	| Vaginal Delivery                | Emergency appointment     | 100 | 0   | 0    | 0   | 0     |
-	| Vaginal Delivery Vacuum Assist  | Emergency appointment     | 0   | 100 | 0    | 0   | 0     |
-	| Vaginal Delivery Forceps Assist | Emergency appointment     | 0   | 0   | 100  | 0   | 0     |
-	| Caesarean section               | Pre-scheduled appointment | 0   | 0   | 0    | 100 | 0     |
-	| Miscarriage                     | Emergency appointment     | 0   | 0   | 0    | 0   | 100   |
+	| birthMethod                     | visitType                 | pit | N2O | peth | epi | MgSO4 | rh |
+	| Vaginal Delivery                | Emergency appointment     | 100 | 0   | 0    | 0   | 0     | 0  |
+	| Vaginal Delivery Vacuum Assist  | Emergency appointment     | 0   | 100 | 0    | 0   | 0     | 1  |
+	| Vaginal Delivery Forceps Assist | Emergency appointment     | 0   | 0   | 100  | 0   | 0     | 2  |
+	| Caesarean section               | Pre-scheduled appointment | 0   | 0   | 0    | 100 | 0     | 3  |
+	| Miscarriage                     | Emergency appointment     | 0   | 0   | 0    | 0   | 100   | 4  |
 
 Scenario: Add newborns
 	Given I have logged in as OBGYN with MID 9000000012 and password pw

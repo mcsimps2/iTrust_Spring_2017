@@ -142,6 +142,7 @@ public class ChildbirthVisitStepDefs {
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:pethidine")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:epiduralAnaesthesia")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("childbirth_form:magnesiumSulfate")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("childbirth_form:rh")).getAttribute("readonly").equals("true"));
 	}
 	
 	@Then("^the newborns form fields are disabled$")
@@ -193,13 +194,14 @@ public class ChildbirthVisitStepDefs {
 		dropdown.selectByVisibleText(visitType);
 	}
 	
-	@When("^I enter (.+) for Pitocin, (.+) for Nitrous Oxide, (.+) for Pethidine, (.+) for Epidural Anaesthesia, and (.+) for Magnesium Sulfate$")
-	public void enterDosages(String pit, String N2O, String peth, String epi, String MgSO4) {
+	@When("^I enter (.+) for Pitocin, (.+) for Nitrous Oxide, (.+) for Pethidine, (.+) for Epidural Anaesthesia, (.+) for Magnesium Sulfate, and (.+) for RH$")
+	public void enterDosages(String pit, String N2O, String peth, String epi, String MgSO4, String rh) {
 		cv.setPitocin(Integer.parseInt(pit));
 		cv.setNitrousOxide(Integer.parseInt(N2O));
 		cv.setPethidine(Integer.parseInt(peth));
 		cv.setEpiduralAnaesthesia(Integer.parseInt(epi));
 		cv.setMagnesiumSulfate(Integer.parseInt(MgSO4));
+		cv.setRH(Integer.parseInt(rh));
 		
 		driver.findElement(By.id("childbirth_form:pitocin")).clear();
 		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(pit);
@@ -215,6 +217,9 @@ public class ChildbirthVisitStepDefs {
 		
 		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).clear();
 		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).sendKeys(MgSO4);
+		
+		driver.findElement(By.id("childbirth_form:rh")).clear();
+		driver.findElement(By.id("childbirth_form:rh")).sendKeys(rh);
 	}
 	
 	@When("^I enter (.+) for all childbirth drug fields$")
@@ -224,6 +229,7 @@ public class ChildbirthVisitStepDefs {
 		cv.setPethidine(Integer.parseInt(dosage));
 		cv.setEpiduralAnaesthesia(Integer.parseInt(dosage));
 		cv.setMagnesiumSulfate(Integer.parseInt(dosage));
+		cv.setRH(Integer.parseInt(dosage));
 		
 		driver.findElement(By.id("childbirth_form:pitocin")).clear();
 		driver.findElement(By.id("childbirth_form:pitocin")).sendKeys(dosage);
@@ -239,6 +245,9 @@ public class ChildbirthVisitStepDefs {
 		
 		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).clear();
 		driver.findElement(By.id("childbirth_form:magnesiumSulfate")).sendKeys(dosage);
+		
+		driver.findElement(By.id("childbirth_form:rh")).clear();
+		driver.findElement(By.id("childbirth_form:rh")).sendKeys(dosage);
 	}
 	
 	@Then("^the childbirth tab has those fields$")
@@ -265,6 +274,9 @@ public class ChildbirthVisitStepDefs {
 		
 		String MgSO4 = driver.findElement(By.id("childbirth_form:magnesiumSulfate")).getAttribute("value");
 		Assert.assertEquals(cv.getMagnesiumSulfate().toString(), MgSO4);
+		
+		String rh = driver.findElement(By.id("childbirth_form:rh")).getAttribute("value");
+		Assert.assertEquals(cv.getRH().toString(), rh);
 	}
 	
 	@Then("^the childbirth visit is in the database$")
