@@ -20,7 +20,14 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
+import edu.ncsu.csc.itrust.model.old.beans.Email;
+import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.FakeEmailDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
+import edu.ncsu.csc.itrust.model.old.enums.Role;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -36,6 +43,10 @@ public class NewbornControllerTest {
 	
 	@Mock private SessionUtils mockSessionUtils;
 	@Mock private PatientDAO mockPatientDAO;
+	@Mock private AuthDAO mockAuthDAO;
+	@Mock private PersonnelDAO mockPersonnelDAO;
+	@Mock private FakeEmailDAO mockFakeEmailDAO;
+	@Mock private DAOFactory mockDaoFactory;
 	
 	private DataSource ds;
 	private NewbornData newbornData;
@@ -46,10 +57,30 @@ public class NewbornControllerTest {
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
 		mockPatientDAO = Mockito.mock(PatientDAO.class);
+		mockAuthDAO = Mockito.mock(AuthDAO.class);
+		mockPersonnelDAO = Mockito.mock(PersonnelDAO.class);
+		mockFakeEmailDAO = Mockito.mock(FakeEmailDAO.class);
+		mockDaoFactory = Mockito.mock(DAOFactory.class);
 		
-		Mockito.when(mockPatientDAO.addEmptyPatient()).thenReturn(1L);
+		PatientBean p = new PatientBean();
+		p.setFirstName("Michael");
+		p.setLastName("Jackson");
+		p.setEmail("michael.jackson@gmail.com");
 		
-		nc = Mockito.spy(new NewbornController(ds, mockSessionUtils, mockPatientDAO));
+		Mockito.when(mockPatientDAO.addEmptyPatient()).thenReturn(6135L);
+		Mockito.doNothing().when(mockPatientDAO).editPatient(Mockito.any(PatientBean.class), Mockito.anyLong());
+		Mockito.when(mockPatientDAO.checkPatientExists(1L)).thenReturn(true);
+		Mockito.when(mockPatientDAO.getPatient(Mockito.anyLong())).thenReturn(p);
+		Mockito.when(mockAuthDAO.addUser(Mockito.anyLong(), Mockito.any(Role.class), Mockito.anyString())).thenReturn("pw");	
+		Mockito.doNothing().when(mockFakeEmailDAO).sendEmailRecord(Mockito.any(Email.class));
+		
+		Mockito.when(mockDaoFactory.getPatientDAO()).thenReturn(mockPatientDAO);
+		Mockito.when(mockDaoFactory.getAuthDAO()).thenReturn(mockAuthDAO);
+		Mockito.when(mockDaoFactory.getPersonnelDAO()).thenReturn(mockPersonnelDAO);
+		Mockito.when(mockDaoFactory.getFakeEmailDAO()).thenReturn(mockFakeEmailDAO);
+		
+		
+		nc = Mockito.spy(new NewbornController(ds, mockSessionUtils, mockDaoFactory));
 		
 		Mockito.doNothing().when(nc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString());
@@ -70,10 +101,14 @@ public class NewbornControllerTest {
 		try {
 			List<Newborn> before = newbornData.getByOfficeVisit(51L);
 			Newborn invalid = new Newborn(1500L, 51L, "2014-01-01", "a", SexType.MALE, false);
-			nc.add(invalid);
+			PatientBean p = new PatientBean();
+			p.setFirstName("Michael");
+			p.setLastName("Person");
+			p.setEmail("random.person@gmail.com");
+			nc.add(invalid, p);
 			Assert.assertTrue(before.equals(newbornData.getByOfficeVisit(51L)));
 			Newborn valid = new Newborn(1500L, 51L, "2014-01-01", "9:00 AM", SexType.MALE, false);
-			nc.add(valid);
+			nc.add(valid, p);
 			Assert.assertTrue(before.size() + 1 == newbornData.getByOfficeVisit(51L).size());
 		} catch (DBException e) {
 			Assert.fail(e.getExtendedMessage());
@@ -94,13 +129,17 @@ public class NewbornControllerTest {
 			n2.setTimeOfBirth("abc");
 			n2.setSex(n1.getSex());
 			n2.setTimeEstimated(!n1.getTimeEstimated());
+			PatientBean p = new PatientBean();
+			p.setFirstName("Michael");
+			p.setLastName("Person");
+			p.setEmail("random.person@gmail.com");
 			
-			nc.edit(n2);
+			nc.edit(n2, p);
 			Newborn afterEdit = newbornData.getByID(n1.getId());
 			Assert.assertTrue(afterEdit.equals(n1));
 			
 			n2.setTimeOfBirth(n1.getTimeOfBirth());
-			nc.edit(n2);
+			nc.edit(n2, p);
 			afterEdit = newbornData.getByID(n1.getId());
 			Assert.assertFalse(afterEdit.equals(n1));
 		} catch (DBException e) {

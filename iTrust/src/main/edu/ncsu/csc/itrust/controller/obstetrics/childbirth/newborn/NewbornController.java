@@ -68,6 +68,7 @@ public class NewbornController extends iTrustController {
 	/**
 	 * Adds the given newborn to the database and creates a patient
 	 * @param newborn
+	 * @param patient
 	 * @return success
 	 */
 	public boolean add(Newborn newborn, PatientBean patient) {
@@ -106,6 +107,7 @@ public class NewbornController extends iTrustController {
 	/**
 	 * Edits the given newborn in the database.
 	 * @param newborn
+	 * @param patient
 	 * @return success
 	 */
 	public boolean edit(Newborn newborn, PatientBean patient) {

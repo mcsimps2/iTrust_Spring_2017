@@ -64,6 +64,7 @@ public class NewbornForm {
 	 * Only works if a child birth has been submitted for this office visit.
 	 * @param officeVisitID
 	 * @param lastName
+	 * @param email
 	 */
 	public void add(Long officeVisitID, String lastName, String email){
 		if (cvc.getByOfficeVisit(officeVisitID) == null) {
@@ -79,6 +80,7 @@ public class NewbornForm {
 	 * Edits the current newborn in the database.
 	 * @param officeVisitID
 	 * @param lastName
+	 * @param email
 	 */
 	public void edit(Long officeVisitID, String lastName, String email){
 		if (controller.edit(newborn, patient))
