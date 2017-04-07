@@ -311,6 +311,12 @@ public class ChildbirthVisitStepDefs {
 		driver.findElement(By.id("newborn_form:time")).sendKeys(time);
 	}
 	
+	@When("^I enter (.+) for First Name$")
+	public void enterFirstName(String name) {
+		driver.findElement(By.id("newborn_form:first-name")).clear();
+		driver.findElement(By.id("newborn_form:first-name")).sendKeys(name);
+	}
+	
 	@When("^I select (.+) for Sex$")
 	public void selectSex(String sex) {
 		recentNewborn.setSex(SexType.matchString(sex));
