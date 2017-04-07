@@ -1,1 +1,1 @@
-INSERT INTO childbirthNewborns(officeVisitID, dateOfBirth, timeOfBirth, sex, timeEstimated, pid) VALUES (51, "2014-01-01", "9:00", "Male", True, 1234);
+INSERT INTO childbirthNewborns(officeVisitID, dateOfBirth, timeOfBirth, sex, timeEstimated, pid) VALUES (51, "2014-01-01", "9:00", "Male", True, 100);

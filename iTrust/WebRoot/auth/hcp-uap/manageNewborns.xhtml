@@ -21,30 +21,37 @@
 					<div class="form-group">
 						<h:outputLabel for="date">Date of birth:</h:outputLabel>
 						<h:inputText label="DATE" id="date" class="form-control" value="#{newborn_form.newborn.dateOfBirth}" readonly="#{!isOBGYN}"/>
-						<h:message for="date" showSummary="true" showDetail="false"
-							style="color:red" />
+						<h:message for="date" showSummary="true" showDetail="false" style="color:red" />
 					</div>
 					<div class="form-group">
 						<h:outputLabel for="time">Time of birth:</h:outputLabel>
 						<h:inputText label="TIME" id="time" class="form-control" value="#{newborn_form.newborn.timeOfBirth}" readonly="#{!isOBGYN}"/>
-						<h:message for="time" showSummary="true" showDetail="false"
-							style="color:red" />
+						<h:message for="time" showSummary="true" showDetail="false" style="color:red" />
 					</div>
 					<div class="form-group">
 						<h:outputLabel for="sex">Sex:</h:outputLabel>
 						<h:selectOneMenu label="SEX" id="sex" value="#{newborn_form.newborn.sex}" class="selectpicker" style="width:100%" a:data-live-search="true" disabled="#{!isOBGYN}">
 							<f:selectItems value="#{newborn_form.getSexTypes()}" var="sexType" itemLabel="#{sexType.toString()}" itemValue="#{sextype.toString()}" />
 						</h:selectOneMenu>
-						<h:message for="sex" showSummary="true" showDetail="false"
-							style="color:red" />
+						<h:message for="sex" showSummary="true" showDetail="false" style="color:red" />
 					</div>
 					<div style="margin-bottom:2em;">
 						<h:outputLabel for="estimated-time" style="margin-bottom:0px;">Time of birth is an estimate:</h:outputLabel>
 						<h:selectBooleanCheckbox label="ESTIMATED-TIME" id="estimated-time" class="form-control" value="#{newborn_form.newborn.timeEstimated}" disabled="#{!isOBGYN}" style="width:15px;height:15px;display:inline-block;margin:0px 0px 0px 10px;vertical-align:text-bottom;"/>
 					</div>
+					<div class="form-group">
+						<h:outputLabel for="first-name">First name:</h:outputLabel>
+						<h:inputText label="FIRST-NAME" id="first-name" class="form-control" value="#{newborn_form.patient.firstName}" readonly="#{!isOBGYN}"/>
+						<h:message for="first-name" showSummary="true" showDetail="false" style="color:red" />
+					</div>
+					<div class="form-group">
+						<h:outputLabel for="last-name">Last name:</h:outputLabel>
+						<h:inputText label="LAST-NAME" id="last-name" class="form-control" value="#{newborn_form.patient.lastName}" readonly="#{!isOBGYN}"/>
+						<h:message for="last-name" showSummary="true" showDetail="false" style="color:red" />
+					</div>
 					<div class="form-action-group">
-						<h:commandButton id="addNewbornData" class="btn btn-default" value="Add Newborn Data" action="#{newborn_form.add(office_visit_form.visitID)}"  disabled="#{!isOBGYN}"/>
-						<h:commandButton id="updateNewbornData" class="btn btn-default" value="Update Newborn Data" action="#{newborn_form.edit(office_visit_form.visitID)}" disabled="#{!isOBGYN}"/>
+						<h:commandButton id="addNewbornData" class="btn btn-default" value="Add Newborn Data" action="#{newborn_form.add(office_visit_form.visitID, newborn_form.patient.lastName, newborn_form.patient.email)}"  disabled="#{!isOBGYN}"/>
+						<h:commandButton id="updateNewbornData" class="btn btn-default" value="Update Newborn Data" action="#{newborn_form.edit(office_visit_form.visitID, newborn_form.patient.lastName, newborn_form.patient.email)}" disabled="#{!isOBGYN}"/>
 					</div>	
 				</h:form>
 			</div>
@@ -69,6 +76,14 @@
 							<h:column>
 								<f:facet name="header">Time of birth is estimated</f:facet>
 								<h:outputText value="#{newborn.getTimeEstimated()}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">First Name</f:facet>
+								<h:outputText value="#{newborn_form.getFirstName(newborn.pid)}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Last Name</f:facet>
+								<h:outputText value="#{newborn_form.getLastName(newborn.pid)}" />
 							</h:column>
 							<h:column>
 								<f:facet name="header">Patient ID</f:facet>

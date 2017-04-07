@@ -1,6 +1,5 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn;
 
-
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -10,30 +9,33 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.action.AddPatientAction;
+import edu.ncsu.csc.itrust.action.EditPatientAction;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornMySQL;
+import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
-import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.model.old.validate.AddPatientValidator;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "newborn_controller")
 @SessionScoped
 public class NewbornController extends iTrustController {
 	
-	/** Newborn mysql class to access the db */
 	NewbornMySQL sql;
-	/** Patient DAO used to create and delete patients */
-	PatientDAO patientDAO;
-	/** Session utils */
 	SessionUtils sessionUtils;
+	DAOFactory daoFactory;
 	
 	/** Constant for the message to be displayed if the newborn is invalid */
 	private static final String INVALID_NEWBORN = "Invalid Newborn";
 	/** Constant for the message to be displayed if the newborn was successfully created */
 	private static final String NEWBORN_SUCCESSFULLY_CREATED = "Newborn was successfully created";
+	/** Constant for the message to be displayed if the newborn was successfully edited */
+	private static final String NEWBORN_SUCCESSFULLY_EDITED = "Newborn was successfully edited";
 	/** Constant for the message to be displayed if newborns are unable to be retrieved */
 	private static final String UNABLE_TO_RETRIEVE_NEWBORNS = "Unable to retrieve newborns";
 	/** Constant for the message to be displayed if newborn was successfully deleted */
@@ -47,7 +49,7 @@ public class NewbornController extends iTrustController {
 		super();
 		sql = new NewbornMySQL();
 		sessionUtils = SessionUtils.getInstance();
-		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
+		daoFactory = DAOFactory.getProductionInstance();
 	}
 
 	/**
@@ -56,24 +58,29 @@ public class NewbornController extends iTrustController {
 	 * @param ds
 	 *            The injected DataSource dependency
 	 */
-	public NewbornController(DataSource ds, SessionUtils sessionUtils, PatientDAO patientDAO) throws DBException {
+	public NewbornController(DataSource ds, SessionUtils sessionUtils, DAOFactory daoFactory) throws DBException {
 		super();
 		this.sql = new NewbornMySQL(ds);
 		this.sessionUtils = sessionUtils;
-		this.patientDAO = patientDAO;
+		this.daoFactory = daoFactory;
 	}
 
 	/**
 	 * Adds the given newborn to the database and creates a patient
 	 * @param newborn
+	 * @param patient
 	 * @return success
 	 */
-	public boolean add(Newborn newborn) {
+	public boolean add(Newborn newborn, PatientBean patient) {
 		try {
+			AddPatientValidator validator = new AddPatientValidator();
+			validator.validate(patient);
 			long id = sql.addReturnGeneratedId(newborn);
 			if (id != -1) {
 				newborn.setId(id);
-				long pid = patientDAO.addEmptyPatient();
+				AddPatientAction addPatientAction = new AddPatientAction(daoFactory, sessionUtils.getSessionLoggedInMIDLong());
+				//This might should be addDependentPatient()
+				long pid = addPatientAction.addPatient(patient, sessionUtils.getSessionLoggedInMIDLong());
 				newborn.setPid(pid);
 				if (sql.update(newborn)) {
 					printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
@@ -88,7 +95,9 @@ public class NewbornController extends iTrustController {
 				throw new Exception();
 			}
 		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
+		} catch (FormValidationException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
 		}
@@ -98,18 +107,25 @@ public class NewbornController extends iTrustController {
 	/**
 	 * Edits the given newborn in the database.
 	 * @param newborn
+	 * @param patient
 	 * @return success
 	 */
-	public boolean edit(Newborn newborn) {
+	public boolean edit(Newborn newborn, PatientBean patient) {
 		try {
+			AddPatientValidator validator = new AddPatientValidator();
+			validator.validate(patient);
 			if (sql.update(newborn)) {
-				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_CREATED,
-						NEWBORN_SUCCESSFULLY_CREATED, null);
+				EditPatientAction editPatientAction = new EditPatientAction(daoFactory, sessionUtils.getSessionLoggedInMIDLong(), newborn.getPid().toString());
+				editPatientAction.updateInformation(patient);
+				printFacesMessage(FacesMessage.SEVERITY_INFO, NEWBORN_SUCCESSFULLY_EDITED,
+						NEWBORN_SUCCESSFULLY_EDITED, null);
 				return true;
 			} else {
 				throw new Exception();
 			}
 		} catch (SQLException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
+		}  catch (FormValidationException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
