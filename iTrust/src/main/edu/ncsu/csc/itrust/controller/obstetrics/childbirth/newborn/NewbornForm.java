@@ -140,6 +140,7 @@ public class NewbornForm {
 	 * Clears all of the fields in this form.
 	 * @param officeVisitID
 	 * @param lastName
+	 * @param email
 	 */
 	public void clearFields(Long officeVisitID, String lastName, String email){
 		newborn = new Newborn(officeVisitID);
