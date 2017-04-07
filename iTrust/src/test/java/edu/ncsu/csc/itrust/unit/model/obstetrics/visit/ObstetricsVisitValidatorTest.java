@@ -11,6 +11,8 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitValidator;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
+import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 /**
  * Test validator for obstetrics visit
@@ -23,7 +25,13 @@ public class ObstetricsVisitValidatorTest {
 	
 	@Before
 	public void setUp() throws Exception {
-			validator = new ObstetricsVisitValidator(ConverterDAO.getDataSource());
+		// Reset test data
+		DBBuilder.rebuildAll();
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
+		validator = new ObstetricsVisitValidator(ConverterDAO.getDataSource());
 	}
 	
 	@Test

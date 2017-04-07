@@ -28,6 +28,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 
 public class ChildbirthVisitStepDefs {	
 	private static final Long TEST_OFFICE_VISIT_ID = 51L;
+	private static final Long TEST_OBSTETRICS_INIT_ID = 3L;
 
 	private iTrustDriver driver;
 	private ChildbirthVisitData cvd;
@@ -180,6 +181,7 @@ public class ChildbirthVisitStepDefs {
 	public void selectChildbirthMethod(String birthMethod) {
 		cv = new ChildbirthVisit();
 		cv.setOfficeVisitID(TEST_OFFICE_VISIT_ID);
+		cv.setObstetricsInitID(TEST_OBSTETRICS_INIT_ID);
 		cv.setDeliveryType(DeliveryMethod.matchString(birthMethod));
 		
 		Select dropdown = new Select(driver.findElement(By.id("childbirth_form:childbirthMethod")));
