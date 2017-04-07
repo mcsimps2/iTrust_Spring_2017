@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.model.obstetrics.visit;
 
+import java.util.List;
+
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.DataBean;
 
@@ -15,4 +17,11 @@ public interface ObstetricsVisitData extends DataBean<ObstetricsVisit> {
 	 * @return the ObstetricsVisit
 	 */
 	public ObstetricsVisit getByOfficeVisit(long officeVisitID) throws DBException;
+	
+	/**
+	 * Method to get the obstetrics visits that correspond to an obstetrics init
+	 * @param obstetricsInitID the obstetrics init id
+	 * @return the List of ObstetricsVisits
+	 */
+	public List<ObstetricsVisit> getByObstetricsInit(long obstetricsInitID) throws DBException;
 }

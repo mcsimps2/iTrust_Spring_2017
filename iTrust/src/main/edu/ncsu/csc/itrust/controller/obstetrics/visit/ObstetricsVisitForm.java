@@ -52,13 +52,13 @@ public class ObstetricsVisitForm {
 	 * Default constructor for OfficeVisitForm.
 	 */
 	public ObstetricsVisitForm() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	/**
 	 * Constructor for OfficeVisitForm for testing purposes.
 	 */
-	public ObstetricsVisitForm(ObstetricsVisitController ovc, DataSource ds) {
+	public ObstetricsVisitForm(ObstetricsVisitController obvc, OfficeVisitController ofvc, DataSource ds) {
 		try {
 			// Use parameters if not null
 			if (ds == null) {
@@ -67,11 +67,12 @@ public class ObstetricsVisitForm {
 			} else {
 				this.ds = ds;
 			}
-			controller = (ovc == null) ? new ObstetricsVisitController() : ovc;
+			controller = (obvc == null) ? new ObstetricsVisitController() : obvc;
+			if (ofvc == null) ofvc = new OfficeVisitController();
 			
 			// Find the viewed office visit
 			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
-			officeVisit = new OfficeVisitController().getVisitByID(officeVisitID.toString());
+			officeVisit = ofvc.getVisitByID(officeVisitID.toString());
 			
 			// Get the existing ObstetricsVisit for this office visit if one exists
 			ov = controller.getByOfficeVisit(officeVisitID);
@@ -83,6 +84,7 @@ public class ObstetricsVisitForm {
 			ObstetricsInit oi = controller.getMostRecentOI(officeVisit);
 			if (oi != null) {
 				rhFlag = oi.getRH();
+				ov.setObstetricsInitID(oi.getID());
 			}
 			
 			// Populate the ObstetricsVisit fields

@@ -60,9 +60,28 @@ public class ChildbirthVisitControllerTest {
 	}
 	
 	@Test
+	public void testConstructors() {
+		try {
+			cvc = new ChildbirthVisitController();
+			Assert.fail("DBException not thrown");
+		} catch (DBException e) {
+			Assert.assertNotNull(e);
+		}
+	}
+	
+	@Test
 	public void testGetByOfficeVisit() {
 		try {
 			Assert.assertTrue(cvc.getByOfficeVisit(51L).equals(childbirthVisitData.getByOfficeVisit(51L)));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetByObstetricsInit() {
+		try {
+			Assert.assertTrue(cvc.getByObstetricsInit(3L).equals(childbirthVisitData.getByObstetricsInit(3L)));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -74,7 +93,7 @@ public class ChildbirthVisitControllerTest {
 		try {
 			int numberBefore = childbirthVisitData.getAll().size();
 			
-			ChildbirthVisit cv = new ChildbirthVisit(51L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, -1, 2, 3, 4, 5, 6);
+			ChildbirthVisit cv = new ChildbirthVisit(51L, 3L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, -1, 2, 3, 4, 5, 6);
 			cvc.add(cv);
 			Assert.assertTrue(numberBefore == childbirthVisitData.getAll().size());
 			

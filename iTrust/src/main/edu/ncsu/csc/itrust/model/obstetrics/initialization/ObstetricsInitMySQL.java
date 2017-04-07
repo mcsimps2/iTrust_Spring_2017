@@ -175,7 +175,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 	}
 	
 	@Override
-	public int addAndReturnID(ObstetricsInit oi) throws DBException, FormValidationException
+	public long addAndReturnID(ObstetricsInit oi) throws DBException, FormValidationException
 	{
 		Connection conn = null;
 		PreparedStatement pstring = null;
@@ -195,7 +195,7 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 			ResultSet rs = pstring.executeQuery();
 			if (rs.next())
 			{
-				return rs.getInt(1);
+				return rs.getLong(1);
 			}
 			else
 			{

@@ -31,5 +31,5 @@ public interface ObstetricsInitData extends DataBean<ObstetricsInit>
 	 * @return the ID of the new row, -1 if unsuccessful
 	 * @throws DBException 
 	 */
-	public int addAndReturnID(ObstetricsInit oi) throws DBException, FormValidationException;
+	public long addAndReturnID(ObstetricsInit oi) throws DBException, FormValidationException;
 }

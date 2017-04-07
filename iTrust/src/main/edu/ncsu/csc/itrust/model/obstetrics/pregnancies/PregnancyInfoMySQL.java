@@ -119,7 +119,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 	}
 
 	@Override
-	public List<PregnancyInfo> getRecordsFromInit(int obstetricsInitID) throws DBException {
+	public List<PregnancyInfo> getRecordsFromInit(long obstetricsInitID) throws DBException {
 		//Record what the pid was
 		ObstetricsInit oiRecord = oisql.getByID(obstetricsInitID);
 		if (oiRecord == null)
@@ -136,7 +136,7 @@ public class PregnancyInfoMySQL implements PregnancyInfoData, Serializable
 			pstring = conn.prepareStatement("SELECT * FROM priorPregnancies, obstetricsInit WHERE priorPregnancies.pid=? AND priorPregnancies.obstetricsInitID = obstetricsInit.id AND obstetricsInit.ts <= ? AND obstetricsInit.id <= ?;");
 			pstring.setLong(1, pid);
 			pstring.setTimestamp(2, oiRecord.getTimestamp());
-			pstring.setInt(3, obstetricsInitID);
+			pstring.setLong(3, obstetricsInitID);
 			results = pstring.executeQuery();
 			List<PregnancyInfo> list = loader.loadList(results);
 			return list;

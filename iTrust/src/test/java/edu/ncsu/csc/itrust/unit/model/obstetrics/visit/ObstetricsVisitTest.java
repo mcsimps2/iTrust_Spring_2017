@@ -31,8 +31,8 @@ public class ObstetricsVisitTest {
 		byte[] b2 = new byte[64];
 		Arrays.fill(b2, (byte)2);
 		InputStream is2 = new ByteArrayInputStream(b2);
-		o1 = new ObstetricsVisit(new Long(1), new Long(2), new Integer(13), new Integer(54), new Integer(3), new Boolean(true), is1, "o1.png");
-		o2 = new ObstetricsVisit(new Long(3), new Integer(14), new Integer(55), new Integer(4), new Boolean(false), is2, "o2.jpg");
+		o1 = new ObstetricsVisit(new Long(1), new Long(2), new Long(3), new Integer(13), new Integer(54), new Integer(3), new Boolean(true), is1, "o1.png");
+		o2 = new ObstetricsVisit(new Long(3), new Long(3), new Integer(14), new Integer(55), new Integer(4), new Boolean(false), is2, "o2.jpg");
 	}
 
 	@Test
@@ -48,6 +48,13 @@ public class ObstetricsVisitTest {
 		Assert.assertTrue(o1.getOfficeVisitID().equals(new Long(2)));
 		o1.setOfficeVisitID(new Long(5));
 		Assert.assertTrue(o1.getOfficeVisitID().equals(new Long(5)));
+	}
+	
+	@Test
+	public void testGetSetObstetricsInitID() {
+		Assert.assertTrue(o1.getObstetricsInitID().equals(new Long(3)));
+		o1.setObstetricsInitID(new Long(5));
+		Assert.assertTrue(o1.getObstetricsInitID().equals(new Long(5)));
 	}
 
 	@Test
