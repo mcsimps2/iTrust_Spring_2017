@@ -6,6 +6,7 @@ public class ChildbirthVisit
 {
 	private Long id;
 	private Long officeVisitID;
+	private Long obstetricsInitID;
 	private DeliveryMethod deliveryType;
 	private VisitType visitType;
 	private Integer pitocin;
@@ -20,11 +21,12 @@ public class ChildbirthVisit
 		super();
 	}
 	
-	public ChildbirthVisit(Long officeVisitID, DeliveryMethod deliveryType, VisitType visitType, Integer pitocin, Integer nitrousOxide,
+	public ChildbirthVisit(Long officeVisitID, Long obstetricsInitID, DeliveryMethod deliveryType, VisitType visitType, Integer pitocin, Integer nitrousOxide,
 			Integer pethidine, Integer epiduralAnaesthesia, Integer magnesiumSulfate, Integer rh)
 	{
 		super();
 		this.officeVisitID = officeVisitID;
+		this.obstetricsInitID = obstetricsInitID;
 		this.deliveryType = deliveryType;
 		this.visitType = visitType;
 		this.pitocin = pitocin;
@@ -75,6 +77,14 @@ public class ChildbirthVisit
 	{
 		this.officeVisitID = officeVisitID;
 	}
+	public Long getObstetricsInitID() {
+		return obstetricsInitID;
+	}
+
+	public void setObstetricsInitID(Long obstetricsInitID) {
+		this.obstetricsInitID = obstetricsInitID;
+	}
+
 	public Integer getPitocin()
 	{
 		return pitocin;
@@ -126,6 +136,7 @@ public class ChildbirthVisit
 		result = prime * result + ((magnesiumSulfate == null) ? 0 : magnesiumSulfate.hashCode());
 		result = prime * result + ((nitrousOxide == null) ? 0 : nitrousOxide.hashCode());
 		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
+		result = prime * result + ((obstetricsInitID == null) ? 0 : obstetricsInitID.hashCode());
 		result = prime * result + ((pethidine == null) ? 0 : pethidine.hashCode());
 		result = prime * result + ((pitocin == null) ? 0 : pitocin.hashCode());
 		result = prime * result + ((rh == null) ? 0 : rh.hashCode());
@@ -172,6 +183,13 @@ public class ChildbirthVisit
 				return false;
 		}
 		else if (!officeVisitID.equals(other.officeVisitID))
+			return false;
+		if (obstetricsInitID == null)
+		{
+			if (other.obstetricsInitID != null)
+				return false;
+		}
+		else if (!obstetricsInitID.equals(other.obstetricsInitID))
 			return false;
 		if (pethidine == null)
 		{

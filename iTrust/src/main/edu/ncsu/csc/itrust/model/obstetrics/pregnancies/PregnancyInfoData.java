@@ -19,11 +19,11 @@ public interface PregnancyInfoData extends DataBean<PregnancyInfo> {
 	 * Returns the pregnancy records saved from an obstetrics initialization.  This includes all
 	 * prior pregnancies found in the system as well as any added during the initialization.  This
 	 * is what should be displayed to HCPs when viewing past obstetrics initializations.
-	 * @param obstetricsInitID
+	 * @param oid
 	 * @return
 	 * @throws DBException
 	 */
-	public List<PregnancyInfo> getRecordsFromInit(int obstetricsInitID) throws DBException;
+	public List<PregnancyInfo> getRecordsFromInit(long oid) throws DBException;
 	
 	/**
 	 * Adds a record to the obstetricsInit DB

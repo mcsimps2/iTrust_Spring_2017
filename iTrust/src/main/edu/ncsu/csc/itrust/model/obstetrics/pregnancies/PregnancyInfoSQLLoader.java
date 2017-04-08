@@ -40,7 +40,7 @@ public class PregnancyInfoSQLLoader implements SQLLoader<PregnancyInfo>
 	public PregnancyInfo loadSingle(ResultSet rs) throws SQLException {
 		PregnancyInfo pi = new PregnancyInfo();
 		pi.setID(rs.getInt("id"));
-		pi.setObstetricsInitID(rs.getInt("obstetricsInitID"));
+		pi.setObstetricsInitID(rs.getLong("obstetricsInitID"));
 		pi.setPid(rs.getLong("pid"));
 		pi.setYearOfConception(rs.getInt("yearOfConception"));
 		pi.setNumDaysPregnant(rs.getInt("numDaysPregnant"));
@@ -70,7 +70,7 @@ public class PregnancyInfoSQLLoader implements SQLLoader<PregnancyInfo>
 		{
 			stmt = "INSERT INTO priorPregnancies (obstetricsInitID, pid, yearOfConception, numDaysPregnant, numHoursInLabor, weightGain, deliveryType, multiplicity) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, insertObject.getObstetricsInitID());
+			ps.setLong(1, insertObject.getObstetricsInitID());
 			ps.setLong(2, insertObject.getPid());
 			ps.setInt(3, insertObject.getYearOfConception());
 			ps.setInt(4, insertObject.getNumDaysPregnant());

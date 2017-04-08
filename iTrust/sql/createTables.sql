@@ -470,6 +470,7 @@ CREATE TABLE immunization (
 CREATE TABLE obstetricsVisit (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
 	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
+	obstetricsInitID        BIGINT(20)      UNSIGNED NOT NULL,
 	weeksPregnant			INT				UNSIGNED NOT NULL,
 	fhr						INT				UNSIGNED,
 	multiplicity 			INT				UNSIGNED,
@@ -477,7 +478,8 @@ CREATE TABLE obstetricsVisit (
 	imageOfUltrasound		MEDIUMBLOB,
 	imageType               VARCHAR(255),
 	PRIMARY KEY (id),
-	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID),
+	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
 
 CREATE TABLE ultrasound (
@@ -585,6 +587,7 @@ CREATE TABLE childbirthVisits
 (
 	id BIGINT UNSIGNED AUTO_INCREMENT,
 	officeVisitID BIGINT UNSIGNED NOT NULL,
+	obstetricsInitID BIGINT UNSIGNED NOT NULL,
 	deliveryType VARCHAR(255),
 	visitType VARCHAR(255),
 	pitocin BIGINT UNSIGNED,
@@ -594,7 +597,8 @@ CREATE TABLE childbirthVisits
 	magnesiumSulfate BIGINT UNSIGNED,
 	rh BIGINT UNSIGNED,
 	PRIMARY KEY (id),
-	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID),
+	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
 
 CREATE TABLE childbirthNewborns

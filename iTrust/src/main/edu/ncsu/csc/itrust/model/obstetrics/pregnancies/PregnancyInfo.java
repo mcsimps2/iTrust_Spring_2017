@@ -5,7 +5,7 @@ public class PregnancyInfo
 	/** Unique ID corresponding to this record */
 	private int id;
 	/** Points to which obstetrics initialization visit created this pregnancy record */
-	private int obstetricsInitID;
+	private long obstetricsInitID;
 	private long pid;
 	private int yearOfConception;
 	private int numDaysPregnant;
@@ -47,7 +47,7 @@ public class PregnancyInfo
 	 * @param deliveryType
 	 * @param multiplicity
 	 */
-	public PregnancyInfo(int obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
+	public PregnancyInfo(long obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
 			double weightGain, DeliveryMethod deliveryType, int multiplicity) {
 		super();
 		this.obstetricsInitID = obstetricsInitID;
@@ -72,7 +72,7 @@ public class PregnancyInfo
 	 * @param deliveryType
 	 * @param multiplicity
 	 */
-	public PregnancyInfo(int id, int obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
+	public PregnancyInfo(int id, long obstetricsInitID, int pid, int yearOfConception, int numDaysPregnant, int numHoursInLabor,
 			double weightGain, DeliveryMethod deliveryType, int multiplicity) {
 		super();
 		this.id = id;;
@@ -91,10 +91,10 @@ public class PregnancyInfo
 		super();
 	}
 
-	public int getObstetricsInitID() {
+	public long getObstetricsInitID() {
 		return obstetricsInitID;
 	}
-	public void setObstetricsInitID(int obstetricsInitID) {
+	public void setObstetricsInitID(long obstetricsInitID) {
 		this.obstetricsInitID = obstetricsInitID;
 	}
 	public long getPid() {
@@ -161,7 +161,7 @@ public class PregnancyInfo
 		result = prime * result + multiplicity;
 		result = prime * result + numDaysPregnant;
 		result = prime * result + numHoursInLabor;
-		result = prime * result + obstetricsInitID;
+		result = prime * result + (int) (obstetricsInitID ^ (obstetricsInitID >>> 32));
 		result = prime * result + (int) (pid ^ (pid >>> 32));
 		long temp;
 		temp = Double.doubleToLongBits(weightGain);
@@ -176,7 +176,7 @@ public class PregnancyInfo
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof PregnancyInfo))
 			return false;
 		PregnancyInfo other = (PregnancyInfo) obj;
 		if (deliveryType != other.deliveryType)

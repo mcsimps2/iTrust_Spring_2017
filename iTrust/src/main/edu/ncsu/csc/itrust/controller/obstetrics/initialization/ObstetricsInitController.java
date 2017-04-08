@@ -298,7 +298,7 @@ public class ObstetricsInitController extends iTrustController
 	 * @param oid obstetrics init id
 	 * @return list of past pregnancies
 	 */
-	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
+	public List<PregnancyInfo> getPastPregnanciesFromInit(long oid) {
 		try {
 			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(oid);
 			Collections.sort(pregnancies,
@@ -504,7 +504,7 @@ public class ObstetricsInitController extends iTrustController
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
 		oi.setRH(this.getRH());
 		try {
-			int oid = oiData.addAndReturnID(oi);
+			long oid = oiData.addAndReturnID(oi);
 			
 			TransactionLogger.getInstance().logTransaction(
 				TransactionType.CREATE_INITIAL_OBSTETRIC_RECORD,

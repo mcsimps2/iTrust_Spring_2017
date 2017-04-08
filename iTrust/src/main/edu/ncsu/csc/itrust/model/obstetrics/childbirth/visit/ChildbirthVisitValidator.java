@@ -11,6 +11,8 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.POJOValidator;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
 
@@ -18,6 +20,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 {
 	private DataSource ds;
 	private OfficeVisitMySQL ovsql;
+	private ObstetricsInitMySQL oisql;
 	
 	/**
 	 * Constructor with no parameters
@@ -29,6 +32,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			Context ctx = new InitialContext();
 			this.ds = ((DataSource) (((Context) ctx.lookup("java:comp/env"))).lookup("jdbc/itrust"));
 			ovsql = new OfficeVisitMySQL(this.ds);
+			oisql = new ObstetricsInitMySQL(this.ds);
 		} catch (NamingException e) {
 			throw new DBException(new SQLException("Context Lookup Naming Exception: " + e.getMessage()));
 		}
@@ -44,6 +48,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 	{
 		this.ds = ds;
 		ovsql = new OfficeVisitMySQL(this.ds);
+		oisql = new ObstetricsInitMySQL(this.ds);
 	}
 	
 	@Override
@@ -51,6 +56,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 	{
 		ErrorList errs = new ErrorList();
 		
+		// Check that officeVisitID is specified
 		if (obj.getOfficeVisitID() == null)
 		{
 			errs.addIfNotNull("No office visit ID specified");
@@ -64,6 +70,29 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			if (ov == null)
 			{
 				errs.addIfNotNull("Could not find the office visit with the specified ID");
+				throw new FormValidationException(errs);
+			}
+		}
+		catch (DBException e)
+		{
+			errs.addIfNotNull("Could not find the patient with the specified PID");
+			throw new FormValidationException(errs);
+		}
+		
+		// Check that the obstetricsInitID is specified
+		if (obj.getObstetricsInitID() == null)
+		{
+			errs.addIfNotNull("No obstetrics init ID specified");
+			throw new FormValidationException(errs);
+		}
+		
+		//Make sure the obstetrics init ID corresponds to something in the DB
+		try
+		{
+			ObstetricsInit oi = oisql.getByID(obj.getObstetricsInitID());
+			if (oi == null)
+			{
+				errs.addIfNotNull("Could not find the obstetrics init with the specified ID");
 				throw new FormValidationException(errs);
 			}
 		}
@@ -135,6 +164,7 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 	{
 		ErrorList errs = new ErrorList();
 		
+		// Check that officeVisitID is specified
 		if (obj.getOfficeVisitID() == null)
 		{
 			errs.addIfNotNull("No office visit ID specified");
@@ -148,6 +178,29 @@ public class ChildbirthVisitValidator extends POJOValidator<ChildbirthVisit>
 			if (ov == null)
 			{
 				errs.addIfNotNull("Could not find the office visit with the specified ID");
+				throw new FormValidationException(errs);
+			}
+		}
+		catch (DBException e)
+		{
+			errs.addIfNotNull("Could not find the patient with the specified PID");
+			throw new FormValidationException(errs);
+		}
+		
+		// Check that the obstetricsInitID is specified
+		if (obj.getObstetricsInitID() == null)
+		{
+			errs.addIfNotNull("No obstetrics init ID specified");
+			throw new FormValidationException(errs);
+		}
+		
+		//Make sure the obstetrics init ID corresponds to something in the DB
+		try
+		{
+			ObstetricsInit oi = oisql.getByID(obj.getObstetricsInitID());
+			if (oi == null)
+			{
+				errs.addIfNotNull("Could not find the obstetrics init with the specified ID");
 				throw new FormValidationException(errs);
 			}
 		}

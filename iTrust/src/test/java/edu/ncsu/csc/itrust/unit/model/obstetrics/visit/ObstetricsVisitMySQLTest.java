@@ -40,7 +40,7 @@ public class ObstetricsVisitMySQLTest {
 		ds = ConverterDAO.getDataSource();
 		ovsql = new ObstetricsVisitMySQL(ds);
 		
-		ov = new ObstetricsVisit(new Long(1), new Long(51), new Integer(32), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ov = new ObstetricsVisit(new Long(1), new Long(51), new Long(3), new Integer(32), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class ObstetricsVisitMySQLTest {
 
 	@Test
 	public void testAdd() {
-		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(51), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(51), new Long(3), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
 		try {
 			ovsql.add(toAdd);
 			Assert.fail("Mistake in validation");
@@ -100,7 +100,7 @@ public class ObstetricsVisitMySQLTest {
 
 	@Test
 	public void testUpdate() {
-		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(1), new Long(51), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ObstetricsVisit toAdd = new ObstetricsVisit(new Long(1), new Long(51), new Long(3), new Integer(-1), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
 		try {
 			ovsql.update(toAdd);
 			Assert.fail("Mistake in validation");
@@ -125,6 +125,16 @@ public class ObstetricsVisitMySQLTest {
 		try {
 			Assert.assertTrue(ovsql.getByOfficeVisit(51L).equals(ov));
 			Assert.assertTrue(ovsql.getByOfficeVisit(125L) == null);
+		}  catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetByObstetricsInit() {
+		try {
+			Assert.assertTrue(ovsql.getByObstetricsInit(3L).get(0).equals(ov));
+			Assert.assertTrue(ovsql.getByObstetricsInit(125L).isEmpty());
 		}  catch (DBException e) {
 			Assert.fail(e.getMessage());
 		}

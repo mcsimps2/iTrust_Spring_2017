@@ -41,7 +41,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 	@Override
 	public ObstetricsInit loadSingle(ResultSet rs) throws SQLException {
 		ObstetricsInit oi = new ObstetricsInit();
-		oi.setID(rs.getInt("id"));
+		oi.setID(rs.getLong("id"));
 		oi.setTimestamp(rs.getTimestamp("ts"));
 		oi.setPid(rs.getLong("pid"));
 		oi.setDate(rs.getDate("dateOfInit"));

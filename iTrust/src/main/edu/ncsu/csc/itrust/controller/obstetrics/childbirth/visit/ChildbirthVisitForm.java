@@ -6,10 +6,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitController;
+import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
+import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 
 @ManagedBean(name = "childbirth_visit_form")
 @ViewScoped
@@ -29,21 +33,30 @@ public class ChildbirthVisitForm {
 	private Integer rh;
 	
 	public ChildbirthVisitForm() {
-		this(null, null, (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"));
+		this(null, null, null, null, (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"));
 	}
 	
-	public ChildbirthVisitForm(ChildbirthVisitController controller, DataSource ds, Long officeVisitID) {
+	public ChildbirthVisitForm(ChildbirthVisitController controller, OfficeVisitController ofvc, ObstetricsVisitController obvc, DataSource ds, Long officeVisitID) {
 		try {
 			this.controller = (controller == null) ? new ChildbirthVisitController() : controller;
+			if (ofvc == null) ofvc = new OfficeVisitController();
+			if (obvc == null) obvc = new ObstetricsVisitController();
 			
 			// Find the viewed office visit
 			this.officeVisitID = officeVisitID;
+			OfficeVisit officeVisit = ofvc.getVisitByID(officeVisitID.toString());
 			
 			// Get the existing ChildbirthVisit for this office visit if one exists
 			this.cv = this.controller.getByOfficeVisit(officeVisitID);
 			if (this.cv == null) {
 				this.cv = new ChildbirthVisit();
 				this.cv.setOfficeVisitID(officeVisitID);
+			}
+			
+			// Find the most recent ObstetricsInit record (as of the office visit date)
+			ObstetricsInit oi = obvc.getMostRecentOI(officeVisit);
+			if (oi != null) {
+				cv.setObstetricsInitID(oi.getID());
 			}
 			
 			// Populate the ObstetricsVisit fields
