@@ -84,7 +84,7 @@ public class ObstetricsInitController extends iTrustController
 	PregnancyInfoData pregnancyData;
 	/** Used to obtain session variables and request parameters */
 	SessionUtils sessionUtils;
-	/** Patient DAO used to acess patient eligibility */
+	/** Patient DAO used to access patient eligibility */
 	PatientDAO patientDAO;
 	/** Personnel DAO used to access hcp type */
 	private PersonnelDAO personnelDAO;
