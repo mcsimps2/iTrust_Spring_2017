@@ -47,6 +47,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 		oi.setDate(rs.getDate("dateOfInit"));
 		oi.setLMP(rs.getDate("LMP"));
 		oi.setRH(rs.getBoolean("RH"));
+		oi.setGeneticPotentialForMiscarriage(rs.getBoolean("geneticPotentialForMiscarriage"));
 		return oi;
 	}
 
@@ -66,7 +67,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 			boolean newInstance) throws SQLException {
 		String stmt = "";
 		if (newInstance) {
-			stmt = "INSERT INTO obstetricsInit(pid, dateOfInit, LMP, RH) VALUES (?, ?, ?, ?);";
+			stmt = "INSERT INTO obstetricsInit(pid, dateOfInit, LMP, RH, geneticPotentialForMiscarriage) VALUES (?, ?, ?, ?, ?);";
 			ps = conn.prepareStatement(stmt, Statement.RETURN_GENERATED_KEYS);
 			String dateOfInit = insertObject.getDate();
 			String dateOfLMP = insertObject.getLMP();
@@ -74,6 +75,7 @@ public class ObstetricsInitSQLLoader implements SQLLoader<ObstetricsInit>
 			ps.setDate(2, Date.valueOf(dateOfInit));
 			ps.setDate(3, Date.valueOf(dateOfLMP));
 			ps.setBoolean(4, insertObject.getRH());
+			ps.setBoolean(5, insertObject.getGeneticPotentialForMiscarriage());
 		}
 		else
 		{
