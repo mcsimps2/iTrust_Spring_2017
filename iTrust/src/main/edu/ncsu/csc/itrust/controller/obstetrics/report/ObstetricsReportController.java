@@ -87,6 +87,13 @@ public class ObstetricsReportController extends iTrustController {
 		dData = new DiagnosisMySQL(ds);
 	}
 	
+	public String getPrettyBool(boolean bool) {
+		if (bool)
+			return "True";
+		else
+			return "False";
+	}
+	
 	public List<PregnancyInfo> getPastPregnancies(long initID) {
 		try {
 			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(initID);
@@ -157,14 +164,6 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public String getPrettyHighBloodPressure(long initID) {
-		if (getHighBloodPressure(initID)) {
-			return "True";
-		} else {
-			return "False";
-		}
-	}
-	
 	public boolean getAdvancedMaternalAge(long pid) {
 		try {
 			int age = patientDAO.getPatient(pid).getAge();
@@ -175,33 +174,12 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public String getPrettyAdvancedMaternalAge(long pid) {
-		if (getAdvancedMaternalAge(pid))
-			return "True";
-		else
-			return "False";
-	}
-	
 	public boolean getHasPreexistingCondition(long initID) {
 		return !this.getPreexistingConditions(initID).isEmpty();
 	}
 	
-	public String getPrettyHasPreexistingCondition(long initID) {
-		if (getHasPreexistingCondition(initID))
-			return "True";
-		else
-			return "False";
-	}
-	
 	public boolean getHasAllergies(long pid) {
 		return !this.getDrugAllergies(pid).isEmpty();
-	}
-	
-	public String getPrettyHasAllergies(long pid) {
-		if (getHasAllergies(pid))
-			return "True";
-		else
-			return "False";
 	}
 	
 	public boolean getLowLyingPlacenta(long initID) {
@@ -214,22 +192,8 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public String getPrettyLowLyingPlacenta(long initID) {
-		if (getLowLyingPlacenta(initID))
-			return "True";
-		else
-			return "False";
-	}
-	
 	public boolean getPotentialForMiscarriage(long pid) {
 		return false;
-	}
-	
-	public String getPrettyPotentialForMiscarriage(long pid) {
-		if (getPotentialForMiscarriage(pid))
-			return "True";
-		else
-			return "False";
 	}
 	
 	public boolean getAbnormalFetalHeartRate(long initID) {
@@ -243,13 +207,6 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public String getPrettyAbnormalFetalHeartRate(long initID) {
-		if (getAbnormalFetalHeartRate(initID))
-			return "True";
-		else
-			return "False";
-	}
-	
 	public boolean getMultiples(long initID) {
 		try {
 			ObstetricsVisit obv = obvData.getByObstetricsInit(initID).get(0);
@@ -259,13 +216,6 @@ public class ObstetricsReportController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_MULTIPLES, e.getMessage(), null);
 			return false;
 		}
-	}
-	
-	public String getPrettyMultiples(long initID) {
-		if (getMultiples(initID))
-			return "True";
-		else
-			return "False";
 	}
 	
 	public boolean getAbnormalWeightGain(long initID) {
@@ -282,13 +232,6 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public String getPrettyAbnormalWeightGain(long initID) {
-		if (getAbnormalWeightGain(initID))
-			return "True";
-		else
-			return "False";
-	}
-	
 	public boolean getHyperemesisGravidarum(long initID) {
 		try {
 			long officeVisitID = obvData.getByObstetricsInit(initID).get(0).getOfficeVisitID();
@@ -303,13 +246,6 @@ public class ObstetricsReportController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HYPEREMESIS_GRAVIDARUM, e.getMessage(), null);
 			return false;
 		}
-	}
-	
-	public String getPrettyHyperemesisGravidarum(long initID) {
-		if (getHyperemesisGravidarum(initID))
-			return "True";
-		else
-			return "False";
 	}
 	
 	public boolean getHypothyroidism(long initID) {
@@ -334,13 +270,6 @@ public class ObstetricsReportController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HYPEREMESIS_GRAVIDARUM, e.getMessage(), null);
 			return false;
 		}
-	}
-	
-	public String getPrettyHypothyroidism(long initID) {
-		if (getHypothyroidism(initID))
-			return "True";
-		else
-			return "False";
 	}
 
 	public List<String> getPreexistingConditions(long initID) {
