@@ -1013,7 +1013,5 @@ INSERT INTO icdcode (code, name, is_chronic) VALUES
 ('E890', 'Postprocedural hypothyroidism', 1),
 ('O210', 'Mild hyperemesis gravidarum', 0),
 ('O211', 'Hyperemesis gravidarum with metabolic disturbance', 0),
-('R971', 'Elevated cancer antigen 125 [CA 125]', 1),
-
-
+('R971', 'Elevated cancer antigen 125 [CA 125]', 1)
 ON duplicate key update code=code;
