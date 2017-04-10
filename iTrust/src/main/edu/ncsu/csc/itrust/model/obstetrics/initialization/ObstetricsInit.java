@@ -25,6 +25,8 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	private final int EDD_LMP_DIFF = 280;
 	/** The RH flag */
 	private boolean RH = false;
+	/** If the patient has a high genetic potential for miscarriage or not */
+	private boolean geneticPotentialForMiscarriage = false;
 	
 	/**
 	 * Constructor to be used when adding a new record to the database
@@ -370,6 +372,28 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 		{
 			return "False";
 		}
+	}
+	
+	public String getPrettyGeneticPotentialForMiscarriage()
+	{
+		if (geneticPotentialForMiscarriage)
+		{
+			return "True";
+		}
+		else
+		{
+			return "False";
+		}
+	}
+	
+	public boolean getGeneticPotentialForMiscarriage()
+	{
+		return geneticPotentialForMiscarriage;
+	}
+	
+	public void setGeneticPotentialForMiscarriage(boolean val)
+	{
+		this.geneticPotentialForMiscarriage = val;
 	}
 }
 

@@ -68,5 +68,21 @@ public class ObstetricsInitTest {
 		Assert.assertEquals(oi.getJavaLMP(), oldDate);
 		oi.setLMP(sdate);
 		Assert.assertEquals(oi.getSQLLMP(), sdate);
+		
+		oi.setRH(false);
+		Assert.assertFalse(oi.getRH());
+		Assert.assertEquals("False", oi.getPrettyRH());
+		
+		oi.setRH(true);
+		Assert.assertTrue(oi.getRH());
+		Assert.assertEquals("True", oi.getPrettyRH());
+		
+		oi.setGeneticPotentialForMiscarriage(false);
+		Assert.assertFalse(oi.getGeneticPotentialForMiscarriage());
+		Assert.assertEquals("False", oi.getPrettyGeneticPotentialForMiscarriage());
+		
+		oi.setGeneticPotentialForMiscarriage(true);
+		Assert.assertTrue(oi.getGeneticPotentialForMiscarriage());
+		Assert.assertEquals("True", oi.getPrettyGeneticPotentialForMiscarriage());
 	}
 }
