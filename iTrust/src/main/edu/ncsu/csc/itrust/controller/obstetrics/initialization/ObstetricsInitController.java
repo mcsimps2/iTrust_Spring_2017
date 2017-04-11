@@ -103,6 +103,9 @@ public class ObstetricsInitController extends iTrustController
 	/** Temporary storage of RH flag */
 	private boolean RH;
 	
+	/** Temporary storage of geneticPotentialForMiscarriage flag */
+	private boolean geneticPotentialForMiscarriage;
+	
 	/** Temporary storage of the LMP for when the user is adding prior pregnancies */
 	private String lmp;
 	
@@ -373,6 +376,7 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyLists();
 		clearLMP();
 		clearRH();
+		clearGeneticPotentialForMiscarriage();
 		
 		if (oi != null) {
 			// We're viewing a record, so show past pregnancy records from it.
@@ -503,6 +507,7 @@ public class ObstetricsInitController extends iTrustController
 		// Make a new ObstetricsInit record with the LMP and save it in the database
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
 		oi.setRH(this.getRH());
+		oi.setGeneticPotentialForMiscarriage(this.getGeneticPotentialForMiscarriage());
 		try {
 			long oid = oiData.addAndReturnID(oi);
 			
@@ -526,6 +531,7 @@ public class ObstetricsInitController extends iTrustController
 			this.clearPregnancyLists();
 			this.clearLMP();
 			this.clearRH();
+			this.clearGeneticPotentialForMiscarriage();
 			
 			// Add success messages
 			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
@@ -557,6 +563,8 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyFields();
 		clearPregnancyLists();
 		clearLMP();
+		clearRH();
+		clearGeneticPotentialForMiscarriage();
 		
 		// Go back to the overview page
 		try {
@@ -587,6 +595,10 @@ public class ObstetricsInitController extends iTrustController
 	
 	private void clearRH() {
 		this.setRH(false);
+	}
+	
+	private void clearGeneticPotentialForMiscarriage() {
+		this.setGeneticPotentialForMiscarriage(false);
 	}
 	
 	/**
@@ -641,6 +653,16 @@ public class ObstetricsInitController extends iTrustController
 	 	
 	 public void setRH(boolean val) {
 	 	this.RH = val;
+	 }
+	 
+	 public boolean getGeneticPotentialForMiscarriage()
+	 {
+		 return geneticPotentialForMiscarriage;
+	 }
+	 
+	 public void setGeneticPotentialForMiscarriage(boolean val)
+	 {
+		 this.geneticPotentialForMiscarriage = val;
 	 }
 
 	public String getYearOfConception() {

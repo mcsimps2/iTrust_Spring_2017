@@ -565,6 +565,7 @@ CREATE TABLE obstetricsInit
 	dateOfInit DATE,
 	LMP DATE,
 	RH BOOLEAN DEFAULT FALSE,
+	geneticPotentialForMiscarriage BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id)
 ) ENGINE=MyISAM;
 

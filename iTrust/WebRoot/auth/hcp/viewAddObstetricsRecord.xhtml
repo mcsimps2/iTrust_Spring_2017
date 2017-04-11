@@ -92,6 +92,17 @@
 												</ui:fragment>
 											</td>
 										</tr>
+										<tr>
+											<td>Genetic Potential for Miscarriage:</td>
+											<td>
+												<ui:fragment rendered="#{addingRecord}">
+													<h:selectBooleanCheckbox class="form-control" value="#{obstetrics_init_controller.geneticPotentialForMiscarriage}" />
+												</ui:fragment>
+												<ui:fragment rendered="#{viewingRecord}">
+													#{oiRecord.getPrettyGeneticPotentialForMiscarriage()}
+												</ui:fragment>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
