@@ -231,4 +231,12 @@ public class DAOFactory {
 	public ReviewsDAO getReviewsDAO() {
 		return new ReviewsDAO(this);
 	}
+	
+	/**
+	 * 
+	 * @return this DAOFactory's UserDAO
+	 */
+	public UserDAO getUserDAO() {
+		return new UserDAO(this);
+	}
 }
