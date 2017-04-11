@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
+import edu.ncsu.csc.itrust.controller.user.UserController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
@@ -58,20 +59,9 @@ public class PersonnelDAO {
 	 * @throws DBException
 	 */
 	public String getName(final long mid) throws ITrustException, DBException {
-		try (Connection conn = factory.getConnection();
-				PreparedStatement stmt = conn
-						.prepareStatement("SELECT firstName, lastName FROM personnel WHERE MID=?");) {
-			stmt.setLong(1, mid);
-			ResultSet results = stmt.executeQuery();
-			if (!results.next()) {
-				throw new ITrustException("User does not exist");
-			}
-			final String result = results.getString("firstName") + " " + results.getString("lastName");
-			results.close();
-			return result;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		}
+		String name = new UserController().getUserNameForIDFirstLast("" + mid);
+		if (name.isEmpty()) throw new ITrustException("User does not exist");
+		return name;
 	}
 
 	public long getNextID(final Role role) throws DBException, ITrustException {
