@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -64,11 +63,10 @@ public class OfficeVisitController extends iTrustController {
 	private static final String OFFICE_VISIT_SUCCESSFULLY_UPDATED = "Office Visit Successfully Updated";
 
 	private OfficeVisitData officeVisitData;
-	private SessionUtils sessionUtils;
 
 	public OfficeVisitController() throws DBException {
+		super();
 		officeVisitData = new OfficeVisitMySQL();
-		sessionUtils = SessionUtils.getInstance();
 	}
 
 	/**
@@ -80,8 +78,8 @@ public class OfficeVisitController extends iTrustController {
 	 *            SessionUtils instance
 	 */
 	public OfficeVisitController(DataSource ds, SessionUtils sessionUtils) {
+		super(sessionUtils, null);
 		officeVisitData = new OfficeVisitMySQL(ds);
-		this.sessionUtils = sessionUtils;
 	}
 
 	/**
@@ -91,8 +89,8 @@ public class OfficeVisitController extends iTrustController {
 	 *            DataSource
 	 */
 	public OfficeVisitController(DataSource ds) {
+		super();
 		officeVisitData = new OfficeVisitMySQL(ds);
-		sessionUtils = SessionUtils.getInstance();
 	}
 
 	/**
@@ -148,28 +146,6 @@ public class OfficeVisitController extends iTrustController {
 		return generatedId;
 	}
 
-	/**
-	 * Sends a FacesMessage for FacesContext to display.
-	 * 
-	 * @param severity
-	 *            severity of the message
-	 * @param summary
-	 *            localized summary message text
-	 * @param detail
-	 *            localized detail message text
-	 * @param clientId
-	 *            The client identifier with which this message is associated
-	 *            (if any)
-	 */
-	public void printFacesMessage(Severity severity, String summary, String detail, String clientId) {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		if (ctx == null) {
-			return;
-		}
-		ctx.getExternalContext().getFlash().setKeepMessages(true);
-		ctx.addMessage(clientId, new FacesMessage(severity, summary, detail));
-	}
-
 	public void redirectToBaseOfficeVisit() throws IOException {
 		if (FacesContext.getCurrentInstance() != null) {
 			NavigationController.baseOfficeVisit();
@@ -222,7 +198,7 @@ public class OfficeVisitController extends iTrustController {
 	 *         visit exists
 	 */
 	public List<OfficeVisit> getOfficeVisitsForCurrentPatient() {
-		return getOfficeVisitsForPatient(sessionUtils.getCurrentPatientMID());
+		return getOfficeVisitsForPatient(getSessionUtils().getCurrentPatientMID());
 	}
 
 	/**
@@ -242,7 +218,7 @@ public class OfficeVisitController extends iTrustController {
 	 *         if no office visit exists during that age range
 	 */
 	public List<OfficeVisit> getBabyOfficeVisitsForCurrentPatient() {
-		return getBabyOfficeVisitsForPatient(sessionUtils.getCurrentPatientMID());
+		return getBabyOfficeVisitsForPatient(getSessionUtils().getCurrentPatientMID());
 	}
 
 	/**
@@ -262,7 +238,7 @@ public class OfficeVisitController extends iTrustController {
 	 *         list if no office visit exists during that age range
 	 */
 	public List<OfficeVisit> getChildOfficeVisitsForCurrentPatient() {
-		return getChildOfficeVisitsForPatient(sessionUtils.getCurrentPatientMID());
+		return getChildOfficeVisitsForPatient(getSessionUtils().getCurrentPatientMID());
 	}
 
 	/**
@@ -282,7 +258,7 @@ public class OfficeVisitController extends iTrustController {
 	 *         list if no office visit exists during that age range
 	 */
 	public List<OfficeVisit> getAdultOfficeVisitsForCurrentPatient() {
-		return getAdultOfficeVisitsForPatient(sessionUtils.getCurrentPatientMID());
+		return getAdultOfficeVisitsForPatient(getSessionUtils().getCurrentPatientMID());
 	}
 
 	public OfficeVisit getVisitByID(String VisitID) {
@@ -307,7 +283,7 @@ public class OfficeVisitController extends iTrustController {
 	 * @return Office Visit of the selected patient in the HCP session
 	 */
 	public OfficeVisit getSelectedVisit() {
-		String visitID = sessionUtils.getRequestParameter("visitID");
+		String visitID = getSessionUtils().getRequestParameter("visitID");
 		if (visitID == null || visitID.isEmpty()) {
 			return null;
 		}
@@ -335,7 +311,7 @@ public class OfficeVisitController extends iTrustController {
 	 *         visit, false if otherwise
 	 */
 	public boolean CurrentPatientHasVisited() {
-		return hasPatientVisited(sessionUtils.getCurrentPatientMID());
+		return hasPatientVisited(getSessionUtils().getCurrentPatientMID());
 	}
 
 	public void edit(OfficeVisit ov) {
@@ -457,11 +433,11 @@ public class OfficeVisitController extends iTrustController {
 	 * Logs that the current user viewed a patient's health metrics page
 	 */
 	public void logViewHealthMetrics(){
-	    String role = sessionUtils.getSessionUserRole();
+	    String role = getSessionUtils().getSessionUserRole();
 	    if ("hcp".equals(role)){
 	        logTransaction(TransactionType.HCP_VIEW_BASIC_HEALTH_METRICS, "");
 	    } else if ("patient".equals(role)){
-	        logTransaction(TransactionType.PATIENT_VIEW_BASIC_HEALTH_METRICS, Long.parseLong(sessionUtils.getSessionLoggedInMID()), null, "");
+	        logTransaction(TransactionType.PATIENT_VIEW_BASIC_HEALTH_METRICS, Long.parseLong(getSessionUtils().getSessionLoggedInMID()), null, "");
 	    }
 	}
 	
