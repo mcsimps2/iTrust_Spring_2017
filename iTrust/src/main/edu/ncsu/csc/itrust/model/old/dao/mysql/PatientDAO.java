@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Vector;
 
 import edu.ncsu.csc.itrust.DBUtil;
-import edu.ncsu.csc.itrust.controller.user.UserController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
@@ -59,9 +58,7 @@ public class PatientDAO {
 	 * @throws DBException
 	 */
 	public String getName(long mid) throws ITrustException, DBException {
-		String name = new UserController().getUserNameForIDFirstLast("" + mid);
-		if (name.isEmpty()) throw new ITrustException("User does not exist");
-		return name;
+		return factory.getUserDAO().getName(mid, "patients");
 	}
 
 	/**
