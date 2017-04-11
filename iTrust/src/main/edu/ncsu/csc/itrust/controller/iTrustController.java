@@ -1,10 +1,9 @@
 package edu.ncsu.csc.itrust.controller;
 
-import java.sql.SQLException;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.DataBean;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
@@ -107,8 +106,8 @@ public class iTrustController {
 			} else {
 				throw new Exception();
 			}
-		} catch (SQLException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, failMsg, e.getMessage(), null);
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, failMsg, e.getExtendedMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, failMsg, failMsg, null);
 		}
