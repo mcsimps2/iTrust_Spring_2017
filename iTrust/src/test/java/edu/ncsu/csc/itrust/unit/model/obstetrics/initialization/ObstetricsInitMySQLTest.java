@@ -47,11 +47,11 @@ public class ObstetricsInitMySQLTest {
 		oiArr = new ObstetricsInit[2];
 		oiArr[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
 		oiArr[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
-		oiArrAll = new ObstetricsInit[3];
-		oiArrAll[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
-		oiArrAll[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
-		oiArrAll[2] = new ObstetricsInit(5, "2005-03-01", "2005-01-03");
-		oiArrAll[3] = new ObstetricsInit(20, "2017-03-16", "2017-01-01");
+		oiArrAll = new ObstetricsInit[4];
+		oiArrAll[0] = new ObstetricsInit(20, "2017-03-16", "2017-01-01");
+		oiArrAll[1] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
+		oiArrAll[2] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
+		oiArrAll[3] = new ObstetricsInit(5, "2005-03-01", "2005-01-03");
 	}
 	
 	/**
@@ -202,9 +202,9 @@ public class ObstetricsInitMySQLTest {
 		{
 			results = oisql.getAll();
 			Assert.assertEquals(oiArrAll.length, results.size());
-			for (int i = 0; i < oiArr.length; i++)
+			for (int i = 0; i < oiArrAll.length; i++)
 			{
-				Assert.assertEquals(results.get(i), oiArr[i]);
+				Assert.assertEquals(results.get(i), oiArrAll[i]);
 			}
 		}
 		catch (DBException e)

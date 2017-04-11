@@ -133,7 +133,7 @@ public class ObstetricsVisitMySQLTest {
 	@Test
 	public void testGetByObstetricsInit() {
 		try {
-			Assert.assertTrue(ovsql.getByObstetricsInit(3L).get(0).equals(ov));
+			Assert.assertTrue(ovsql.getByObstetricsInit(3L).get(1).equals(ov));
 			Assert.assertTrue(ovsql.getByObstetricsInit(125L).isEmpty());
 		}  catch (DBException e) {
 			Assert.fail(e.getMessage());
