@@ -248,7 +248,7 @@ CREATE TABLE allergies(
 	PatientID BIGINT unsigned NOT NULL COMMENT 'MID of the Patient',
 	Description VARCHAR( 50 ) NOT NULL COMMENT 'Description of the allergy',
 	FirstFound TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	Code varchar(10) COMMENT 'NDCode of drug that patient is allergic to'
+	Code varchar(20) COMMENT 'NDCode of drug that patient is allergic to'
 	/*NEW, Added Code, so that we could pass the NDCode of the drug when adding allergy.*/
 ) ENGINE=MyISAM;
 

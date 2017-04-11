@@ -51,6 +51,7 @@ public class ObstetricsInitMySQLTest {
 		oiArrAll[0] = new ObstetricsInit(1, "2017-03-16", "2017-01-01");
 		oiArrAll[1] = new ObstetricsInit(1, "2016-02-03", "2015-11-21");
 		oiArrAll[2] = new ObstetricsInit(5, "2005-03-01", "2005-01-03");
+		oiArrAll[3] = new ObstetricsInit(20, "2017-03-16", "2017-01-01");
 	}
 	
 	/**
@@ -281,9 +282,9 @@ public class ObstetricsInitMySQLTest {
 		ObstetricsInit oi1 = new ObstetricsInit(1, "2015-05-05", "2015-04-01");
 		try
 		{
-			Assert.assertEquals(4, oisql.addAndReturnID(oi1));
 			Assert.assertEquals(5, oisql.addAndReturnID(oi1));
 			Assert.assertEquals(6, oisql.addAndReturnID(oi1));
+			Assert.assertEquals(7, oisql.addAndReturnID(oi1));
 		} catch (DBException | FormValidationException e)
 		{
 			Assert.fail(e.getMessage());

@@ -30,7 +30,7 @@ public class NDCodeTest extends TestCase {
 	// (unless codes are switched to fixed width)
 	public void testGetAllNDCodes() throws Exception {
 		List<MedicationBean> codes = ndDAO.getAllNDCodes();
-		assertEquals(5, codes.size());
+		assertEquals(8, codes.size());
 		assertEquals("00060-431", codes.get(0).getNDCode());
 		assertEquals("Tetracycline", codes.get(1).getDescription());
 	}
