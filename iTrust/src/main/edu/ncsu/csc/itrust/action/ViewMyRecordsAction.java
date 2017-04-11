@@ -135,32 +135,11 @@ public class ViewMyRecordsAction {
 	 * @return list of FamilyMemberBeans
 	 */
 	public List<FamilyMemberBean> getFamily() throws ITrustException {
-		List<FamilyMemberBean> fam = new ArrayList<FamilyMemberBean>();
-		List<FamilyMemberBean> parents = null;
+		List<FamilyMemberBean> fam = getFamilyHistory();
 		try {
-			parents = familyDAO.getParents(loggedInMID);
-			fam.addAll(parents);
-			fam.addAll(familyDAO.getSiblings(loggedInMID));
 			fam.addAll(familyDAO.getChildren(loggedInMID));
 		} catch (DBException e) {
 			throw new ITrustException(e.getMessage());
-		}
-		
-		if(parents != null) {
-			List<FamilyMemberBean> grandparents = new ArrayList<FamilyMemberBean>();
-			for(FamilyMemberBean parent : parents) {
-				try {
-					grandparents.addAll(familyDAO.getParents(parent.getMid()));
-				} catch (DBException e) {
-					throw new ITrustException(e.getMessage());
-				}
-			}
-			
-			fam.addAll(grandparents);
-			
-			for(FamilyMemberBean gp : grandparents) {
-				gp.setRelation("Grandparent");
-			}
 		}
 		return fam;
 	}
