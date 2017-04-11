@@ -89,24 +89,21 @@ public class UserController {
 	}
 	
 	public boolean doesUserExistWithID(String mid) throws DBException{
-		User user = null;
-		if( mid == null) return false;
-		long id = -1;
+		return doesRecordExistWithID(mid, userData);
+	}
+	
+	protected <T> boolean doesRecordExistWithID(String id, DataBean<T> data) throws DBException {
+		T record = null;
+		if( id == null) return false;
+		long idLong = -1;
 		try{
-			id = Long.parseLong(mid);
+			idLong = Long.parseLong(id);
 		}
 		catch(NumberFormatException ne){
 			return false;
 		}
-		user = userData.getByID(id);
-		if(!(user == null)){
-				return true;
-		}
-		else{
-			return false;
-		}
-
-		
+		record = data.getByID(idLong);
+		return record != null;
 	}
 	
 	
