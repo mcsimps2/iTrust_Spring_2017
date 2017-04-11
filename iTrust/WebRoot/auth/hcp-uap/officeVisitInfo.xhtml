@@ -48,17 +48,19 @@
 					<input id="tab-immunizations" type="radio" name="ovtabs" />
 					<label for="tab-immunizations">Immunizations</label>
 					
-					<input id="tab-obstetrics" type="radio" name="ovtabs" />
-					<label for="tab-obstetrics">Obstetrics</label>
-					
-					<input id="tab-ultrasound" type="radio" name="ovtabs" />
-					<label for="tab-ultrasound">Ultrasound</label>
-					
-					<input id="tab-childbirth" type="radio" name="ovtabs" />
-					<label for="tab-childbirth">Childbirth</label>
-					
-					<input id="tab-newborns" type="radio" name="ovtabs" />
-					<label for="tab-newborns">Newborns</label>
+					<ui:fragment rendered="#{obstetrics_visit_form.weeksPregnant != null}">
+						<input id="tab-obstetrics" type="radio" name="ovtabs" />
+						<label for="tab-obstetrics">Obstetrics</label>
+						
+						<input id="tab-ultrasound" type="radio" name="ovtabs" />
+						<label for="tab-ultrasound">Ultrasound</label>
+						
+						<input id="tab-childbirth" type="radio" name="ovtabs" />
+						<label for="tab-childbirth">Childbirth</label>
+						
+						<input id="tab-newborns" type="radio" name="ovtabs" />
+						<label for="tab-newborns">Newborns</label>
+					</ui:fragment>
 				</c:if>
 				
 				<div class="tab-content">

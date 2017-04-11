@@ -184,4 +184,8 @@ public class NewbornForm {
 			return "";
 		}
 	}
+	
+	public boolean isChildbirthTabSaved(long officeVisitID) {
+		return cvc.getByOfficeVisit(officeVisitID) != null;
+	}
 }
