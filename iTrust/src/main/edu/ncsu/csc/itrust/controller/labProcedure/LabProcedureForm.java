@@ -148,20 +148,7 @@ public class LabProcedureForm {
 	}
 
 	public boolean isRemovable(String idStr) {
-		try {
-			Long.parseLong(idStr);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-
-		LabProcedure proc = controller.getLabProcedureByID(idStr);
-
-		LabProcedureStatus status = proc.getStatus();
-
-		boolean isInTransit = status == LabProcedureStatus.IN_TRANSIT;
-		boolean isReceived = status == LabProcedureStatus.RECEIVED;
-		boolean result = isInTransit || isReceived;
-		return result;
+		return isReassignable(idStr);
 	}
 
 	public boolean isCommentable(String idStr) {
