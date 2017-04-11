@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:itrust="/WEB-INF/tags.tld">
+
+	<f:view beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+
+	<h:body>
+		<ui:composition template="/iTrust_template.xhtml">
+			<ui:define name="pageStyle"></ui:define>
+			<ui:define name="pageTitle">iTrust - Labor and Delivery Report</ui:define>
+			<ui:define name="leftMenu">
+				<ui:include src="/auth/hcp/menu.xhtml" />
+			</ui:define>
+
+			<ui:define name="mainContent">
+				<ui:param name="pid" value="#{session.getAttribute('pid')}" />
+				<ui:param name="initID" value="#{obstetrics_report_controller.getViewedOI().getID()}" />
+
+				<h1>Labor and Delivery report</h1>
+				
+				<h:form>
+					<h:commandButton value="Back" action="obstetricsInitRecords" />
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

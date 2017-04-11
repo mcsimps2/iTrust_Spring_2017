@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.report;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +8,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.controller.NavigationController;
 import edu.ncsu.csc.itrust.controller.iTrustController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.diagnosis.Diagnosis;
@@ -33,6 +37,8 @@ import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
+@ManagedBean(name = "obstetrics_report_controller")
+@SessionScoped
 public class ObstetricsReportController extends iTrustController {
 	
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
@@ -49,13 +55,15 @@ public class ObstetricsReportController extends iTrustController {
 	private static final String ERROR_LOADING_PREEXISTING_CONDITIONS = "Error loading preexisting conditions";
 	private static final String ERROR_LOADING_ALLERGIES = "Error loading allergies";
 	
-	ObstetricsInitData oiData;
-	PregnancyInfoData pregnancyData;
-	ObstetricsVisitData obvData;
-	OfficeVisitData ofvData;
-	DiagnosisData dData;
-	PatientDAO patientDAO;
-	AllergyDAO allergyDAO;
+	private ObstetricsInitData oiData;
+	private PregnancyInfoData pregnancyData;
+	private ObstetricsVisitData obvData;
+	private OfficeVisitData ofvData;
+	private DiagnosisData dData;
+	private PatientDAO patientDAO;
+	private AllergyDAO allergyDAO;
+
+	private ObstetricsInit viewedOI;
 	
 	SessionUtils sessionUtils;
 	
@@ -87,11 +95,13 @@ public class ObstetricsReportController extends iTrustController {
 		dData = new DiagnosisMySQL(ds);
 	}
 	
+	public void viewReport(ObstetricsInit oi) throws IOException {
+		this.setViewedOI(oi);
+		NavigationController.viewObstetricsReport();
+	}
+	
 	public String getPrettyBool(boolean bool) {
-		if (bool)
-			return "True";
-		else
-			return "False";
+		return bool ? "True" : "False";
 	}
 	
 	public List<PregnancyInfo> getPastPregnancies(long initID) {
@@ -220,7 +230,7 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getAbnormalWeightGain(long initID) {
 		try {
-			//This might not be correct;
+			// TODO This might not be correct
 			List<ObstetricsVisit> list = obvData.getByObstetricsInit(initID);
 			OfficeVisit lastOfv = ofvData.getByID(list.get(0).getOfficeVisitID());
 			OfficeVisit firstOfv = ofvData.getByID(list.get(list.size() - 1).getOfficeVisitID());
@@ -305,5 +315,13 @@ public class ObstetricsReportController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_ALLERGIES, e.getMessage(), null);
 		}
 		return allergies;
+	}
+
+	public ObstetricsInit getViewedOI() {
+		return viewedOI;
+	}
+
+	public void setViewedOI(ObstetricsInit viewedOI) {
+		this.viewedOI = viewedOI;
 	}
 }
