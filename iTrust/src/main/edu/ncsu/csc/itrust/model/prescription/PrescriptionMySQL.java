@@ -14,13 +14,15 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.DBUtil;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.model.DataBean;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.loaders.PatientLoader;
 
-public class PrescriptionMySQL {
+public class PrescriptionMySQL implements DataBean<Prescription> {
     private DataSource ds;
     private PrescriptionValidator validator;
     
@@ -77,25 +79,39 @@ public class PrescriptionMySQL {
      * @return True if the record was successfully added, false otherwise
      * @throws SQLException 
      */
-    public boolean add(Prescription p) throws SQLException {
+    @Override
+    public boolean add(Prescription p) throws FormValidationException, DBException {
+    	Connection conn = null;
+		PreparedStatement pstring = null;
+		
     	try {
     		validator.validate(p);
     	} catch (FormValidationException e) {
-    		throw new SQLException(e.getMessage());
+    		throw new DBException(new SQLException(e.getMessage()));
     	}
-        try (Connection conn = ds.getConnection();
-                PreparedStatement pstring = createAddPreparedStatement(conn, p);){
+    	
+        try {
+        	conn = ds.getConnection();
+        	pstring = createAddPreparedStatement(conn, p);
             return pstring.executeUpdate() > 0;
-        }
+        } catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+        } finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
     }
     
-    public Prescription get(long id) throws SQLException {
+    @Override
+    public Prescription getByID(long id) throws DBException {
     	try (Connection conn = ds.getConnection();
     			PreparedStatement pstring = createGetStatement(conn, id);
     			ResultSet results = pstring.executeQuery()) {
     		List<Prescription> list = loadRecords(results);
     		return list.isEmpty() ? null : list.get(0);
-    	}
+    	} catch (SQLException e) {
+			throw new DBException(e);
+		}
     }
     
     /**
@@ -135,16 +151,26 @@ public class PrescriptionMySQL {
      * @return True if the Prescription was successfully updated, false if not
      * @throws SQLException 
      */
-    public boolean update(Prescription p) throws SQLException {
+    public boolean update(Prescription p) throws DBException, FormValidationException {
+    	Connection conn = null;
+		PreparedStatement pstring = null;
+		
     	try {
     		validator.validate(p);
     	} catch (FormValidationException e) {
-    		throw new SQLException(e.getMessage());
+    		throw new DBException(new SQLException(e.getMessage()));
     	}
-        try (Connection conn = ds.getConnection();
-                PreparedStatement pstring = createUpdatePreparedStatement(conn, p);){
+    	
+        try {
+        	conn = ds.getConnection();
+        	pstring = createUpdatePreparedStatement(conn, p);
             return pstring.executeUpdate() > 0;
-        }
+        } catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+        } finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
     }
     
     /**
@@ -373,4 +399,10 @@ public class PrescriptionMySQL {
     	pstring.setLong(1,  id);
     	return pstring;
     }
+
+	@Override
+	public List<Prescription> getAll() throws DBException {
+		// TODO Auto-generated method stub
+		throw new IllegalStateException("PrescriptionMySQL.getAll() is unimplemented");
+	}
 }

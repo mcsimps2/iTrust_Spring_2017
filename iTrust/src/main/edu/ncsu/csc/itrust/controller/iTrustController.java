@@ -1,8 +1,11 @@
 package edu.ncsu.csc.itrust.controller;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 
+import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.logger.TransactionLogger;
+import edu.ncsu.csc.itrust.model.DataBean;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
@@ -83,5 +86,30 @@ public class iTrustController {
 		Long loggedInMID = sessionUtils.getSessionLoggedInMIDLong();
 		Long patientMID = sessionUtils.getCurrentPatientMIDLong();
 		logTransaction(type, loggedInMID, patientMID, addedInfo);
+	}
+	
+	/**
+	 * Uses the given DataBean to add the given addObject to the database and logs the transaction upon success.
+	 * The current office visit id is recorded with the log as additional information.
+	 * @param data the given DataBean to use
+	 * @param addObject the object to add to the database
+	 * @param successMsg the message to display upon success
+	 * @param failMsg the message to display upon failure
+	 * @param transactionType the TransactionType used to log the transaction
+	 */
+	protected <T> void addLogOfficeVisitID(DataBean<T> data, T addObject, String successMsg,
+			String failMsg, TransactionType transactionType) {
+		try {
+			if (data.add(addObject)) {
+				printFacesMessage(FacesMessage.SEVERITY_INFO, successMsg, successMsg, null);
+				logTransaction(transactionType, sessionUtils.getCurrentOfficeVisitId().toString());
+			} else {
+				throw new Exception();
+			}
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, failMsg, e.getExtendedMessage(), null);
+		} catch (Exception e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, failMsg, failMsg, null);
+		}
 	}
 }

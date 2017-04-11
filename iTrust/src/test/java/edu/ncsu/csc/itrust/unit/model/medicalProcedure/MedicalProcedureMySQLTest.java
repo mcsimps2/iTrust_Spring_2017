@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCode;
 import edu.ncsu.csc.itrust.model.medicalProcedure.MedicalProcedure;
@@ -36,7 +37,7 @@ public class MedicalProcedureMySQLTest extends TestCase {
     }
     
     @Test
-    public void testValids() throws SQLException, DBException {
+    public void testValids() throws SQLException, DBException, FormValidationException {
         long ovID = ovSql.getAll().get(0).getVisitID();
         MedicalProcedure p = new MedicalProcedure();
         p.setOfficeVisitId(ovID);
@@ -47,7 +48,7 @@ public class MedicalProcedureMySQLTest extends TestCase {
         Assert.assertEquals("90717", pList.get(0).getCode());
         
         long mpID = pList.get(0).getId();
-        Assert.assertEquals("90717", sql.get(mpID).getCode());
+        Assert.assertEquals("90717", sql.getByID(mpID).getCode());
         
         Assert.assertEquals("Typhoid Vaccine", sql.getCodeName("90717"));
         

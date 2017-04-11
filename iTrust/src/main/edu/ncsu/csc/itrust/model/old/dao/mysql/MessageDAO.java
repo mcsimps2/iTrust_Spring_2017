@@ -99,22 +99,7 @@ public class MessageDAO {
 	 * @throws DBException
 	 */
 	public List<MessageBean> getMessagesNameAscending(long mid) throws SQLException, DBException {
-		try (Connection conn = factory.getConnection();
-				PreparedStatement stmt = (mid >= 999999999)
-						? conn.prepareStatement(
-								"SELECT message.* FROM message, patients WHERE message.from_id=patients.mid AND message.to_id=? ORDER BY patients.lastName ASC, patients.firstName ASC, message.sent_date ASC")
-						: conn.prepareStatement(
-								"SELECT message.* FROM message, personnel WHERE message.from_id=personnel.mid AND message.to_id=? ORDER BY personnel.lastName ASC, personnel.firstName ASC, message.sent_date ASC")) {
-			stmt.setLong(1, mid);
-			ResultSet rs = stmt.executeQuery();
-
-			List<MessageBean> messageList = this.mbLoader.loadList(rs);
-
-			rs.close();
-			return messageList;
-		} catch (SQLException e) {
-			throw new DBException(e);
-		}
+		return getMessagesOrderedByName(mid, "ASC");
 	}
 
 	/**
@@ -127,12 +112,16 @@ public class MessageDAO {
 	 * @throws DBException
 	 */
 	public List<MessageBean> getMessagesNameDescending(long mid) throws SQLException, DBException {
+		return getMessagesOrderedByName(mid, "DESC");
+	}
+	
+	private List<MessageBean> getMessagesOrderedByName(long mid, String order) throws DBException {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = (mid >= 999999999)
-						? conn.prepareStatement(
-								"SELECT message.* FROM message, patients WHERE message.from_id=patients.mid AND message.to_id=? ORDER BY patients.lastName DESC, patients.firstName DESC, message.sent_date DESC")
-						: conn.prepareStatement(
-								"SELECT message.* FROM message, personnel WHERE message.from_id=personnel.mid AND message.to_id=? ORDER BY personnel.lastName DESC, personnel.firstName DESC, message.sent_date DESC")) {
+						? conn.prepareStatement(String.format(
+								"SELECT message.* FROM message, patients WHERE message.from_id=patients.mid AND message.to_id=? ORDER BY patients.lastName %s, patients.firstName %s, message.sent_date %s", order, order, order))
+						: conn.prepareStatement(String.format(
+								"SELECT message.* FROM message, personnel WHERE message.from_id=personnel.mid AND message.to_id=? ORDER BY personnel.lastName %s, personnel.firstName %s, message.sent_date %s", order, order, order))) {
 			stmt.setLong(1, mid);
 			ResultSet rs = stmt.executeQuery();
 
