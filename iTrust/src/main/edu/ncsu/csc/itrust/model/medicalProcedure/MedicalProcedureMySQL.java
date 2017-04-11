@@ -12,11 +12,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import edu.ncsu.csc.itrust.DBUtil;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.model.DataBean;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCode;
 
-public class MedicalProcedureMySQL {
+public class MedicalProcedureMySQL implements DataBean<MedicalProcedure> {
     private DataSource ds;
     private MedicalProcedureValidator validator;
     
@@ -39,16 +41,27 @@ public class MedicalProcedureMySQL {
         this.validator = new MedicalProcedureValidator();
     }
     
-    public boolean add(MedicalProcedure p) throws SQLException{
+    @Override
+    public boolean add(MedicalProcedure p) throws FormValidationException, DBException {
+    	Connection conn = null;
+		PreparedStatement pstring = null;
+		
         try {
             validator.validate(p);
         } catch (FormValidationException e) {
-            throw new SQLException(e.getMessage());
+            throw new DBException(new SQLException(e.getMessage()));
         }
-        try (Connection conn = ds.getConnection();
-                PreparedStatement pstring = createAddPreparedStatement(conn, p);){
+        
+        try {
+        	conn = ds.getConnection();
+        	pstring = createAddPreparedStatement(conn, p);
             return pstring.executeUpdate() > 0;
-        }
+        } catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+        } finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
     }
 
     private PreparedStatement createAddPreparedStatement(Connection conn, MedicalProcedure p) throws SQLException {
@@ -60,13 +73,16 @@ public class MedicalProcedureMySQL {
         return pstring;
     }
     
-    public MedicalProcedure get(long id) throws SQLException{
-        try (Connection conn = ds.getConnection();
+    @Override
+	public MedicalProcedure getByID(long id) throws DBException {
+    	try (Connection conn = ds.getConnection();
                 PreparedStatement pstring = createGetStatement(conn, id);
                 ResultSet results = pstring.executeQuery()) {
             return loadSingle(results);
-        }
-    }
+        } catch (SQLException e) {
+			throw new DBException(e);
+		}
+	}
 
     private PreparedStatement createGetStatement(Connection conn, long id) throws SQLException {
         PreparedStatement pstring = conn.prepareStatement("SELECT * FROM medicalProcedure, cptcode " +
@@ -88,16 +104,27 @@ public class MedicalProcedureMySQL {
         }
     }
     
-    public boolean update(MedicalProcedure p) throws SQLException{
+    @Override
+    public boolean update(MedicalProcedure p) throws DBException, FormValidationException {
+    	Connection conn = null;
+		PreparedStatement pstring = null;
+		
         try {
             validator.validate(p);
         } catch (FormValidationException e) {
-            throw new SQLException(e.getMessage());
+            throw new DBException(new SQLException(e.getMessage()));
         }
-        try (Connection conn = ds.getConnection();
-                PreparedStatement pstring = createUpdatePreparedStatement(conn, p);){
+        
+        try {
+        	conn = ds.getConnection();
+        	pstring = createUpdatePreparedStatement(conn, p);
             return pstring.executeUpdate() > 0;
-        }
+        } catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException(e);
+        } finally {
+			DBUtil.closeConnection(conn, pstring);
+		}
     }
 
     private PreparedStatement createUpdatePreparedStatement(Connection conn, MedicalProcedure p) throws SQLException {
@@ -165,4 +192,10 @@ public class MedicalProcedureMySQL {
         pstring.setString(1, code);
         return pstring;
     }
+
+	@Override
+	public List<MedicalProcedure> getAll() throws DBException {
+		// TODO Auto-generated method stub
+		throw new IllegalStateException("MedicalProcedureMySQL.getAll() is unimplemented");
+	}
 }

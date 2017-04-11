@@ -22,6 +22,7 @@ import edu.ncsu.csc.itrust.model.prescription.PrescriptionMySQL;
 public class PrescriptionController extends iTrustController {
 
 	private static final String INVALID_PRESCRIPTION = "Invalid Prescription";
+	private static final String CREATE_SUCCESS = "Prescription is successfully created";
 	private PrescriptionMySQL sql;
 
 	public PrescriptionController() throws DBException {
@@ -45,19 +46,7 @@ public class PrescriptionController extends iTrustController {
 	}
 
 	public void add(Prescription prescription) {
-		try {
-			if (sql.add(prescription)) {
-				printFacesMessage(FacesMessage.SEVERITY_INFO, "Prescription is successfully created",
-						"Prescription is successfully created", null);
-				logTransaction(TransactionType.PRESCRIPTION_ADD, getSessionUtils().getCurrentOfficeVisitId().toString());
-			} else {
-				throw new Exception();
-			}
-		} catch (SQLException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_PRESCRIPTION, e.getMessage(), null);
-		} catch (Exception e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_PRESCRIPTION, INVALID_PRESCRIPTION, null);
-		}
+		addLogOfficeVisitID(sql, prescription, CREATE_SUCCESS, INVALID_PRESCRIPTION, TransactionType.PRESCRIPTION_ADD);
 	}
 
 	public void edit(Prescription prescription) {
@@ -106,7 +95,7 @@ public class PrescriptionController extends iTrustController {
 		return prescriptions;
 	}
 	
-	public Prescription getPrescriptionByID(String prescriptionID) throws SQLException {
+	public Prescription getPrescriptionByID(String prescriptionID) throws DBException {
 		Long id = null;
 		try {
 			id = Long.parseLong(prescriptionID);
@@ -117,7 +106,7 @@ public class PrescriptionController extends iTrustController {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Cannot get prescription", "Invalid prescription ID", null);
 			return null;
 		} else {
-			return sql.get(id);
+			return sql.getByID(id);
 		}
 	}
 

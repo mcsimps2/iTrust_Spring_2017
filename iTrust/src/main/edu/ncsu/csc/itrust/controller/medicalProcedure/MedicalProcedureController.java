@@ -19,6 +19,7 @@ import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 @SessionScoped
 public class MedicalProcedureController extends iTrustController {
     private static final String INVALID_MEDICAL_PROCEDURE = "Invalid Medical Procedure";
+	private static final String CREATE_SUCCESS = "Medical Procedure successfully created";
     MedicalProcedureMySQL sql;
     
     public MedicalProcedureController() throws DBException{
@@ -32,20 +33,7 @@ public class MedicalProcedureController extends iTrustController {
     }
     
     public void add(MedicalProcedure mp){
-        try {
-            if (sql.add(mp)) {
-                printFacesMessage(FacesMessage.SEVERITY_INFO, "Medical Procedure successfully created",
-                        "Medical Procedure successfully created", null);
-                Long ovid = getSessionUtils().getCurrentOfficeVisitId();
-                logTransaction(TransactionType.PROCEDURE_ADD, ovid == null ? null : ovid.toString());
-            } else {
-                throw new Exception();
-            }
-        } catch (SQLException e) {
-            printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_MEDICAL_PROCEDURE, e.getMessage(), null);
-        } catch (Exception e) {
-            printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_MEDICAL_PROCEDURE, INVALID_MEDICAL_PROCEDURE, null);
-        }
+    	addLogOfficeVisitID(sql, mp, CREATE_SUCCESS, INVALID_MEDICAL_PROCEDURE, TransactionType.PROCEDURE_ADD);
     }
     
     public void edit(MedicalProcedure mp){

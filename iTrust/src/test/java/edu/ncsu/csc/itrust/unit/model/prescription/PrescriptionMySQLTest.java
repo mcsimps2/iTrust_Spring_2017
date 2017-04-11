@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
@@ -139,13 +140,13 @@ public class PrescriptionMySQLTest extends TestCase {
 		Prescription expected = plist.get(0);
 		Assert.assertNotNull(expected);
 		long actualId = expected.getId();
-		Prescription actual = sql.get(actualId);
+		Prescription actual = sql.getByID(actualId);
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(expected.getDrugCode().getNDCode(), actual.getDrugCode().getNDCode());
 	}
 	
 	@Test
-	public void testAddUpdateAndDelete() throws DBException, SQLException{
+	public void testAddUpdateAndDelete() throws DBException, SQLException, FormValidationException{
 	    OfficeVisitMySQL ovSQL = new OfficeVisitMySQL(ds);
         List<OfficeVisit> ovList = ovSQL.getVisitsForPatient(201L);
         Assert.assertEquals(3, ovList.size());
