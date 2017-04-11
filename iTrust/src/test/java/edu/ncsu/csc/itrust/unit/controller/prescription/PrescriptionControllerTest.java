@@ -31,6 +31,7 @@ import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.controller.prescription.PrescriptionController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedureData;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
@@ -72,7 +73,7 @@ public class PrescriptionControllerTest {
 	}
 	
 	@Test
-	public void testGetPrescriptionByID() throws SQLException {
+	public void testGetPrescriptionByID() throws DBException {
 		assertNull(controller.getPrescriptionByID(null));
 		verify(controller).printFacesMessage(eq(FacesMessage.SEVERITY_ERROR), anyString(), anyString(), anyString());
 		assertNull(controller.getPrescriptionByID("-1"));
@@ -107,7 +108,7 @@ public class PrescriptionControllerTest {
 	}
 	
 	@Test
-	public void testExceptions() throws SQLException{
+	public void testExceptions() throws SQLException, DBException, FormValidationException {
 	    PrescriptionMySQL pSQL = spy(new PrescriptionMySQL(ds));
 	    controller.setSql(pSQL);
 	    

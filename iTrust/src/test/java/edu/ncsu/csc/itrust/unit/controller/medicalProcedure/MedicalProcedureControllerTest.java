@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import edu.ncsu.csc.itrust.controller.medicalProcedure.MedicalProcedureController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCode;
 import edu.ncsu.csc.itrust.model.medicalProcedure.MedicalProcedure;
@@ -27,7 +28,7 @@ public class MedicalProcedureControllerTest extends TestCase {
     }
     
     @Test
-    public void testDiabolicals() throws DBException, SQLException{
+    public void testDiabolicals() throws DBException, SQLException, FormValidationException{
         MedicalProcedureController controller = new MedicalProcedureController(ds);
         MedicalProcedureMySQL sql = spy(new MedicalProcedureMySQL(ds));
         controller.setSQL(sql);
