@@ -177,7 +177,8 @@ public class ObstetricsReportControllerTest {
 
 	@Test
 	public void testGetPotentialForMiscarriage() {
-		//fail("Not yet implemented");
+		Assert.assertFalse(orc.getPotentialForMiscarriage(1L));
+		Assert.assertTrue(orc.getPotentialForMiscarriage(4L));
 	}
 
 	@Test

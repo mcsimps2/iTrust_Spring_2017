@@ -47,6 +47,7 @@ public class ObstetricsReportController extends iTrustController {
 	private static final String ERROR_LOADING_HYPEREMESIS_GRAVIDARUM = "Error loading hyperemesis gravidarum";
 	private static final String ERROR_LOADING_PREEXISTING_CONDITIONS = "Error loading preexisting conditions";
 	private static final String ERROR_LOADING_ALLERGIES = "Error loading allergies";
+	private static final String ERROR_LOADING_GENETIC_POTENTIAL_FOR_MISCARRIAGE = "Error loading genetic potential for miscarriage";
 	
 	ObstetricsInitData oiData;
 	PregnancyInfoData pregnancyData;
@@ -187,8 +188,13 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public boolean getPotentialForMiscarriage(long pid) {
-		return false;
+	public boolean getPotentialForMiscarriage(long initID) {
+		try {
+			return oiData.getByID(initID).getGeneticPotentialForMiscarriage();
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_GENETIC_POTENTIAL_FOR_MISCARRIAGE, e.getMessage(), null);
+			return false;
+		}
 	}
 	
 	public boolean getAbnormalFetalHeartRate(long initID) {
