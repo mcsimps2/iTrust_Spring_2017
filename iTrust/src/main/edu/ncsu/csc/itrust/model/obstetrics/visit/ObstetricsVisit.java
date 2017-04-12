@@ -177,6 +177,10 @@ public class ObstetricsVisit {
 	public Boolean isLowLyingPlacentaObserved() {
 		return lowLyingPlacentaObserved;
 	}
+	
+	public String prettyIsLowLyingPlacentaObserved() {
+		return lowLyingPlacentaObserved ? "Yes" : "No";
+	}
 
 	/**
 	 * @param lowLyingPlacentaObserved the lowLyingPlacentaObserved to set
