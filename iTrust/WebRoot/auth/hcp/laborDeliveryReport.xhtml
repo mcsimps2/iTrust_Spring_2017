@@ -98,43 +98,34 @@
 					<div class="panel-heading">
 						<strong>Obstetrics office visits</strong>
 					</div>
-					<div class="panel-body">
-						Obstetrics visits that have occurred during this pregnancy.
-					</div>
-					<table class="table">
-						<tr>
-							<th>Weeks pregnant</th>
-							<th>Weight</th>
-							<th>Blood pressure</th>
-							<th>FHR</th>
-							<th>Multiplicity</th>
-							<th>LLP observed</th>
-						</tr>
-						<tr>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-						</tr>
-						<tr>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-						</tr>
-						<tr>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-							<td>test</td>
-						</tr>
-					</table>
+					<c:set var="obstetricsVisits" value="#{obstetrics_report_controller.getObstetricsVisits(initID)}" />
+					<ui:fragment rendered="#{empty obstetricsVisits}">
+						<div class="panel-body">
+							No obstetrics visits occurred during this pregnancy.
+						</div>
+					</ui:fragment>
+					<ui:fragment rendered="#{not empty obstetricsVisits}">
+						<table class="table">
+							<tr>
+								<th>Weeks pregnant</th>
+								<th>Weight</th>
+								<th>Blood pressure</th>
+								<th>FHR</th>
+								<th>Multiplicity</th>
+								<th>LLP observed</th>
+							</tr>
+							<ui:repeat var="ov" value="#{obstetricsVisits}">
+								<tr>
+									<td>#{ov.weeksPregnant}</td>
+									<td>????</td>
+									<td>????</td>
+									<td>#{ov.fhr}</td>
+									<td>#{ov.multiplicity}</td>
+									<td>#{ov.isLowLyingPlacentaObserved()}</td>
+								</tr>
+							</ui:repeat>
+						</table>
+					</ui:fragment>
 				</div>
 			
 				<div class="panel panel-default">
