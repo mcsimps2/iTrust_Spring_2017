@@ -135,15 +135,15 @@
 					<ui:fragment rendered="#{not empty pregnancies}">
 						<table class="table table-hover">
 							<tr>
+								<th>Conception year</th>
 								<th>Term length</th>
 								<th>Delivery type</th>
-								<th>Conception year</th>
 							</tr>
 							<ui:repeat var="p" value="#{pregnancies}">
 								<tr>
+									<td>#{p.yearOfConception}</td>
 									<td>#{p.numWeeksPregnant}w #{p.remainderDaysPregnant}d</td>
 									<td>#{p.getDeliveryType().toString()}</td>
-									<td>#{p.yearOfConception}</td>
 								</tr>
 							</ui:repeat>
 						</table>
