@@ -51,7 +51,7 @@ public class NewbornForm {
 		    this.cvc = (cvc == null) ? new ChildbirthVisitController() : cvc;
 			this.controller = (nc == null) ? new NewbornController() : nc;
 			this.patientDAO = patientDAO;
-			PatientBean mother = patientDAO.getPatient(sessionUtils.getCurrentPatientMIDLong());
+			PatientBean mother = patientDAO.getPatient(this.sessionUtils.getCurrentPatientMIDLong());
 			clearFields(officeVisitID, mother.getLastName(), mother.getEmail());
 		} catch (Exception e) {
 			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
