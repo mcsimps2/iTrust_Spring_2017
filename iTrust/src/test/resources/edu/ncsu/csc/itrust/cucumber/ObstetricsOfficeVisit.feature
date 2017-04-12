@@ -110,6 +110,5 @@ Scenario: add ultrasound before office visit info
 	And I go to the create new office visit page
 	And I enter a date to the office visit date field
 	And I click Save to save the office visit
-	And I enter 1 for CRL, 1 for BPD, 1 for HC, 1 for FL, 1 for OFD, 1 for AC, 1 for HL, and 1 for EFW
-	And click Add Fetus Data on the ultrasound office visit tab
-	Then a message says I must add obstetrics data first and no ultrasound data is added
+	Then the ultrasound form fields are disabled
+	And a message says I must save obstetrics data first

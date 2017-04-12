@@ -114,8 +114,5 @@ Scenario: Add newborn before childbirth visit info
 	And I go to the create new office visit page
 	And I enter a date to the office visit date field
 	And I click Save to save the office visit
-	And I enter 2017-4-2 for Date and 10:00 AM for Time
-	And I select Male for Sex
-	And I enter Josh for First Name
-	And click Add Newborn on the newborns tab
-	Then a message says I must add childbirth data first and no newborn data is added
+	Then the newborns form fields are disabled
+	And a message says I must save childbirth data first
