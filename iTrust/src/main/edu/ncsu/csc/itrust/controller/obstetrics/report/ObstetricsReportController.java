@@ -506,4 +506,22 @@ public class ObstetricsReportController extends iTrustController {
 		
 		return list;
 	}
+	
+	public String getBloodPressureByObstetricsVisit(ObstetricsVisit ov) {
+		try {
+			return ofvData.getByID(ov.getOfficeVisitID()).getBloodPressure();
+		} catch (DBException e) {
+			e.printStackTrace();
+			return "Error";
+		}
+	}
+	
+	public String getWeightByObstetricsVisit(ObstetricsVisit ov) {
+		try {
+			return Float.toString(ofvData.getByID(ov.getOfficeVisitID()).getWeight());
+		} catch (DBException e) {
+			e.printStackTrace();
+			return "Error";
+		}
+	}
 }

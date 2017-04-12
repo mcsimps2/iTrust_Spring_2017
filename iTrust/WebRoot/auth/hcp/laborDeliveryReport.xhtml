@@ -96,8 +96,8 @@
 							<ui:repeat var="ov" value="#{obstetricsVisits}">
 								<tr>
 									<td>#{ov.weeksPregnant}</td>
-									<td>????</td>
-									<td>????</td>
+									<td>#{obstetrics_report_controller.getWeightByObstetricsVisit(ov)}</td>
+									<td>#{obstetrics_report_controller.getBloodPressureByObstetricsVisit(ov)}</td>
 									<td>#{ov.fhr}</td>
 									<td>#{ov.multiplicity}</td>
 									<td>#{ov.isLowLyingPlacentaObserved()}</td>
