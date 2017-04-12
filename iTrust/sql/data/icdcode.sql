@@ -998,5 +998,20 @@ INSERT INTO icdcode (code, name, is_chronic) VALUES
 ('B889', 'Infestation', 0),
 ('B89', 'Unspecified parasitic disease', 0),
 ('B900', 'Sequelae of central nervous sy', 1),
-('B901', 'Sequelae of genitourinary tube', 1)
+('B901', 'Sequelae of genitourinary tube', 1),
+('E02', 'Subclinical iodine-deficiency hypothyroidism', 1),
+('E03', 'Other hypothyroidism', 1),
+('E030', 'Congenital hypothyroidism with diffuse goiter', 1),
+('E031', 'Congenital hypothyroidism without goiter', 1),
+('E032', 'Hypothyroidism, due to meds and oth exogenous substances', 1),
+('E033', 'Postinfectious hypothyroidism', 1),
+('E038', 'Other specified hypothyroidism', 1),
+('E039', 'Hypothyroidism, unspecified', 1),
+('E10', 'Type 1 diabetes mellitus', 1),
+('E11', 'Type 2 diabetes mellitus', 1),
+('E13', 'Other specified diabetes mellitus', 1),
+('E890', 'Postprocedural hypothyroidism', 1),
+('O210', 'Mild hyperemesis gravidarum', 0),
+('O211', 'Hyperemesis gravidarum with metabolic disturbance', 0),
+('R971', 'Elevated cancer antigen 125 [CA 125]', 1)
 ON duplicate key update code=code;

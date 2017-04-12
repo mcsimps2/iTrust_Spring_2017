@@ -118,6 +118,9 @@ public class PregnancyInfo
 	public int getNumWeeksPregnant() {
 		return numDaysPregnant / 7;
 	}
+	public int getRemainderDaysPregnant() {
+		return numDaysPregnant % 7;
+	}
 	public int getNumHoursInLabor() {
 		return numHoursInLabor;
 	}
