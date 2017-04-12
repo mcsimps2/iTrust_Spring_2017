@@ -64,9 +64,9 @@
 					</ui:fragment>
 					<ui:fragment rendered="#{not empty oiList}">
 						<h:dataTable id="previousRecords" styleClass="fTable" value="#{obstetrics_init_controller.getRecords(pid)}" var="oi" border="1">
-							<br/>
 							<h:column>
-								<h:outputText value="#{oi.date}"/>
+								<f:facet name="header">Initialization date</f:facet>
+								<h:outputText value="#{oi.prettyDate}"/>
 							</h:column>
 							<h:column>
 								<h:form>
