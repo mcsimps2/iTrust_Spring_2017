@@ -35,6 +35,7 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AllergyDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
+import edu.ncsu.csc.itrust.webutils.PrettyUtils;
 
 @ManagedBean(name = "obstetrics_report_controller")
 @SessionScoped
@@ -505,6 +506,15 @@ public class ObstetricsReportController extends iTrustController {
 		}
 		
 		return list;
+	}
+	
+	public String getDateByObstetricsVisit(ObstetricsVisit ov) {
+		try {
+			return PrettyUtils.getPrettyDate(ofvData.getByID(ov.getOfficeVisitID()).getDate());
+		} catch (DBException e) {
+			e.printStackTrace();
+			return "Error";
+		}
 	}
 	
 	public String getBloodPressureByObstetricsVisit(ObstetricsVisit ov) {

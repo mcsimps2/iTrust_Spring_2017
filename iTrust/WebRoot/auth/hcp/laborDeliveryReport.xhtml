@@ -99,6 +99,7 @@
 					<ui:fragment rendered="#{not empty obstetricsVisits}">
 						<table class="table table-hover">
 							<tr>
+								<th>Date</th>
 								<th>Weeks pregnant</th>
 								<th>Weight</th>
 								<th>Blood pressure</th>
@@ -108,6 +109,7 @@
 							</tr>
 							<ui:repeat var="ov" value="#{obstetricsVisits}">
 								<tr>
+									<td>#{obstetrics_report_controller.getDateByObstetricsVisit(ov)}</td>
 									<td>#{ov.weeksPregnant}</td>
 									<td>#{obstetrics_report_controller.getWeightByObstetricsVisit(ov)}</td>
 									<td>#{obstetrics_report_controller.getBloodPressureByObstetricsVisit(ov)}</td>
