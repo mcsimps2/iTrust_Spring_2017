@@ -61,7 +61,7 @@
 					<div class="panel-heading">
 						<strong>Pregnancy info</strong>
 					</div>
-					<table class="table">
+					<table class="table table-hover">
 						<tr>
 							<td>Blood type</td>
 							<td>#{obstetrics_report_controller.getBloodType(pid)}</td>
@@ -84,7 +84,7 @@
 						</div>
 					</ui:fragment>
 					<ui:fragment rendered="#{not empty obstetricsVisits}">
-						<table class="table">
+						<table class="table table-hover">
 							<tr>
 								<th>Weeks pregnant</th>
 								<th>Weight</th>
@@ -118,7 +118,7 @@
 						</div>
 					</ui:fragment>
 					<ui:fragment rendered="#{not empty pregnancies}">
-						<table class="table">
+						<table class="table table-hover">
 							<tr>
 								<th>Term length</th>
 								<th>Delivery type</th>
