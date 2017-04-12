@@ -55,27 +55,6 @@
 				<ui:param name="pid" value="#{session.getAttribute('pid')}" />
 				<ui:param name="initID" value="#{obstetrics_report_controller.getViewedOI().getID()}" />
 
-<!--
-<pre>
-#{obstetrics_report_controller.getPastPregnancies(initID)}
-#{obstetrics_report_controller.getObstetricsInit(initID)}
-#{obstetrics_report_controller.getObstetricsVisits(initID)}
-#{obstetrics_report_controller.getAdvancedMaternalAge(pid)}
-#{obstetrics_report_controller.getHasPreexistingCondition(initID)}
-#{obstetrics_report_controller.getLowLyingPlacenta(initID)}
-#{obstetrics_report_controller.getPotentialForMiscarriage(pid)}
-#{obstetrics_report_controller.getAbnormalFetalHeartRate(initID)}
-#{obstetrics_report_controller.getMultiples(initID)}
-#{obstetrics_report_controller.getHyperemesisGravidarum(initID)}
-#{obstetrics_report_controller.getHypothyroidism(initID)}
-#{obstetrics_report_controller.getPreexistingConditions(initID)}
-#{obstetrics_report_controller.getDrugAllergies(pid)}
-#{obstetrics_report_controller.getHasAllergies(pid)}
-#{obstetrics_report_controller.getAbnormalWeightGain(initID)}
-#{obstetrics_report_controller.getHighBloodPressure(initID)}
-</pre>
--->
-
 				<h1>Labor and Delivery report</h1>
 
 				<div class="panel panel-default">
@@ -170,46 +149,57 @@
 							<div class="title">RH- flag</div>
 							<div class="description">Yes, RH- flag present</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">High blood pressure</div>
 							<div class="description">No, 115/80</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Advanced maternal age</div>
 							<div class="description">No, 24</div>
 						</div>
+						
 						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Pre-existing conditions</div>
 							<div class="description">Yes: Diabetes</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Drug allergies</div>
 							<div class="description">None</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Low-lying placenta</div>
 							<div class="description">None observed</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">High genetic potential for miscarriages</div>
 							<div class="description">No</div>
 						</div>
+						
 						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Abnormal fetal heart rate (FHR)</div>
 							<div class="description">Yes, 190</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Multiplicity > 1</div>
 							<div class="description">No, 1</div>
 						</div>
+						
 						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Atypical weight change</div>
 							<div class="description">Yes, 49</div>
 						</div>
+						
 						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Hyperemesis gravidarum</div>
 							<div class="description">Yes</div>
 						</div>
+						
 						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
 							<div class="title">Hypothyroidism</div>
 							<div class="description">No</div>
