@@ -372,4 +372,138 @@ public class ObstetricsReportController extends iTrustController {
 	public void setViewedOI(ObstetricsInit viewedOI) {
 		this.viewedOI = viewedOI;
 	}
+	
+	public List<ComplicationInfo> getComplications(long pid, long initID) {
+		List<ComplicationInfo> list = new ArrayList<ComplicationInfo>();
+
+		try {
+			// RH- flag
+			ComplicationInfo rh = new ComplicationInfo();
+			boolean rhFlag = this.getObstetricsInit(initID).getRH();
+			rh.setFlag(rhFlag);
+			rh.setTitle("RH- flag");
+			rh.setMessage(rhFlag ? "Yes, RH- flag present" : "No, RH- flag not present");
+			list.add(rh);
+			
+			// High blood pressure
+			ComplicationInfo hbp = new ComplicationInfo();
+			boolean hbpFlag = this.getHighBloodPressure(initID);
+			hbp.setFlag(hbpFlag);
+			hbp.setTitle("High blood pressure");
+			if (hbpFlag) {
+				String bloodPressure = ofvData.getByID(obvData.getByObstetricsInit(initID).get(0).getOfficeVisitID()).getBloodPressure();
+				hbp.setMessage("Yes, " + bloodPressure);
+			} else {
+				hbp.setMessage("No");
+			}
+			list.add(hbp);
+			
+			// Advanced maternal age
+			ComplicationInfo ama = new ComplicationInfo();
+			boolean amaFlag = this.getAdvancedMaternalAge(pid);
+			ama.setFlag(amaFlag);
+			ama.setTitle("Advanced maternal age");
+			String age = Integer.toString(patientDAO.getPatient(pid).getAge());
+			ama.setMessage(amaFlag ? "Yes, " + age : "No, " + age);
+			list.add(ama);
+			
+			// Pre-existing conditions
+			ComplicationInfo pec = new ComplicationInfo();
+			List<String> pecs = this.getPreexistingConditions(initID);
+			boolean pecFlag = !pecs.isEmpty();
+			pec.setFlag(pecFlag);
+			pec.setTitle("Pre-existing conditions");
+			String listOfConditions = String.join(", ", pecs);
+			pec.setMessage(pecFlag ? "Yes: " + listOfConditions : "None");
+			list.add(pec);
+			
+			// Drug allergies
+			ComplicationInfo da = new ComplicationInfo();
+			List<String> das = this.getDrugAllergies(pid);
+			boolean daFlag = !das.isEmpty();
+			da.setFlag(daFlag);
+			da.setTitle("Drug allergies");
+			String listOfDrugAllergies = String.join(", ", das);
+			da.setMessage(daFlag ? "Yes: " + listOfDrugAllergies : "None");
+			list.add(da);
+			
+			// Low-lying placenta
+			ComplicationInfo llp = new ComplicationInfo();
+			boolean llpFlag = this.getLowLyingPlacenta(initID);
+			llp.setFlag(llpFlag);
+			llp.setTitle("Low-lying placenta");
+			llp.setMessage(llpFlag ? "Low-lying placenta observed" : "None observed");
+			list.add(llp);
+			
+			// High genetic potential for miscarriages
+			ComplicationInfo gpm = new ComplicationInfo();
+			boolean gpmFlag = this.getPotentialForMiscarriage(initID);
+			gpm.setFlag(gpmFlag);
+			gpm.setTitle("High genetic potential for miscarriages");
+			gpm.setMessage(gpmFlag ? "Yes" : "No");
+			list.add(gpm);
+			
+			// Abnormal fetal heart rate (FHR)
+			ComplicationInfo afhr = new ComplicationInfo();
+			boolean afhrFlag = this.getAbnormalFetalHeartRate(initID);
+			afhr.setFlag(afhrFlag);
+			afhr.setTitle("Abnormal fetal heart rate (FHR)");
+			if (afhrFlag) {
+				String fhr = Integer.toString(obvData.getByObstetricsInit(initID).get(0).getFhr());
+				afhr.setMessage("Yes, " + fhr);
+			} else {
+				afhr.setMessage("No");
+			}
+			list.add(afhr);
+			
+			// Multiplicity > 1
+			ComplicationInfo mp = new ComplicationInfo();
+			boolean mpFlag = this.getMultiples(initID);
+			mp.setFlag(mpFlag);
+			mp.setTitle("Multiplicity > 1");
+			if (mpFlag) {
+				String multiplicity = Integer.toString(obvData.getByObstetricsInit(initID).get(0).getMultiplicity());
+				mp.setMessage("Yes, " + multiplicity);
+			} else {
+				mp.setMessage("No");
+			}
+			list.add(mp);
+			
+			// Atypical weight change
+			ComplicationInfo awc = new ComplicationInfo();
+			boolean awcFlag = this.getAbnormalWeightGain(initID);
+			awc.setFlag(awcFlag);
+			awc.setTitle("Atypical weight change");
+			if (awcFlag) {
+				List<ObstetricsVisit> ovs = obvData.getByObstetricsInit(initID);
+				OfficeVisit last = ofvData.getByID(ovs.get(0).getOfficeVisitID());
+				OfficeVisit first = ofvData.getByID(ovs.get(list.size() - 1).getOfficeVisitID());
+				String weightChange = Float.toString(last.getWeight() - first.getWeight());
+				awc.setMessage("Yes, " + weightChange);
+			} else {
+				awc.setMessage("No");
+			}
+			list.add(awc);
+			
+			// Hyperemesis gravidarum
+			ComplicationInfo hg = new ComplicationInfo();
+			boolean hgFlag = this.getHyperemesisGravidarum(initID);
+			hg.setFlag(hgFlag);
+			hg.setTitle("Hyperemesis gravidarum");
+			hg.setMessage(hgFlag ? "Yes" : "No");
+			list.add(hg);
+			
+			// Hypothyroidism
+			ComplicationInfo ht = new ComplicationInfo();
+			boolean htFlag = this.getHypothyroidism(initID);
+			ht.setFlag(htFlag);
+			ht.setTitle("Hypothyroidism");
+			ht.setMessage(htFlag ? "Yes" : "No");
+			list.add(ht);
+		} catch (DBException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 }

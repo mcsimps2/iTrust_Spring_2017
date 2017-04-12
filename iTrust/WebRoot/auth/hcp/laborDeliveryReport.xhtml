@@ -139,71 +139,29 @@
 					<div class="panel-heading">
 						<strong>Complications</strong>
 					</div>
+					
 					<div class="panel-body description">
 						Complications that could occur or could have occurred during this pregnancy.<br />
 						<span class="complications-bg-red">Red</span> complications <strong>did</strong> occur during this pregnancy.<br />
 						<span class="complications-bg-green">Green</span> complications <strong>did not</strong> occur during this pregnancy.<br />
 					</div>
+					
 					<div class="panel-body">
-						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">RH- flag</div>
-							<div class="description">Yes, RH- flag present</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">High blood pressure</div>
-							<div class="description">No, 115/80</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Advanced maternal age</div>
-							<div class="description">No, 24</div>
-						</div>
-						
-						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Pre-existing conditions</div>
-							<div class="description">Yes: Diabetes</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Drug allergies</div>
-							<div class="description">None</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Low-lying placenta</div>
-							<div class="description">None observed</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">High genetic potential for miscarriages</div>
-							<div class="description">No</div>
-						</div>
-						
-						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Abnormal fetal heart rate (FHR)</div>
-							<div class="description">Yes, 190</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Multiplicity > 1</div>
-							<div class="description">No, 1</div>
-						</div>
-						
-						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Atypical weight change</div>
-							<div class="description">Yes, 49</div>
-						</div>
-						
-						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Hyperemesis gravidarum</div>
-							<div class="description">Yes</div>
-						</div>
-						
-						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
-							<div class="title">Hypothyroidism</div>
-							<div class="description">No</div>
-						</div>
+						<ui:repeat var="ci" value="#{obstetrics_report_controller.getComplications(pid, initID)}">
+							<ui:fragment rendered="#{ci.flag}">
+								<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+									<div class="title">#{ci.title}</div>
+									<div class="description">#{ci.message}</div>
+								</div>
+							</ui:fragment>
+							
+							<ui:fragment rendered="#{not ci.flag}">
+								<div class="complication complication-no col-xs-12 col-sm-6 col-md-4 col-lg-3">
+									<div class="title">#{ci.title}</div>
+									<div class="description">#{ci.message}</div>
+								</div>
+							</ui:fragment>
+						</ui:repeat>
 					</div>
 				</div>
 				
