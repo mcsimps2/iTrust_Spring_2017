@@ -152,22 +152,15 @@ public class ChildbirthVisitStepDefs {
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:time")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:sex")).getAttribute("disabled").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:estimated-time")).getAttribute("disabled").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:first-name")).getAttribute("readonly").equals("true"));
+		Assert.assertTrue(driver.findElement(By.id("newborn_form:last-name")).getAttribute("readonly").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:addNewbornData")).getAttribute("disabled").equals("true"));
 		Assert.assertTrue(driver.findElement(By.id("newborn_form:updateNewbornData")).getAttribute("disabled").equals("true"));
 	}
 	
-	@Then("^a message says I must add childbirth data first and no newborn data is added$")
-	public void ultrasoundDataFailed() {
-		Assert.assertTrue(driver.getPageSource().contains("The Childbirth tab must be saved before you can add a newborn"));
-		Assert.assertTrue(driver.getPageSource().contains("No Newborns"));
-		
-		try {
-			List<Newborn> results = nd.getByOfficeVisit(TEST_OFFICE_VISIT_ID);
-			Assert.assertFalse("Newborn was added to database", results.contains(recentNewborn));
-		} catch (DBException e) {
-			e.printStackTrace();
-			Assert.fail("DBException");
-		}
+	@Then("^a message says I must save childbirth data first$")
+	public void childbirthTabMustBeSaved() {
+		Assert.assertTrue(driver.getPageSource().contains("Save childbirth tab before adding newborns"));
 	}
 	
 	@Then("^the patient's obstetrics history is present$")

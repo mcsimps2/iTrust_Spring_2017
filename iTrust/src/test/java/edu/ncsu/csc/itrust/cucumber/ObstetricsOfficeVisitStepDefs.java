@@ -259,9 +259,8 @@ public class ObstetricsOfficeVisitStepDefs {
 		Assert.assertTrue(driver.findElement(By.id("ultrasound_form:updateFetusData")).getAttribute("disabled").equals("true"));
 	}
 	
-	@Then("^a message says I must add obstetrics data first and no ultrasound data is added$")
+	@Then("^a message says I must save obstetrics data first$")
 	public void ultrasoundDataFailed() {
-		Assert.assertTrue(driver.getPageSource().contains("The Obstetrics tab must be saved before you can add an ultrasound"));
-		Assert.assertTrue(driver.getPageSource().contains("No Ultrasounds"));
+		Assert.assertTrue(driver.getPageSource().contains("Save obstetrics tab before adding ultrasounds"));
 	}
 }
