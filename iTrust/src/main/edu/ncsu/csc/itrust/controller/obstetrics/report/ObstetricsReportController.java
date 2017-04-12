@@ -35,7 +35,6 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AllergyDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
-import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "obstetrics_report_controller")
 @SessionScoped
@@ -54,6 +53,7 @@ public class ObstetricsReportController extends iTrustController {
 	private static final String ERROR_LOADING_HYPEREMESIS_GRAVIDARUM = "Error loading hyperemesis gravidarum";
 	private static final String ERROR_LOADING_PREEXISTING_CONDITIONS = "Error loading preexisting conditions";
 	private static final String ERROR_LOADING_ALLERGIES = "Error loading allergies";
+	private static final String ERROR_LOADING_GENETIC_POTENTIAL_FOR_MISCARRIAGE = "Error loading genetic potential for miscarriage";
 	
 	private ObstetricsInitData oiData;
 	private PregnancyInfoData pregnancyData;
@@ -65,11 +65,8 @@ public class ObstetricsReportController extends iTrustController {
 
 	private ObstetricsInit viewedOI;
 	
-	SessionUtils sessionUtils;
-	
 	public ObstetricsReportController() {
 		super();
-		sessionUtils = SessionUtils.getInstance();
 		patientDAO = new PatientDAO(DAOFactory.getProductionInstance());
 		allergyDAO = new AllergyDAO(DAOFactory.getProductionInstance());
 		try {
@@ -83,9 +80,8 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public ObstetricsReportController(DataSource ds, SessionUtils sessionUtils, PatientDAO patientDAO, AllergyDAO allergyDAO) {
+	public ObstetricsReportController(DataSource ds, PatientDAO patientDAO, AllergyDAO allergyDAO) {
 		super();
-		this.sessionUtils = sessionUtils;
 		this.patientDAO = patientDAO;
 		this.allergyDAO = allergyDAO;
 		oiData = new ObstetricsInitMySQL(ds);
@@ -166,7 +162,7 @@ public class ObstetricsReportController extends iTrustController {
 			String bloodPressure = ofvData.getByID(obv.getOfficeVisitID()).getBloodPressure();
 			int i = bloodPressure.indexOf("/");
 			int top = Integer.parseInt(bloodPressure.substring(0, i));
-			int bottom = Integer.parseInt(bloodPressure.substring(i));
+			int bottom = Integer.parseInt(bloodPressure.substring(i + 1));
 			return top >= 140 || bottom >= 90;
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_BLOOD_PRESSURE, e.getMessage(), null);
@@ -202,8 +198,13 @@ public class ObstetricsReportController extends iTrustController {
 		}
 	}
 	
-	public boolean getPotentialForMiscarriage(long pid) {
-		return false;
+	public boolean getPotentialForMiscarriage(long initID) {
+		try {
+			return oiData.getByID(initID).getGeneticPotentialForMiscarriage();
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_GENETIC_POTENTIAL_FOR_MISCARRIAGE, e.getMessage(), null);
+			return false;
+		}
 	}
 	
 	public boolean getAbnormalFetalHeartRate(long initID) {

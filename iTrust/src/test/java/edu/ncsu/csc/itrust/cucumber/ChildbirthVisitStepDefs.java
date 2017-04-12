@@ -27,7 +27,7 @@ import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
 
 public class ChildbirthVisitStepDefs {	
-	private static final Long TEST_OFFICE_VISIT_ID = 51L;
+	private static final Long TEST_OFFICE_VISIT_ID = 52L;
 	private static final Long TEST_OBSTETRICS_INIT_ID = 3L;
 
 	private iTrustDriver driver;

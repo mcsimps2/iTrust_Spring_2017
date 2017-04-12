@@ -40,7 +40,7 @@ public class ObstetricsVisitMySQLTest {
 		ds = ConverterDAO.getDataSource();
 		ovsql = new ObstetricsVisitMySQL(ds);
 		
-		ov = new ObstetricsVisit(new Long(1), new Long(51), new Long(3), new Integer(32), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ov = new ObstetricsVisit(new Long(1), new Long(51), new Long(3), new Integer(22), new Integer(130), new Integer(1), new Boolean(false), null, "image.jpg");
 	}
 
 	@Test
@@ -133,7 +133,7 @@ public class ObstetricsVisitMySQLTest {
 	@Test
 	public void testGetByObstetricsInit() {
 		try {
-			Assert.assertTrue(ovsql.getByObstetricsInit(3L).get(0).equals(ov));
+			Assert.assertTrue(ovsql.getByObstetricsInit(3L).get(1).equals(ov));
 			Assert.assertTrue(ovsql.getByObstetricsInit(125L).isEmpty());
 		}  catch (DBException e) {
 			Assert.fail(e.getMessage());
