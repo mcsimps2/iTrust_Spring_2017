@@ -158,7 +158,15 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getHighBloodPressure(long initID) {
 		try {
-			ObstetricsVisit obv = obvData.getByObstetricsInit(initID).get(0);
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// If there are no office visits associated with this obstetrics record, then no blood
+				// pressure has been recorded yet, so no high blood pressure should be reported.
+				return false;
+			}
+			
+			ObstetricsVisit obv = obstetricsVisits.get(0);
+			
 			String bloodPressure = ofvData.getByID(obv.getOfficeVisitID()).getBloodPressure();
 			int i = bloodPressure.indexOf("/");
 			int top = Integer.parseInt(bloodPressure.substring(0, i));
@@ -190,7 +198,13 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getLowLyingPlacenta(long initID) {
 		try {
-			ObstetricsVisit obv = obvData.getByObstetricsInit(initID).get(0);
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// No low-lying placenta has been observed yet because no office visits have
+				// occurred yet.
+				return false;
+			}
+			ObstetricsVisit obv = obstetricsVisits.get(0);
 			return obv.isLowLyingPlacentaObserved();
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_LOW_LYING_PLACENTA, e.getMessage(), null);
@@ -209,7 +223,12 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getAbnormalFetalHeartRate(long initID) {
 		try {
-			ObstetricsVisit obv = obvData.getByObstetricsInit(initID).get(0);
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// No fetal heart rate has been recorded yet, so it cannot be abnormal.
+				return false;
+			}
+			ObstetricsVisit obv = obstetricsVisits.get(0);
 			int fhr = obv.getFhr();
 			return fhr < 120 || fhr > 160;
 		} catch (DBException e) {
@@ -220,7 +239,13 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getMultiples(long initID) {
 		try {
-			ObstetricsVisit obv = obvData.getByObstetricsInit(initID).get(0);
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// If no office visits have occurred, then no babies have been born,
+				// so there haven't been multiples yet.
+				return false;
+			}
+			ObstetricsVisit obv = obstetricsVisits.get(0);
 			int multiplicity = obv.getMultiplicity();
 			return multiplicity > 1;
 		} catch (DBException e) {
@@ -231,8 +256,13 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getAbnormalWeightGain(long initID) {
 		try {
-			// TODO This might not be correct
 			List<ObstetricsVisit> list = obvData.getByObstetricsInit(initID);
+			if (list.size() < 2) {
+				// If fewer than two office visits have occurred, we don't know any weight
+				// change, so we report that no abnormal weight gain has occurred.
+				return false;
+			}
+			
 			OfficeVisit lastOfv = ofvData.getByID(list.get(0).getOfficeVisitID());
 			OfficeVisit firstOfv = ofvData.getByID(list.get(list.size() - 1).getOfficeVisitID());
 			float weightGain = lastOfv.getWeight() - firstOfv.getWeight();
@@ -245,9 +275,14 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getHyperemesisGravidarum(long initID) {
 		try {
-			long officeVisitID = obvData.getByObstetricsInit(initID).get(0).getOfficeVisitID();
-			List<Diagnosis> list = dData.getAllDiagnosisByOfficeVisit(officeVisitID);
-			for (Diagnosis d : list) {
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// No office visit has occurred, so no hyperemesis gravidarum has been recorded.
+				return false;
+			}
+			long officeVisitID = obstetricsVisits.get(0).getOfficeVisitID();
+			List<Diagnosis> diagnoses = dData.getAllDiagnosisByOfficeVisit(officeVisitID);
+			for (Diagnosis d : diagnoses) {
 				String code = d.getIcdCode().getCode();
 				if (code.equals("O210") || code.equals("O211"))
 					return true;
@@ -261,7 +296,13 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public boolean getHypothyroidism(long initID) {
 		try {
-			long officeVisitID = obvData.getByObstetricsInit(initID).get(0).getOfficeVisitID();
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// No office visit has occurred, so no hypothyroidism has been recorded.
+				return false;
+			}
+			
+			long officeVisitID = obstetricsVisits.get(0).getOfficeVisitID();
 			List<Diagnosis> list = dData.getAllDiagnosisByOfficeVisit(officeVisitID);
 			for (Diagnosis d : list) {
 				String code = d.getIcdCode().getCode();
@@ -286,7 +327,13 @@ public class ObstetricsReportController extends iTrustController {
 	public List<String> getPreexistingConditions(long initID) {
 		List<String> conditions = new ArrayList<String>();
 		try {
-			long officeVisitID = obvData.getByObstetricsInit(initID).get(0).getOfficeVisitID();
+			List<ObstetricsVisit> obstetricsVisits = obvData.getByObstetricsInit(initID);
+			if (obstetricsVisits.isEmpty()) {
+				// If there are no office visits associated with this obstetrics record, then no preexisting
+				// conditions have been recorded yet, so no none should be reported.
+				return conditions;
+			}
+			long officeVisitID = obstetricsVisits.get(0).getOfficeVisitID();
 			List<Diagnosis> list = dData.getAllDiagnosisByOfficeVisit(officeVisitID);
 			for (Diagnosis d: list) {
 				String code = d.getIcdCode().getCode();
