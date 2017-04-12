@@ -12,11 +12,13 @@
 		<ui:composition template="/iTrust_template.xhtml">
 			<ui:define name="pageStyle">
 				<style>
-					.complication-yes {
+					.complication-yes,
+					.complications-bg-red {
 						background-color: #d9534f;
 					}
 					
-					.complication-no {
+					.complication-no,
+					.complications-bg-green {
 						background-color: #5cb85c;
 					}
 					
@@ -30,6 +32,17 @@
 					.complication .title {
 						font-size: 1.25em;
 						font-weight: bold;
+					}
+					
+					.complications-bg-red,
+					.complications-bg-green {
+						padding: 5px;
+						color: white;
+						border-radius: 4px;
+					}
+					
+					.complications .description {
+						line-height: 2.5em;
 					}
 				</style>
 			</ui:define>
@@ -46,7 +59,6 @@
 <pre>
 #{obstetrics_report_controller.getPastPregnancies(initID)}
 #{obstetrics_report_controller.getObstetricsInit(initID)}
-#{obstetrics_report_controller.getBloodType(pid)}
 #{obstetrics_report_controller.getObstetricsVisits(initID)}
 #{obstetrics_report_controller.getAdvancedMaternalAge(pid)}
 #{obstetrics_report_controller.getHasPreexistingCondition(initID)}
@@ -73,11 +85,11 @@
 					<table class="table">
 						<tr>
 							<td>Blood type</td>
-							<td>A+</td>
+							<td>#{obstetrics_report_controller.getBloodType(pid)}</td>
 						</tr>
 						<tr>
 							<td>EDD</td>
-							<td>November 1, 2017</td>
+							<td>#{obstetrics_report_controller.getObstetricsInit(initID).getPrettyEDD()}</td>
 						</tr>
 					</table>
 				</div>
@@ -156,9 +168,14 @@
 					</table>
 				</div>
 				
-				<div class="panel panel-default">
+				<div class="panel panel-default complications">
 					<div class="panel-heading">
 						<strong>Complications</strong>
+					</div>
+					<div class="panel-body description">
+						Complications that could occur or could have occurred during this pregnancy.<br />
+						<span class="complications-bg-red">Red</span> complications did occur during this pregnancy.<br />
+						<span class="complications-bg-green">Green</span> complications did not occur during this pregnancy.<br />
 					</div>
 					<div class="panel-body">
 						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
