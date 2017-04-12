@@ -10,7 +10,29 @@
 
 	<h:body>
 		<ui:composition template="/iTrust_template.xhtml">
-			<ui:define name="pageStyle"></ui:define>
+			<ui:define name="pageStyle">
+				<style>
+					.complication-yes {
+						background-color: #d9534f;
+					}
+					
+					.complication-no {
+						background-color: #5cb85c;
+					}
+					
+					.complication {
+						color: white;
+						text-align: center;
+						padding: 50px 10px;
+						height: 150px;
+					}
+					
+					.complication .title {
+						font-size: 1.25em;
+						font-weight: bold;
+					}
+				</style>
+			</ui:define>
 			<ui:define name="pageTitle">iTrust - Labor and Delivery Report</ui:define>
 			<ui:define name="leftMenu">
 				<ui:include src="/auth/hcp/menu.xhtml" />
@@ -20,11 +42,180 @@
 				<ui:param name="pid" value="#{session.getAttribute('pid')}" />
 				<ui:param name="initID" value="#{obstetrics_report_controller.getViewedOI().getID()}" />
 
+<!--
+<pre>
+#{obstetrics_report_controller.getPastPregnancies(initID)}
+#{obstetrics_report_controller.getObstetricsInit(initID)}
+#{obstetrics_report_controller.getBloodType(pid)}
+#{obstetrics_report_controller.getObstetricsVisits(initID)}
+#{obstetrics_report_controller.getAdvancedMaternalAge(pid)}
+#{obstetrics_report_controller.getHasPreexistingCondition(initID)}
+#{obstetrics_report_controller.getLowLyingPlacenta(initID)}
+#{obstetrics_report_controller.getPotentialForMiscarriage(pid)}
+#{obstetrics_report_controller.getAbnormalFetalHeartRate(initID)}
+#{obstetrics_report_controller.getMultiples(initID)}
+#{obstetrics_report_controller.getHyperemesisGravidarum(initID)}
+#{obstetrics_report_controller.getHypothyroidism(initID)}
+#{obstetrics_report_controller.getPreexistingConditions(initID)}
+#{obstetrics_report_controller.getDrugAllergies(pid)}
+#{obstetrics_report_controller.getHasAllergies(pid)}
+#{obstetrics_report_controller.getAbnormalWeightGain(initID)}
+#{obstetrics_report_controller.getHighBloodPressure(initID)}
+</pre>
+-->
+
 				<h1>Labor and Delivery report</h1>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Pregnancy info</strong>
+					</div>
+					<table class="table">
+						<tr>
+							<td>Blood type</td>
+							<td>A+</td>
+						</tr>
+						<tr>
+							<td>EDD</td>
+							<td>November 1, 2017</td>
+						</tr>
+					</table>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Obstetrics office visits</strong>
+					</div>
+					<div class="panel-body">
+						Obstetrics visits that have occurred during this pregnancy.
+					</div>
+					<table class="table">
+						<tr>
+							<th>Weeks pregnant</th>
+							<th>Weight</th>
+							<th>Blood pressure</th>
+							<th>FHR</th>
+							<th>Multiplicity</th>
+							<th>LLP observed</th>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+					</table>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Past pregnancies</strong>
+					</div>
+					<div class="panel-body">
+						Pregnancies that have occurred before this pregnancy.
+					</div>
+					<table class="table">
+						<tr>
+							<th>Term</th>
+							<th>Delivery type</th>
+							<th>Conception year</th>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>test</td>
+							<td>test</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Complications</strong>
+					</div>
+					<div class="panel-body">
+						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">RH- flag</div>
+							<div class="description">Yes, RH- flag present</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">High blood pressure</div>
+							<div class="description">No, 115/80</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Advanced maternal age</div>
+							<div class="description">No, 24</div>
+						</div>
+						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Pre-existing conditions</div>
+							<div class="description">Yes: Diabetes</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Drug allergies</div>
+							<div class="description">None</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Low-lying placenta</div>
+							<div class="description">None observed</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">High genetic potential for miscarriages</div>
+							<div class="description">No</div>
+						</div>
+						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Abnormal fetal heart rate (FHR)</div>
+							<div class="description">Yes, 190</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Multiplicity > 1</div>
+							<div class="description">No, 1</div>
+						</div>
+						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Atypical weight change</div>
+							<div class="description">Yes, 49</div>
+						</div>
+						<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Hyperemesis gravidarum</div>
+							<div class="description">Yes</div>
+						</div>
+						<div class="complication complication-no  col-xs-12 col-sm-6 col-md-4 col-lg-3">
+							<div class="title">Hypothyroidism</div>
+							<div class="description">No</div>
+						</div>
+					</div>
+				</div>
 				
 				<h:form>
-					<h:commandButton value="Back" action="obstetricsInitRecords" />
+					<h:commandButton value="Done" action="obstetricsInitRecords" />
 				</h:form>
+
 			</ui:define>
 		</ui:composition>
 	</h:body>
