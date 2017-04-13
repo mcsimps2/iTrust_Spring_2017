@@ -384,6 +384,7 @@ public class ObstetricsReportController extends iTrustController {
 			rh.setFlag(rhFlag);
 			rh.setTitle("RH- flag");
 			rh.setMessage(rhFlag ? "Yes, RH- flag present" : "No, RH- flag not present");
+			rh.setID("rh");
 			list.add(rh);
 			
 			// High blood pressure
@@ -397,6 +398,7 @@ public class ObstetricsReportController extends iTrustController {
 			} else {
 				hbp.setMessage("No");
 			}
+			hbp.setID("hbp");
 			list.add(hbp);
 			
 			// Advanced maternal age
@@ -406,6 +408,7 @@ public class ObstetricsReportController extends iTrustController {
 			ama.setTitle("Advanced maternal age");
 			String age = Integer.toString(patientDAO.getPatient(pid).getAge());
 			ama.setMessage(amaFlag ? "Yes, " + age : "No, " + age);
+			ama.setID("ama");
 			list.add(ama);
 			
 			// Pre-existing conditions
@@ -416,6 +419,7 @@ public class ObstetricsReportController extends iTrustController {
 			pec.setTitle("Pre-existing conditions");
 			String listOfConditions = String.join(", ", pecs);
 			pec.setMessage(pecFlag ? "Yes: " + listOfConditions : "None");
+			pec.setID("pec");
 			list.add(pec);
 			
 			// Drug allergies
@@ -426,6 +430,7 @@ public class ObstetricsReportController extends iTrustController {
 			da.setTitle("Drug allergies");
 			String listOfDrugAllergies = String.join(", ", das);
 			da.setMessage(daFlag ? "Yes: " + listOfDrugAllergies : "None");
+			da.setID("da");
 			list.add(da);
 			
 			// Low-lying placenta
@@ -434,6 +439,7 @@ public class ObstetricsReportController extends iTrustController {
 			llp.setFlag(llpFlag);
 			llp.setTitle("Low-lying placenta");
 			llp.setMessage(llpFlag ? "Low-lying placenta observed" : "None observed");
+			llp.setID("llp");
 			list.add(llp);
 			
 			// High genetic potential for miscarriages
@@ -442,6 +448,7 @@ public class ObstetricsReportController extends iTrustController {
 			gpm.setFlag(gpmFlag);
 			gpm.setTitle("High genetic potential for miscarriages");
 			gpm.setMessage(gpmFlag ? "Yes" : "No");
+			gpm.setID("gpm");
 			list.add(gpm);
 			
 			// Abnormal fetal heart rate (FHR)
@@ -455,6 +462,7 @@ public class ObstetricsReportController extends iTrustController {
 			} else {
 				afhr.setMessage("No");
 			}
+			afhr.setID("afhr");
 			list.add(afhr);
 			
 			// Multiplicity > 1
@@ -468,6 +476,7 @@ public class ObstetricsReportController extends iTrustController {
 			} else {
 				mp.setMessage("No");
 			}
+			mp.setID("mp");
 			list.add(mp);
 			
 			// Atypical weight change
@@ -484,6 +493,7 @@ public class ObstetricsReportController extends iTrustController {
 			} else {
 				awc.setMessage("No");
 			}
+			awc.setID("awc");
 			list.add(awc);
 			
 			// Hyperemesis gravidarum
@@ -492,6 +502,7 @@ public class ObstetricsReportController extends iTrustController {
 			hg.setFlag(hgFlag);
 			hg.setTitle("Hyperemesis gravidarum");
 			hg.setMessage(hgFlag ? "Yes" : "No");
+			hg.setID("hg");
 			list.add(hg);
 			
 			// Hypothyroidism
@@ -500,6 +511,7 @@ public class ObstetricsReportController extends iTrustController {
 			ht.setFlag(htFlag);
 			ht.setTitle("Hypothyroidism");
 			ht.setMessage(htFlag ? "Yes" : "No");
+			ht.setID("ht");
 			list.add(ht);
 		} catch (DBException e) {
 			e.printStackTrace();

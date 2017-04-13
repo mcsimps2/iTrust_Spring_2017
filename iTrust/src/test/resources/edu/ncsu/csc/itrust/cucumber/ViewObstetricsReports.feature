@@ -7,7 +7,7 @@ Background:
 	Given the databases have been reset
 
 Scenario: view report and go back
-	And I have logged in as HCP 9000000012 with password pw
+	Given I have logged in as HCP 9000000012 with password pw
 	And I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -16,7 +16,7 @@ Scenario: view report and go back
 	Then I am redirected to obstetrics records page
 
 Scenario: generate report from new obstetrics record
-	And I have logged in as HCP 9000000012 with password pw
+	Given I have logged in as HCP 9000000012 with password pw
 	And I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with name Random
 	And click on the link for patient with pid 1
@@ -27,9 +27,22 @@ Scenario: generate report from new obstetrics record
 	Then the report for the new record displays correctly
 
 Scenario: generate report from existing obstetrics record
-	And I have logged in as HCP 9000000012 with password pw
+	Given I have logged in as HCP 9000000012 with password pw
 	And I have navigated to Patient Info -> Obstetrics Records
 	When I search for the patient with name Random
 	And click on the link for patient with pid 1
 	And I click Generate Report on the first entry
 	Then the report for the existing record displays correctly
+
+Scenario: report with RH positive, genetic potential for miscarriage
+	Given I have logged in as HCP 9000000012 with password pw
+	And I have navigated to Patient Info -> Obstetrics Records
+	When I search for the patient with name Random
+	And click on the link for patient with pid 1
+	When I click Add New Record
+	And I enter an lmp in for the LMP field
+	And I check the RH flag
+	And I check the genetic potential for miscarriage flag
+	And I click Save Record
+	And I click Generate Report on the first entry
+	Then the report for the complications test displays correctly

@@ -106,20 +106,6 @@ public class ViewObstetricsRecordsStepDefs {
 	
 	@Then("^there will be (\\d+) prior pregnancies$")
 	public void checkPriorPregnancies(int numPreg) {
-		try
-		{
-			driver.findElement(By.xpath("//*[@id=\"j_idt20\"]/div[2]/table/tbody/tr[" + numPreg + "]"));
-		}
-		catch (NoSuchElementException e)
-		{
-			Assert.fail("Can't find prior pregancy at row " + numPreg);
-		}
-		try
-		{
-			driver.findElement(By.xpath("//*[@id=\"j_idt20\"]/div[2]/table/tbody/tr[" + numPreg + 1 + "]"));
-		}
-		catch (NoSuchElementException e) {
-			//Good. There shouldn't be that element
-		}
+		Assert.assertTrue(driver.findElements(By.cssSelector(".pregnancies-table tbody > tr")).size() == numPreg);
 	}
 }
