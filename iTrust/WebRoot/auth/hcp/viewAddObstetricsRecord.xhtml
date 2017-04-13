@@ -41,7 +41,7 @@
 				<ui:param name="addingRecord" value="#{empty oiRecord}" />
 				<ui:param name="viewingRecord" value="#{not empty oiRecord}" />
 
-				<h:form>
+				<h:form id="viewAddForm">
 					<ui:fragment rendered="#{addingRecord}"><h1>Adding Obstetrics Record</h1></ui:fragment>
 					<ui:fragment rendered="#{viewingRecord}"><h1>Viewing Obstetrics Record</h1></ui:fragment>
 
@@ -66,7 +66,7 @@
 											<td>LMP:</td>
 											<td>
 												<ui:fragment rendered="#{addingRecord}">
-													<h:inputText class="form-control" value="#{obstetrics_init_controller.lmp}" />
+													<h:inputText id="lmp" class="form-control" value="#{obstetrics_init_controller.lmp}" />
 												</ui:fragment>
 												<ui:fragment rendered="#{viewingRecord}">
 													#{oiRecord.prettyLMP}
@@ -85,7 +85,7 @@
 											<td>RH Flag:</td>
 											<td>
 												<ui:fragment rendered="#{addingRecord}">
-													<h:selectBooleanCheckbox class="form-control" value="#{obstetrics_init_controller.RH}" />
+													<h:selectBooleanCheckbox id="rhFlag" class="form-control" value="#{obstetrics_init_controller.RH}" />
 												</ui:fragment>
 												<ui:fragment rendered="#{viewingRecord}">
 													#{oiRecord.getPrettyRH()}
@@ -96,7 +96,7 @@
 											<td>Genetic Potential for Miscarriage:</td>
 											<td>
 												<ui:fragment rendered="#{addingRecord}">
-													<h:selectBooleanCheckbox class="form-control" value="#{obstetrics_init_controller.geneticPotentialForMiscarriage}" />
+													<h:selectBooleanCheckbox id="gpmFlag" class="form-control" value="#{obstetrics_init_controller.geneticPotentialForMiscarriage}" />
 												</ui:fragment>
 												<ui:fragment rendered="#{viewingRecord}">
 													#{oiRecord.getPrettyGeneticPotentialForMiscarriage()}
@@ -125,7 +125,7 @@
 							<h2>There are no prior pregnancies to display.</h2>
 						</ui:fragment>
 						<ui:fragment rendered="#{addingRecord or (not empty priorPregnancies)}">
-							<table class="table table-hover">
+							<table class="table table-hover pregnancies-table">
 								<thead>
 									<tr>
 										<th>Year of conception</th>
@@ -142,21 +142,21 @@
 								<tbody>
 									<ui:fragment rendered="#{addingRecord}">
 										<tr>
-											<td><h:inputText value="#{obstetrics_init_controller.yearOfConception}" class="form-control"/></td>
-											<td><h:inputText value="#{obstetrics_init_controller.numWeeksPregnant}" class="form-control"/></td>
-											<td><h:inputText value="#{obstetrics_init_controller.numHoursInLabor}" class="form-control"/></td>
-											<td><h:inputText value="#{obstetrics_init_controller.weightGain}" class="form-control"/></td>
+											<td><h:inputText id="yearOfConception" value="#{obstetrics_init_controller.yearOfConception}" class="form-control"/></td>
+											<td><h:inputText id="numWeeksPregnant" value="#{obstetrics_init_controller.numWeeksPregnant}" class="form-control"/></td>
+											<td><h:inputText id="numHoursInLabor" value="#{obstetrics_init_controller.numHoursInLabor}" class="form-control"/></td>
+											<td><h:inputText id="weightGain" value="#{obstetrics_init_controller.weightGain}" class="form-control"/></td>
 											<td>
-												<h:selectOneMenu value="#{obstetrics_init_controller.deliveryType}" class="form-control">
+												<h:selectOneMenu id="deliveryMethod" value="#{obstetrics_init_controller.deliveryType}" class="form-control">
 													<f:selectItems var="method"
 																   value="#{obstetrics_init_controller.getDeliveryMethods()}"
 																   itemLabel="#{method.toString()}"
 																   itemValue="#{method.toString()}" />
 												</h:selectOneMenu>
 											</td>
-											<td><h:inputText value="#{obstetrics_init_controller.multiplicity}" class="form-control"/></td>
+											<td><h:inputText id="multiplicity" value="#{obstetrics_init_controller.multiplicity}" class="form-control"/></td>
 		
-											<td><h:commandButton value="Add" action="#{obstetrics_init_controller.addPregnancyRecord()}" /></td>
+											<td><h:commandButton id="addPregnancyButton" value="Add" action="#{obstetrics_init_controller.addPregnancyRecord()}" /></td>
 										</tr>
 									</ui:fragment>
 	
@@ -178,12 +178,12 @@
 	
 						<div class="text-center">
 							<ui:fragment rendered="#{addingRecord}">
-								<h:commandButton value="Submit" action="#{obstetrics_init_controller.addObstetricsRecord()}" />
+								<h:commandButton id="submitButton" value="Submit" action="#{obstetrics_init_controller.addObstetricsRecord()}" />
 								&nbsp;
-								<h:commandButton value="Cancel" action="#{obstetrics_init_controller.cancelAddObstetricsRecord()}" />
+								<h:commandButton id="cancelButton" value="Cancel" action="#{obstetrics_init_controller.cancelAddObstetricsRecord()}" />
 							</ui:fragment>
 							<ui:fragment rendered="#{viewingRecord}">
-								<h:commandButton value="Done" action="#{navigation_controller.viewObstetricsOverview}" />
+								<h:commandButton id="doneButton" value="Done" action="#{navigation_controller.viewObstetricsOverview}" />
 							</ui:fragment>
 						</div>
 					</div>

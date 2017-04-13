@@ -5,6 +5,9 @@ public class ComplicationInfo {
 	private String title;
 	private String message;
 	
+	/** This ID should be unique among complications. */
+	private String id;
+	
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
@@ -27,5 +30,13 @@ public class ComplicationInfo {
 	
 	public String getMessage() {
 		return this.message;
+	}
+	
+	public void setID(String id) {
+		this.id = id;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 }

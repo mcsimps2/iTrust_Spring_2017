@@ -51,25 +51,39 @@ public class AddObstetricsRecordStepDefs {
 		driver.findElement(By.cssSelector(".record-info-table input")).sendKeys(date);
 	}
 	
+	@When("^I check the RH flag$")
+	public void checkRHFlag() {
+		if (!driver.findElement(By.id("viewAddForm:rhFlag")).isSelected()) {
+		     driver.findElement(By.id("viewAddForm:rhFlag")).click();
+		}
+	}
+	
+	@When("^I check the genetic potential for miscarriage flag$")
+	public void checkGeneticPotentialForMiscarriageFlag() {
+		if (!driver.findElement(By.id("viewAddForm:gpmFlag")).isSelected()) {
+		     driver.findElement(By.id("viewAddForm:gpmFlag")).click();
+		}
+	}
+	
 	@When("^I enter a prior pregnancy with values: conception year (.+), weeks pregnant (.+), hours in labor (.+), weight gain (.+), delivery type (.+), multiplicity (.+)$")
 	public void enterPriorPregnancy(String cYear, String weeksPreg, String hrsLabor, String weightGain, String deliveryType, String mult) {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt52\"]")).sendKeys(cYear);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt54\"]")).sendKeys(weeksPreg);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt56\"]")).sendKeys(hrsLabor);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt58\"]")).sendKeys(weightGain);
-		Select s = new Select(driver.findElement(By.cssSelector("select[name=\"j_idt20:j_idt60\"]")));
+		driver.findElement(By.id("viewAddForm:yearOfConception")).sendKeys(cYear);
+		driver.findElement(By.id("viewAddForm:numWeeksPregnant")).sendKeys(weeksPreg);
+		driver.findElement(By.id("viewAddForm:numHoursInLabor")).sendKeys(hrsLabor);
+		driver.findElement(By.id("viewAddForm:weightGain")).sendKeys(weightGain);
+		Select s = new Select(driver.findElement(By.id("viewAddForm:deliveryMethod")));
 		s.selectByVisibleText(deliveryType);
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt63\"]")).sendKeys(mult);
+		driver.findElement(By.id("viewAddForm:multiplicity")).sendKeys(mult);
 	}
 	
 	@When("^I click add pregnancy$")
 	public void addPregnancy() {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt65\"]")).submit();
+		driver.findElement(By.id("viewAddForm:addPregnancyButton")).submit();
 	}
 	
 	@When("^I click Save Record")
 	public void saveRecord() {
-		driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt72\"]")).click();
+		driver.findElement(By.id("viewAddForm:submitButton")).click();
 	}
 	
 	@Then("^I am redirected to obstetrics records page$")
@@ -95,10 +109,10 @@ public class AddObstetricsRecordStepDefs {
 	@Then("^all the fields are empty")
 	public void allFieldsEmpty() {
 		Assert.assertTrue(driver.findElement(By.cssSelector(".record-info-table input")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt52\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt54\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt56\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt58\"]")).getText().length() == 0);
-		Assert.assertTrue(driver.findElement(By.cssSelector("input[name=\"j_idt20:j_idt63\"]")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.id("viewAddForm:yearOfConception")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.id("viewAddForm:numWeeksPregnant")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.id("viewAddForm:numHoursInLabor")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.id("viewAddForm:weightGain")).getText().length() == 0);
+		Assert.assertTrue(driver.findElement(By.id("viewAddForm:multiplicity")).getText().length() == 0);
 	}
 }
