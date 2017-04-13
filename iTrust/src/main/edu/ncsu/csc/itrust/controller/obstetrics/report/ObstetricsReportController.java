@@ -487,7 +487,7 @@ public class ObstetricsReportController extends iTrustController {
 			if (awcFlag) {
 				List<ObstetricsVisit> ovs = obvData.getByObstetricsInit(initID);
 				OfficeVisit last = ofvData.getByID(ovs.get(0).getOfficeVisitID());
-				OfficeVisit first = ofvData.getByID(ovs.get(list.size() - 1).getOfficeVisitID());
+				OfficeVisit first = ofvData.getByID(ovs.get(ovs.size() - 1).getOfficeVisitID());
 				String weightChange = Float.toString(last.getWeight() - first.getWeight());
 				awc.setMessage("Yes, " + weightChange);
 			} else {
