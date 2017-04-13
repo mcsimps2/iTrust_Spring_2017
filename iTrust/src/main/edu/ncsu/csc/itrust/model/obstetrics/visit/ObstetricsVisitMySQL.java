@@ -53,7 +53,7 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 	public ObstetricsVisitMySQL(DataSource ds) {
 		loader = new ObstetricsVisitSQLLoader();
 		this.ds = ds;
-		validator = new ObstetricsVisitValidator();
+		validator = new ObstetricsVisitValidator(ds);
 	}
 
 	@Override
@@ -129,6 +129,18 @@ public class ObstetricsVisitMySQL implements ObstetricsVisitData {
 			} else {
 				return null;
 			}
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
+	}
+
+	@Override
+	public List<ObstetricsVisit> getByObstetricsInit(long obstetricsInitID) throws DBException {
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM obstetricsVisit, officeVisit WHERE obstetricsInitID="+obstetricsInitID+" AND officeVisitID=visitID ORDER BY visitDate DESC;");
+			ResultSet resultSet = statement.executeQuery()) {
+			List<ObstetricsVisit> list = loader.loadList(resultSet);
+			return list;
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

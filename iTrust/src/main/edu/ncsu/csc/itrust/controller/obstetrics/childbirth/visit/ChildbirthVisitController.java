@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit;
 
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -42,6 +44,15 @@ public class ChildbirthVisitController extends iTrustController {
 	public ChildbirthVisit getByOfficeVisit(long officeVisitID) {
 		try {
 			return cvData.getByOfficeVisit(officeVisitID);
+		} catch (DBException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<ChildbirthVisit> getByObstetricsInit(long obstetricsInitID) {
+		try {
+			return cvData.getByObstetricsInit(obstetricsInitID);
 		} catch (DBException e) {
 			e.printStackTrace();
 			return null;

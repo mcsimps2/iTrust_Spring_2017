@@ -14,6 +14,9 @@ public class ObstetricsVisit {
 	/** ID to link to OfficeVisit object */
 	private Long officeVisitID;
 	
+	/** ID to link to ObstetricsInit object */
+	private Long obstetricsInitID;
+	
 	/** Number of weeks pregnant at visit */
 	private Integer weeksPregnant;
 	
@@ -36,6 +39,7 @@ public class ObstetricsVisit {
 	 * Constructor for getting out of the db
 	 * @param id
 	 * @param officeVisitID
+	 * @param obstetricsInitID
 	 * @param weeksPregnant
 	 * @param daysPregnant
 	 * @param fhr
@@ -43,11 +47,12 @@ public class ObstetricsVisit {
 	 * @param lowLyingPlacentaObserved
 	 * @param imageOfUltraSound
 	 */
-	public ObstetricsVisit(Long id, Long officeVisitID, Integer weeksPregnant, Integer fhr,
+	public ObstetricsVisit(Long id, Long officeVisitID, Long obstetricsInitID, Integer weeksPregnant, Integer fhr,
 			Integer multiplicity, Boolean lowLyingPlacentaObserved, InputStream imageOfUltraSound, String imageType) {
 		super();
 		this.id = id;
 		this.officeVisitID = officeVisitID;
+		this.obstetricsInitID = obstetricsInitID;
 		this.weeksPregnant = weeksPregnant;
 		this.fhr = fhr;
 		this.multiplicity = multiplicity;
@@ -59,16 +64,18 @@ public class ObstetricsVisit {
 	/**
 	 * Constructor for passing into the db
 	 * @param officeVisitID
+	 * @param obstetricsInitID
 	 * @param weeksPregnant
 	 * @param fhr
 	 * @param multiplicity
 	 * @param lowLyingPlacentaObserved
 	 * @param imageOfUltraSound
 	 */
-	public ObstetricsVisit(Long officeVisitID, Integer weeksPregnant, Integer fhr,
+	public ObstetricsVisit(Long officeVisitID, Long obstetricsInitID, Integer weeksPregnant, Integer fhr,
 			Integer multiplicity, Boolean lowLyingPlacentaObserved, InputStream imageOfUltraSound, String imageType) {
 		super();
 		this.officeVisitID = officeVisitID;
+		this.obstetricsInitID = obstetricsInitID;
 		this.weeksPregnant = weeksPregnant;
 		this.fhr = fhr;
 		this.multiplicity = multiplicity;
@@ -112,6 +119,14 @@ public class ObstetricsVisit {
 	 */
 	public void setOfficeVisitID(Long officeVisitID) {
 		this.officeVisitID = officeVisitID;
+	}
+
+	public Long getObstetricsInitID() {
+		return obstetricsInitID;
+	}
+
+	public void setObstetricsInitID(Long obstetricsInitID) {
+		this.obstetricsInitID = obstetricsInitID;
 	}
 
 	/**
@@ -162,6 +177,10 @@ public class ObstetricsVisit {
 	public Boolean isLowLyingPlacentaObserved() {
 		return lowLyingPlacentaObserved;
 	}
+	
+	public String prettyIsLowLyingPlacentaObserved() {
+		return lowLyingPlacentaObserved ? "Yes" : "No";
+	}
 
 	/**
 	 * @param lowLyingPlacentaObserved the lowLyingPlacentaObserved to set
@@ -206,6 +225,7 @@ public class ObstetricsVisit {
 		result = prime * result + ((lowLyingPlacentaObserved == null) ? 0 : lowLyingPlacentaObserved.hashCode());
 		result = prime * result + ((multiplicity == null) ? 0 : multiplicity.hashCode());
 		result = prime * result + ((officeVisitID == null) ? 0 : officeVisitID.hashCode());
+		result = prime * result + ((obstetricsInitID == null) ? 0 : obstetricsInitID.hashCode());
 		result = prime * result + ((weeksPregnant == null) ? 0 : weeksPregnant.hashCode());
 		return result;
 	}
@@ -252,6 +272,11 @@ public class ObstetricsVisit {
 			if (other.officeVisitID != null)
 				return false;
 		} else if (!officeVisitID.equals(other.officeVisitID))
+			return false;
+		if (obstetricsInitID == null) {
+			if (other.obstetricsInitID != null)
+				return false;
+		} else if (!obstetricsInitID.equals(other.obstetricsInitID))
 			return false;
 		if (weeksPregnant == null) {
 			if (other.weeksPregnant != null)

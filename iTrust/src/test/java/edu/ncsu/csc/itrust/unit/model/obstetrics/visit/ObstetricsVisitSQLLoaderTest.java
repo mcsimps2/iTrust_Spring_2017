@@ -42,7 +42,7 @@ public class ObstetricsVisitSQLLoaderTest {
 		loader = new ObstetricsVisitSQLLoader();
 		ds = ConverterDAO.getDataSource();
 		
-		ov = new ObstetricsVisit(new Long(1), new Long(51), new Integer(32), new Integer(41), new Integer(1), new Boolean(false), null, "image.jpg");
+		ov = new ObstetricsVisit(new Long(1), new Long(51), new Long(3), new Integer(22), new Integer(130), new Integer(1), new Boolean(false), null, "image.jpg");
 		
 	}
 

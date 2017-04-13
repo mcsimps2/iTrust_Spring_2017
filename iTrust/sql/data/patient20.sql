@@ -26,7 +26,8 @@ fathermid,
 bloodtype,
 ethnicity,
 gender,
-topicalnotes)
+topicalnotes,
+obstetricsCareEligibility)
 VALUES
 (20,
 'Koopa',
@@ -55,7 +56,8 @@ NULL,
 'AB+',
 'African American',
 'Male',
-''
+'',
+true
 );
 
 INSERT INTO users(MID, password, role, sQuestion, sAnswer) 

@@ -6,14 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import edu.ncsu.csc.itrust.DBUtil;
-import edu.ncsu.csc.itrust.exception.DBException;
-import edu.ncsu.csc.itrust.exception.FormValidationException;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import edu.ncsu.csc.itrust.DBUtil;
+import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.exception.FormValidationException;
 
 public class ChildbirthVisitMySQL implements ChildbirthVisitData
 {
@@ -188,6 +188,18 @@ public class ChildbirthVisitMySQL implements ChildbirthVisitData
 			} finally {
 				DBUtil.closeConnection(conn, pstring);
 			}
+		}
+	}
+	
+	@Override
+	public List<ChildbirthVisit> getByObstetricsInit(long obstetricsInitID) throws DBException {
+		try (Connection conn = ds.getConnection();
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM childbirthVisits, officeVisit WHERE obstetricsInitID="+obstetricsInitID+" AND officeVisitID=visitID ORDER BY visitDate DESC;");
+			ResultSet resultSet = statement.executeQuery()) {
+			List<ChildbirthVisit> list = loader.loadList(resultSet);
+			return list;
+		} catch (SQLException e) {
+			throw new DBException(e);
 		}
 	}
 	

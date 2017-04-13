@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:itrust="/WEB-INF/tags.tld">
+
+	<f:view beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
+
+	<h:body>
+		<ui:composition template="/iTrust_template.xhtml">
+			<ui:define name="pageStyle">
+				<style>
+					.complication-yes,
+					.complications-bg-red {
+						background-color: #d9534f;
+					}
+					
+					.complication-yes:hover {
+						background-color: #ea645f;
+					}
+					
+					.complication-no,
+					.complications-bg-green {
+						background-color: #5cb85c;
+					}
+					
+					.complication-no:hover {
+						background-color: #6dc96d;
+					}
+					
+					.complication-yes,
+					.complication-no {
+						transition: background-color 0.3s;
+					}
+					
+					.complication {
+						color: white;
+						text-align: center;
+						padding: 50px 10px;
+						height: 150px;
+					}
+					
+					.complication .title {
+						font-size: 1.25em;
+						font-weight: bold;
+					}
+					
+					.complications-bg-red,
+					.complications-bg-green {
+						padding: 5px;
+						color: white;
+						border-radius: 4px;
+					}
+					
+					.complications .description {
+						line-height: 2.5em;
+					}
+				</style>
+			</ui:define>
+			<ui:define name="pageTitle">iTrust - Labor and Delivery Report</ui:define>
+			<ui:define name="leftMenu">
+				<ui:include src="/auth/hcp/menu.xhtml" />
+			</ui:define>
+
+			<ui:define name="mainContent">
+				<ui:param name="pid" value="#{session.getAttribute('pid')}" />
+				<ui:param name="initID" value="#{obstetrics_report_controller.getViewedOI().getID()}" />
+
+				<h1>Labor and Delivery Report</h1>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Pregnancy info</strong>
+					</div>
+					<table class="table table-hover">
+						<tr>
+							<td>Blood type</td>
+							<td>#{obstetrics_report_controller.getBloodType(pid)}</td>
+						</tr>
+						<tr>
+							<td>EDD</td>
+							<td>#{obstetrics_report_controller.getObstetricsInit(initID).getPrettyEDD()}</td>
+						</tr>
+					</table>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Obstetrics office visits</strong>
+					</div>
+					<c:set var="obstetricsVisits" value="#{obstetrics_report_controller.getObstetricsVisits(initID)}" />
+					<ui:fragment rendered="#{empty obstetricsVisits}">
+						<div class="panel-body">
+							No obstetrics visits occurred during this pregnancy.
+						</div>
+					</ui:fragment>
+					<ui:fragment rendered="#{not empty obstetricsVisits}">
+						<table class="table table-hover">
+							<tr>
+								<th>Date</th>
+								<th>Weeks pregnant</th>
+								<th>Weight</th>
+								<th>Blood pressure</th>
+								<th>FHR</th>
+								<th>Multiplicity</th>
+								<th>LLP observed</th>
+							</tr>
+							<ui:repeat var="ov" value="#{obstetricsVisits}">
+								<tr>
+									<td>#{obstetrics_report_controller.getDateByObstetricsVisit(ov)}</td>
+									<td>#{ov.weeksPregnant}</td>
+									<td>#{obstetrics_report_controller.getWeightByObstetricsVisit(ov)}</td>
+									<td>#{obstetrics_report_controller.getBloodPressureByObstetricsVisit(ov)}</td>
+									<td>#{ov.fhr}</td>
+									<td>#{ov.multiplicity}</td>
+									<td>#{ov.prettyIsLowLyingPlacentaObserved()}</td>
+								</tr>
+							</ui:repeat>
+						</table>
+					</ui:fragment>
+				</div>
+			
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<strong>Past pregnancies</strong>
+					</div>
+					<c:set var="pregnancies" value="#{obstetrics_report_controller.getPastPregnancies(initID)}" />
+					<ui:fragment rendered="#{empty pregnancies}">
+						<div class="panel-body">
+							No pregnancies occurred before this pregnancy.
+						</div>
+					</ui:fragment>
+					<ui:fragment rendered="#{not empty pregnancies}">
+						<table class="table table-hover">
+							<tr>
+								<th>Conception year</th>
+								<th>Term length</th>
+								<th>Delivery type</th>
+							</tr>
+							<ui:repeat var="p" value="#{pregnancies}">
+								<tr>
+									<td>#{p.yearOfConception}</td>
+									<td>#{p.numWeeksPregnant}w #{p.remainderDaysPregnant}d</td>
+									<td>#{p.getDeliveryType().toString()}</td>
+								</tr>
+							</ui:repeat>
+						</table>
+					</ui:fragment>
+				</div>
+				
+				<div class="panel panel-default complications">
+					<div class="panel-heading">
+						<strong>Complications</strong>
+					</div>
+					
+					<div class="panel-body description">
+						Complications that could occur or could have occurred during this pregnancy.<br />
+						<span class="complications-bg-red">Red</span> complications <strong>did</strong> occur during this pregnancy.<br />
+						<span class="complications-bg-green">Green</span> complications <strong>did not</strong> occur during this pregnancy.<br />
+					</div>
+					
+					<div class="panel-body">
+						<ui:repeat var="ci" value="#{obstetrics_report_controller.getComplications(pid, initID)}">
+							<ui:fragment rendered="#{ci.flag}">
+								<div class="complication complication-yes col-xs-12 col-sm-6 col-md-4 col-lg-3">
+									<div class="title">#{ci.title}</div>
+									<div class="description">#{ci.message}</div>
+								</div>
+							</ui:fragment>
+							
+							<ui:fragment rendered="#{not ci.flag}">
+								<div class="complication complication-no col-xs-12 col-sm-6 col-md-4 col-lg-3">
+									<div class="title">#{ci.title}</div>
+									<div class="description">#{ci.message}</div>
+								</div>
+							</ui:fragment>
+						</ui:repeat>
+					</div>
+				</div>
+				
+				<h:form id="doneForm">
+					<h:commandButton value="Done" id="doneButton" action="obstetricsInitRecords" />
+				</h:form>
+
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

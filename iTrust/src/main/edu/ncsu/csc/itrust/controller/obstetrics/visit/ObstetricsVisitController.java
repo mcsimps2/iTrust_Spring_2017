@@ -91,12 +91,30 @@ public class ObstetricsVisitController extends iTrustController {
 	}
 	
 	/**
+	 * Returns the list of ObstetricsVisits that have the given obstetricsInitID.
+	 * If no visits are found, returns an empty list.
+	 * @param obstetricsInitID
+	 * @return
+	 */
+	public List<ObstetricsVisit> getByObstetricsInit(long obstetricsInitID) {
+		try {
+			return ovData.getByObstetricsInit(obstetricsInitID);
+		} catch (DBException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
 	 * Return the most recent ObstetricsInit record using the date and pid from the given OfficeVisit.
 	 * If no record is found, returns null.
 	 * @param ov
 	 * @return
 	 */
 	public ObstetricsInit getMostRecentOI(OfficeVisit ov) {
+		// Check office visit
+		if (ov == null) return null;
+		
 		// Convert OfficeVisit LocalDateTime to java.util.Date
 		Date ovDate = Date.from(ov.getDate().toInstant(ZoneOffset.UTC));
 

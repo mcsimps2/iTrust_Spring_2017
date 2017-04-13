@@ -31,8 +31,8 @@ public class ChildbirthVisitMySQLTest
 		
 		sql = new ChildbirthVisitMySQL(ConverterDAO.getDataSource());
 		cvArr = new ChildbirthVisit[2];
-		cvArr[0] = new ChildbirthVisit(1L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
-		cvArr[1] = new ChildbirthVisit(2L, DeliveryMethod.VAGINAL_DELIVERY_VACUUM, VisitType.EMERGENCY_APPOINTMENT, 1, 2, 3, 4, 5, 1);
+		cvArr[0] = new ChildbirthVisit(1L, 1L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
+		cvArr[1] = new ChildbirthVisit(2L, 1L, DeliveryMethod.VAGINAL_DELIVERY_VACUUM, VisitType.EMERGENCY_APPOINTMENT, 1, 2, 3, 4, 5, 1);
 		try
 		{
 			for (int i = 0; i < cvArr.length; i++)
@@ -100,7 +100,7 @@ public class ChildbirthVisitMySQLTest
 	{
 		//Have already done valid adds in setup
 		//Try an invalid add
-		ChildbirthVisit cv = new ChildbirthVisit(-1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1); //nonexistent office visit ID
+		ChildbirthVisit cv = new ChildbirthVisit(-1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1); //nonexistent office visit ID
 		try
 		{
 			sql.add(cv);
@@ -115,7 +115,7 @@ public class ChildbirthVisitMySQLTest
 	@Test
 	public void testAddReturnID()
 	{
-		ChildbirthVisit cv = new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.EMERGENCY_APPOINTMENT, 5, 4, 3, 2, 1, 1); 
+		ChildbirthVisit cv = new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.EMERGENCY_APPOINTMENT, 5, 4, 3, 2, 1, 1); 
 		try
 		{
 			Assert.assertEquals(4, sql.addReturnGeneratedId(cv));
@@ -166,17 +166,17 @@ public class ChildbirthVisitMySQLTest
 		
 		//Valid values
 		ChildbirthVisit[] cvArrValid = {
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 2),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 2),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 2),
-				new ChildbirthVisit(1L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0, 0),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, null, 0, 0, 0, 0, 3),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, null, 0, 0, 0, 3),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, null, 0, 0, 3),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, null, 0, 3),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, null, 3),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, null)
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 2),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 1, 1, 1, 1, 1, 2),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 2),
+				new ChildbirthVisit(1L, 1L, null, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, null, 0, 0, 0, 0, 0, 0),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, null, 0, 0, 0, 0, 3),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, null, 0, 0, 0, 3),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, null, 0, 0, 3),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, null, 0, 3),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, null, 3),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 0, 0, 0, 0, 0, null)
 		};
 		for (int i = 0; i < cvArrValid.length; i++)
 		{
@@ -195,14 +195,16 @@ public class ChildbirthVisitMySQLTest
 		
 		//Invaild values
 		ChildbirthVisit[] cvArrInvalid = {
-				new ChildbirthVisit(-1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //invalid office visit
-				new ChildbirthVisit(null, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //null office visit
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, -1, 4, 3, 2, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, -1, 3, 2, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, -1, 2, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, -1, 1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, -1, 1),
-				new ChildbirthVisit(1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, -1)
+				new ChildbirthVisit(-1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //invalid office visit
+				new ChildbirthVisit(null, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //null office visit
+				new ChildbirthVisit(1L, -1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //invalid obstetrics init
+				new ChildbirthVisit(1L, null, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1), //null obstetrics init
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, -1, 4, 3, 2, 1, 1),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, -1, 3, 2, 1, 1),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, -1, 2, 1, 1),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, -1, 1, 1),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, -1, 1),
+				new ChildbirthVisit(1L, 1L, DeliveryMethod.CAESAREAN_SECTION, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, -1)
 		};
 		for (int i = 0; i < cvArrInvalid.length; i++)
 		{
@@ -228,6 +230,21 @@ public class ChildbirthVisitMySQLTest
 			Assert.assertEquals(cvArr[0], sql.getByOfficeVisit(1L));
 			Assert.assertEquals(cvArr[1], sql.getByOfficeVisit(2L));
 			Assert.assertNull(sql.getByOfficeVisit(-1L));
+		}
+		catch (DBException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetByObstetricsInit()
+	{
+		try
+		{
+			Assert.assertEquals(cvArr[0], sql.getByObstetricsInit(1L).get(0));
+			Assert.assertEquals(cvArr[1], sql.getByObstetricsInit(1L).get(1));
+			Assert.assertTrue(sql.getByObstetricsInit(-1L).isEmpty());
 		}
 		catch (DBException e)
 		{

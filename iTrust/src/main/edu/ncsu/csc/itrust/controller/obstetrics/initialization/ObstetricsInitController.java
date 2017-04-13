@@ -49,33 +49,19 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 @SessionScoped
 public class ObstetricsInitController extends iTrustController
 {
-	/** Constant for the message to be displayed when a patient is made eligible for obstetric care */
 	private static final String PATIENT_MADE_ELIGIBLE = " is now eligible for obstetric care.";
-	/** Error message when patient data cannot be found */
 	private static final String ERROR_LOADING_PATIENT = "Error loading patient data.";
-	/** Error message when hcp data cannot be found */
 	private static final String ERROR_LOADING_HCP = "Error loading HCP data.";
-	/** Error message when getting pregnancy data fails */
 	private static final String ERROR_LOADING_PREGNANCIES = "Error loading pregnancy data.";
-	/** Error message when viewing record fails */
 	private static final String ERROR_VIEWING_RECORD = "Error viewing record.";
-	/** Error message when viewing the obstetrics overview fails */
 	private static final String ERROR_VIEWING_OVERVIEW = "Error viewing obstetrics overview.";
-	/** Error message when adding invalid pregancy info */
 	private static final String ERROR_ADDING_PREGNANCY = "Error when adding prior pregnancy.";
-	/** Error when non integers are input to pregnancy info */
 	private static final String ERROR_ADDING_PREGNANCY_INT_REQUIRED = "Error when adding prior pregnancy: integers are required in every field (weight gain can take a decimal value)";
-	/** Error message when adding the obstetrics initialization record fails */
 	private static final String ERROR_ADDING_RECORD = "Error adding the obstetrics initialization record.";
-	/** Error indicating incorrect date format for lmp */
 	private static final String ERROR_LMP_FORMAT = "Error: please format the LMP as YYYY-MM-DD.";
-	/** Error indicating the LMP is required */
 	private static final String ERROR_REQUIRED_LMP = "Error: the LMP field is required.";
-	/** Error indicating the pregnancy should be added before submitting if there is info in the fields */
 	private static final String ERROR_ADD_PREGNANCY_FIRST = "Error: there was unsubmitted information in the pregnancy form. Please finish adding it or remove it.";
-	/** String for an OB/GYN specialist */
 	private static final String OBGYN = "OB/GYN";
-	/** Success message when obstetrics record is created */
 	private static final String SUCCESS_ADD_OBSTETRICS = "The obstetrics record was added successfully.";
 	
 	/** Grants access to the obstetrics initializations database */
@@ -84,7 +70,7 @@ public class ObstetricsInitController extends iTrustController
 	PregnancyInfoData pregnancyData;
 	/** Used to obtain session variables and request parameters */
 	SessionUtils sessionUtils;
-	/** Patient DAO used to acess patient eligibility */
+	/** Patient DAO used to access patient eligibility */
 	PatientDAO patientDAO;
 	/** Personnel DAO used to access hcp type */
 	private PersonnelDAO personnelDAO;
@@ -102,6 +88,9 @@ public class ObstetricsInitController extends iTrustController
 	
 	/** Temporary storage of RH flag */
 	private boolean RH;
+	
+	/** Temporary storage of geneticPotentialForMiscarriage flag */
+	private boolean geneticPotentialForMiscarriage;
 	
 	/** Temporary storage of the LMP for when the user is adding prior pregnancies */
 	private String lmp;
@@ -298,7 +287,7 @@ public class ObstetricsInitController extends iTrustController
 	 * @param oid obstetrics init id
 	 * @return list of past pregnancies
 	 */
-	public List<PregnancyInfo> getPastPregnanciesFromInit(int oid) {
+	public List<PregnancyInfo> getPastPregnanciesFromInit(long oid) {
 		try {
 			List<PregnancyInfo> pregnancies = this.pregnancyData.getRecordsFromInit(oid);
 			Collections.sort(pregnancies,
@@ -373,6 +362,7 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyLists();
 		clearLMP();
 		clearRH();
+		clearGeneticPotentialForMiscarriage();
 		
 		if (oi != null) {
 			// We're viewing a record, so show past pregnancy records from it.
@@ -503,8 +493,9 @@ public class ObstetricsInitController extends iTrustController
 		// Make a new ObstetricsInit record with the LMP and save it in the database
 		ObstetricsInit oi = new ObstetricsInit(pid, today, this.getLmp());
 		oi.setRH(this.getRH());
+		oi.setGeneticPotentialForMiscarriage(this.getGeneticPotentialForMiscarriage());
 		try {
-			int oid = oiData.addAndReturnID(oi);
+			long oid = oiData.addAndReturnID(oi);
 			
 			TransactionLogger.getInstance().logTransaction(
 				TransactionType.CREATE_INITIAL_OBSTETRIC_RECORD,
@@ -526,6 +517,7 @@ public class ObstetricsInitController extends iTrustController
 			this.clearPregnancyLists();
 			this.clearLMP();
 			this.clearRH();
+			this.clearGeneticPotentialForMiscarriage();
 			
 			// Add success messages
 			printFacesMessage(FacesMessage.SEVERITY_INFO, SUCCESS_ADD_OBSTETRICS, SUCCESS_ADD_OBSTETRICS, null);
@@ -557,6 +549,8 @@ public class ObstetricsInitController extends iTrustController
 		clearPregnancyFields();
 		clearPregnancyLists();
 		clearLMP();
+		clearRH();
+		clearGeneticPotentialForMiscarriage();
 		
 		// Go back to the overview page
 		try {
@@ -587,6 +581,10 @@ public class ObstetricsInitController extends iTrustController
 	
 	private void clearRH() {
 		this.setRH(false);
+	}
+	
+	private void clearGeneticPotentialForMiscarriage() {
+		this.setGeneticPotentialForMiscarriage(false);
 	}
 	
 	/**
@@ -641,6 +639,16 @@ public class ObstetricsInitController extends iTrustController
 	 	
 	 public void setRH(boolean val) {
 	 	this.RH = val;
+	 }
+	 
+	 public boolean getGeneticPotentialForMiscarriage()
+	 {
+		 return geneticPotentialForMiscarriage;
+	 }
+	 
+	 public void setGeneticPotentialForMiscarriage(boolean val)
+	 {
+		 this.geneticPotentialForMiscarriage = val;
 	 }
 
 	public String getYearOfConception() {

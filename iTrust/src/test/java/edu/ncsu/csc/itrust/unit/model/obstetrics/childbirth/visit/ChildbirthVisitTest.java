@@ -10,8 +10,8 @@ public class ChildbirthVisitTest
 	@Test
 	public void testEqualsAndHashCode()
 	{
-		ChildbirthVisit cv1 = new ChildbirthVisit(1L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
-		ChildbirthVisit cv2 = new ChildbirthVisit(1L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
+		ChildbirthVisit cv1 = new ChildbirthVisit(1L, 3L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
+		ChildbirthVisit cv2 = new ChildbirthVisit(1L, 3L, DeliveryMethod.VAGINAL_DELIVERY, VisitType.PRE_SCHEDULED_APPOINTMENT, 5, 4, 3, 2, 1, 1);
 		Assert.assertNotEquals(cv1, this);
 		Assert.assertEquals(cv1.hashCode(), cv2.hashCode());
 		Assert.assertEquals(cv1, cv1);

@@ -58,9 +58,11 @@ Scenario: Add newborns
 	And I check the number of newborns in the table
 	And I enter 2017-4-2 for Date and 10:00 AM for Time
 	And I select Male for Sex
+	And I enter Michael for First Name
 	And click Add Newborn on the newborns tab
 	And I enter 2017-4-2 for Date and 10:01 AM for Time
 	And I select Female for Sex
+	And I enter Michelle for First Name
 	And click Add Newborn on the newborns tab
 	Then 2 more newborns exist in the newborns table
 	And a success message appears
@@ -78,9 +80,11 @@ Scenario: Update and Delete newborn data
 	And click Save on the childbirth tab
 	And I enter 2017-4-2 for Date and 10:00 AM for Time
 	And I select Male for Sex
+	And I enter Michael for First Name
 	And click Add Newborn on the newborns tab
 	And I enter 2017-4-2 for Date and 10:01 AM for Time
 	And I select Female for Sex
+	And I enter Michelle for First Name
 	And click Add Newborn on the newborns tab
 	And I check the number of newborns in the table
 	And click the first Delete button in the newborns table
@@ -88,6 +92,7 @@ Scenario: Update and Delete newborn data
 	And click the first Edit button in the newborns table
 	And I enter 2017-4-2 for Date and 10:02 AM for Time
 	And I select Female for Sex
+	And I enter Uber for First Name
 	And click Update Newborn
 	Then the same number of newborns should be in the table
 
@@ -109,7 +114,5 @@ Scenario: Add newborn before childbirth visit info
 	And I go to the create new office visit page
 	And I enter a date to the office visit date field
 	And I click Save to save the office visit
-	And I enter 2017-4-2 for Date and 10:00 AM for Time
-	And I select Male for Sex
-	And click Add Newborn on the newborns tab
-	Then a message says I must add childbirth data first and no newborn data is added
+	Then the newborns form fields are disabled
+	And a message says I must save childbirth data first

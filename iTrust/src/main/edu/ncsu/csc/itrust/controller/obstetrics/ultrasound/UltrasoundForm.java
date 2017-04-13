@@ -134,4 +134,8 @@ public class UltrasoundForm {
 	public void setUltrasound(Ultrasound ultrasound) {
 		this.ultrasound = ultrasound;
 	}
+	
+	public boolean isObstetricsTabSaved() {
+		return ovc.getByOfficeVisit(officeVisitID) != null;
+	}
 }

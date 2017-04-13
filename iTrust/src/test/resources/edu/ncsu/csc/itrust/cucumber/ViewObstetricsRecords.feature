@@ -14,7 +14,7 @@ Scenario Outline: Check Records Display Values
 	Then an obstetrics record appears with date <date>
 Examples:
 	| hcpMID | pw | patientName | pid | date |
-	| 9000000012 | pw | Baby | 5 | 2005-03-01 |
+	| 9000000012 | pw | Baby | 5 | March 1, 2005 |
 	
 Scenario Outline: Ineligable Obstetrics Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>

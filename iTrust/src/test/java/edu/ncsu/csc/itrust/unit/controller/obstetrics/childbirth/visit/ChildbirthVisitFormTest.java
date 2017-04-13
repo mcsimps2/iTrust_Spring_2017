@@ -13,6 +13,8 @@ import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit.ChildbirthVisitController;
 import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit.ChildbirthVisitForm;
+import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitController;
+import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitData;
@@ -31,6 +33,8 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
 public class ChildbirthVisitFormTest {
 
 	@Spy private ChildbirthVisitController cvc;
+	@Spy private OfficeVisitController ofvc;
+	@Spy private ObstetricsVisitController obvc;
 	
 	@Mock private SessionUtils mockSessionUtils;
 	
@@ -46,8 +50,10 @@ public class ChildbirthVisitFormTest {
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
 		
 		cvc = Mockito.spy(new ChildbirthVisitController(ds, mockSessionUtils));
+		ofvc = Mockito.spy(new OfficeVisitController(ds, mockSessionUtils));
+		obvc = Mockito.spy(new ObstetricsVisitController(ds, mockSessionUtils));
 		
-		cvf = new ChildbirthVisitForm(cvc, ds, 51L);
+		cvf = new ChildbirthVisitForm(cvc, ofvc, obvc, ds, 51L);
 		
 		Mockito.doNothing().when(cvc).logTransaction(Matchers.any(TransactionType.class), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString());
 		Mockito.doNothing().when(cvc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
@@ -60,6 +66,17 @@ public class ChildbirthVisitFormTest {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
+	}
+	
+	@Test
+	public void testConstructors() {
+		try {
+			cvf = new ChildbirthVisitForm();
+			Assert.fail("Invalid constructor call when testing");
+		} catch (Exception e) {
+			Assert.assertNotNull(e);
+		}
+		
 	}
 	
 	@Test
@@ -98,7 +115,7 @@ public class ChildbirthVisitFormTest {
 			Assert.fail(e.getMessage());
 		}
 		
-		cvf = new ChildbirthVisitForm(cvc, ds, 1000L);
+		cvf = new ChildbirthVisitForm(cvc, ofvc, obvc, ds, 1000L);
 		cvf.setDeliveryType(DeliveryMethod.MISCARRIAGE);
 		cvf.setVisitType(VisitType.EMERGENCY_APPOINTMENT);
 		cvf.setPitocin(1);

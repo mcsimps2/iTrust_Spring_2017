@@ -248,7 +248,7 @@ CREATE TABLE allergies(
 	PatientID BIGINT unsigned NOT NULL COMMENT 'MID of the Patient',
 	Description VARCHAR( 50 ) NOT NULL COMMENT 'Description of the allergy',
 	FirstFound TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	Code varchar(10) COMMENT 'NDCode of drug that patient is allergic to'
+	Code varchar(20) COMMENT 'NDCode of drug that patient is allergic to'
 	/*NEW, Added Code, so that we could pass the NDCode of the drug when adding allergy.*/
 ) ENGINE=MyISAM;
 
@@ -470,6 +470,7 @@ CREATE TABLE immunization (
 CREATE TABLE obstetricsVisit (
 	id						BIGINT(20)		UNSIGNED AUTO_INCREMENT,
 	officeVisitID			BIGINT(20)		UNSIGNED NOT NULL,
+	obstetricsInitID        BIGINT(20)      UNSIGNED NOT NULL,
 	weeksPregnant			INT				UNSIGNED NOT NULL,
 	fhr						INT				UNSIGNED,
 	multiplicity 			INT				UNSIGNED,
@@ -477,7 +478,8 @@ CREATE TABLE obstetricsVisit (
 	imageOfUltrasound		MEDIUMBLOB,
 	imageType               VARCHAR(255),
 	PRIMARY KEY (id),
-	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID)
+	FOREIGN KEY (officeVisitId) REFERENCES officeVisit(officeVisitID),
+	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
 
 CREATE TABLE ultrasound (
@@ -563,6 +565,7 @@ CREATE TABLE obstetricsInit
 	dateOfInit DATE,
 	LMP DATE,
 	RH BOOLEAN DEFAULT FALSE,
+	geneticPotentialForMiscarriage BOOLEAN DEFAULT FALSE,
 	PRIMARY KEY (id)
 ) ENGINE=MyISAM;
 
@@ -585,6 +588,7 @@ CREATE TABLE childbirthVisits
 (
 	id BIGINT UNSIGNED AUTO_INCREMENT,
 	officeVisitID BIGINT UNSIGNED NOT NULL,
+	obstetricsInitID BIGINT UNSIGNED NOT NULL,
 	deliveryType VARCHAR(255),
 	visitType VARCHAR(255),
 	pitocin BIGINT UNSIGNED,
@@ -594,7 +598,8 @@ CREATE TABLE childbirthVisits
 	magnesiumSulfate BIGINT UNSIGNED,
 	rh BIGINT UNSIGNED,
 	PRIMARY KEY (id),
-	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
+	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID),
+	FOREIGN KEY (obstetricsInitID) REFERENCES obstetricsInit(id)
 ) ENGINE=MyISAM;
 
 CREATE TABLE childbirthNewborns

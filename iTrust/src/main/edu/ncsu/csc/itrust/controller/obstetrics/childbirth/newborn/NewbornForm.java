@@ -13,6 +13,9 @@ import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit.ChildbirthVisi
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.SexType;
+import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
+import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "newborn_form")
@@ -23,6 +26,8 @@ public class NewbornForm {
 	private ChildbirthVisitController cvc;
 	private SessionUtils sessionUtils;
 	private Newborn newborn;
+	private PatientBean patient;
+	private PatientDAO patientDAO;
 	
 	private static final String SAVE_CHILDBIRTH_FIRST_ERROR = "The Childbirth tab must be saved before you can add a newborn";
 
@@ -30,7 +35,8 @@ public class NewbornForm {
 	 * Constructor used in run time.
 	 */
 	public NewbornForm() {
-	    this(null, null, SessionUtils.getInstance(), (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"));
+	    this(null, null, SessionUtils.getInstance(), (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId"),
+	    		new PatientDAO(DAOFactory.getProductionInstance()));
 	}
 
 	/**
@@ -39,12 +45,14 @@ public class NewbornForm {
 	 * @param ovc
 	 * @param sessionUtils
 	 */
-	public NewbornForm(NewbornController nc, ChildbirthVisitController cvc, SessionUtils sessionUtils, Long officeVisitID) {
+	public NewbornForm(NewbornController nc, ChildbirthVisitController cvc, SessionUtils sessionUtils, Long officeVisitID, PatientDAO patientDAO) {
 		try {
 			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
 		    this.cvc = (cvc == null) ? new ChildbirthVisitController() : cvc;
 			this.controller = (nc == null) ? new NewbornController() : nc;
-			clearFields(officeVisitID);
+			this.patientDAO = patientDAO;
+			PatientBean mother = patientDAO.getPatient(this.sessionUtils.getCurrentPatientMIDLong());
+			clearFields(officeVisitID, mother.getLastName(), mother.getEmail());
 		} catch (Exception e) {
 			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
 					"Controller Error", null);
@@ -53,26 +61,30 @@ public class NewbornForm {
 	
 	/**
 	 * Adds the newborn to the database.
-	 * Only works if an Childbirth has been submitted for this office visit.
+	 * Only works if a child birth has been submitted for this office visit.
 	 * @param officeVisitID
+	 * @param lastName
+	 * @param email
 	 */
-	public void add(Long officeVisitID){
+	public void add(Long officeVisitID, String lastName, String email){
 		if (cvc.getByOfficeVisit(officeVisitID) == null) {
 			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, SAVE_CHILDBIRTH_FIRST_ERROR,
 					SAVE_CHILDBIRTH_FIRST_ERROR, null);
 			return;
 		}
-		if (controller.add(newborn))
-			clearFields(officeVisitID);
+		if (controller.add(newborn, patient))
+			clearFields(officeVisitID, lastName, email);
 	}
 	
 	/**
 	 * Edits the current newborn in the database.
 	 * @param officeVisitID
+	 * @param lastName
+	 * @param email
 	 */
-	public void edit(Long officeVisitID){
-		if (controller.edit(newborn))
-			clearFields(officeVisitID);
+	public void edit(Long officeVisitID, String lastName, String email){
+		if (controller.edit(newborn, patient))
+			clearFields(officeVisitID, lastName, email);
 	}
 	
 	/**
@@ -108,14 +120,16 @@ public class NewbornForm {
 	 * @param sex
 	 * @param estimatedTime
 	 * @param pid
+	 * @throws DBException  
 	 */
-	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime, Long pid){
+	public void fillInput(Long newbornID, String dateOfBirth, String timeOfBirth, SexType sex, Boolean estimatedTime, Long pid) throws DBException {
 		newborn.setId(newbornID);
 		newborn.setDateOfBirth(dateOfBirth);
 		newborn.setTimeOfBirth(timeOfBirth);
 		newborn.setSex(sex);
 		newborn.setTimeEstimated(estimatedTime);
 		newborn.setPid(pid);
+		patient = patientDAO.getPatient(pid);
 	}
 	
 	public List<SexType> getSexTypes() {
@@ -125,9 +139,14 @@ public class NewbornForm {
 	/**
 	 * Clears all of the fields in this form.
 	 * @param officeVisitID
+	 * @param lastName
+	 * @param email
 	 */
-	public void clearFields(Long officeVisitID){
+	public void clearFields(Long officeVisitID, String lastName, String email){
 		newborn = new Newborn(officeVisitID);
+		patient = new PatientBean();
+		patient.setLastName(lastName);
+		patient.setEmail(email);
 	}
 
 	public Newborn getNewborn() {
@@ -136,5 +155,37 @@ public class NewbornForm {
 
 	public void setNewborn(Newborn newborn) {
 		this.newborn = newborn;
+	}
+	
+	public PatientBean getPatient() {
+		return patient;
+	}
+	
+	public void setPatient(PatientBean patient) {
+		this.patient = patient;
+	}
+	
+	public String getFirstName(Long pid) {
+		try {
+			PatientBean p = patientDAO.getPatient(pid);
+			if (p == null) return "";
+			return p.getFirstName();
+		} catch (DBException e) {
+			return "";
+		}
+	}
+	
+	public String getLastName(Long pid) {
+		try {
+			PatientBean p = patientDAO.getPatient(pid);
+			if (p == null) return "";
+			return p.getLastName();
+		} catch (DBException e) {
+			return "";
+		}
+	}
+	
+	public boolean isChildbirthTabSaved(long officeVisitID) {
+		return cvc.getByOfficeVisit(officeVisitID) != null;
 	}
 }
