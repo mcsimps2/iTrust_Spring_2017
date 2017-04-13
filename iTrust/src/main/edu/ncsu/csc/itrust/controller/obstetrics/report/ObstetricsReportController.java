@@ -55,6 +55,7 @@ public class ObstetricsReportController extends iTrustController {
 	private static final String ERROR_LOADING_PREEXISTING_CONDITIONS = "Error loading preexisting conditions";
 	private static final String ERROR_LOADING_ALLERGIES = "Error loading allergies";
 	private static final String ERROR_LOADING_GENETIC_POTENTIAL_FOR_MISCARRIAGE = "Error loading genetic potential for miscarriage";
+	private static final String ERROR_VIEWING_REPORT = "Error viewing report";
 	
 	private ObstetricsInitData oiData;
 	private PregnancyInfoData pregnancyData;
@@ -92,8 +93,16 @@ public class ObstetricsReportController extends iTrustController {
 		dData = new DiagnosisMySQL(ds);
 	}
 	
-	public void viewReport(ObstetricsInit oi) throws IOException {
+	public void viewReport(ObstetricsInit oi) {
 		this.setViewedOI(oi);
+		try {
+			this.navigateToReport();
+		} catch (IOException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_REPORT, e.getMessage(), null);			
+		}
+	}
+	
+	public void navigateToReport() throws IOException {
 		NavigationController.viewObstetricsReport();
 	}
 	
@@ -141,8 +150,8 @@ public class ObstetricsReportController extends iTrustController {
 						LocalDateTime d0 = ofvData.getByID(arg0.getOfficeVisitID()).getDate();
 						LocalDateTime d1 = ofvData.getByID(arg1.getOfficeVisitID()).getDate();
 						//This might need to be flipped
-						if (d0.isBefore(d1)) return -1;
-						else if (d1.isBefore(d0)) return 1;
+						if (d1.isBefore(d0)) return -1;
+						else if (d0.isBefore(d1)) return 1;
 						else return 0;
 					} catch (DBException e) {
 						ObstetricsReportController.this.printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_OBSTETRICS_VISITS, e.getMessage(), null);
@@ -338,12 +347,12 @@ public class ObstetricsReportController extends iTrustController {
 			List<Diagnosis> list = dData.getAllDiagnosisByOfficeVisit(officeVisitID);
 			for (Diagnosis d: list) {
 				String code = d.getIcdCode().getCode();
-				if (d.getIcdCode().isChronic() ||
-						code.equals("E10") ||
+				if (code.equals("E10") ||
 						code.equals("E11") ||
-						code.equals("E12") ||
+						code.equals("E13") ||
 						code.equals("R971") ||
-						code.equals("A94"))
+						code.equals("A94") ||
+						d.getIcdCode().isChronic())
 					//This might need to be d.getIcdCode().getName();
 					conditions.add(d.getName());
 			}
@@ -487,7 +496,7 @@ public class ObstetricsReportController extends iTrustController {
 			if (awcFlag) {
 				List<ObstetricsVisit> ovs = obvData.getByObstetricsInit(initID);
 				OfficeVisit last = ofvData.getByID(ovs.get(0).getOfficeVisitID());
-				OfficeVisit first = ofvData.getByID(ovs.get(list.size() - 1).getOfficeVisitID());
+				OfficeVisit first = ofvData.getByID(ovs.get(ovs.size() - 1).getOfficeVisitID());
 				String weightChange = Float.toString(last.getWeight() - first.getWeight());
 				awc.setMessage("Yes, " + weightChange);
 			} else {
@@ -524,7 +533,6 @@ public class ObstetricsReportController extends iTrustController {
 		try {
 			return PrettyUtils.getPrettyDate(ofvData.getByID(ov.getOfficeVisitID()).getDate());
 		} catch (DBException e) {
-			e.printStackTrace();
 			return "Error";
 		}
 	}
@@ -533,7 +541,6 @@ public class ObstetricsReportController extends iTrustController {
 		try {
 			return ofvData.getByID(ov.getOfficeVisitID()).getBloodPressure();
 		} catch (DBException e) {
-			e.printStackTrace();
 			return "Error";
 		}
 	}
@@ -542,7 +549,6 @@ public class ObstetricsReportController extends iTrustController {
 		try {
 			return Float.toString(ofvData.getByID(ov.getOfficeVisitID()).getWeight());
 		} catch (DBException e) {
-			e.printStackTrace();
 			return "Error";
 		}
 	}
