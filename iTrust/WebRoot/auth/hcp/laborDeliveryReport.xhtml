@@ -68,7 +68,7 @@
 				<ui:param name="pid" value="#{session.getAttribute('pid')}" />
 				<ui:param name="initID" value="#{obstetrics_report_controller.getViewedOI().getID()}" />
 
-				<h1>Labor and Delivery report</h1>
+				<h1>Labor and Delivery Report</h1>
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -180,8 +180,8 @@
 					</div>
 				</div>
 				
-				<h:form>
-					<h:commandButton value="Done" action="obstetricsInitRecords" />
+				<h:form id="doneForm">
+					<h:commandButton value="Done" id="doneButton" action="obstetricsInitRecords" />
 				</h:form>
 
 			</ui:define>
