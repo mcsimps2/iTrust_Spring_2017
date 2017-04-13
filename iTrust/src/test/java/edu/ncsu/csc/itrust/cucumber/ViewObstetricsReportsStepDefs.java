@@ -40,7 +40,6 @@ public class ViewObstetricsReportsStepDefs {
 	@Then("^the report for the existing record displays correctly$")
 	public void reportExistingRecordDisplaysCorrectly() {
 		String pageSource = driver.getPageSource();
-		Assert.assertTrue(pageSource.contains(""));
 		
 		// Sanity check: title of report should be there
 		Assert.assertTrue(pageSource.contains("Labor and Delivery Report"));
@@ -75,5 +74,19 @@ public class ViewObstetricsReportsStepDefs {
 		Assert.assertTrue(pageSource.contains("No, RH- flag not present")); // RH flag
 		Assert.assertTrue(pageSource.contains("Yes, 66")); // Advanced maternal age
 		Assert.assertTrue(pageSource.contains("None observed")); // Low-lying placenta
+	}
+	
+	@Then("^the report for the complications test displays correctly$")
+	public void complicationsReportDisplayedCorrectly() {
+		String pageSource = driver.getPageSource();
+		
+		// Sanity check that the page loaded correctly
+		Assert.assertTrue(pageSource.contains("Labor and Delivery Report"));
+		
+		// Check that RH- flag is flagged
+		Assert.assertTrue(driver.findElement(By.cssSelector("#rh-complication .description")).getText().contains("Yes, RH- flag present"));
+		
+		// Check that genetic potential for miscarriage is flagged
+		Assert.assertTrue(driver.findElement(By.cssSelector("#gpm-complication .description")).getText().contains("Yes"));
 	}
 }
