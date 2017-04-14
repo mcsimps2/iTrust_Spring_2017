@@ -382,7 +382,6 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			navigateToViewAdd();
 		} catch (IOException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_RECORD, e.getMessage(), null);
 		}
 	}

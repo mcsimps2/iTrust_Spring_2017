@@ -15,10 +15,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
+import edu.ncsu.csc.itrust.controller.obstetrics.report.ComplicationInfo;
 import edu.ncsu.csc.itrust.controller.obstetrics.report.ObstetricsReportController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
+import edu.ncsu.csc.itrust.model.diagnosis.Diagnosis;
+import edu.ncsu.csc.itrust.model.diagnosis.DiagnosisData;
+import edu.ncsu.csc.itrust.model.diagnosis.DiagnosisMySQL;
+import edu.ncsu.csc.itrust.model.icdcode.ICDCode;
+import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfo;
@@ -46,6 +52,7 @@ public class ObstetricsReportControllerTest {
 	private ObstetricsInitData oiData;
 	private PregnancyInfoData pregnancyData;
 	private ObstetricsVisitData obvData;
+	private DiagnosisData dData;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -79,10 +86,12 @@ public class ObstetricsReportControllerTest {
 		
 		Mockito.doNothing().when(orc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing().when(orc).navigateToReport();
 		
 		oiData = new ObstetricsInitMySQL(ds);
 		pregnancyData = new PregnancyInfoMySQL(ds);
 		obvData = new ObstetricsVisitMySQL(ds);
+		dData = new DiagnosisMySQL(ds);
 		
 		// Reset test data
 		DBBuilder.rebuildAll();		
@@ -134,7 +143,7 @@ public class ObstetricsReportControllerTest {
 	@Test
 	public void testGetObstetricsVisits() {
 		try {
-			long initID = 2L;
+			long initID = 1L;
 			List<ObstetricsVisit> obVisits = orc.getObstetricsVisits(initID);
 			List<ObstetricsVisit> obVisits2 = obvData.getByObstetricsInit(initID);
 			for (ObstetricsVisit v : obVisits) {
@@ -147,7 +156,9 @@ public class ObstetricsReportControllerTest {
 
 	@Test
 	public void testGetHighBloodPressure() {
+		Assert.assertFalse(orc.getHighBloodPressure(51L));
 		Assert.assertFalse(orc.getHighBloodPressure(3L));
+		Assert.assertTrue(orc.getHighBloodPressure(4L));
 		Assert.assertTrue(orc.getHighBloodPressure(1L));
 	}
 
@@ -161,6 +172,22 @@ public class ObstetricsReportControllerTest {
 	public void testGetHasPreexistingCondition() {
 		Assert.assertTrue(orc.getHasPreexistingCondition(1L));
 		Assert.assertFalse(orc.getHasPreexistingCondition(3L));
+		try {
+			dData.add(new Diagnosis(10, 57, new ICDCode("E10", "Type 1 diabetes mellitus", true)));
+			Assert.assertTrue(orc.getHasPreexistingCondition(4L));
+			dData.add(new Diagnosis(10, 57, new ICDCode("E11", "Type 2 diabetes mellitus", true)));
+			Assert.assertTrue(orc.getHasPreexistingCondition(4L));
+			dData.add(new Diagnosis(10, 57, new ICDCode("E13", "Other specified diabetes mellitus", true)));
+			Assert.assertTrue(orc.getHasPreexistingCondition(4L));
+			dData.add(new Diagnosis(10, 57, new ICDCode("R971", "Elevated cancer antigen 125 [CA 125]", true)));
+			Assert.assertTrue(orc.getHasPreexistingCondition(4L));
+			dData.add(new Diagnosis(10, 57, new ICDCode("A94", "Unspecified arthropod-borne vi", true)));
+			Assert.assertTrue(orc.getHasPreexistingCondition(4L));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		} catch (FormValidationException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	@Test
@@ -171,6 +198,7 @@ public class ObstetricsReportControllerTest {
 
 	@Test
 	public void testGetLowLyingPlacenta() {
+		Assert.assertFalse(orc.getLowLyingPlacenta(51L));
 		Assert.assertTrue(orc.getLowLyingPlacenta(1L));
 		Assert.assertFalse(orc.getLowLyingPlacenta(3L));
 	}
@@ -184,16 +212,17 @@ public class ObstetricsReportControllerTest {
 	@Test
 	public void testGetAbnormalFetalHeartRate() {
 		try {
+			Assert.assertFalse(orc.getAbnormalFetalHeartRate(51L));
 			Assert.assertFalse(orc.getAbnormalFetalHeartRate(3L));
 			
-			ObstetricsVisit v = obvData.getByID(1L);
+			ObstetricsVisit v = obvData.getByID(2L);
 			v.setFhr(110);
 			obvData.update(v);
-			Assert.assertFalse(orc.getAbnormalFetalHeartRate(3L));
+			Assert.assertTrue(orc.getAbnormalFetalHeartRate(3L));
 			
 			v.setFhr(170);
 			obvData.update(v);
-			Assert.assertFalse(orc.getAbnormalFetalHeartRate(3L));
+			Assert.assertTrue(orc.getAbnormalFetalHeartRate(3L));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
 		} catch (FormValidationException e) {
@@ -203,12 +232,14 @@ public class ObstetricsReportControllerTest {
 
 	@Test
 	public void testGetMultiples() {
+		Assert.assertFalse(orc.getMultiples(51L));
 		Assert.assertTrue(orc.getMultiples(1L));
 		Assert.assertFalse(orc.getMultiples(3L));
 	}
 
 	@Test
 	public void testGetAbnormalWeightGain() {
+		Assert.assertFalse(orc.getAbnormalWeightGain(51L));
 		Assert.assertTrue(orc.getAbnormalWeightGain(1L));
 		Assert.assertFalse(orc.getAbnormalWeightGain(3L));
 		Assert.assertTrue(orc.getAbnormalWeightGain(4L));
@@ -216,18 +247,47 @@ public class ObstetricsReportControllerTest {
 
 	@Test
 	public void testGetHyperemesisGravidarum() {
+		Assert.assertFalse(orc.getHyperemesisGravidarum(51L));
 		Assert.assertTrue(orc.getHyperemesisGravidarum(1L));
+		Assert.assertTrue(orc.getHyperemesisGravidarum(4L));
 		Assert.assertFalse(orc.getHyperemesisGravidarum(3L));
 	}
 
 	@Test
 	public void testGetHypothyroidism() {
-		Assert.assertTrue(orc.getHypothyroidism(1L));
+		Assert.assertFalse(orc.getHypothyroidism(51L));
 		Assert.assertFalse(orc.getHypothyroidism(3L));
+		Assert.assertTrue(orc.getHypothyroidism(1L));
+		
+		try {
+			dData.add(new Diagnosis(10, 57, new ICDCode("E890", "Hypothyroidism, unspecified", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E039", "Hypothyroidism, unspecified", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E038", "Other specified hypothyroidism", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E033", "Postinfectious hypothyroidism", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E032", "Hypothyroidism, due to meds and oth exogenous substances", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E031", "Congenital hypothyroidism without goiter", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E030", "Congenital hypothyroidism with diffuse goiter", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E03", "Other hypothyroidism", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+			dData.update(new Diagnosis(10, 57, new ICDCode("E02", "Subclinical iodine-deficiency hypothyroidism", true)));
+			Assert.assertTrue(orc.getHypothyroidism(4L));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		} catch (FormValidationException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	@Test
 	public void testGetPreexistingConditions() {
+		Assert.assertTrue(orc.getPreexistingConditions(51L).isEmpty());
 		List<String> conditions = new ArrayList<String>();
 		Assert.assertTrue(orc.getPreexistingConditions(3L).equals(conditions));
 		conditions.add("Subclinical iodine-deficiency ");
@@ -242,6 +302,66 @@ public class ObstetricsReportControllerTest {
 		allergies.add("Penicillin");
 		allergies.add("Sulfasalazine");
 		Assert.assertTrue(orc.getDrugAllergies(3L).equals(allergies));
+	}
+	
+	@Test
+	public void testViewReport() {
+		try {
+			ObstetricsInit oi = oiData.getByID(1L);
+			orc.viewReport(oi);
+			Assert.assertTrue(orc.getViewedOI().equals(oi));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetComplications() {
+		List<ComplicationInfo> list = orc.getComplications(1L, 3L);
+		ComplicationInfo i = new ComplicationInfo();
+		i.setFlag(false);
+		Assert.assertFalse(i.getFlag());
+		i.setID("rh");
+		Assert.assertTrue(i.getID().equals("rh"));
+		i.setMessage("No, RH- flag not present");
+		Assert.assertTrue(i.getMessage().equals("No, RH- flag not present"));
+		i.setTitle("RH- flag");
+		Assert.assertTrue(i.getTitle().equals("RH- flag"));
+		Assert.assertTrue(list.contains(i));
+		i.setID("hbp");
+		i.setMessage("No");
+		i.setTitle("High blood pressure");
+		Assert.assertTrue(list.contains(i));		
+	}
+	
+	@Test
+	public void testGetDateByObstetricsVisit() {
+		try {
+			String temp = orc.getDateByObstetricsVisit(obvData.getByID(1L));
+			Assert.assertTrue(temp.equals("February 22, 2017"));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetBloodPressureByObstetricsVisit() {
+		try {
+			String temp = orc.getBloodPressureByObstetricsVisit(obvData.getByID(1L));
+			Assert.assertTrue(temp.equals("120/80"));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetWeightByObstetricsVisit() {
+		try {
+			String temp = orc.getWeightByObstetricsVisit(obvData.getByID(1L));
+			Assert.assertTrue(temp.equals("105.1"));
+		} catch (DBException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 }
