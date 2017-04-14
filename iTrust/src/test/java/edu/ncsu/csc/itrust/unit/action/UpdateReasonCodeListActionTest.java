@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateNDCodeListAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -13,14 +16,14 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 /**
  * UpdateReasonCodeListActionTest
  */
-public class UpdateReasonCodeListActionTest extends TestCase {
+public class UpdateReasonCodeListActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private UpdateNDCodeListAction action;
 	private final static long performingAdmin = 9000000001L;
 	private TestDataGenerator gen = new TestDataGenerator();
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		action = new UpdateNDCodeListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
@@ -34,6 +37,7 @@ public class UpdateReasonCodeListActionTest extends TestCase {
 	/**
 	 * testEvilFactory
 	 */
+	@Test
 	public void testEvilFactory() {
 		action = new UpdateNDCodeListAction(EvilDAOFactory.getEvilInstance(), 0L);
 		MedicationBean mb = new MedicationBean();
@@ -66,6 +70,7 @@ public class UpdateReasonCodeListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddNDCode() throws Exception {
 		final String code = "999999999";
 		final String desc = "UpdateNDCodeListActionTest testAddNDCode";
@@ -81,6 +86,7 @@ public class UpdateReasonCodeListActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws FormValidationException
 	 */
+	@Test
 	public void testAddDuplicate() throws DBException, FormValidationException {
 		final String code = "999999999";
 		final String descrip0 = "description 0";
@@ -97,6 +103,7 @@ public class UpdateReasonCodeListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateNDInformation0() throws Exception {
 		final String code = "888888888";
 		final String desc = "new descrip 0";
@@ -113,6 +120,7 @@ public class UpdateReasonCodeListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateNonExistent() throws Exception {
 		final String code = "999999999";
 		MedicationBean proc = new MedicationBean(code, "shouldnt be here");

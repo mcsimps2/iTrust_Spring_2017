@@ -4,14 +4,17 @@
 
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.AddUAPAction;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class AddUAPActionTest extends TestCase {
+public class AddUAPActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen;
 	private AddUAPAction action;
@@ -19,8 +22,8 @@ public class AddUAPActionTest extends TestCase {
 	/**
 	 * Sets up defaults
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.hcp0();
@@ -32,6 +35,7 @@ public class AddUAPActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddUAP() throws Exception {
 		PersonnelBean p = new PersonnelBean();
 		p.setFirstName("Cosmo");

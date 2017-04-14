@@ -9,27 +9,29 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class DrugInteractionActionTest extends TestCase {
+public class DrugInteractionActionTest  {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private DAOFactory evilFactory = EvilDAOFactory.getEvilInstance();
 	private DrugInteractionAction action;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		gen.clearAllTables();
 		action = new DrugInteractionAction(factory);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 	}
 
+	@Test
 	public void testReportInteraction() throws Exception {
 		gen.ndCodes();
 		String response = action.reportInteraction("548684985", "081096",
@@ -42,6 +44,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDeleteInteraction() throws Exception {
 		gen.drugInteractions();
 		String response = action.deleteInteraction("009042407", "548680955");
@@ -53,6 +56,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetInteractions() throws Exception {
 		gen.drugInteractions();
 		List<DrugInteractionBean> beans = action.getInteractions("009042407");
@@ -69,6 +73,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetInteractions2() throws Exception {
 		gen.standardData();
 		action.reportInteraction("009042407", "081096", "Tetra and Aspirin");
@@ -90,6 +95,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testReportSameDrugsInteraction() throws Exception {
 		gen.ndCodes();
 		String response = action.reportInteraction("548684985", "548684985", "Double dose");
@@ -101,6 +107,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testReportAlreadyAdded() throws Exception {
 		gen.ndCodes();
 		try {
@@ -120,6 +127,7 @@ public class DrugInteractionActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEvilDAOFactory() throws Exception {
 		DrugInteractionAction actionEvil = new DrugInteractionAction(evilFactory);
 		gen.drugInteractions();

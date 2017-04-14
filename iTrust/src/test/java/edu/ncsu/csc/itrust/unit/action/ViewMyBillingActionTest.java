@@ -6,15 +6,17 @@ import edu.ncsu.csc.itrust.action.ViewMyBillingAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ViewMyBillingActionTest extends TestCase {
+public class ViewMyBillingActionTest  {
 	private ViewMyBillingAction action;
 	private long mid = 311L; // Sean Ford
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -23,10 +25,12 @@ public class ViewMyBillingActionTest extends TestCase {
 		action = new ViewMyBillingAction(TestDAOFactory.getTestInstance(), this.mid);
 	}
 
+	@Test
 	public void testGetMyUnpaidBills() throws DBException, SQLException {
 		assertEquals(1, action.getMyUnpaidBills().size());
 	}
 
+	@Test
 	public void testGetAllMyBills() throws DBException, SQLException {
 		assertEquals(2, action.getAllMyBills().size());
 	}

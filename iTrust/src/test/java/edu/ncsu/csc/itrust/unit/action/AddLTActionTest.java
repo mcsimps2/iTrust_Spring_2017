@@ -22,8 +22,7 @@ public class AddLTActionTest extends ActionTestWithMocks {
 	/**
 	 * Sets up defaults
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		// Step 0. Initialize the mocks and other necessary objects.
 		super.initMocks();
 		// Step 1. Initialize any other classes we need.

@@ -4,7 +4,10 @@
 
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.AddPatientAction;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -12,7 +15,7 @@ import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class AddPatientActionTest extends TestCase {
+public class AddPatientActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen;
 	private AddPatientAction action;
@@ -20,8 +23,8 @@ public class AddPatientActionTest extends TestCase {
 	/**
 	 * Sets up defaults
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		gen = new TestDataGenerator();
 
 		gen.transactionLog();
@@ -34,6 +37,7 @@ public class AddPatientActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddPatient() throws Exception {
 		AuthDAO authDAO = factory.getAuthDAO();
 

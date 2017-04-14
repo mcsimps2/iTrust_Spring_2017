@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateHospitalListAction;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -11,14 +14,14 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 /**
  * UpdateHospitalListActionTest
  */
-public class UpdateHospitalListActionTest extends TestCase {
+public class UpdateHospitalListActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private UpdateHospitalListAction action;
 	private TestDataGenerator gen = new TestDataGenerator();
 	private long performingAdmin = 9000000001L;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		action = new UpdateHospitalListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
@@ -33,6 +36,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * KILLS-- M FAIL: edu.ncsu.csc.itrust.action.UpdateHospitalListAction:35:
 	 * changed return value (areturn)
 	 */
+	@Test
 	public void testEvilFactory() {
 		action = new UpdateHospitalListAction(EvilDAOFactory.getEvilInstance(), 0L);
 		HospitalBean db = new HospitalBean("2223", "ananana");
@@ -49,6 +53,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * KILLS-- M FAIL: edu.ncsu.csc.itrust.action.UpdateHospitalListAction:49:
 	 * changed return value (areturn)
 	 */
+	@Test
 	public void testEvilFactory2() {
 		action = new UpdateHospitalListAction(EvilDAOFactory.getEvilInstance(), 0L);
 		HospitalBean db = new HospitalBean("2223", "ananana");
@@ -73,6 +78,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddHospital() throws Exception {
 		String id = "9999999999";
 		String name = "testAddHospital Hospital";
@@ -87,6 +93,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * CP[64] "added hospital " -> "___jumble___" M FAIL:
 	 * edu.ncsu.csc.itrust.action.UpdateHospitalListAction:27: 0L -> 1L
 	 */
+	@Test
 	public void testAddHospital2() throws Exception {
 		String id = "88888888";
 		String name = "Test Hospital";
@@ -101,6 +108,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddDuplicate() throws Exception {
 		String id = "0000000000";
 		String name0 = "hospital 0";
@@ -117,6 +125,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateICDInformation0() throws Exception {
 		String id = "8888888888";
 		String name = "new hospital 8...";
@@ -133,6 +142,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateNonExistent() throws Exception {
 		String id = "9999999999";
 		HospitalBean hosp = new HospitalBean(id, "shouldn't be here");
@@ -146,6 +156,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddAddress() throws Exception {
 		String id = "9999999999";
 		HospitalBean hosp = new HospitalBean(id, "shouldn't be here", "Address", "City", "ST", "00000-0000");
@@ -162,6 +173,7 @@ public class UpdateHospitalListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateAddress() throws Exception {
 		String id = "8888888888";
 		String name = "new hospital 8...";

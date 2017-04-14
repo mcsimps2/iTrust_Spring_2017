@@ -10,19 +10,22 @@ import edu.ncsu.csc.itrust.exception.CSVFormatException;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests adding a patient file
  *
  */
 @SuppressWarnings("unused")
-public class AddPatientFileActionTest extends TestCase {
+public class AddPatientFileActionTest  {
 
 	String fileDirectory = "testing-files/sample_patientupload/";
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 
 	}
 
@@ -33,6 +36,7 @@ public class AddPatientFileActionTest extends TestCase {
 	 * @throws AddPatientFileException
 	 * @throws FileNotFoundException
 	 */
+	@Test
 	public void testValidData() throws CSVFormatException, AddPatientFileException, FileNotFoundException {
 		DAOFactory prodDAO = DAOFactory.getProductionInstance();
 		AuthDAO authDAO = prodDAO.getAuthDAO();
@@ -49,6 +53,7 @@ public class AddPatientFileActionTest extends TestCase {
 	 * @throws AddPatientFileException
 	 * @throws FileNotFoundException
 	 */
+	@Test
 	public void testInvalidData() throws CSVFormatException, AddPatientFileException, FileNotFoundException {
 		DAOFactory prodDAO = DAOFactory.getProductionInstance();
 		AuthDAO authDAO = prodDAO.getAuthDAO();
@@ -66,6 +71,7 @@ public class AddPatientFileActionTest extends TestCase {
 	 * @throws FileNotFoundException
 	 */
 	@SuppressFBWarnings(value = "DLS_DEAD_LOCAL_STORE")
+	@Test
 	public void testDuplicateField() throws CSVFormatException, AddPatientFileException, FileNotFoundException {
 		DAOFactory prodDAO = DAOFactory.getProductionInstance();
 		AuthDAO authDAO = prodDAO.getAuthDAO();
@@ -88,6 +94,7 @@ public class AddPatientFileActionTest extends TestCase {
 	 * @throws FileNotFoundException
 	 */
 	@SuppressFBWarnings(value = "DLS_DEAD_LOCAL_STORE")
+	@Test
 	public void testInvalidHeader() throws CSVFormatException, AddPatientFileException, FileNotFoundException {
 		DAOFactory prodDAO = DAOFactory.getProductionInstance();
 		AuthDAO authDAO = prodDAO.getAuthDAO();
@@ -109,6 +116,7 @@ public class AddPatientFileActionTest extends TestCase {
 	 * @throws FileNotFoundException
 	 */
 	@SuppressFBWarnings(value = "DLS_DEAD_LOCAL_STORE")
+	@Test
 	public void testRequiredFieldMissing() throws CSVFormatException, AddPatientFileException, FileNotFoundException {
 		DAOFactory prodDAO = DAOFactory.getProductionInstance();
 		AuthDAO authDAO = prodDAO.getAuthDAO();

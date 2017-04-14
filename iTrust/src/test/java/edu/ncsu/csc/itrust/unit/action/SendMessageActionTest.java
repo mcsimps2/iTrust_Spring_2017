@@ -16,9 +16,12 @@ import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class SendMessageActionTest extends TestCase {
+public class SendMessageActionTest  {
 
 	private DAOFactory factory;
 	private GregorianCalendar gCal;
@@ -28,9 +31,8 @@ public class SendMessageActionTest extends TestCase {
 	private long patientId;
 	private long hcpId;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -43,6 +45,7 @@ public class SendMessageActionTest extends TestCase {
 		gCal = new GregorianCalendar();
 	}
 
+	@Test
 	public void testSendMessage() throws ITrustException, SQLException, FormValidationException {
 		String body = "UNIT TEST - SendMessageActionText";
 		MessageBean mBean = new MessageBean();
@@ -63,14 +66,17 @@ public class SendMessageActionTest extends TestCase {
 		assertEquals(body, mBeanDB.getBody());
 	}
 
+	@Test
 	public void testGetPatientName() throws ITrustException {
 		assertEquals("Andy Programmer", this.smAction.getPatientName(this.patientId));
 	}
 
+	@Test
 	public void testGetPersonnelName() throws ITrustException {
 		assertEquals("Kelly Doctor", this.smAction.getPersonnelName(this.hcpId));
 	}
 
+	@Test
 	public void testGetMyRepresentees() throws ITrustException {
 		List<PatientBean> pbList = smAction.getMyRepresentees();
 		assertEquals(7, pbList.size());
@@ -86,16 +92,19 @@ public class SendMessageActionTest extends TestCase {
 		assertEquals("Sandy Sky", pbList.get(6).getFullName());
 	}
 
+	@Test
 	public void testGetMyDLHCPs() throws ITrustException {
 		List<PersonnelBean> pbList = this.smAction.getDLHCPsFor(this.patientId);
 		assertEquals(1, pbList.size());
 	}
 
+	@Test
 	public void testGetMyDLHCPs2() throws ITrustException {
 		List<PersonnelBean> pbList = this.smAction.getMyDLHCPs();
 		assertEquals(1, pbList.size());
 	}
 
+	@Test
 	public void testGetDLCHPsFor() throws ITrustException {
 		List<PersonnelBean> pbList = this.smAction.getDLHCPsFor(this.patientId);
 

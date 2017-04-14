@@ -14,9 +14,12 @@ import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class AddApptActionTest extends TestCase {
+public class AddApptActionTest  {
 
 	private AddApptAction action;
 	private DAOFactory factory;
@@ -24,8 +27,8 @@ public class AddApptActionTest extends TestCase {
 	private long hcpId = 9000000000L;
 	TestDataGenerator gen;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -34,6 +37,7 @@ public class AddApptActionTest extends TestCase {
 		this.action = new AddApptAction(this.factory, this.hcpId);
 	}
 
+	@Test
 	public void testAddAppt() throws FormValidationException, SQLException, DBException {
 		ApptBean b = new ApptBean();
 		b.setApptType("General Checkup");
@@ -45,6 +49,7 @@ public class AddApptActionTest extends TestCase {
 		assertTrue(action.addAppt(b, true).startsWith("Success"));
 	}
 
+	@Test
 	public void testAddAppt2() throws FormValidationException, SQLException, DBException {
 		ApptBean b = new ApptBean();
 		b.setApptType("General Checkup");
@@ -57,14 +62,17 @@ public class AddApptActionTest extends TestCase {
 		assertEquals("The scheduled date of this Appointment (" + t + ") has already passed.", action.addAppt(b, true));
 	}
 
+	@Test
 	public void testGetName() throws ITrustException {
 		assertEquals("Kelly Doctor", action.getName(hcpId));
 	}
 
+	@Test
 	public void testGetName2() throws ITrustException {
 		assertEquals("Random Person", action.getName(mid));
 	}
 
+	@Test
 	public void testAddConflicts()
 			throws SQLException, FormValidationException, FileNotFoundException, IOException, DBException {
 		gen.clearAllTables();
@@ -92,6 +100,7 @@ public class AddApptActionTest extends TestCase {
 		assertTrue(resultB.contains("conflict"));
 	}
 
+	@Test
 	public void testGetConflicts()
 			throws SQLException, FormValidationException, FileNotFoundException, IOException, DBException {
 		gen.clearAllTables();

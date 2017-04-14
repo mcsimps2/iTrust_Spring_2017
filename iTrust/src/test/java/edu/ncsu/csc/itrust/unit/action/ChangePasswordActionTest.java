@@ -1,25 +1,28 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ChangePasswordAction;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class ChangePasswordActionTest extends TestCase {
+public class ChangePasswordActionTest  {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private ChangePasswordAction action;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		gen.clearAllTables();
 		gen.standardData();
 		action = new ChangePasswordAction(factory);
 	}
 
+	@Test
 	public void testChangePassword() throws Exception {
 		String response1 = action.changePassword(1L, "pw", "pass1", "pass1");
 		String response2 = action.changePassword(1L, "pass1", "pw1", "pw1");

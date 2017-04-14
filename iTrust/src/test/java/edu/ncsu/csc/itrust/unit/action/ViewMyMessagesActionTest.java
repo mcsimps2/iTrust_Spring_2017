@@ -14,12 +14,15 @@ import edu.ncsu.csc.itrust.model.old.dao.mysql.MessageDAO;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * ViewMyMessagesActionTest
  */
-public class ViewMyMessagesActionTest extends TestCase {
+public class ViewMyMessagesActionTest  {
 
 	private ViewMyMessagesAction action;
 	private ViewMyMessagesAction action2;
@@ -29,9 +32,8 @@ public class ViewMyMessagesActionTest extends TestCase {
 	private long mId = 2L;
 	private long hcpId = 9000000000L;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
@@ -50,6 +52,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws SQLException
 	 * @throws DBException
 	 */
+	@Test
 	public void testGetAllMyMessages() throws SQLException, DBException {
 		List<MessageBean> mbList = action.getAllMyMessages();
 
@@ -63,6 +66,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testGetPatientName() throws ITrustException {
 		assertEquals("Andy Programmer", action.getName(this.mId));
 	}
@@ -72,6 +76,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testGetPersonnelName() throws ITrustException {
 		assertEquals("Kelly Doctor", action.getPersonnelName(this.hcpId));
 	}
@@ -82,6 +87,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesTimeAscending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMyMessagesTimeAscending();
@@ -97,6 +103,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesNameAscending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMyMessagesNameAscending();
@@ -119,6 +126,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesNameDescending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMyMessagesNameDescending();
@@ -141,6 +149,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMySentMessages() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMySentMessages();
@@ -154,6 +163,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesFromTimeAscending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMySentMessagesTimeAscending();
@@ -169,6 +179,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesFromNameAscending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMySentMessagesNameAscending();
@@ -191,6 +202,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetAllMyMessagesFromNameDescending() throws DBException, SQLException {
 
 		List<MessageBean> mbList = action2.getAllMySentMessagesNameDescending();
@@ -214,6 +226,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws SQLException
 	 * @throws FormValidationException
 	 */
+	@Test
 	public void testUpdateRead() throws ITrustException, SQLException, FormValidationException {
 		List<MessageBean> mbList = action.getAllMyMessages();
 		assertEquals(0, mbList.get(0).getRead());
@@ -228,6 +241,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws SQLException
 	 * @throws DBException
 	 */
+	@Test
 	public void testAddMessage() throws SQLException, DBException {
 		MessageDAO test = new MessageDAO(factory);
 
@@ -247,6 +261,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws ITrustException
 	 * @throws ParseException
 	 */
+	@Test
 	public void testFilterMessages() throws SQLException, ITrustException, ParseException {
 		List<MessageBean> mbList = action2.getAllMyMessages();
 
@@ -260,6 +275,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetUnreadCount() throws DBException, SQLException {
 		assertEquals(1, action.getUnreadCount());
 		assertEquals(12, action2.getUnreadCount());
@@ -271,6 +287,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testGetCCdMessages() throws DBException, SQLException {
 		assertEquals(0, action.getCCdMessages(1).size());
 	}
@@ -280,6 +297,7 @@ public class ViewMyMessagesActionTest extends TestCase {
 	 * 
 	 * @throws DBException
 	 */
+	@Test
 	public void testThrowsExceptions() throws DBException {
 		List<MessageBean> resultList = null;
 		try {

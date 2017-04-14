@@ -2,7 +2,10 @@ package edu.ncsu.csc.itrust.unit.action;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ViewMyReportRequestsAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
@@ -12,14 +15,14 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class ViewMyReportRequestsActionTest extends TestCase {
+public class ViewMyReportRequestsActionTest  {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private DAOFactory evilFactory = EvilDAOFactory.getEvilInstance();
 	private ViewMyReportRequestsAction action;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.patient2();
@@ -29,6 +32,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		gen.reportRequests();
 	}
 
+	@Test
 	public void testGetReportRequests3() throws Exception {
 		action = new ViewMyReportRequestsAction(factory, 9000000000L);
 		List<ReportRequestBean> list = action.getAllReportRequestsForRequester();
@@ -36,6 +40,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		assertEquals(ReportRequestBean.Requested, list.get(0).getStatus());
 	}
 
+	@Test
 	public void testGetEvilReportRequest() throws Exception {
 		action = new ViewMyReportRequestsAction(evilFactory, 9000000000L);
 		try {
@@ -47,6 +52,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetReportRequestForID3() throws Exception {
 		action = new ViewMyReportRequestsAction(factory, 9000000000L);
 		ReportRequestBean b = action.getReportRequest(3);
@@ -56,6 +62,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		assertEquals("01/03/2008 12:00", b.getRequestedDateString());
 	}
 
+	@Test
 	public void testGetReportRequestForID4() throws Exception {
 		action = new ViewMyReportRequestsAction(factory, 9000000000L);
 		ReportRequestBean b = action.getReportRequest(4);
@@ -67,6 +74,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		assertEquals(ReportRequestBean.Viewed, b.getStatus());
 	}
 
+	@Test
 	public void testInsertReport1() throws Exception {
 		action = new ViewMyReportRequestsAction(evilFactory, 9000000000L);
 		try {
@@ -78,6 +86,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testInsertReport2() throws Exception {
 		action = new ViewMyReportRequestsAction(factory, 9000000000L);
 		long id = action.addReportRequest(2);
@@ -87,6 +96,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		assertEquals(ReportRequestBean.Requested, b2.getStatus());
 	}
 
+	@Test
 	public void testSetViewedToZero() throws Exception {
 		action = new ViewMyReportRequestsAction(factory, 9000000000L);
 		try {
@@ -98,6 +108,7 @@ public class ViewMyReportRequestsActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetLongStatus() throws Exception {
 		ViewMyReportRequestsAction action = new ViewMyReportRequestsAction(factory, 2L);
 		TestDataGenerator gen = new TestDataGenerator();

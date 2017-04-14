@@ -11,23 +11,27 @@ import edu.ncsu.csc.itrust.model.old.dao.mysql.TransactionDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
-public class EventLoggingActionTest extends TestCase {
+public class EventLoggingActionTest  {
 	private EventLoggingAction action;
 	private DAOFactory factory;
 	private long mid = 1L;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		factory = TestDAOFactory.getTestInstance();
 		action = new EventLoggingAction(factory);
 	}
 
+	@Test
 	public void testGetTransactions() throws FormValidationException, SQLException {
 		try {
 			action.logEvent(TransactionType.LOGIN_FAILURE, mid, 0, "");

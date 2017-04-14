@@ -5,7 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +22,7 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class ViewClaimsActionTest extends TestCase {
+public class ViewClaimsActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private ViewClaimsAction subject;
@@ -30,7 +33,6 @@ public class ViewClaimsActionTest extends TestCase {
 	private static final int OV_ID = 3;
 	private static final long DOCTOR_MID = 9000000000L;
 
-	@Override
 	@Before
 	public void setUp() throws Exception {
 		gen.clearAllTables();
@@ -78,7 +80,6 @@ public class ViewClaimsActionTest extends TestCase {
 		subject = new ViewClaimsAction(factory);
 	}
 
-	@Override
 	@After
 	public void tearDown() throws Exception {
 	}

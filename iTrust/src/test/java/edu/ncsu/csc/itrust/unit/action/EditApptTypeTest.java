@@ -9,16 +9,19 @@ import edu.ncsu.csc.itrust.model.old.beans.ApptTypeBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class EditApptTypeTest extends TestCase {
+public class EditApptTypeTest  {
 
 	private EditApptTypeAction action;
 	private DAOFactory factory;
 	private long adminId = 9000000001L;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -27,10 +30,12 @@ public class EditApptTypeTest extends TestCase {
 		this.action = new EditApptTypeAction(this.factory, this.adminId);
 	}
 
+	@Test
 	public void testGetApptTypes() throws SQLException, DBException {
 		assertEquals(8, action.getApptTypes().size());
 	}
 
+	@Test
 	public void testAddApptType() throws SQLException, FormValidationException, DBException {
 		ApptTypeBean a = new ApptTypeBean();
 		a.setName("Test");
@@ -40,6 +45,7 @@ public class EditApptTypeTest extends TestCase {
 		assertEquals(9, action.getApptTypes().size());
 	}
 
+	@Test
 	public void testAddApptType2() throws SQLException, FormValidationException, DBException {
 		ApptTypeBean a = new ApptTypeBean();
 		a.setName("General Checkup");
@@ -48,6 +54,7 @@ public class EditApptTypeTest extends TestCase {
 		assertTrue(action.addApptType(a).equals("Appointment Type: General Checkup already exists."));
 	}
 
+	@Test
 	public void testEditApptType() throws SQLException, FormValidationException, DBException {
 		ApptTypeBean a = new ApptTypeBean();
 		a.setName("General Checkup");
@@ -56,12 +63,14 @@ public class EditApptTypeTest extends TestCase {
 		assertTrue(action.editApptType(a).startsWith("Success"));
 	}
 
+	@Test
 	public void testEditApptType2() throws SQLException, FormValidationException, DBException {
 		ApptTypeBean a = new ApptTypeBean("General Checkup", 45);
 
 		assertEquals("Appointment Type: General Checkup already has a duration of 45 minutes.", action.editApptType(a));
 	}
 
+	@Test
 	public void testAddApptTypeLengthZero() throws SQLException, DBException {
 		ApptTypeBean a = new ApptTypeBean();
 		a.setName("Test");
@@ -76,6 +85,7 @@ public class EditApptTypeTest extends TestCase {
 		assertTrue(false);
 	}
 
+	@Test
 	public void testEditNonExistentApptType() throws SQLException, FormValidationException, DBException {
 		ApptTypeBean a = new ApptTypeBean();
 		a.setName("NonExistent");
