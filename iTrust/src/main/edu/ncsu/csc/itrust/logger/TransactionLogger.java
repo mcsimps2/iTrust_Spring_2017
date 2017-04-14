@@ -14,7 +14,7 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
  */
 public class TransactionLogger {
 	/** Whether or not the transaction logger is being used in testing or production */
-	public static boolean testInstance = false;
+	private static boolean testInstance = false;
 	/** The singleton instance of this class. */
 	private static TransactionLogger singleton = null;
 
@@ -22,14 +22,18 @@ public class TransactionLogger {
 	TransactionDAO dao;
 
 	private TransactionLogger() {
-		if (testInstance)
-		{
-			dao = TestDAOFactory.getTestInstance().getTransactionDAO();
-		}
-		else
-		{
-			dao = DAOFactory.getProductionInstance().getTransactionDAO();
-		}
+		dao = DAOFactory.getProductionInstance().getTransactionDAO();
+		testInstance = false;
+	}
+	
+	private void TestTransactionLogger() {
+		dao = TestDAOFactory.getTestInstance().getTransactionDAO();
+		testInstance = true;
+	}
+	
+	private void ProductionTransactionLogger() {
+		dao = TestDAOFactory.getTestInstance().getTransactionDAO();
+		testInstance = false;
 	}
 
 	/**
@@ -47,8 +51,25 @@ public class TransactionLogger {
 	public void logTransaction(TransactionType type, Long loggedInMID, Long secondaryMID, String addedInfo) {
 		try {
 			dao.logTransaction(type, loggedInMID, secondaryMID, addedInfo);
-		} catch (DBException e) {
-			e.printStackTrace();
+		} catch (DBException e1) {
+			//Try the other version
+			try
+			{
+				if (testInstance)
+				{
+					TestTransactionLogger();
+					dao.logTransaction(type, loggedInMID, secondaryMID, addedInfo);
+				}
+				else
+				{
+					ProductionTransactionLogger();
+					dao.logTransaction(type, loggedInMID, secondaryMID, addedInfo);
+				}
+			}
+			catch (DBException e2)
+			{
+				e2.printStackTrace();
+			}
 		}
 	}
 }
