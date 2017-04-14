@@ -45,6 +45,12 @@ public class ChildbirthVisitFormTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		// Reset test data
+		DBBuilder.rebuildAll();		
+		TestDataGenerator gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
+		
 		ds = ConverterDAO.getDataSource();
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
@@ -60,12 +66,6 @@ public class ChildbirthVisitFormTest {
 				Mockito.anyString(), Mockito.anyString());
 		
 		childbirthVisitData = new ChildbirthVisitMySQL(ds);
-		
-		// Reset test data
-		DBBuilder.rebuildAll();		
-		TestDataGenerator gen = new TestDataGenerator();
-		gen.clearAllTables();
-		gen.standardData();
 	}
 	
 	@Test
@@ -102,6 +102,7 @@ public class ChildbirthVisitFormTest {
 		
 		cvf.submitChildbirth();
 		try {
+			System.out.println("Value 1: " + childbirthVisitData.getByOfficeVisit(51L).getRH());
 			Assert.assertTrue(childbirthVisitData.getByOfficeVisit(51L).getRH().equals(51));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
@@ -110,6 +111,7 @@ public class ChildbirthVisitFormTest {
 		cvf.setRh(66);
 		cvf.submitChildbirth();
 		try {
+			System.out.println("Value 2: " + childbirthVisitData.getByOfficeVisit(51L).getRH());
 			Assert.assertTrue(childbirthVisitData.getByOfficeVisit(51L).getRH().equals(66));
 		} catch (DBException e) {
 			Assert.fail(e.getMessage());
