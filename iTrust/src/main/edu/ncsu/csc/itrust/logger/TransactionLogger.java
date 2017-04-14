@@ -4,7 +4,6 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.TransactionDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
-import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 /**
  * Singleton provider of the transaction logging mechanism.
@@ -22,14 +21,7 @@ public class TransactionLogger {
 	TransactionDAO dao;
 
 	private TransactionLogger() {
-		if (testInstance)
-		{
-			dao = TestDAOFactory.getTestInstance().getTransactionDAO();
-		}
-		else
-		{
-			dao = DAOFactory.getProductionInstance().getTransactionDAO();
-		}
+		dao = DAOFactory.getProductionInstance().getTransactionDAO();
 	}
 
 	/**
