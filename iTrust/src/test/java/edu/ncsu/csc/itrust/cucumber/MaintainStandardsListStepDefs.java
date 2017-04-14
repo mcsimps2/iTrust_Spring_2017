@@ -44,8 +44,6 @@ public class MaintainStandardsListStepDefs {
 	private LOINCCodeMySQL loincSQL;
 	
 	public MaintainStandardsListStepDefs(){
-		
-		
 		this.ds = ConverterDAO.getDataSource();
 		this.gen = new TestDataGenerator();
 		this.persDAO = new PersonnelDAO(TestDAOFactory.getTestInstance());

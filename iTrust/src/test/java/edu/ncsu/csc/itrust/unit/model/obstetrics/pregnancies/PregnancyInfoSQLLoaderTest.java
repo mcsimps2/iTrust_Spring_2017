@@ -35,16 +35,25 @@ public class PregnancyInfoSQLLoaderTest {
 	public void testInsert() throws SQLException
 	{
 		DataSource ds = ConverterDAO.getDataSource();
-		Connection conn = ds.getConnection();
-		PreparedStatement ps = null;
-		PregnancyInfo pi = new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1);
-		ps = loader.loadParameters(conn, ps, pi, true);
-		ps.executeUpdate();
-		
-		String stmt = "SELECT * FROM priorPregnancies WHERE pid=1";
-		ps = conn.prepareStatement(stmt);
-		List<PregnancyInfo> list = loader.loadList(ps.executeQuery());
-		Assert.assertTrue(list.contains(pi));
+		try (Connection conn = ds.getConnection();)
+		{
+			PregnancyInfo pi = new PregnancyInfo(1, 1, 2017, 270, 15, 25, DeliveryMethod.CAESAREAN_SECTION, 1);
+			try (PreparedStatement ps = loader.loadParameters(conn, null, pi, true);)
+			{
+				ps.executeUpdate();
+			}
+			
+			String stmt = "SELECT * FROM priorPregnancies WHERE pid=1";
+			try (PreparedStatement ps = conn.prepareStatement(stmt);)
+			{
+				List<PregnancyInfo> list = loader.loadList(ps.executeQuery());
+				Assert.assertTrue(list.contains(pi));
+			}
+		}
+		catch (SQLException e)
+		{
+			Assert.fail(e.getMessage());
+		}
 	}
 	
 	@Test
@@ -52,23 +61,32 @@ public class PregnancyInfoSQLLoaderTest {
 	{
 		//Go ahead and insert something
 		DataSource ds = ConverterDAO.getDataSource();
-		Connection conn = ds.getConnection();
-		PreparedStatement ps = null;
-		PregnancyInfo pi = new PregnancyInfo(1, 1, 2014, 500, 150, 250, DeliveryMethod.CAESAREAN_SECTION, 8);
-		ps = loader.loadParameters(conn, ps, pi, true);
-		ps.executeUpdate();
-		
-		//Try to update it
-		pi.setNumDaysPregnant(1000);
-		pi.setID(1);
-		try
+		try (Connection conn = ds.getConnection();)
 		{
-			ps = loader.loadParameters(conn, ps, pi, false);
-			ps.executeUpdate();
-			Assert.fail("Called an unimplemented method");
-		} catch (IllegalStateException e)
+			PregnancyInfo pi = new PregnancyInfo(1, 1, 2014, 500, 150, 250, DeliveryMethod.CAESAREAN_SECTION, 8);
+			try (PreparedStatement ps = loader.loadParameters(conn, null, pi, true);)
+			{
+				ps.executeUpdate();
+			}
+			
+			//Try to update it
+			pi.setNumDaysPregnant(1000);
+			pi.setID(1);
+			try
+			{
+				try (PreparedStatement ps = loader.loadParameters(conn, null, pi, false);)
+				{
+					ps.executeUpdate();
+				}
+				Assert.fail("Called an unimplemented method");
+			} catch (IllegalStateException e)
+			{
+				Assert.assertTrue(true);
+			}
+		}
+		catch (SQLException e)
 		{
-			Assert.assertTrue(true);
+			Assert.fail(e.getMessage());
 		}
 	}
 	

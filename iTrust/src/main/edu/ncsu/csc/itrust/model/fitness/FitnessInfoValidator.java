@@ -78,20 +78,19 @@ public class FitnessInfoValidator extends POJOValidator<FitnessInfo>
 		
 		//First, check the user exists
 		
-		try
+		try (Connection conn = ds.getConnection();
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE MID=?");)
 		{
-			Connection conn = ds.getConnection();
-			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE MID=?");
 			stmt.setLong(1, obj.getPid());
-			final ResultSet results = stmt.executeQuery();
-			final boolean check = results.next();
-			results.close();
-			if (!check)
+			try (ResultSet results = stmt.executeQuery();)
 			{
-				errs.addIfNotNull("The specified PID does not exist in the database");
-				throw new FormValidationException(errs);
+				final boolean check = results.next();
+				if (!check)
+				{
+					errs.addIfNotNull("The specified PID does not exist in the database");
+					throw new FormValidationException(errs);
+				}
 			}
-			DBUtil.closeConnection(conn, stmt);
 		} catch (SQLException e) {
 			errs.addIfNotNull("Could not access database to check PID");
 			throw new FormValidationException(errs);

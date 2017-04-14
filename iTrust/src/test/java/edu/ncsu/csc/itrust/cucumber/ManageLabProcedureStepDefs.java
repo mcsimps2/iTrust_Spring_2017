@@ -31,7 +31,6 @@ public class ManageLabProcedureStepDefs {
 	private LabProcedureMySQL labPSQL;
 
 	public ManageLabProcedureStepDefs() {
-		
 		this.ds = ConverterDAO.getDataSource();
 		this.gen = new TestDataGenerator();
 		this.oVisSQL = new OfficeVisitMySQL(ds);

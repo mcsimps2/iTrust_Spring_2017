@@ -51,9 +51,11 @@ public class AllergyDAO {
 				PreparedStatement stmt = conn
 						.prepareStatement("SELECT * FROM allergies WHERE PatientID=? ORDER BY FirstFound DESC")) {
 			stmt.setLong(1, pid);
-			final ResultSet results = stmt.executeQuery();
-			final List<AllergyBean> loadlist = allergyBeanLoader.loadList(results);
-			return loadlist;
+			try (ResultSet results = stmt.executeQuery();)
+			{
+				final List<AllergyBean> loadlist = allergyBeanLoader.loadList(results);
+				return loadlist;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

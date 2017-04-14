@@ -267,8 +267,11 @@ public class PatientDAO {
 						.prepareStatement("SELECT * FROM declaredhcp WHERE PatientID=? AND HCPID=?")) {
 			ps.setLong(1, pid);
 			ps.setLong(2, hcpid);
-			boolean patientHasDeclaredHCP = (ps.executeQuery().next());
-			return patientHasDeclaredHCP;
+			try (ResultSet rs = ps.executeQuery())
+			{
+				boolean patientHasDeclaredHCP = (rs.next());
+				return patientHasDeclaredHCP;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

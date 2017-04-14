@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import cucumber.api.java.Before;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class TestHooks {
@@ -12,6 +13,7 @@ public class TestHooks {
 	public static void testPrep(){
 		TestDataGenerator gen = new TestDataGenerator();
 		try {
+			DBBuilder.rebuildAll();
 			gen.clearAllTables();
 			gen.standardData();
 		} catch (FileNotFoundException e) {

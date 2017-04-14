@@ -1037,27 +1037,18 @@ public class TestDataGenerator {
 	 * @throws SQLException
 	 */
 	private boolean checkIfZipsExists() {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
-			rs = ps.executeQuery();
+		try (
+			Connection conn = factory.getConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
+			ResultSet rs = ps.executeQuery();)
+		{
 			if (rs.next()) {
 				return true;
 
 			}
 		} catch (SQLException e) {
 			return false;
-		} finally {
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					return false;
-				}
-		}
+		} 
 
 		return false;
 	}

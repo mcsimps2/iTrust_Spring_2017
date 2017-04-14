@@ -49,22 +49,28 @@ public class FitnessInfoSQLLoaderTest {
 	public void testInsert() throws SQLException, DBException
 	{
 		DataSource ds = ConverterDAO.getDataSource();
-		Connection conn = ds.getConnection();
-		PreparedStatement ps = null;
-		FitnessInfo fi = new FitnessInfo();
-		fi.setPid(1);
-		fi.setDate("1996-01-01");
-		fi.setSteps(30);
-		ps = loader.loadParameters(conn, ps, fi, true);
-		ps.executeUpdate();
+		try (Connection conn = ds.getConnection();)
+		{
+			FitnessInfo fi = new FitnessInfo();
+			fi.setPid(1);
+			fi.setDate("1996-01-01");
+			fi.setSteps(30);
+			try (PreparedStatement ps = loader.loadParameters(conn, null, fi, true);)
+			{
+				ps.executeUpdate();
+			}
+			String stmt = "SELECT * from fitness WHERE dateOfData='1996-01-01'";
+			try (PreparedStatement ps = conn.prepareStatement(stmt);
+			ResultSet rs = ps.executeQuery();)
+			{
+				Assert.assertTrue(rs.next());
+				Assert.assertEquals(rs.getInt("steps"), fi.getSteps());
+				Assert.assertTrue(rs.getDate("dateOfData").toString().equals(fi.getDate()));
+				Assert.assertEquals(rs.getLong("pid"), fi.getPid());
+			}
+		}
 		
-		String stmt = "SELECT * from fitness WHERE dateOfData='1996-01-01'";
-		ps = conn.prepareStatement(stmt);
-		ResultSet rs = ps.executeQuery();
-		Assert.assertTrue(rs.next());
-		Assert.assertEquals(rs.getInt("steps"), fi.getSteps());
-		Assert.assertTrue(rs.getDate("dateOfData").toString().equals(fi.getDate()));
-		Assert.assertEquals(rs.getLong("pid"), fi.getPid());
+		
 	}
 	
 	/**
@@ -77,31 +83,36 @@ public class FitnessInfoSQLLoaderTest {
 	{
 		//First insert something
 		DataSource ds = ConverterDAO.getDataSource();
-		Connection conn = ds.getConnection();
-		PreparedStatement ps = null;
-		FitnessInfo fi = new FitnessInfo();
-		fi.setPid(1);
-		fi.setDate("2001-12-21");
-		fi.setSteps(100);
-		fi.setMiles(1.5);
-		ps = loader.loadParameters(conn, ps, fi, true);
-		ps.executeUpdate();
-		
-		//Now update
-		fi.setSteps(500);
-		fi.setFloors(3);
-		ps = loader.loadParameters(conn, ps, fi, false);
-		ps.executeUpdate();
-		
-		//Now check
-		String stmt = "SELECT * from fitness WHERE dateOfData='2001-12-21'";
-		ps = conn.prepareStatement(stmt);
-		ResultSet rs = ps.executeQuery();
-		Assert.assertTrue(rs.next()); //move cursor to the right row
-		Assert.assertEquals(rs.getInt("steps"), 500);
-		Assert.assertTrue(rs.getDate("dateOfData").toString().equals(fi.getDate()));
-		Assert.assertEquals(rs.getLong("pid"), fi.getPid());
-		Assert.assertTrue(Math.abs(rs.getDouble("distance") - 1.5) < 0.001);
-		Assert.assertEquals(rs.getInt("floors"), 3);
+		try (Connection conn = ds.getConnection();)
+		{
+			FitnessInfo fi = new FitnessInfo();
+			fi.setPid(1);
+			fi.setDate("2001-12-21");
+			fi.setSteps(100);
+			fi.setMiles(1.5);
+			try (PreparedStatement ps = loader.loadParameters(conn, null, fi, true);)
+			{
+				ps.executeUpdate();
+			}
+			//Now update
+			fi.setSteps(500);
+			fi.setFloors(3);
+			try (PreparedStatement ps = loader.loadParameters(conn, null, fi, false);)
+			{
+				ps.executeUpdate();
+			}
+			//Now check
+			String stmt = "SELECT * from fitness WHERE dateOfData='2001-12-21'";
+			try (PreparedStatement ps = conn.prepareStatement(stmt);
+					ResultSet rs = ps.executeQuery();)
+			{
+				Assert.assertTrue(rs.next()); //move cursor to the right row
+				Assert.assertEquals(rs.getInt("steps"), 500);
+				Assert.assertTrue(rs.getDate("dateOfData").toString().equals(fi.getDate()));
+				Assert.assertEquals(rs.getLong("pid"), fi.getPid());
+				Assert.assertTrue(Math.abs(rs.getDouble("distance") - 1.5) < 0.001);
+				Assert.assertEquals(rs.getInt("floors"), 3);
+			}
+		}
 	}
 }

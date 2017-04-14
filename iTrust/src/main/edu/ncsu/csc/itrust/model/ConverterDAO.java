@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,7 +23,7 @@ import org.xml.sax.InputSource;
  * The tangled mess you see here is SAX, the XML-parser and XPath, an XML
  */
 public class ConverterDAO {
-
+	public static BasicDataSource ds = null;
 
 	private static String getAttribute(Document document, String attribute) throws XPathExpressionException {
 		return (String) XPathFactory.newInstance().newXPath().compile("/Context/Resource/" + attribute)
@@ -35,10 +37,24 @@ public class ConverterDAO {
 		return builder.parse(new InputSource(reader));
 	}
 
-	public static DataSource getDataSource() {
+	/**
+	 * Releases all idle connections of the pre-existing ConverterDAO datasource and returns a new one
+	 * @return a new datasource
+	 */
+	public static synchronized DataSource getDataSource() {
+		if (ds != null)
+		{
+			try
+			{
+				ds.close();
+			}
+			catch (SQLException e)
+			{
+				//Do nothing
+			}
+		}
 		FileReader f = null;
 		BufferedReader r = null;
-		BasicDataSource ds = null;
 		try {
 			f = new FileReader("WebRoot/META-INF/context.xml");
 			r = new BufferedReader(f);
@@ -49,7 +65,11 @@ public class ConverterDAO {
 			ds.setPassword(getAttribute(document, "@password"));
 			ds.setUrl(getAttribute(document, "@url"));
 			ds.setMaxTotal(15);
-			
+			ds.setMaxIdle(4);
+			ds.setTestOnBorrow(true);
+			ds.setRemoveAbandonedOnBorrow(true);
+			ds.setRemoveAbandonedOnMaintenance(true);
+			ds.setRemoveAbandonedTimeout(60);
 			ds.setPoolPreparedStatements(true);
 			
 		} catch (Exception e) {
