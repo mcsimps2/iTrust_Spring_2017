@@ -320,9 +320,13 @@ public class ObstetricsReportControllerTest {
 		List<ComplicationInfo> list = orc.getComplications(1L, 3L);
 		ComplicationInfo i = new ComplicationInfo();
 		i.setFlag(false);
+		Assert.assertFalse(i.getFlag());
 		i.setID("rh");
+		Assert.assertTrue(i.getID().equals("rh"));
 		i.setMessage("No, RH- flag not present");
+		Assert.assertTrue(i.getMessage().equals("No, RH- flag not present"));
 		i.setTitle("RH- flag");
+		Assert.assertTrue(i.getTitle().equals("RH- flag"));
 		Assert.assertTrue(list.contains(i));
 		i.setID("hbp");
 		i.setMessage("No");
