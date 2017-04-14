@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.unit.model.obstetrics.pregnancies;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -199,10 +200,13 @@ public class PregnancyInfoMySQLTest {
 	public void testDiabolical() throws Exception
 	{
 		//Try dropping the databases right before an add
-		try {
+		String stmt = "DROP TABLE priorPregnancies";
+		try (
 			Connection conn = ds.getConnection();
-			String stmt = "DROP TABLE priorPregnancies";
-			conn.prepareStatement(stmt).execute();
+			PreparedStatement ps = conn.prepareStatement(stmt);
+			)
+		{
+			ps.execute();
 		} catch (SQLException e) {
 			Assert.fail(e.getMessage());
 		}

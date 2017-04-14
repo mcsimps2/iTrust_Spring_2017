@@ -192,14 +192,16 @@ public class ObstetricsInitMySQL implements ObstetricsInitData, Serializable
 				return -1;
 			}
 			pstring = conn.prepareStatement("SELECT LAST_INSERT_ID() FROM obstetricsInit;");
-			ResultSet rs = pstring.executeQuery();
-			if (rs.next())
+			try (ResultSet rs = pstring.executeQuery();)
 			{
-				return rs.getLong(1);
-			}
-			else
-			{
-				return -1;
+				if (rs.next())
+				{
+					return rs.getLong(1);
+				}
+				else
+				{
+					return -1;
+				}
 			}
 		}
 		catch (SQLException e) {

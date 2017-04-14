@@ -52,13 +52,15 @@ public class AccessDAO {
 	public int getSessionTimeoutMins() throws DBException {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = conn.prepareStatement("SELECT Value FROM globalvariables WHERE Name='Timeout'")) {
-			ResultSet rs = stmt.executeQuery();
-			if (rs.next()) {
-				int returnVal = rs.getInt("Value");
-				return returnVal;
-			} else {
-				insertDefaultTimeout(20);
-				return 20;
+			try (ResultSet rs = stmt.executeQuery();)
+			{
+				if (rs.next()) {
+					int returnVal = rs.getInt("Value");
+					return returnVal;
+				} else {
+					insertDefaultTimeout(20);
+					return 20;
+				}
 			}
 		} catch (SQLException e) {
 			throw new DBException(e);

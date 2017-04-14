@@ -119,9 +119,11 @@ public class UltrasoundMySQL implements UltrasoundData {
 	public List<Ultrasound> getByOfficeVisit(long officeVisitID) throws DBException {
 		try (Connection conn = ds.getConnection();
 			PreparedStatement statement = conn.prepareStatement("SELECT * FROM ultrasound WHERE officeVisitID="+officeVisitID);) {
-			ResultSet resultSet = statement.executeQuery();
-			List<Ultrasound> list = loader.loadList(resultSet);
-			return list;
+			try (ResultSet resultSet = statement.executeQuery();)
+			{
+				List<Ultrasound> list = loader.loadList(resultSet);
+				return list;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

@@ -49,11 +49,11 @@ public class UltrasoundSQLLoaderTest {
 
 	@Test
 	public void testLoadList() {
-		try {
-			Connection conn = ds.getConnection();
-			String stmt = "SELECT * FROM ultrasound";
+		String stmt = "SELECT * FROM ultrasound";
+		try (Connection conn = ds.getConnection();
 			PreparedStatement ps = conn.prepareStatement(stmt);
-			ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();)
+		{
 			List<Ultrasound> list = loader.loadList(rs);
 			for (int i = 0; i < uArr.length; i++)
 			{
@@ -67,11 +67,11 @@ public class UltrasoundSQLLoaderTest {
 
 	@Test
 	public void testLoadSingle() {
-		try {
-			Connection conn = ds.getConnection();
-			String stmt = "SELECT * FROM ultrasound WHERE id=1";
+		String stmt = "SELECT * FROM ultrasound WHERE id=1";
+		try (Connection conn = ds.getConnection();
 			PreparedStatement ps = conn.prepareStatement(stmt);
-			ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();)
+		{
 			rs.next();
 			Ultrasound u = loader.loadSingle(rs);
 			Assert.assertTrue(u.equals(uArr[0]));

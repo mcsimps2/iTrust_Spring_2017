@@ -55,21 +55,22 @@ public class DBBuilder {
 	}
 
 	public void executeSQL(List<String> queries) throws SQLException {
-		Connection conn = factory.getConnection();
-		long start = System.currentTimeMillis();
-		for (String sql : queries) {
-			numExecuted++;
-			Statement stmt = conn.createStatement();
-			try {
-				stmt.execute(sql);
-			} catch (SQLException e) {
-				throw new SQLException(e.getMessage() + " from executing: " + sql, e.getSQLState(), e.getErrorCode());
-			} finally {
-				stmt.close();
+		try (Connection conn = factory.getConnection();)
+		{
+			long start = System.currentTimeMillis();
+			for (String sql : queries) {
+				numExecuted++;
+				Statement stmt = conn.createStatement();
+				try {
+					stmt.execute(sql);
+				} catch (SQLException e) {
+					throw new SQLException(e.getMessage() + " from executing: " + sql, e.getSQLState(), e.getErrorCode());
+				} finally {
+					stmt.close();
+				}
 			}
+			queryTimeTaken += (System.currentTimeMillis() - start);
 		}
-		queryTimeTaken += (System.currentTimeMillis() - start);
-		conn.close();
 	}
 
 	public void executeSQLFile(String filepath) throws FileNotFoundException, SQLException, IOException {
