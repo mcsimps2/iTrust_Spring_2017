@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.EditPatientAction;
 import edu.ncsu.csc.itrust.action.SearchUsersAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -25,8 +26,15 @@ public class SearchUsersActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**
@@ -134,10 +142,6 @@ public class SearchUsersActionTest  {
 		SearchUsersAction act = new SearchUsersAction(evil, 2L);
 		List<PersonnelBean> personnel = act.searchForPersonnelWithName("null", "null");
 		assertEquals(null, personnel);
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	/**

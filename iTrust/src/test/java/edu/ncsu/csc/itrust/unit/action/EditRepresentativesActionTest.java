@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.EditRepresentativesAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -22,11 +23,18 @@ public class EditRepresentativesActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.patient1(); // 2 represents 1, but not 4
 		gen.patient2();
 		gen.patient4();
 		gen.multiplePatients_old();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import edu.ncsu.csc.itrust.action.VerifyClaimAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.BillingBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.BillingDAO;
@@ -30,7 +31,7 @@ public class VerifyClaimActionTest {
 
 	@Before
 	public void setUp() throws Exception {
-
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		b1 = new BillingBean();
 		b1.setAmt(40);
@@ -52,9 +53,11 @@ public class VerifyClaimActionTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
-
+	
 	@Test
 	public void testGetBill() {
 		assertEquals("123 else drive", subject.getBill().getInsAddress1());

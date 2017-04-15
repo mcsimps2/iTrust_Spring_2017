@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.mockito.Mockito;
 
@@ -17,12 +18,15 @@ import edu.ncsu.csc.itrust.controller.cptcode.CPTCodeController;
 import edu.ncsu.csc.itrust.controller.medicalProcedure.MedicalProcedureController;
 import edu.ncsu.csc.itrust.controller.medicalProcedure.MedicalProcedureForm;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCode;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCodeMySQL;
 import edu.ncsu.csc.itrust.model.medicalProcedure.MedicalProcedure;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 import junit.framework.TestCase;
 
@@ -34,13 +38,19 @@ public class MedicalProcedureFormTest extends TestCase {
     
     @Override
     public void setUp() throws FileNotFoundException, SQLException, IOException{
-        ds = ConverterDAO.getDataSource();
+    	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
+    	ds = ConverterDAO.getDataSource();
         ovSql = new OfficeVisitMySQL(ds);
         utils = spy(SessionUtils.getInstance());
         gen = new TestDataGenerator();
         gen.clearAllTables();
         gen.uc11();
     }
+    
+    @After
+   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
     
     public void testForm() throws DBException, SQLException{
         // set the office visit id in the session

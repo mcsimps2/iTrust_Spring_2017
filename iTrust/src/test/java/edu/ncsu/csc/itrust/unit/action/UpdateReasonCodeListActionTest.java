@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateNDCodeListAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -24,10 +25,17 @@ public class UpdateReasonCodeListActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		action = new UpdateNDCodeListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
 		gen.ndCodes();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	private String getAddCodeSuccessString(MedicationBean proc) {

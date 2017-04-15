@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.unit.action;
 import edu.ncsu.csc.itrust.action.SendMessageAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.MessageBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
@@ -33,6 +34,7 @@ public class SendMessageActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -43,6 +45,12 @@ public class SendMessageActionTest  {
 		messageDAO = new MessageDAO(this.factory);
 		smAction = new SendMessageAction(this.factory, this.patientId);
 		gCal = new GregorianCalendar();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

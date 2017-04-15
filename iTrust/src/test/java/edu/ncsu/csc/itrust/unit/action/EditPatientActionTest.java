@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.EditPatientAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
@@ -21,9 +22,16 @@ public class EditPatientActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.patient2();
 		action = new EditPatientAction(factory, 9000000000L, "2");
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

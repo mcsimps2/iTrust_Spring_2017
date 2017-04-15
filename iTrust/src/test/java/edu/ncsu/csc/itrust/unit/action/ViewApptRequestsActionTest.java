@@ -7,8 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ViewApptRequestsAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ApptRequestBean;
 import edu.ncsu.csc.itrust.model.old.beans.MessageBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.MessageDAO;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
@@ -21,11 +23,18 @@ public class ViewApptRequestsActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 		gen.apptRequestConflicts();
 		action = new ViewApptRequestsAction(9000000000L, TestDAOFactory.getTestInstance());
 		mDAO = TestDAOFactory.getTestInstance().getMessageDAO();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

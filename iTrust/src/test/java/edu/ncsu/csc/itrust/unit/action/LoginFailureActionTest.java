@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.LoginFailureAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
@@ -18,9 +19,16 @@ public class LoginFailureActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		action = new LoginFailureAction(factory, "192.168.1.1");
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

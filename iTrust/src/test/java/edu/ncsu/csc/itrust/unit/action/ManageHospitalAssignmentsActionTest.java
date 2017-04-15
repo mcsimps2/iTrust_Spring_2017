@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ManageHospitalAssignmentsAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -34,6 +35,7 @@ public class ManageHospitalAssignmentsActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.hcp0();
 		gen.admin1();
@@ -42,6 +44,12 @@ public class ManageHospitalAssignmentsActionTest  {
 		gen.ltData0();
 		action = new ManageHospitalAssignmentsAction(factory, performingAdmin);
 		ltAction = new ManageHospitalAssignmentsAction(factory, lt0);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	private String doAssignment() throws ITrustException {

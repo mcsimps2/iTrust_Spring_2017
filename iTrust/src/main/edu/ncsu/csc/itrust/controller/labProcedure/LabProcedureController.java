@@ -31,7 +31,6 @@ public class LabProcedureController extends iTrustController {
 		try {
 			labProcedureData = new LabProcedureMySQL();
 		} catch (DBException e) {
-			e.printStackTrace();
 		}
 	}
 

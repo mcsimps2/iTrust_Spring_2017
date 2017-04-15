@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import edu.ncsu.csc.itrust.action.ActivityFeedAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.TransactionBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
@@ -28,12 +29,19 @@ public class ActivityFeedActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
 
 		this.factory = TestDAOFactory.getTestInstance();
 		this.action = new ActivityFeedAction(factory, mid);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

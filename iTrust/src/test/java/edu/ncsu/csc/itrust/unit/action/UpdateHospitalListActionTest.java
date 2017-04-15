@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateHospitalListAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -22,10 +23,17 @@ public class UpdateHospitalListActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		action = new UpdateHospitalListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
 		gen.hospitals();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	private String getAddHospitalSuccessString(HospitalBean proc) {

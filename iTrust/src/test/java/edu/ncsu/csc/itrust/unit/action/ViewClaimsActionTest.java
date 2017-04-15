@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.ncsu.csc.itrust.action.ViewClaimsAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.BillingBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.BillingDAO;
@@ -35,6 +36,7 @@ public class ViewClaimsActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 		b1 = new BillingBean();
@@ -81,7 +83,9 @@ public class ViewClaimsActionTest  {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

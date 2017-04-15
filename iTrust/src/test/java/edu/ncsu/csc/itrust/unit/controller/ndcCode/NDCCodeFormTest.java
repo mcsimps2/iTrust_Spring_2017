@@ -7,15 +7,19 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import edu.ncsu.csc.itrust.controller.ndcode.NDCCodeController;
 import edu.ncsu.csc.itrust.controller.ndcode.NDCCodeForm;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.ndcode.NDCCode;
 import edu.ncsu.csc.itrust.model.ndcode.NDCCodeMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import junit.framework.TestCase;
 
 public class NDCCodeFormTest extends TestCase {
@@ -23,10 +27,16 @@ public class NDCCodeFormTest extends TestCase {
     DataSource ds;
     @Override
     public void setUp() throws FileNotFoundException, SQLException, IOException{
-        ds = ConverterDAO.getDataSource();
+    	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
+    	ds = ConverterDAO.getDataSource();
         gen = new TestDataGenerator();
         gen.clearAllTables();
     }
+    
+    @After
+   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
     
     @Test
     public void testForm(){

@@ -9,6 +9,7 @@ import org.easymock.classextension.EasyMock;
 
 import edu.ncsu.csc.itrust.action.GroupReportGeneratorAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.report.DemographicReportFilter;
 import edu.ncsu.csc.itrust.report.PersonnelReportFilter;
@@ -28,10 +29,17 @@ public class GroupReportGeneratorActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 	}
 
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	
 	/**
 	 * testGenerateReport
 	 * @throws DBException 

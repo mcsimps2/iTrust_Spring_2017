@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.PatientRoomAssignmentAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.WardRoomBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -23,10 +24,17 @@ public class PatientRoomAssignmentActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
 		wardDAO = new WardDAO(factory);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

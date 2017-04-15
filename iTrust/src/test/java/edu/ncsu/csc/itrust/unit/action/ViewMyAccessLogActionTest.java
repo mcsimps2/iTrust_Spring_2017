@@ -12,7 +12,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ViewMyAccessLogAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.TransactionBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
@@ -22,6 +24,7 @@ public class ViewMyAccessLogActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.hcp0();
@@ -35,6 +38,12 @@ public class ViewMyAccessLogActionTest  {
 		gen.patient23();
 		gen.patient24();
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 2L);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

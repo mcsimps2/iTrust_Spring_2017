@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateReasonCodeListAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.beans.OverrideReasonBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -25,9 +26,16 @@ public class UpdateORCListActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		action = new UpdateReasonCodeListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@SuppressWarnings("unused")

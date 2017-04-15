@@ -9,11 +9,15 @@
 package edu.ncsu.csc.itrust.unit.action;
 
 import edu.ncsu.csc.itrust.action.AddLTAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
 import edu.ncsu.csc.itrust.unit.testutils.ActionTestWithMocks;
 
 import static org.easymock.classextension.EasyMock.*;
+
+import org.junit.After;
 
 public class AddLTActionTest extends ActionTestWithMocks {
 	private AddLTAction action;
@@ -32,6 +36,12 @@ public class AddLTActionTest extends ActionTestWithMocks {
 		personnel.setEmail("cosmo@kramer.com");
 		personnel.setRole(Role.LT);
 
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

@@ -176,7 +176,6 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			pidLong = Long.parseLong(pid);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return false;
 		}
@@ -206,7 +205,6 @@ public class ObstetricsInitController extends iTrustController
 			pidLong = Long.parseLong(pid);
 			hcpidLong = Long.parseLong(hcpid);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return;
 		}
@@ -248,7 +246,6 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			pidLong = Long.parseLong(pid);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_PATIENT, e.getMessage(), null);
 			return null;
 		}
@@ -311,7 +308,6 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			hcpidLong = Long.parseLong(hcpid);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
 			return false;
 		}
@@ -352,7 +348,6 @@ public class ObstetricsInitController extends iTrustController
 		try {
 			hcpidLong = Long.parseLong(hcpid);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_HCP, e.getMessage(), null);
 			return;
 		}
@@ -437,7 +432,6 @@ public class ObstetricsInitController extends iTrustController
 				Integer.parseInt(multiplicity)
 			);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_ADDING_PREGNANCY, ERROR_ADDING_PREGNANCY_INT_REQUIRED, null);
 			return;
 		}

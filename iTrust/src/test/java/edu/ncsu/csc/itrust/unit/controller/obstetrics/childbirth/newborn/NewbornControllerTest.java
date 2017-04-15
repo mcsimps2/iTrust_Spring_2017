@@ -1,10 +1,14 @@
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.childbirth.newborn;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +19,7 @@ import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn.NewbornController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.Newborn;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.newborns.NewbornData;
@@ -31,6 +36,7 @@ import edu.ncsu.csc.itrust.model.old.enums.Role;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -53,6 +59,7 @@ public class NewbornControllerTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
@@ -95,6 +102,11 @@ public class NewbornControllerTest {
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	 @After
+	   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+	   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	   	}
 
 	@Test
 	public void testAdd() {

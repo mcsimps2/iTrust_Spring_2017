@@ -11,23 +11,28 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import edu.ncsu.csc.itrust.controller.prescription.PrescriptionController;
 import edu.ncsu.csc.itrust.controller.prescription.PrescriptionForm;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.ndcode.NDCCodeMySQL;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.prescription.Prescription;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 import junit.framework.TestCase;
 
-public class PrescriptionFormTest extends TestCase {
+public class PrescriptionFormTest {
     private TestDataGenerator gen;
     private DataSource ds;
     private PrescriptionForm form;
@@ -37,9 +42,10 @@ public class PrescriptionFormTest extends TestCase {
     private OfficeVisitMySQL ovSql;
     
     
-    @Override
+    @Before
     public void setUp() throws FileNotFoundException, SQLException, IOException, DBException{
-        ds = ConverterDAO.getDataSource();
+    	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
+    	ds = ConverterDAO.getDataSource();
         gen = new TestDataGenerator();
         ovSql = new OfficeVisitMySQL(ds);
         gen.clearAllTables();
@@ -48,6 +54,11 @@ public class PrescriptionFormTest extends TestCase {
         pc = spy(new PrescriptionController(ds));
         nData = spy(new NDCCodeMySQL(ds));
     }
+    
+    @After
+   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
     
     @Test
     public void testEverything() throws DBException, SQLException{

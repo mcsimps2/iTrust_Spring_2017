@@ -4,6 +4,8 @@ import java.sql.SQLException;
 
 import edu.ncsu.csc.itrust.action.ViewMyBillingAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import org.junit.After;
@@ -17,12 +19,19 @@ public class ViewMyBillingActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
 		gen.uc60();
 
 		action = new ViewMyBillingAction(TestDAOFactory.getTestInstance(), this.mid);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import edu.ncsu.csc.itrust.action.ViewMyMessagesAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.MessageBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.MessageDAO;
@@ -34,7 +35,7 @@ public class ViewMyMessagesActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
-
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -44,6 +45,12 @@ public class ViewMyMessagesActionTest  {
 		this.action = new ViewMyMessagesAction(this.factory, this.mId);
 		this.action2 = new ViewMyMessagesAction(this.factory, this.hcpId);
 		this.evilAction = new ViewMyMessagesAction(this.evilFactory, this.mId);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

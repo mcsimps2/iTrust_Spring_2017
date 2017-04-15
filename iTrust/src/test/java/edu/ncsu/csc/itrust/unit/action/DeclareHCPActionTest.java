@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.DeclareHCPAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.beans.TransactionBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -21,11 +22,18 @@ public class DeclareHCPActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.patient2();
 		gen.hcp0();
 		gen.hcp3();
 		action = new DeclareHCPAction(factory, 2L);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

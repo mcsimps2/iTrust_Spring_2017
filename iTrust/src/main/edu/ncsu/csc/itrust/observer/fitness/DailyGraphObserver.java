@@ -24,6 +24,7 @@ public class DailyGraphObserver extends GraphObserver {
 	 * Constructor with data source
 	 */
 	public DailyGraphObserver(DataSource ds) {
+		super(ds);
 		this.setFitnessController(new FitnessInfoController(ds));
 	}
 	
@@ -31,6 +32,7 @@ public class DailyGraphObserver extends GraphObserver {
 	 * Constructor
 	 */
 	public DailyGraphObserver() {
+		super();
 		this.setFitnessController(new FitnessInfoController());
 	}
 

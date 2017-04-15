@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ViewMyReportRequestsAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ReportRequestBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -23,6 +24,7 @@ public class ViewMyReportRequestsActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.patient2();
@@ -30,6 +32,12 @@ public class ViewMyReportRequestsActionTest  {
 		gen.admin1();
 		gen.fakeEmail();
 		gen.reportRequests();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

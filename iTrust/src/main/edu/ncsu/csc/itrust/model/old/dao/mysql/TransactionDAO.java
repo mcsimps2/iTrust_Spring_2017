@@ -86,6 +86,10 @@ public class TransactionDAO {
 		if (secondaryMID == null) {
 			secondaryMID = 0L;
 		}
+		//Repeat for loggedInMID
+		if (loggedInMID == null) {
+			loggedInMID = 0L;
+		}
 
 		try (Connection conn = factory.getConnection();
 				PreparedStatement ps = conn.prepareStatement("INSERT INTO transactionlog(loggedInMID, secondaryMID, "
@@ -96,6 +100,7 @@ public class TransactionDAO {
 			ps.setString(4, addedInfo);
 			ps.executeUpdate();
 		} catch (SQLException e) {
+			System.out.println("Received a logging error:\n" + e.getMessage());
 			throw new DBException(e);
 		}
 	}

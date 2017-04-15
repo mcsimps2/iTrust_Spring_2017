@@ -7,8 +7,10 @@ import java.io.InputStream;
 import edu.ncsu.csc.itrust.action.AddPatientFileAction;
 import edu.ncsu.csc.itrust.exception.AddPatientFileException;
 import edu.ncsu.csc.itrust.exception.CSVFormatException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +28,13 @@ public class AddPatientFileActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
-
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

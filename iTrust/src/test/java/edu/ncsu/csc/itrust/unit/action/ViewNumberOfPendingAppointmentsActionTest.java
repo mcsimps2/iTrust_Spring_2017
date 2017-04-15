@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.ViewApptRequestsAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ApptRequestBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -24,6 +25,7 @@ public class ViewNumberOfPendingAppointmentsActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -31,6 +33,12 @@ public class ViewNumberOfPendingAppointmentsActionTest  {
 		gen.pendingAppointmentAlert();
 		this.factory = TestDAOFactory.getTestInstance();
 		this.action = new ViewApptRequestsAction(this.hcpId, this.factory);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.FindExpertAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.CustomComparator;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
@@ -23,6 +24,7 @@ public class FindExpertActionTest  {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		fea = new FindExpertAction(factory);
 		gen.clearAllTables();
 		person = new PersonnelBean();
@@ -32,6 +34,12 @@ public class FindExpertActionTest  {
 
 	}
 
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	
 	/**
 	 * Tests that you can find all of the experts you should be able to
 	 */

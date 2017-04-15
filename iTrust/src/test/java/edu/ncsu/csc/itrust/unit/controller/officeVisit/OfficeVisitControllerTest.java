@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.unit.controller.officeVisit;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +23,7 @@ import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.apptType.ApptType;
 import edu.ncsu.csc.itrust.model.apptType.ApptTypeData;
@@ -29,12 +34,14 @@ import edu.ncsu.csc.itrust.model.hospital.HospitalMySQLConverter;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitData;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 import junit.framework.TestCase;
 
-public class OfficeVisitControllerTest extends TestCase {
+public class OfficeVisitControllerTest {
 	
 	private static final long DEFAULT_PATIENT_MID = 1L;
 	private static final long DEFAULT_HCP_MID = 900000000L;
@@ -61,6 +68,7 @@ public class OfficeVisitControllerTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
 		ovc = Mockito.spy(new OfficeVisitController(ds, mockSessionUtils));
@@ -109,6 +117,11 @@ public class OfficeVisitControllerTest extends TestCase {
 		// Mock HttpSession
 		mockHttpSession = Mockito.mock(HttpSession.class);
 	}
+	
+	@After
+   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
 
 	@Test
 	public void testRetrieveOfficeVisit() throws DBException {
