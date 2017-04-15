@@ -79,7 +79,7 @@
 			
 			<div class="form-group form-button-group">
 				<h:commandButton id="submitObstetricsButton" value="Save"
-					action="#{obstetrics_visit_form.submitObstetrics}" disabled="#{!isOBGYN}"/>
+					action="#{obstetrics_visit_form.submitObstetrics(office_visit_form)}" disabled="#{!isOBGYN}"/>
 				<h:commandButton id="cancelVisitButton" value="Cancel"
 					action="#{navigation_controller.baseOfficeVisit}" immediate="true" />
 			</div>

@@ -29,12 +29,14 @@ import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitValidator;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "obstetrics_visit_form")
 @ViewScoped
 public class ObstetricsVisitForm {
 	private ObstetricsVisitController controller;
 	private DataSource ds;
+	private SessionUtils sessionUtils;
 	
 	private Long officeVisitID;
 	private OfficeVisit officeVisit;
@@ -52,13 +54,13 @@ public class ObstetricsVisitForm {
 	 * Default constructor for OfficeVisitForm.
 	 */
 	public ObstetricsVisitForm() {
-		this(null, null, null);
+		this(null, null, null, null, null);
 	}
 
 	/**
 	 * Constructor for OfficeVisitForm for testing purposes.
 	 */
-	public ObstetricsVisitForm(ObstetricsVisitController obvc, OfficeVisitController ofvc, DataSource ds) {
+	public ObstetricsVisitForm(ObstetricsVisitController obvc, OfficeVisitController ofvc, DataSource ds, SessionUtils sessionUtils, Long officeVisitID) {
 		try {
 			// Use parameters if not null
 			if (ds == null) {
@@ -68,16 +70,17 @@ public class ObstetricsVisitForm {
 				this.ds = ds;
 			}
 			controller = (obvc == null) ? new ObstetricsVisitController() : obvc;
+			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
 			if (ofvc == null) ofvc = new OfficeVisitController();
+			this.officeVisitID = (officeVisitID == null) ? (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId") : officeVisitID;
 			
 			// Find the viewed office visit
-			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
-			officeVisit = ofvc.getVisitByID(officeVisitID.toString());
+			officeVisit = ofvc.getVisitByID(this.officeVisitID.toString());
 			
 			// Get the existing ObstetricsVisit for this office visit if one exists
-			ov = controller.getByOfficeVisit(officeVisitID);
+			ov = controller.getByOfficeVisit(this.officeVisitID);
 			if (ov == null) {
-				ov = new ObstetricsVisit(officeVisitID);
+				ov = new ObstetricsVisit(this.officeVisitID);
 			}
 			
 			// Find the most recent ObstetricsInit record (as of the office visit date)
@@ -105,11 +108,10 @@ public class ObstetricsVisitForm {
 	/**
 	 * Called when user updates obstetrics on officeVisitInfo.xhtml.
 	 */
-	public void submitObstetrics() {
+	public void submitObstetrics(OfficeVisitForm offVForm) {
 		boolean isNew = ov.getId() == null;
 		
 		// Validate the OfficeVisit fields first
-		OfficeVisitForm offVForm = (OfficeVisitForm) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("office_visit_form");
 		boolean isValid = validateOfficeVisitFields(offVForm, isNew);
 		if (!isValid) {
 			return;
@@ -187,11 +189,9 @@ public class ObstetricsVisitForm {
 	 * @return the schedules appointment bean or null if not able to schedule
 	 */
 	private ApptBean scheduleNextAppointment() {
-		String pid = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("pid");
-		Long hcpid = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("loggedInMID");
-		long pidLong;
+		Long pid = sessionUtils.getCurrentPatientMIDLong();
+		Long hcpid = sessionUtils.getSessionLoggedInMIDLong();
 		try {
-			pidLong = Long.parseLong(pid);
 			int numDays = getNumDaysToNextAppointment();
 			if (numDays == -1) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, "The patient needs to make an appointment for a childbirth visit",
@@ -199,10 +199,7 @@ public class ObstetricsVisitForm {
 				return null;
 			}
 			controller.logTransaction(TransactionType.SCHEDULE_NEXT_OFFICE_VISIT, officeVisit.getVisitID().toString());
-			return GoogleScheduler.scheduleObstetricsAppointment(hcpid, pidLong, calendarID, numDays, officeVisit);
-		} catch (NumberFormatException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Error loading patient information", "Error loading patient information");
-			return null;
+			return GoogleScheduler.scheduleObstetricsAppointment(hcpid, pid, calendarID, numDays, officeVisit);
 		} catch (GoogleSchedulerException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to automatically schedule next appointment",
 					"Unable to automatically schedule next appointment");
@@ -251,13 +248,6 @@ public class ObstetricsVisitForm {
 		if (file == null) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, "No file selected",
 					"No file selected");
-			return;
-		}
-		
-		// Check that ObstetricsVisit has been submitted
-		if (ov.getId() == null) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, "The Obstetrics tab must be saved before you can upload a file",
-					"The Obstetrics tab must be saved before you can upload a file");
 			return;
 		}
 		
@@ -322,6 +312,10 @@ public class ObstetricsVisitForm {
 		return weeksPregnant;
 	}
 
+	/**
+	 * Should only be used for unit testing.
+	 * @param weeksPregnant
+	 */
 	public void setWeeksPregnant(Integer weeksPregnant) {
 		this.weeksPregnant = weeksPregnant;
 	}
@@ -368,5 +362,13 @@ public class ObstetricsVisitForm {
 
 	public ObstetricsVisit getOv() {
 		return ov;
+	}
+
+	/**
+	 * Should only be used for unit testing.
+	 * @param rhFlag
+	 */
+	public void setRhFlag(boolean rhFlag) {
+		this.rhFlag = rhFlag;
 	}
 }

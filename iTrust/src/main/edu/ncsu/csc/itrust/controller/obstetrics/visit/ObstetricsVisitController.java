@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.controller.iTrustController;
@@ -60,17 +58,7 @@ public class ObstetricsVisitController extends iTrustController {
 	 *            SessionUtils instance
 	 */
 	public ObstetricsVisitController(DataSource ds, SessionUtils sessionUtils) {
-		ovData = new ObstetricsVisitMySQL(ds);
-		oiData = new ObstetricsInitMySQL(ds);
-	}
-
-	/**
-	 * For testing purposes
-	 * 
-	 * @param ds
-	 *            DataSource
-	 */
-	public ObstetricsVisitController(DataSource ds) {
+		super(sessionUtils, null);
 		ovData = new ObstetricsVisitMySQL(ds);
 		oiData = new ObstetricsInitMySQL(ds);
 	}
@@ -178,28 +166,31 @@ public class ObstetricsVisitController extends iTrustController {
 	 * @throws FormValidationException 
 	 * @throws DBException 
 	 */
-	public void add(ObstetricsVisit ov) throws DBException, FormValidationException {
-		ovData.add(ov);
+	public boolean add(ObstetricsVisit ov) throws DBException, FormValidationException {
+		boolean result = ovData.add(ov);
 		logTransaction(TransactionType.CREATE_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+		return result;
 	}
 	
 	/**
 	 * Attempts to update the given ObstetricsVisit in the database.
 	 * @param ov
 	 */
-	public void update(ObstetricsVisit ov) {
+	public boolean update(ObstetricsVisit ov) {
 		try {
-			ovData.update(ov);
+			boolean result = ovData.update(ov);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED,
 					OBSTETRICS_VISIT_SUCCESSFULLY_UPDATED, null);
 			logTransaction(TransactionType.EDIT_OBSTETRIC_OFFICE_VISIT, "Office Visit ID: " + ov.getOfficeVisitID().toString());
+			return result;
 		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(),
-					null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED, e.getExtendedMessage(), null);
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, OBSTETRICS_VISIT_CANNOT_BE_UPDATED,
 					OBSTETRICS_VISIT_CANNOT_BE_UPDATED, null);
+			return false;
 		}
 	}
 	
@@ -207,41 +198,20 @@ public class ObstetricsVisitController extends iTrustController {
 	 * Updates the given ObstetricsVisit in the database (but now it should contain a new file).
 	 * @param ov
 	 */
-	public void upload(ObstetricsVisit ov) {
+	public boolean upload(ObstetricsVisit ov) {
 		try {
-			ovData.update(ov);
+			boolean result = ovData.update(ov);
 			printFacesMessage(FacesMessage.SEVERITY_INFO, FILE_UPLOAD_SUCCESS,
 					FILE_UPLOAD_SUCCESS, null);
+			return result;
 		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, FILE_UPLOAD_FAILED, e.getExtendedMessage(),
-					null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, FILE_UPLOAD_FAILED, e.getExtendedMessage(), null);
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, FILE_UPLOAD_FAILED,
 					FILE_UPLOAD_FAILED, null);
+			return false;
 		}
-	}
-
-	/**
-	 * Sends a FacesMessage for FacesContext to display.
-	 * 
-	 * @param severity
-	 *            severity of the message
-	 * @param summary
-	 *            localized summary message text
-	 * @param detail
-	 *            localized detail message text
-	 * @param clientId
-	 *            The client identifier with which this message is associated
-	 *            (if any)
-	 */
-	@Override
-	public void printFacesMessage(Severity severity, String summary, String detail, String clientId) {
-		FacesContext ctx = FacesContext.getCurrentInstance();
-		if (ctx == null) {
-			return;
-		}
-		ctx.getExternalContext().getFlash().setKeepMessages(true);
-		ctx.addMessage(clientId, new FacesMessage(severity, summary, detail));
 	}
 }
