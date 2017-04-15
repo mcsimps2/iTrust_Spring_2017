@@ -17,10 +17,13 @@ import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.cucumber.util.SharedOfficeVisit;
 import edu.ncsu.csc.itrust.cucumber.util.SharedPatient;
 import edu.ncsu.csc.itrust.cucumber.util.SharedPersonnel;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 public class BasicHealthInfoStepDefs {
 
@@ -122,7 +125,9 @@ public class BasicHealthInfoStepDefs {
 
 	@When("^submits record$")
 	public void submits_record() throws Throwable {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		sharedOfficeVisit.add();
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@Then("^The record is saved successfully$")

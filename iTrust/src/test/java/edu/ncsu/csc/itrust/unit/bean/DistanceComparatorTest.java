@@ -38,7 +38,7 @@ public class DistanceComparatorTest {
 	 * Gets all of the standard data and initializes 2 zipcode actions
 	 */
 	@Before
-	protected void setUp() throws IOException, SQLException {
+	public void setUp() throws IOException, SQLException {
 		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
