@@ -1,10 +1,8 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.report;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -142,24 +140,7 @@ public class ObstetricsReportController extends iTrustController {
 	
 	public List<ObstetricsVisit> getObstetricsVisits(long initID) {
 		try {
-			List<ObstetricsVisit> visits = obvData.getByObstetricsInit(initID);
-			Collections.sort(visits, new Comparator<ObstetricsVisit>() {
-				@Override
-				public int compare(ObstetricsVisit arg0, ObstetricsVisit arg1) {
-					try {
-						LocalDateTime d0 = ofvData.getByID(arg0.getOfficeVisitID()).getDate();
-						LocalDateTime d1 = ofvData.getByID(arg1.getOfficeVisitID()).getDate();
-						//This might need to be flipped
-						if (d1.isBefore(d0)) return -1;
-						else if (d0.isBefore(d1)) return 1;
-						else return 0;
-					} catch (DBException e) {
-						ObstetricsReportController.this.printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_OBSTETRICS_VISITS, e.getMessage(), null);
-						return 0;
-					}
-				}
-			});
-			return visits;
+			return obvData.getByObstetricsInit(initID);
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_LOADING_OBSTETRICS_VISITS, e.getMessage(), null);
 			return null;
