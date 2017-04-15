@@ -17,7 +17,7 @@ import edu.ncsu.csc.itrust.webutils.SessionUtils;
  */
 public class iTrustController {
 
-	private SessionUtils sessionUtils;
+	protected SessionUtils sessionUtils;
 	private TransactionLogger logger;
 
 	/**

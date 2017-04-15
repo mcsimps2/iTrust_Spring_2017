@@ -33,6 +33,7 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AllergyDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.webutils.PrettyUtils;
 
 @ManagedBean(name = "obstetrics_report_controller")
@@ -95,6 +96,7 @@ public class ObstetricsReportController extends iTrustController {
 		this.setViewedOI(oi);
 		try {
 			this.navigateToReport();
+			logTransaction(TransactionType.LABOR_DELIVERY_REPORT, this.sessionUtils.getSessionLoggedInMIDLong(), sessionUtils.getCurrentPatientMIDLong(), null);
 		} catch (IOException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, ERROR_VIEWING_REPORT, e.getMessage(), null);			
 		}
