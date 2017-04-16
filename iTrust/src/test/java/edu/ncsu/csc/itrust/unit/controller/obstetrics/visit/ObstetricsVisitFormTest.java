@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.unit.controller.obstetrics.visit;
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,15 +17,18 @@ import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitForm;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitForm;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitData;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitMySQL;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitData;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -53,6 +57,7 @@ public class ObstetricsVisitFormTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
@@ -87,6 +92,11 @@ public class ObstetricsVisitFormTest {
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	@After
+   	public void tearDown() {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
 	
 	@Test
 	public void testConstructors() {
