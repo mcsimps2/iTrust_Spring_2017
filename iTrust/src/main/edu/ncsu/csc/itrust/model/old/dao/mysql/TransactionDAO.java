@@ -100,7 +100,6 @@ public class TransactionDAO {
 			ps.setString(4, addedInfo);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("Received a logging error:\n" + e.getMessage());
 			throw new DBException(e);
 		}
 	}

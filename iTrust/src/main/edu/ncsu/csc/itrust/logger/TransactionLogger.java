@@ -44,7 +44,6 @@ public class TransactionLogger {
 		try {
 			dao.logTransaction(type, loggedInMID, secondaryMID, addedInfo);
 		} catch (DBException e) {
-			System.out.println("Error");
 			e.printStackTrace();
 		}
 	}
