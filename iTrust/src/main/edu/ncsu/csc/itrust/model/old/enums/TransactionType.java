@@ -505,6 +505,8 @@ public enum TransactionType {
 	SCHEDULE_NEXT_OFFICE_VISIT(9404, "Schedule next office visit", "Schedule next office visit", true),
 	/**SCHEDULE_CHILDBIRTH*/
 	SCHEDULE_CHILDBIRTH(9405, "Schedule childbirth", "Schedule childbirth", true),
+	/** LABOR_DELIVERY_REPORT */
+	LABOR_DELIVERY_REPORT(9500, "Labor and delivery report", "Labor and delivery report", true),
 	/**CREATE_CHILDBIRTH_VISIT*/
 	CREATE_CHILDBIRTH_VISIT(9600, "A childbirth visit occurred", "A childbirth visit occurred", true),
 	/**ADD_CHILDBIRTH_DRUGS*/

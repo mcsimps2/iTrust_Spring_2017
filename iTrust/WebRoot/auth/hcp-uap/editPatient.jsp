@@ -162,6 +162,15 @@
 				<td class="subHeaderVertical">Alternate Name:</td>
 				<td ><input name="alternateName" value="<%= StringEscapeUtils.escapeHtml("" + (p.getAlternateName())) %>" type="text"></td>
 			</tr>
+			<tr>
+				<td class="subHeaderVertical">Obstetrics Eligibility:</td>
+				<td ><input name="obstetricsEligibility" type="checkbox" <% 
+				    if (p.getObstetricsCareEligibility()) {
+				        out.print("checked=\"checked\"");
+				    }
+				    %>/>
+				</td>
+			</tr>
 		</table>
 		<br />
 		<table class="fTable" align=center style="width: 350px;">

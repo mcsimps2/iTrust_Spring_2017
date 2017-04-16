@@ -38,6 +38,7 @@ import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AllergyDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
+import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
@@ -86,6 +87,7 @@ public class ObstetricsReportControllerTest {
 		
 		Mockito.doNothing().when(orc).printFacesMessage(Matchers.any(FacesMessage.Severity.class), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing().when(orc).logTransaction(Matchers.any(TransactionType.class), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString());
 		Mockito.doNothing().when(orc).navigateToReport();
 		
 		oiData = new ObstetricsInitMySQL(ds);
