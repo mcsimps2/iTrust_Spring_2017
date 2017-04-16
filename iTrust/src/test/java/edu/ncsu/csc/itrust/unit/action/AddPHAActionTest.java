@@ -8,8 +8,6 @@
 
 package edu.ncsu.csc.itrust.unit.action;
 
-import org.junit.After;
-
 import edu.ncsu.csc.itrust.action.AddPHAAction;
 import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
@@ -27,6 +25,7 @@ public class AddPHAActionTest extends ActionTestWithMocks {
 	/**
 	 * Sets up defaults
 	 */
+	@Override
 	public void setUp() throws Exception {
 		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
@@ -39,7 +38,7 @@ public class AddPHAActionTest extends ActionTestWithMocks {
 		personnel.setRole(Role.PHA);
 	}
 	
-	@After
+	@Override
 	public void tearDown()
 	{
 		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());

@@ -18,8 +18,6 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 import static org.easymock.classextension.EasyMock.*;
 
-import org.junit.After;
-
 public class AddHCPActionTest extends ActionTestWithMocks {
 	private AddHCPAction action;
 	private PersonnelBean personnel;
@@ -27,6 +25,7 @@ public class AddHCPActionTest extends ActionTestWithMocks {
 	/**
 	 * Sets up defaults
 	 */
+	@Override
 	public void setUp() throws Exception {
 		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		// Step 0. Initialize the mocks and other necessary objects.
@@ -40,7 +39,7 @@ public class AddHCPActionTest extends ActionTestWithMocks {
 
 	}
 	
-	@After
+	@Override
 	public void tearDown()
 	{
 		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());

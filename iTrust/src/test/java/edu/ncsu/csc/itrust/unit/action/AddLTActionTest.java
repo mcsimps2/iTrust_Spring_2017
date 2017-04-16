@@ -17,7 +17,6 @@ import edu.ncsu.csc.itrust.unit.testutils.ActionTestWithMocks;
 
 import static org.easymock.classextension.EasyMock.*;
 
-import org.junit.After;
 
 public class AddLTActionTest extends ActionTestWithMocks {
 	private AddLTAction action;
@@ -26,6 +25,7 @@ public class AddLTActionTest extends ActionTestWithMocks {
 	/**
 	 * Sets up defaults
 	 */
+	@Override
 	public void setUp() throws Exception {
 		// Step 0. Initialize the mocks and other necessary objects.
 		super.initMocks();
@@ -38,7 +38,7 @@ public class AddLTActionTest extends ActionTestWithMocks {
 
 	}
 	
-	@After
+	@Override
 	public void tearDown()
 	{
 		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
