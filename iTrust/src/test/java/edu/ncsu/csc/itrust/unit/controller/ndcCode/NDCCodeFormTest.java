@@ -34,7 +34,7 @@ public class NDCCodeFormTest extends TestCase {
     }
     
     @After
-   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+   	public void tearDown() {
    		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
    	}
     

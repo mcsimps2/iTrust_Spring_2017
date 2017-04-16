@@ -104,7 +104,7 @@ public class NewbornControllerTest {
 	}
 	
 	 @After
-	   	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+	   	public void tearDown() {
 	   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	   	}
 

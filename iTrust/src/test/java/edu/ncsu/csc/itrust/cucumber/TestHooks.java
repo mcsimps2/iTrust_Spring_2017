@@ -4,7 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.junit.After;
+
 import cucumber.api.java.Before;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
@@ -26,8 +30,16 @@ public class TestHooks {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		
 	}
+	
+	/*
+	@After
+	public static void testTearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	*/
 
 }

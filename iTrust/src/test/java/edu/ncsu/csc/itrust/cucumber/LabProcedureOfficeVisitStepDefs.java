@@ -173,7 +173,6 @@ import org.junit.Assert;
 			
 			} catch (DBException | SQLException e1) {
 				Assert.assertTrue(true);
-				e1.printStackTrace();
 			} catch (FormValidationException e) {
 				Assert.assertTrue(true);
 			}
