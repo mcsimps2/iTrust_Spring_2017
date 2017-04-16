@@ -120,6 +120,7 @@ public class EditRepresentativesAction extends PatientBaseAction {
 		try {
 			return patientDAO.checkIfPatientIsActive(patientID);
 		} catch (DBException e) {
+			System.err.println("Returning false for patient activity due to database error");
 			return false;
 		}
 	}

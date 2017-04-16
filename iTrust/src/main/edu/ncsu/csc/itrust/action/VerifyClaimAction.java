@@ -25,7 +25,7 @@ public class VerifyClaimAction {
 		try {
 			bill = billAccess.getBillId(bID);
 		} catch (DBException e) {
-			//Do nothing
+			System.err.println("Claim unverified due to database error");
 		}
 	}
 	
