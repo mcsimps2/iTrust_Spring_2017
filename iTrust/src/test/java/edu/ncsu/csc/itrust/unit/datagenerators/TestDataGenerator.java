@@ -901,8 +901,8 @@ public class TestDataGenerator {
 		new DBBuilder(factory).executeSQLFile(DIR + "/newborns.sql");
 	}
 	
-	public void uc96() throws FileNotFoundException, SQLException, IOException {
-		new DBBuilder(factory).executeSQLFile(DIR + "/uc96.sql");
+	public void uc95() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/uc95.sql");
 	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
@@ -1025,7 +1025,7 @@ public class TestDataGenerator {
 		
 		newborns();
 		
-		uc96();
+		uc95();
 		
 		setMode();
 	}

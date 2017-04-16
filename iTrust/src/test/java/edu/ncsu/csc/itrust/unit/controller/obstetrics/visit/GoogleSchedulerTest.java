@@ -1,4 +1,4 @@
-package edu.ncsu.csc.itrust.unit.controller.obstetrics.officeVisit;
+package edu.ncsu.csc.itrust.unit.controller.obstetrics.visit;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
