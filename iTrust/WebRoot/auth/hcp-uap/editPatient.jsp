@@ -320,6 +320,12 @@
 	</span>
 </div>
 </form>
+<form action="upload" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="pid" value="${pid}" />
+    <input type="file" name="file" />
+    <input type="submit" />
+</form>
+<img src="${pageContext.request.contextPath}/ImageServlet?pid=${pid}">
 <br />
 <br />
 <itrust:patientNav thisTitle="Demographics" />

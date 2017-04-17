@@ -614,3 +614,9 @@ CREATE TABLE childbirthNewborns
 	PRIMARY KEY (id),
 	FOREIGN KEY	(officeVisitID)	REFERENCES officeVisit(visitID)
 ) ENGINE=MyISAM;
+
+CREATE TABLE image
+(
+	name		VARCHAR(255),
+	content     MEDIUMBLOB
+) ENGINE=MyISAM;
