@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.sql.DataSource;
 
+import com.mysql.jdbc.Statement;
+
 import edu.ncsu.csc.itrust.exception.DBException;
 
 @MultipartConfig
@@ -25,9 +27,9 @@ public class UploadServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String SQL_FIND = "SELECT content FROM image WHERE name = ?";
-	private static final String SQL_ADD = "INSERT INTO image(content, name) VALUES(?, ?)";
-	private static final String SQL_UPDATE = "UPDATE image SET content = ? WHERE name = ?";
+	private static final String SQL_FIND = "SELECT content FROM image WHERE name = ?;";
+	private static final String SQL_ADD = "INSERT INTO image(content, name) VALUES(?, ?);";
+	private static final String SQL_UPDATE = "UPDATE image SET content = ? WHERE name = ?;";
 	
 	private DataSource ds;
 	
@@ -62,10 +64,11 @@ public class UploadServlet extends HttpServlet{
                 	query = SQL_ADD;
                 }
                 
-                try (PreparedStatement statement2 = connection.prepareStatement(query)) {
+                try (PreparedStatement statement2 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
                 	statement2.setBinaryStream(1, imageContent);
                 	statement2.setString(2, imageName);
-                	statement2.executeQuery();
+                	statement2.executeUpdate();
+            	    response.sendRedirect("http://localhost:8080/iTrust/auth/hcp-uap/editPatient.jsp");
                 }
                 
             }

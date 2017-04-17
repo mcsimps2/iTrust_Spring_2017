@@ -22,7 +22,7 @@
 			<c:choose>
 				<c:when test="#{office_visit_controller.CurrentPatientHasVisited()}">
 					<h3>Basic Health Information <small>of #{user.getUserNameForID(session.getAttribute("pid"))}</small></h3>
-					<img src="${pageContext.request.contextPath}/ImageServlet"></img>
+					<h:graphicImage url="/ImageServlet"></h:graphicImage>
 					<br/>
 					<ui:include src="/auth/hcp-patient/listBasicHealthInfo.xhtml"/>
 				</c:when>

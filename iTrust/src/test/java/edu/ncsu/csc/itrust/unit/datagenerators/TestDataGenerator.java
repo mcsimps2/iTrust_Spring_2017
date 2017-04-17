@@ -1,11 +1,19 @@
 package edu.ncsu.csc.itrust.unit.datagenerators;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
@@ -904,6 +912,14 @@ public class TestDataGenerator {
 	public void uc95() throws FileNotFoundException, SQLException, IOException {
 		new DBBuilder(factory).executeSQLFile(DIR + "/uc95.sql");
 	}
+	
+	public void image() throws FileNotFoundException, SQLException, IOException {
+		Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement("INSERT INTO image VALUES('default', ?)");
+		File file = new File("testing-files/default.jpg");
+		statement.setBinaryStream(1, new FileInputStream(file));
+		statement.executeUpdate();
+	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
 	
@@ -1028,6 +1044,8 @@ public class TestDataGenerator {
 		uc95();
 		
 		setMode();
+		
+		image();
 	}
 
 	/**

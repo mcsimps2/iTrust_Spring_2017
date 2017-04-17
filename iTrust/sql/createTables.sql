@@ -1,6 +1,7 @@
 /* updated 2014-2-1 */
 
 SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+SET GLOBAL max_allowed_packet = 1024*1024*1024*4;
 
 CREATE TABLE users(
 	MID                 BIGINT unsigned,
@@ -618,5 +619,5 @@ CREATE TABLE childbirthNewborns
 CREATE TABLE image
 (
 	name		VARCHAR(255),
-	content     MEDIUMBLOB
+	content     LONGBLOB
 ) ENGINE=MyISAM;

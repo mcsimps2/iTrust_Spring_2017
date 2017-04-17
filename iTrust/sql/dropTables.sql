@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS hcprelations;
 DROP TABLE IF EXISTS historypatients;
 DROP TABLE IF EXISTS hospitals;
 DROP TABLE IF EXISTS icdCode;
+DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS immunization;
 DROP TABLE IF EXISTS labProcedure;
 DROP TABLE IF EXISTS loginfailures;

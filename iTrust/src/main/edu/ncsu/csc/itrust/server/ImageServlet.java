@@ -53,11 +53,20 @@ public class ImageServlet extends HttpServlet {
                 if (resultSet.next()) {
                 	InputStream i = resultSet.getBinaryStream("content");
                 	byte[] content = IOUtils.toByteArray(i);
-                    response.setContentType(getServletContext().getMimeType(imageName));
                     response.setContentLength(content.length);
                     response.getOutputStream().write(content);
                 } else {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
+                    statement.setString(1, "default");
+                    try (ResultSet defaultSet = statement.executeQuery()) {
+                    	if (defaultSet.next()) {
+                        	InputStream i = defaultSet.getBinaryStream("content");
+                        	byte[] content = IOUtils.toByteArray(i);
+                            response.setContentLength(content.length);
+                            response.getOutputStream().write(content);
+                    	} else {
+                    		response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
+                    	}
+                    }
                 }
             }
         } catch (SQLException e) {
