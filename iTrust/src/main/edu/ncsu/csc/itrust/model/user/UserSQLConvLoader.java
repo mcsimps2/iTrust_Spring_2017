@@ -40,6 +40,7 @@ public class UserSQLConvLoader implements SQLLoader<User> {
 		} catch (ITrustException e) {
 			throw new SQLException("Incorrect value for MID stored in MySQL database");
 		}
+		ret.setColorScheme(ColorSchemeType.matchString(rs.getString("colorScheme")));
 		return ret;
 	}
 

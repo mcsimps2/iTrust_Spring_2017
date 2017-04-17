@@ -51,6 +51,10 @@ public class User implements Serializable{
 	}
 	public ColorSchemeType getColorScheme()
 	{
-		
+		return colorScheme;
+	}
+	public void setColorScheme(ColorSchemeType colorScheme)
+	{
+		this.colorScheme = colorScheme;
 	}
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import junit.framework.TestCase;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
+import edu.ncsu.csc.itrust.model.user.ColorSchemeType;
 import edu.ncsu.csc.itrust.model.user.User;
 
 public class UserTest extends TestCase {
@@ -67,5 +68,13 @@ public class UserTest extends TestCase {
 	public void testFirstName(){
 		test.setFirstName("testFN");
 		Assert.assertEquals("testFN",test.getFirstName());
+	}
+	
+	@Test
+	public void testColorScheme() {
+		User u = new User();
+		Assert.assertEquals(ColorSchemeType.DEFAULT, u.getColorScheme());
+		u.setColorScheme(ColorSchemeType.I_DARE_YOU);
+		Assert.assertEquals("I Dare You", u.getColorScheme().toString());
 	}
 }

@@ -11,7 +11,7 @@ CREATE TABLE users(
 	sQuestion           VARCHAR(100) DEFAULT '', 
 	sAnswer             VARCHAR(30) DEFAULT '',
 	isDependent			tinyint(1) unsigned NOT NULL default '0',
-	colorScheme			VARCHAR DEFAULT 'Default';
+	colorScheme			VARCHAR(256) DEFAULT 'Default',
 	PRIMARY KEY (MID),
 	UNIQUE (openID)
 ) ENGINE=MyISAM; 
