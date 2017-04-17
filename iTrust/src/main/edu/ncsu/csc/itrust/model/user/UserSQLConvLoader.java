@@ -12,9 +12,6 @@ import edu.ncsu.csc.itrust.model.SQLLoader;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
 
 public class UserSQLConvLoader implements SQLLoader<User> {
-
-
-	
 	
 	@Override
 	public List<User> loadList(ResultSet rs) throws SQLException {

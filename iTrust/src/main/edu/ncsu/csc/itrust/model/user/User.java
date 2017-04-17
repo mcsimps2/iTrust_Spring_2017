@@ -14,8 +14,11 @@ public class User implements Serializable{
 	private String lastName;
 	private String firstName;
 	private Role role;
+	private ColorSchemeType colorScheme;
+	
 	public User(){
-		
+		//Set the default color scheme
+		colorScheme = ColorSchemeType.DEFAULT;
 	}
 	public long getMID() {
 		return MID;
@@ -45,5 +48,9 @@ public class User implements Serializable{
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+	public ColorSchemeType getColorScheme()
+	{
+		
 	}
 }
