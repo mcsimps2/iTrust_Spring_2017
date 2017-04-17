@@ -41,6 +41,7 @@
 						<li><a href="/iTrust">Home</a></li>
 						<li><a href="/iTrust/logout.jsp">Logout</a></li>
 						<li><a href="/iTrust/auth/changePassword.jsp">Change Password</a></li>
+						<li><a href="/iTrust/auth/settings.xhtml">Settings</a></li>
 					</ul>
 				</div>
 				<c:if test="#{user.doesUserExistWithID(session.getAttribute('pid'))}">
@@ -70,8 +71,33 @@
 			</c:if>
 			<c:otherwise>
 				<div class="row">
-					<div id="iTrustMenu" class="col-sm-4 col-md-3 sidebar">	
-						<ui:insert name="leftMenu"/>
+					<div id="iTrustMenu" class="col-sm-4 col-md-3 sidebar">
+						<ui:insert name="leftMenu">
+							<ui:fragment rendered="#{userRole eq 'patient'}">
+								<ui:include src="/auth/patient/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'uap'}">
+								<ui:include src="/auth/uap/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'hcp'}">
+								<ui:include src="/auth/hcp/menu.xhtml" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'er'}">
+								<ui:include src="/auth/er/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'pha'}">
+								<ui:include src="/auth/pha/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'admin'}">
+								<ui:include src="/auth/admin/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'tester'}">
+								<ui:include src="/auth/tester/menu.jsp" />
+							</ui:fragment>
+							<ui:fragment rendered="#{userRole eq 'lt'}">
+								<ui:include src="/auth/lt/menu.jsp" />
+							</ui:fragment>
+						</ui:insert>
 					</div>
 				</div>
 			</c:otherwise>
