@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.report;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +23,7 @@ import edu.ncsu.csc.itrust.controller.obstetrics.report.ComplicationInfo;
 import edu.ncsu.csc.itrust.controller.obstetrics.report.ObstetricsReportController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.diagnosis.Diagnosis;
 import edu.ncsu.csc.itrust.model.diagnosis.DiagnosisData;
@@ -35,12 +40,14 @@ import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitData;
 import edu.ncsu.csc.itrust.model.obstetrics.visit.ObstetricsVisitMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.AllergyBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AllergyDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.enums.BloodType;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 public class ObstetricsReportControllerTest {
 
@@ -57,6 +64,7 @@ public class ObstetricsReportControllerTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		
 		mockPatientDAO = Mockito.mock(PatientDAO.class);
@@ -101,6 +109,11 @@ public class ObstetricsReportControllerTest {
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	@After
+   	public void tearDown() {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
 	
 	@Test
 	public void testGetPrettyBool() {

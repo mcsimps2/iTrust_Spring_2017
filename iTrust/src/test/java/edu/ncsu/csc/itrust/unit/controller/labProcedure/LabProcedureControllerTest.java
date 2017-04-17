@@ -29,13 +29,16 @@ import org.mockito.Mockito;
 import edu.ncsu.csc.itrust.controller.labProcedure.LabProcedureController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedure;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedure.LabProcedureStatus;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedureData;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedureMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -57,6 +60,7 @@ public class LabProcedureControllerTest {
 
 	@Before
 	public void setUp() throws FileNotFoundException, SQLException, IOException {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
@@ -80,6 +84,7 @@ public class LabProcedureControllerTest {
 	@After
 	public void tearDown() throws FileNotFoundException, SQLException, IOException {
 		gen.clearAllTables();
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

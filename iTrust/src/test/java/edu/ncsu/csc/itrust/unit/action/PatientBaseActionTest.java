@@ -1,12 +1,16 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.base.PatientBaseAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 
-public class PatientBaseActionTest extends TestCase {
+public class PatientBaseActionTest  {
 
+	@Test
 	public void testEvilDatabase() {
 		try {
 			new PatientBaseAction(EvilDAOFactory.getEvilInstance(), "2222");

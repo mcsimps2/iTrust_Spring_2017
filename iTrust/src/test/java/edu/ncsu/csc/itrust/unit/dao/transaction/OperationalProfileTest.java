@@ -1,8 +1,15 @@
 package edu.ncsu.csc.itrust.unit.dao.transaction;
 
-import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.OperationalProfile;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.TransactionDAO;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -12,16 +19,23 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 /**
  * OperationalProfileTest
  */
-public class OperationalProfileTest extends TestCase {
+public class OperationalProfileTest {
 	private TestDataGenerator gen;
 	private TransactionDAO transDAO = TestDAOFactory.getTestInstance().getTransactionDAO();
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.operationalProfile();
 		gen.tester();
+	}
+	
+	@After
+	public void tearDown() 
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**
@@ -29,6 +43,7 @@ public class OperationalProfileTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetOperationalProfile() throws Exception {
 		OperationalProfile op = transDAO.getOperationalProfile();
 		Integer[] totalCounts = new Integer[43000];
@@ -66,6 +81,7 @@ public class OperationalProfileTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testOperationProfileException() throws Exception {
 		TransactionDAO evilTranDAO = EvilDAOFactory.getEvilInstance().getTransactionDAO();
 		try {

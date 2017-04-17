@@ -5,13 +5,17 @@ import java.sql.SQLException;
 import edu.ncsu.csc.itrust.action.ViewHelperAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ViewHelperActionTest extends TestCase {
-	@Override
-	protected void setUp() throws Exception {
+public class ViewHelperActionTest  {
+	@Before
+	public void setUp() throws Exception {
 	}
 
+	@Test
 	public void testUpdateUserPrefs() throws FormValidationException, SQLException, ITrustException {
 		assertTrue(ViewHelperAction.calculateColor("000000", "FFFFFF", 0).equals("000000"));
 		assertTrue(ViewHelperAction.calculateColor("000000", "FFFFFF", 1.0).equals("FFFFFF"));

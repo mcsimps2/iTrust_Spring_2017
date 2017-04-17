@@ -1,8 +1,13 @@
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.childbirth.visit;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,15 +18,18 @@ import org.mockito.Spy;
 
 import edu.ncsu.csc.itrust.controller.obstetrics.childbirth.visit.ChildbirthVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisit;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitData;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.ChildbirthVisitMySQL;
 import edu.ncsu.csc.itrust.model.obstetrics.childbirth.visit.VisitType;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.DeliveryMethod;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -40,6 +48,7 @@ public class ChildbirthVisitControllerTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
@@ -57,6 +66,11 @@ public class ChildbirthVisitControllerTest {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
+	}
+	
+	@After
+	public void tearDown() {
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 	
 	@Test

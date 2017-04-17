@@ -12,9 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 import org.easymock.classextension.IMocksControl;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import edu.ncsu.csc.itrust.XmlGenerator;
 import edu.ncsu.csc.itrust.action.GroupReportGeneratorAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.server.GroupReportGeneratorServlet;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
@@ -23,7 +28,7 @@ import org.w3c.dom.Document;
 import junit.framework.TestCase;
 
 @SuppressWarnings("unused")
-public class GroupReportGeneratorTest extends TestCase {
+public class GroupReportGeneratorTest {
 
 	protected GroupReportGeneratorAction grga;
 
@@ -35,15 +40,23 @@ public class GroupReportGeneratorTest extends TestCase {
 	private ArrayList<String> headers = new ArrayList<String>();
 	private ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ctrl = createControl();
 		req = ctrl.createMock(HttpServletRequest.class);
 		resp = ctrl.createMock(HttpServletResponse.class);
 		grga = ctrl.createMock(GroupReportGeneratorAction.class);
 		xmlgen = ctrl.createMock(XmlGenerator.class);
 	}
-
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	
+	@Test
 	public void testGroupReportGeneratorServletPost() throws Exception {
 		String demo = new String();
 		String med = new String();

@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.unit.controller.obstetrics.ultrasound;
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,13 +16,16 @@ import edu.ncsu.csc.itrust.controller.obstetrics.ultrasound.UltrasoundController
 import edu.ncsu.csc.itrust.controller.obstetrics.ultrasound.UltrasoundForm;
 import edu.ncsu.csc.itrust.controller.obstetrics.visit.ObstetricsVisitController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.Ultrasound;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.UltrasoundData;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.UltrasoundMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -45,6 +49,7 @@ public class UltrasoundFormTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		
 		mockSessionUtils = Mockito.mock(SessionUtils.class);
@@ -69,6 +74,11 @@ public class UltrasoundFormTest {
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	@After
+   	public void tearDown() {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
 	
 	@Test
 	public void testConstructor() {

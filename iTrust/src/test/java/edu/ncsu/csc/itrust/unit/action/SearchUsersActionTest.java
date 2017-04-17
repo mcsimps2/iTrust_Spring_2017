@@ -4,31 +4,43 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.EditPatientAction;
 import edu.ncsu.csc.itrust.action.SearchUsersAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * SearchUsersActionTest
  */
-public class SearchUsersActionTest extends TestCase {
+public class SearchUsersActionTest  {
 	private TestDataGenerator gen = new TestDataGenerator();
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private DAOFactory evil = EvilDAOFactory.getEvilInstance();
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**
 	 * testSearchForPatienstWithName
 	 */
+	@Test
 	public void testSearchForPatientsWithName() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000000L);
 		List<PatientBean> patients = act.searchForPatientsWithName("Random", "Person");
@@ -38,6 +50,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testSearchForPatietnsWithName2
 	 */
+	@Test
 	public void testSearchForPatientsWithName2() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.searchForPatientsWithName("Andy", "Programmer");
@@ -47,6 +60,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testSearchForPatientsWithName3
 	 */
+	@Test
 	public void testSearchForPatientsWithName3() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.searchForPatientsWithName("", "");
@@ -56,6 +70,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testFuzzySearchForPatient1
 	 */
+	@Test
 	public void testFuzzySearchForPatient1() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.fuzzySearchForPatients("Andy");
@@ -65,6 +80,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testFuzzySearchForPatient2
 	 */
+	@Test
 	public void testFuzzySearchForPatient2() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.fuzzySearchForPatients("nd grammer");
@@ -74,12 +90,14 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testFuzzySearchForPatient3
 	 */
+	@Test
 	public void testFuzzySearchForPatient3() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.fuzzySearchForPatients("2");
 		assertEquals("Andy Programmer", patient.get(0).getFullName());
 	}
 
+	@Test
 	public void testFuzzySearchForPatientDeactivated() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.fuzzySearchForPatients("314159");
@@ -89,6 +107,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testFuzzySearchForPatientDeactivatedOverride
 	 */
+	@Test
 	public void testFuzzySearchForPatientDeactivatedOverride() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PatientBean> patient = act.fuzzySearchForPatients("314159", true);
@@ -98,6 +117,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testSearchForPersonnelWithName
 	 */
+	@Test
 	public void testSearchForPersonnelWithName() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000000L);
 		List<PersonnelBean> personnel = act.searchForPersonnelWithName("Kelly", "Doctor");
@@ -107,6 +127,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testSearchForPersonnelWithName2
 	 */
+	@Test
 	public void testSearchForPersonnelWithName2() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PersonnelBean> personnel = act.searchForPersonnelWithName("", "");
@@ -116,14 +137,11 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testSearchForPersonnelWithName3
 	 */
+	@Test
 	public void testSearchForPersonnelWithName3() {
 		SearchUsersAction act = new SearchUsersAction(evil, 2L);
 		List<PersonnelBean> personnel = act.searchForPersonnelWithName("null", "null");
 		assertEquals(null, personnel);
-	}
-
-	@Override
-	public void tearDown() throws Exception {
 	}
 
 	/**
@@ -131,6 +149,7 @@ public class SearchUsersActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testZeroPatients() throws Exception {
 		SearchUsersAction action = new SearchUsersAction(factory, 9990000000L);
 		List<PatientBean> patients = action.searchForPatientsWithName("A", "B");
@@ -138,6 +157,7 @@ public class SearchUsersActionTest extends TestCase {
 		assertEquals(0, patients.size());
 	}
 
+	@Test
 	public void testDeactivated() throws Exception {
 		SearchUsersAction action = new SearchUsersAction(factory, 9990000000L);
 		EditPatientAction dis = new EditPatientAction(factory, 1L, "1");
@@ -151,6 +171,7 @@ public class SearchUsersActionTest extends TestCase {
 	/**
 	 * testFuzzySearchForExpert
 	 */
+	@Test
 	public void testFuzzySearchForExpert() {
 		SearchUsersAction act = new SearchUsersAction(factory, 9000000003L);
 		List<PersonnelBean> patient = act.fuzzySearchForExperts("Andy");

@@ -3,8 +3,12 @@ package edu.ncsu.csc.itrust.unit.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.FindExpertAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.CustomComparator;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
@@ -12,14 +16,15 @@ import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class FindExpertActionTest extends TestCase {
+public class FindExpertActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private FindExpertAction fea;
 	private PersonnelBean person, person1;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		fea = new FindExpertAction(factory);
 		gen.clearAllTables();
 		person = new PersonnelBean();
@@ -29,9 +34,16 @@ public class FindExpertActionTest extends TestCase {
 
 	}
 
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	
 	/**
 	 * Tests that you can find all of the experts you should be able to
 	 */
+	@Test
 	public void testFindExperts() {
 		List<HospitalBean> hospitals = new ArrayList<HospitalBean>();
 
@@ -55,6 +67,7 @@ public class FindExpertActionTest extends TestCase {
 	/**
 	 * Tests that you can filter out the hospitals
 	 */
+	@Test
 	public void testFilterHospitals() {
 		HospitalBean hospitalZero = new HospitalBean();
 		HospitalBean hospitalOne = new HospitalBean();
@@ -82,6 +95,7 @@ public class FindExpertActionTest extends TestCase {
 	/**
 	 * Tests that you can find hospitals by their specialty
 	 */
+	@Test
 	public void testFindHospitalsBySpecialty() {
 		assertTrue(fea.findHospitalsBySpecialty("ob/gyn", "00000", 5).size() == 0);
 	}

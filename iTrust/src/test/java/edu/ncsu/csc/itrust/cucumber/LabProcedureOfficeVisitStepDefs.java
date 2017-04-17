@@ -5,6 +5,7 @@
  import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCode;
 import edu.ncsu.csc.itrust.model.cptcode.CPTCodeMySQL;
@@ -19,6 +20,7 @@ import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.HospitalsDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
@@ -146,34 +148,38 @@ import org.junit.Assert;
         
         @When("^I add a prescription with backwards dates and the following information: Medication: (.*) (.*), Dosage: (.*). Dates: (.*) to (.*), Instructions: (.*)$")
         public void enterBackwardsDates(String medCode, String medName, String dosage, String date1, String date2, String instructions) {
-        		List<OfficeVisit> oList;
-				try {
-					oList = oVisSQL.getAll();
-					
-					NDCCode nd = new NDCCode();
-					nd.setCode(medCode);
-					nd.setDescription(medName);
-					
-					Prescription pre = new Prescription();
-	                MedicationBean medBean = new MedicationBean();
-	                medBean.setNDCode(medCode);
-	                pre.setOfficeVisitId(oList.get(oList.size() - 1).getVisitID());
-	                pre.setPatientMID((long)1);
-	                pre.setDrugCode(medBean);
-	                pre.setInstructions(instructions);
-	                pre.setDosage(Long.parseLong(dosage));
-	                pre.setStartDate(LocalDate.parse(date1));
-	                pre.setEndDate(LocalDate.parse(date2));
-	                
-					preSQL.add(pre);
-					ndcSQL.add(nd);
+        	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());	
+        	List<OfficeVisit> oList;
+			try {
+				oList = oVisSQL.getAll();
 				
-				} catch (DBException | SQLException e1) {
-					Assert.assertTrue(true);
-					e1.printStackTrace();
-				} catch (FormValidationException e) {
-					Assert.assertTrue(true);
-				}
+				NDCCode nd = new NDCCode();
+				nd.setCode(medCode);
+				nd.setDescription(medName);
+				
+				Prescription pre = new Prescription();
+                MedicationBean medBean = new MedicationBean();
+                medBean.setNDCode(medCode);
+                pre.setOfficeVisitId(oList.get(oList.size() - 1).getVisitID());
+                pre.setPatientMID((long)1);
+                pre.setDrugCode(medBean);
+                pre.setInstructions(instructions);
+                pre.setDosage(Long.parseLong(dosage));
+                pre.setStartDate(LocalDate.parse(date1));
+                pre.setEndDate(LocalDate.parse(date2));
+                
+				preSQL.add(pre);
+				ndcSQL.add(nd);
+			
+			} catch (DBException | SQLException e1) {
+				Assert.assertTrue(true);
+			} catch (FormValidationException e) {
+				Assert.assertTrue(true);
+			}
+			finally
+			{
+				TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+			}
         }
         
         

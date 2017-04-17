@@ -12,8 +12,7 @@ import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
  *
  */
 public class TransactionLogger {
-	/** Whether or not the transaction logger is being used in testing or production */
-	public static boolean testInstance = false;
+
 	/** The singleton instance of this class. */
 	private static TransactionLogger singleton = null;
 
@@ -22,6 +21,15 @@ public class TransactionLogger {
 
 	private TransactionLogger() {
 		dao = DAOFactory.getProductionInstance().getTransactionDAO();
+	}
+	
+	/**
+	 * Specifies the TransactionDAO to use when sending logs to the database
+	 * @param dao the TransactionDAO to use for logging
+	 */
+	public void setTransactionDAO(TransactionDAO dao)
+	{
+		this.dao = dao;
 	}
 
 	/**

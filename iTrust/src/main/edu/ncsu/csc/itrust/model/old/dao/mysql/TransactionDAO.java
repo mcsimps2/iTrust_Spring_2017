@@ -86,6 +86,10 @@ public class TransactionDAO {
 		if (secondaryMID == null) {
 			secondaryMID = 0L;
 		}
+		//Repeat for loggedInMID
+		if (loggedInMID == null) {
+			loggedInMID = 0L;
+		}
 
 		try (Connection conn = factory.getConnection();
 				PreparedStatement ps = conn.prepareStatement("INSERT INTO transactionlog(loggedInMID, secondaryMID, "

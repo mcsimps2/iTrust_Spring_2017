@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 
 import edu.ncsu.csc.itrust.controller.emergencyRecord.EmergencyRecordController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.diagnosis.Diagnosis;
 import edu.ncsu.csc.itrust.model.emergencyRecord.EmergencyRecord;

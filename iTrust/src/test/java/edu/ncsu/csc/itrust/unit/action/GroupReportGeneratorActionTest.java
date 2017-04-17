@@ -9,30 +9,42 @@ import org.easymock.classextension.EasyMock;
 
 import edu.ncsu.csc.itrust.action.GroupReportGeneratorAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.report.DemographicReportFilter;
 import edu.ncsu.csc.itrust.report.PersonnelReportFilter;
 import edu.ncsu.csc.itrust.report.ReportFilter;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class GroupReportGeneratorActionTest extends TestCase {
+public class GroupReportGeneratorActionTest  {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private GroupReportGeneratorAction gpga;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 	}
 
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+	
 	/**
 	 * testGenerateReport
 	 * @throws DBException 
 	 */
+	@Test
 	public void testGenerateReport() throws DBException {
 		List<ReportFilter> filters = new ArrayList<ReportFilter>();
 		filters.add(new DemographicReportFilter(DemographicReportFilter.filterTypeFromString("DEACTIVATED"), "exclude",
@@ -59,6 +71,7 @@ public class GroupReportGeneratorActionTest extends TestCase {
 	 * testParseFilters
 	 * @throws DBException 
 	 */
+	@Test
 	public void testParseFilters() throws DBException {
 		HttpServletRequest request = EasyMock.createMock(HttpServletRequest.class);
 		org.easymock.EasyMock.expect(request.getParameter("demoparams")).andReturn("MID").anyTimes();

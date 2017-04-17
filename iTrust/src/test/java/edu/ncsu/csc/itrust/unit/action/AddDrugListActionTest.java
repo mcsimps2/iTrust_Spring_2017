@@ -7,8 +7,12 @@ package edu.ncsu.csc.itrust.unit.action;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.AddDrugListAction.SkipDuplicateDrugStrategy;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.NDCodesDAO;
 import edu.ncsu.csc.itrust.action.AddDrugListAction;
@@ -17,7 +21,7 @@ import edu.ncsu.csc.itrust.action.AddDrugListAction.OverwriteDuplicateDrugStrate
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class AddDrugListActionTest extends TestCase {
+public class AddDrugListActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private AddDrugListAction action;
 	private TestDataGenerator gen;
@@ -41,11 +45,19 @@ public class AddDrugListActionTest extends TestCase {
 	/**
 	 * Sets up defaults
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testLoadFile() throws Exception {
 		InputStream is = new ByteArrayInputStream(inputDrugs1.getBytes());
 		action = new AddDrugListAction(new SkipDuplicateDrugStrategy(), factory, new EventLoggingAction(factory),
@@ -65,6 +77,7 @@ public class AddDrugListActionTest extends TestCase {
 		assertEquals("Claritin", ndCodesDAO.getNDCode("115237197").getDescription());
 	}
 
+	@Test
 	public void testRenameDrugs() throws Exception {
 		InputStream is = new ByteArrayInputStream(inputDrugs1.getBytes());
 		action = new AddDrugListAction(new SkipDuplicateDrugStrategy(), factory, new EventLoggingAction(factory),

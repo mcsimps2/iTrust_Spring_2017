@@ -1,9 +1,13 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.UpdateReasonCodeListAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.beans.OverrideReasonBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -14,17 +18,24 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 /**
  * UpdateORCListActionTest
  */
-public class UpdateORCListActionTest extends TestCase {
+public class UpdateORCListActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private UpdateReasonCodeListAction action;
 	private final static long performingAdmin = 9000000001L;
 	private TestDataGenerator gen = new TestDataGenerator();
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		action = new UpdateReasonCodeListAction(factory, performingAdmin);
 		gen.clearAllTables();
 		gen.admin1();
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	@SuppressWarnings("unused")
@@ -35,6 +46,7 @@ public class UpdateORCListActionTest extends TestCase {
 	/**
 	 * testEvilFacotry
 	 */
+	@Test
 	public void testEvilFactory() {
 		action = new UpdateReasonCodeListAction(EvilDAOFactory.getEvilInstance(), 0L);
 		OverrideReasonBean mb = new OverrideReasonBean();
@@ -68,6 +80,7 @@ public class UpdateORCListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddORCode() throws Exception {
 		final String code = "99998";
 		final String desc = "UpdateORCodeListActionTest testAddORCode";
@@ -90,6 +103,7 @@ public class UpdateORCListActionTest extends TestCase {
 	 * @throws DBException
 	 * @throws FormValidationException
 	 */
+	@Test
 	public void testAddDuplicate() throws DBException, FormValidationException {
 		final String code = "99997";
 		final String descrip0 = "description 0";
@@ -111,6 +125,7 @@ public class UpdateORCListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateNDInformation0() throws Exception {
 		final String code = "88888";
 		final String desc = "new descrip 0";
@@ -128,6 +143,7 @@ public class UpdateORCListActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testUpdateNonExistent() throws Exception {
 		final String code = "99996";
 		OverrideReasonBean orc = new OverrideReasonBean(code, "shouldnt be here");

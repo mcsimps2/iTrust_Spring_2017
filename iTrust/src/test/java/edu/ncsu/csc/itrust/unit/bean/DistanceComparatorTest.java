@@ -6,9 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import edu.ncsu.csc.itrust.action.ZipCodeAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.DistanceComparator;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -22,7 +27,7 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
  * Test comparing the distances
  *
  */
-public class DistanceComparatorTest extends TestCase {
+public class DistanceComparatorTest {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen;
@@ -32,18 +37,26 @@ public class DistanceComparatorTest extends TestCase {
 	/**
 	 * Gets all of the standard data and initializes 2 zipcode actions
 	 */
-	@Override
-	protected void setUp() throws IOException, SQLException {
+	@Before
+	public void setUp() throws IOException, SQLException {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
 		action = new ZipCodeAction(factory, 2L);
 		action2 = new ZipCodeAction(factory, 3L);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
 	/**
 	 * Tests comparing two things
 	 */
+	@Test
 	public void testComparator() {
 		PersonnelDAO dao = new PersonnelDAO(factory);
 		List<PersonnelBean> list = new ArrayList<PersonnelBean>();
@@ -67,6 +80,7 @@ public class DistanceComparatorTest extends TestCase {
 	/**
 	 * Tests when we have an evil factory we get an exception
 	 */
+	@Test
 	public void testComparatorEvil() {
 		EvilDAOFactory evil = new EvilDAOFactory();
 		PersonnelDAO dao = new PersonnelDAO(factory);
@@ -92,6 +106,7 @@ public class DistanceComparatorTest extends TestCase {
 	 * Tests that we get an error when we drop the tables and try to compare
 	 * stuff
 	 */
+	@Test
 	public void testError() {
 		DBBuilder builder = new DBBuilder();
 		DistanceComparator dist = new DistanceComparator(action2, "27587");
