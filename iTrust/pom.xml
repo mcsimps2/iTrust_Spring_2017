@@ -416,6 +416,12 @@
 		<groupId>httpunit</groupId>
 		<artifactId>httpunit</artifactId>
 		<version>1.7</version>
+		<exclusions>
+        	<exclusion>
+            	<groupId>javax.servlet</groupId>
+            	<artifactId>servlet-api</artifactId>
+        	</exclusion>
+    	</exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.easymock</groupId>
@@ -441,6 +447,12 @@
 		<groupId>tomcat</groupId>
 		<artifactId>jasper-runtime</artifactId>
 		<version>5.5.23</version>
+		<exclusions>
+        	<exclusion>
+            	<groupId>javax.servlet</groupId>
+            	<artifactId>servlet-api</artifactId>
+        	</exclusion>
+    	</exclusions>
 	</dependency>
 	<dependency>
 	    <groupId>org.apache.tomcat</groupId>
@@ -496,6 +508,12 @@
 		<groupId>info.cukes</groupId>
 		<artifactId>gherkin</artifactId>
 		<version>2.12.2</version>
+		<exclusions>
+        	<exclusion>
+            	<groupId>javax.servlet</groupId>
+            	<artifactId>servlet-api</artifactId>
+        	</exclusion>
+    	</exclusions>
 	</dependency>
 	<dependency>
 	    <groupId>com.sun.faces</groupId>
