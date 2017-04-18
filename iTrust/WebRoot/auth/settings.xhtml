@@ -21,7 +21,7 @@
 					<div class="form-group">
 						<label for="colorScheme" class="col-sm-2 control-label">Color Scheme</label>
 						<div class="col-sm-2">
-							<h:selectOneMenu id="color_scheme" value="" class="form-control">
+							<h:selectOneMenu id="color_scheme" value="#{settings_controller.colorScheme}" class="form-control">
 								<f:selectItems var="scheme"
 									value="#{settings_controller.getColorSchemes()}"
 									itemLabel="#{scheme.toString()}"
