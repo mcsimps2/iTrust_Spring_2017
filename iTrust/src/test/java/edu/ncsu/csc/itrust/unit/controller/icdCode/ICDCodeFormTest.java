@@ -7,16 +7,20 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import edu.ncsu.csc.itrust.controller.icdcode.ICDCodeController;
 import edu.ncsu.csc.itrust.controller.icdcode.ICDCodeForm;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.icdcode.ICDCode;
 import edu.ncsu.csc.itrust.model.icdcode.ICDCodeMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import junit.framework.TestCase;
 
 public class ICDCodeFormTest extends TestCase {
@@ -24,10 +28,17 @@ public class ICDCodeFormTest extends TestCase {
     DataSource ds;
     @Override
     public void setUp() throws FileNotFoundException, SQLException, IOException{
+    	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
         ds = ConverterDAO.getDataSource();
         gen = new TestDataGenerator();
         gen.clearAllTables();
     }
+    
+    @After
+	public void tearDown() throws FileNotFoundException, SQLException, IOException {
+    	gen.clearAllTables();
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
     
     @Test
     public void testICDCodeForm(){

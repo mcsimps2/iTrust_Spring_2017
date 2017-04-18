@@ -1,8 +1,12 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.EditPatientAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
@@ -11,22 +15,31 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 
-public class EditPatientActionTest extends TestCase {
+public class EditPatientActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private EditPatientAction action;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.patient2();
 		action = new EditPatientAction(factory, 9000000000L, "2");
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testConstructNormal() throws Exception {
 		assertEquals(2L, action.getPid());
 	}
 
+	@Test
 	public void testNonExistent() throws Exception {
 		try {
 			action = new EditPatientAction(factory, 0L, "200");
@@ -36,6 +49,7 @@ public class EditPatientActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEditRepresentatives() throws Exception {
 		action = new EditPatientAction(factory, 2l, "2");
 		PatientDAO po = new PatientDAO(factory);
@@ -53,6 +67,7 @@ public class EditPatientActionTest extends TestCase {
 
 	}
 
+	@Test
 	public void testEditCOD() throws Exception {
 		gen.patient1();
 		action = new EditPatientAction(factory, 1L, "1");
@@ -71,6 +86,7 @@ public class EditPatientActionTest extends TestCase {
 
 	}
 
+	@Test
 	public void testInvalidDates() throws Exception {
 		gen.patient3();
 		action = new EditPatientAction(factory, 3L, "3");
@@ -95,6 +111,7 @@ public class EditPatientActionTest extends TestCase {
 
 	}
 
+	@Test
 	public void testWrongFormat() throws Exception {
 		try {
 			action = new EditPatientAction(factory, 0L, "hello!");
@@ -104,6 +121,7 @@ public class EditPatientActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNull() throws Exception {
 		try {
 			action = new EditPatientAction(factory, 0L, null);
@@ -113,11 +131,13 @@ public class EditPatientActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetPatientLogged() throws Exception {
 		PatientBean patient = action.getPatient();
 		assertEquals(2L, patient.getMID());
 	}
 
+	@Test
 	public void testDeactivateActivate() throws Exception {
 		gen.patient1();
 		action = new EditPatientAction(factory, 1L, "1");
@@ -130,6 +150,7 @@ public class EditPatientActionTest extends TestCase {
 		assertTrue(pb2.getDateOfDeactivationStr().equals(""));
 	}
 
+	@Test
 	public void testIsDependent() throws Exception {
 		// Check that patient 2 is not a dependent
 		assertFalse(action.isDependent());
@@ -142,6 +163,7 @@ public class EditPatientActionTest extends TestCase {
 		assertTrue(action.isDependent());
 	}
 
+	@Test
 	public void testSetDependent() throws Exception {
 		// 2 represents 1, but not 4
 		gen.patient1();

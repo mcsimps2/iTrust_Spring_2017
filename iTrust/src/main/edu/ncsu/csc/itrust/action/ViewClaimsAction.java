@@ -34,13 +34,11 @@ public class ViewClaimsAction {
 	 * @return A list of all the insurance claims.
 	 */
 	public List<BillingBean> getClaims(){
-		List<BillingBean> result = null;
 		try {
-			result = billingAccess.getInsuranceBills();
+			return billingAccess.getInsuranceBills();
 		} catch (DBException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return result;
 	}
 	
 	/**
@@ -49,13 +47,11 @@ public class ViewClaimsAction {
 	 * @return The name of the submitter.
 	 */
 	public String getSubmitter(BillingBean b){
-		String result = null;
 		try {
-			result = patientRetriever.getName(b.getPatient());
+			return patientRetriever.getName(b.getPatient());
 		} catch (ITrustException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return result;
 	}
 	
 	/**

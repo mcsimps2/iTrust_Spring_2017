@@ -22,6 +22,15 @@ public class TransactionLogger {
 	private TransactionLogger() {
 		dao = DAOFactory.getProductionInstance().getTransactionDAO();
 	}
+	
+	/**
+	 * Specifies the TransactionDAO to use when sending logs to the database
+	 * @param dao the TransactionDAO to use for logging
+	 */
+	public void setTransactionDAO(TransactionDAO dao)
+	{
+		this.dao = dao;
+	}
 
 	/**
 	 * @return Singleton instance of this transaction logging mechanism.

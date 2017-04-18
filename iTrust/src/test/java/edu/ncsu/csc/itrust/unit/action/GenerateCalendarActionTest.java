@@ -13,22 +13,25 @@ import edu.ncsu.csc.itrust.action.AddApptAction;
 import edu.ncsu.csc.itrust.action.GenerateCalendarAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class GenerateCalendarActionTest extends TestCase {
+public class GenerateCalendarActionTest  {
 	private GenerateCalendarAction action;
 	private DAOFactory factory;
 	private long mId = 2L;
 	private long hcpId = 9000000000L;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -36,7 +39,14 @@ public class GenerateCalendarActionTest extends TestCase {
 		this.factory = TestDAOFactory.getTestInstance();
 		this.action = new GenerateCalendarAction(factory, mId);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testGetApptsTable() throws SQLException, DBException {
 		Hashtable<Integer, ArrayList<ApptBean>> aTable = action
 				.getApptsTable(Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.YEAR));
@@ -46,6 +56,7 @@ public class GenerateCalendarActionTest extends TestCase {
 		assertTrue(aTable.containsKey(28));
 	}
 
+	@Test
 	public void testGetSend() throws SQLException, DBException {
 		action.getApptsTable(Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.YEAR));
 		List<ApptBean> aList = action.getSend();
@@ -70,6 +81,7 @@ public class GenerateCalendarActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testGetConflicts() throws Exception {
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();

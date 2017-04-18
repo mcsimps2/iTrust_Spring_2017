@@ -5,7 +5,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 	<f:view beforePhase="#{navigation_controller.redirectIfInvalidPatient()}" />
 
@@ -65,7 +66,7 @@
 											<td>LMP:</td>
 											<td>
 												<ui:fragment rendered="#{addingRecord}">
-													<h:inputText id="lmp" class="form-control" value="#{obstetrics_init_controller.lmp}" />
+													<h:inputText a:placeholder="yyyy-mm-dd" id="lmp" class="form-control" value="#{obstetrics_init_controller.lmp}" />
 												</ui:fragment>
 												<ui:fragment rendered="#{viewingRecord}">
 													#{oiRecord.prettyLMP}

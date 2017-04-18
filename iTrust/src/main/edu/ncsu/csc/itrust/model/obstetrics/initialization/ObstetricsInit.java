@@ -113,7 +113,6 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 		try {
 			return sdf.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

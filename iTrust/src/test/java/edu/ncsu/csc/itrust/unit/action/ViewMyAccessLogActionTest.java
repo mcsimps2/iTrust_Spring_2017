@@ -6,19 +6,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ViewMyAccessLogAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.TransactionBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class ViewMyAccessLogActionTest extends TestCase {
+public class ViewMyAccessLogActionTest  {
 	ViewMyAccessLogAction action;
 	private TestDataGenerator gen;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.hcp0();
@@ -33,13 +39,21 @@ public class ViewMyAccessLogActionTest extends TestCase {
 		gen.patient24();
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 2L);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testNoProblems() throws Exception {
 		String today = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 		List<TransactionBean> accesses = action.getAccesses(today, today, null, false);
 		assertEquals(0, accesses.size());
 	}
 
+	@Test
 	public void testNoProblemsDependentLog() throws Exception {
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 24L);
 		String today = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
@@ -47,6 +61,7 @@ public class ViewMyAccessLogActionTest extends TestCase {
 		assertEquals(0, accesses.size());
 	}
 
+	@Test
 	public void testGetAccessesIllegalUser() throws Exception {
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 24L);
 		String today = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
@@ -60,6 +75,7 @@ public class ViewMyAccessLogActionTest extends TestCase {
 
 	}
 
+	@Test
 	public void testGetAccessesBadData() throws Exception {
 		gen.transactionLog();
 		List<TransactionBean> accesses = action.getAccesses(null, null, null, false);
@@ -79,6 +95,7 @@ public class ViewMyAccessLogActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetAccessesByRole() throws Exception {
 		gen.transactionLog3();
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 1L);
@@ -97,6 +114,7 @@ public class ViewMyAccessLogActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testDLHCPAccessesHidden() throws Exception {
 		gen.transactionLog3();
 		action = new ViewMyAccessLogAction(TestDAOFactory.getTestInstance(), 1L);
@@ -106,12 +124,14 @@ public class ViewMyAccessLogActionTest extends TestCase {
 			assertFalse(tb.getRole().equals("DLHCP"));
 	}
 
+	@Test
 	public void testDefaultNoList() throws Exception {
 		String today = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 		assertEquals(today, action.getDefaultStart(new ArrayList<TransactionBean>()));
 		assertEquals(today, action.getDefaultEnd(new ArrayList<TransactionBean>()));
 	}
 
+	@Test
 	public void testDefaultWithList() throws Exception {
 		String today = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 		ArrayList<TransactionBean> list = new ArrayList<TransactionBean>();

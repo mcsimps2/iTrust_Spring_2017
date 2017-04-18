@@ -7,24 +7,37 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.ZipCodeAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ZipCodeActionTest extends TestCase {
+public class ZipCodeActionTest  {
 	private ZipCodeAction zipCodeAction;
 	private TestDataGenerator gen = new TestDataGenerator();
 	private long loggedInMID = 2;
 
-	@Override
-	protected void setUp() throws FileNotFoundException, SQLException, IOException {
+	@Before
+	public void setUp() throws FileNotFoundException, SQLException, IOException {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		zipCodeAction = new ZipCodeAction(TestDAOFactory.getTestInstance(), loggedInMID);
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testGetExperts() throws DBException {
 		System.out.println("Begin testGetExperts");
 		List<PersonnelBean> physicians = zipCodeAction.getExperts("Surgeon", "10453", "250", 0l);

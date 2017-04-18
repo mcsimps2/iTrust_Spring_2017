@@ -68,9 +68,11 @@ public class FakeEmailDAO {
 				PreparedStatement stmt = conn
 						.prepareStatement("SELECT * FROM fakeemail WHERE ToAddr LIKE ? ORDER BY AddedDate DESC");) {
 			stmt.setString(1, "%" + email + "%");
-			ResultSet rs = stmt.executeQuery();
-			List<Email> loadlist = emailBeanLoader.loadList(rs);
-			return loadlist;
+			try (ResultSet rs = stmt.executeQuery();)
+			{
+				List<Email> loadlist = emailBeanLoader.loadList(rs);
+				return loadlist;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

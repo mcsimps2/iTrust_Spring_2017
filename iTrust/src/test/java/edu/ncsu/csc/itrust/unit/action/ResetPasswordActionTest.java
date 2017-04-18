@@ -2,10 +2,14 @@ package edu.ncsu.csc.itrust.unit.action;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ResetPasswordAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.Email;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.FakeEmailDAO;
@@ -14,20 +18,28 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class ResetPasswordActionTest extends TestCase {
+public class ResetPasswordActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private DAOFactory evil = EvilDAOFactory.getEvilInstance();
 	private FakeEmailDAO feDAO = factory.getFakeEmailDAO();
 	private ResetPasswordAction action;
 	private TestDataGenerator gen;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		action = new ResetPasswordAction(factory);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testCheckMID() throws Exception {
 		gen.patient1();
 		gen.hcp0();
@@ -39,16 +51,19 @@ public class ResetPasswordActionTest extends TestCase {
 		assertEquals("existant", 9000000000L, action.checkMID("9000000000"));
 	}
 
+	@Test
 	public void testCheckMIDEvil() throws Exception {
 		action = new ResetPasswordAction(evil);
 		assertEquals(0l, action.checkMID(""));
 	}
 
+	@Test
 	public void testCheckMIDEvil2() throws Exception {
 		action = new ResetPasswordAction(evil);
 		assertEquals(0l, action.checkMID("a"));
 	}
 
+	@Test
 	public void testCheckRole() throws Exception {
 		gen.patient2();
 		gen.hcp0();
@@ -60,6 +75,7 @@ public class ResetPasswordActionTest extends TestCase {
 		assertEquals(null, action.checkRole(0L, "HCP"));
 	}
 
+	@Test
 	public void testCheckWrongRole() {
 		try {
 			action.checkRole(9000000000L, "patient");
@@ -69,12 +85,14 @@ public class ResetPasswordActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCheckAnswerNull() throws Exception {
 		assertEquals("empty", null, action.checkAnswerNull(""));
 		assertEquals("null", null, action.checkAnswerNull(null));
 		assertEquals("answer", action.checkAnswerNull("answer"));
 	}
 
+	@Test
 	public void testGetSecurityQuestion() throws Exception {
 		gen.patient1();
 		gen.hcp0();
@@ -83,12 +101,14 @@ public class ResetPasswordActionTest extends TestCase {
 		assertEquals("first letter?", action.getSecurityQuestion(9000000000L));
 	}
 
+	@Test
 	public void testGetSecurityQuestionEvil() throws Exception {
 		action = new ResetPasswordAction(EvilDAOFactory.getEvilInstance());
 		assertEquals("", action.getSecurityQuestion(1l));
 
 	}
 
+	@Test
 	public void testResetPassword() throws Exception {
 		gen.patient1();
 		gen.hcp0();
@@ -108,6 +128,7 @@ public class ResetPasswordActionTest extends TestCase {
 				action.resetPassword(9000000000L, "uap", "a", "12345678", "12345678", "127.0.0.1"));
 	}
 
+	@Test
 	public void testResetForHCP() throws Exception {
 		gen.hcp0();
 		assertEquals("Password changed",
@@ -118,6 +139,7 @@ public class ResetPasswordActionTest extends TestCase {
 				list.get(0).getBody().contains("You have chosen to change your iTrust password for user 9000000000"));
 	}
 
+	@Test
 	public void testValidatePasswordNull() throws Exception {
 		gen.patient1();
 		try {
@@ -129,6 +151,7 @@ public class ResetPasswordActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testValidatePasswordEmpty() throws Exception {
 		gen.patient1();
 		try {
@@ -140,6 +163,7 @@ public class ResetPasswordActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testValidatePasswordWrong() throws Exception {
 		gen.patient1();
 		try {

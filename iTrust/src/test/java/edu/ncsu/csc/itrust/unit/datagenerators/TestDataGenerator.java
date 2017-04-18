@@ -901,8 +901,8 @@ public class TestDataGenerator {
 		new DBBuilder(factory).executeSQLFile(DIR + "/newborns.sql");
 	}
 	
-	public void uc96() throws FileNotFoundException, SQLException, IOException {
-		new DBBuilder(factory).executeSQLFile(DIR + "/uc96.sql");
+	public void uc95() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/uc95.sql");
 	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
@@ -1025,7 +1025,7 @@ public class TestDataGenerator {
 		
 		newborns();
 		
-		uc96();
+		uc95();
 		
 		setMode();
 	}
@@ -1037,27 +1037,18 @@ public class TestDataGenerator {
 	 * @throws SQLException
 	 */
 	private boolean checkIfZipsExists() {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
-			rs = ps.executeQuery();
+		try (
+			Connection conn = factory.getConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
+			ResultSet rs = ps.executeQuery();)
+		{
 			if (rs.next()) {
 				return true;
 
 			}
 		} catch (SQLException e) {
 			return false;
-		} finally {
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					return false;
-				}
-		}
+		} 
 
 		return false;
 	}

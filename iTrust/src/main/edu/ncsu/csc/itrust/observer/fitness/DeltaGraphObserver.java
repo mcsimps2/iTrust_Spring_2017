@@ -24,6 +24,7 @@ public class DeltaGraphObserver extends GraphObserver {
 	 * Constructor with data source
 	 */
 	public DeltaGraphObserver(DataSource ds) {
+		super(ds);
 		this.setFitnessController(new FitnessInfoController(ds));
 	}
 	
@@ -31,6 +32,7 @@ public class DeltaGraphObserver extends GraphObserver {
 	 * Constructor
 	 */
 	public DeltaGraphObserver() {
+		super();
 		this.setFitnessController(new FitnessInfoController());
 	}
 	

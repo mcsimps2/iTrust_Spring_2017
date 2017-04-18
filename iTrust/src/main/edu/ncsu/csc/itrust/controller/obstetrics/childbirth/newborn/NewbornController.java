@@ -1,6 +1,5 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.childbirth.newborn;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class NewbornController extends iTrustController {
 				throw new Exception();
 			}
 		} catch (DBException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		} catch (FormValidationException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
 		} catch (Exception e) {
@@ -123,8 +122,8 @@ public class NewbornController extends iTrustController {
 			} else {
 				throw new Exception();
 			}
-		} catch (SQLException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
+		} catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		}  catch (FormValidationException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
 		} catch (Exception e) {
@@ -145,8 +144,8 @@ public class NewbornController extends iTrustController {
         	} else {
         		throw new Exception();
         	}
-        } catch (SQLException e) {
-			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getMessage(), null);
+        } catch (DBException e) {
+			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, e.getExtendedMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_NEWBORN, INVALID_NEWBORN, null);
 		}

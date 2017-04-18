@@ -74,12 +74,11 @@ public class DBUtil {
 	 * @throws DBException 
 	 */
 	public static long getLastInsert(Connection conn) throws SQLException, DBException {
-			ResultSet rs = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");
-			rs.next();
-			long result = rs.getLong(1);
-			rs.close();
-			return result;
-			
-		
+			try (ResultSet rs = conn.createStatement().executeQuery("SELECT LAST_INSERT_ID()");)
+			{
+				rs.next();
+				long result = rs.getLong(1);
+				return result;
+			}
 	}
 }

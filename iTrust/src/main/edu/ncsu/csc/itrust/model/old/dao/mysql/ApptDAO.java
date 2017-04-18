@@ -26,13 +26,14 @@ public class ApptDAO {
 	}
 
 	public List<ApptBean> getAppt(final int apptID) throws SQLException, DBException {
-		ResultSet results = null;
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM appointment WHERE appt_id=?")) {
 			stmt.setInt(1, apptID);
-			results = stmt.executeQuery();
-			final List<ApptBean> abList = this.abloader.loadList(results);
-			return abList;
+			try (ResultSet results = stmt.executeQuery();)
+			{
+				final List<ApptBean> abList = this.abloader.loadList(results);
+				return abList;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

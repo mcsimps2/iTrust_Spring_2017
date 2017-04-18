@@ -8,27 +8,40 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.AddApptRequestAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.beans.ApptRequestBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class AddApptRequestActionTest extends TestCase {
+public class AddApptRequestActionTest  {
 
 	private AddApptRequestAction action;
 	private TestDataGenerator gen = new TestDataGenerator();
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 		gen.apptRequestConflicts();
 		action = new AddApptRequestAction(TestDAOFactory.getTestInstance());
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testAddApptRequest() throws Exception {
 		ApptBean b = new ApptBean();
 		b.setApptType("General Checkup");
@@ -54,6 +67,7 @@ public class AddApptRequestActionTest extends TestCase {
 		assertEquals(expected, action.addApptRequest(req));
 	}
 
+	@Test
 	public void testGetNextAvailableAppts() throws SQLException, ParseException, DBException {
 		ApptBean b = new ApptBean();
 		b.setApptType("General Checkup");

@@ -1,22 +1,28 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.AddRemoteMonitoringDataAction;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.RemoteMonitoringDataBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
 /**
  * AddRemoteMonitoringDataActionTest
  */
-public class AddRemoteMonitoringDataActionTest extends TestCase {
+public class AddRemoteMonitoringDataActionTest  {
 	AddRemoteMonitoringDataAction action;
 	private TestDataGenerator gen;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.hcp0();
@@ -24,12 +30,19 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 		gen.patient2();
 		action = new AddRemoteMonitoringDataAction(TestDAOFactory.getTestInstance(), 1, 1);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
 	/**
 	 * testAddRemoteMOnitoringData
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringData() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -47,6 +60,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringDataUAP() throws Exception {
 		gen.uap1();
 		gen.remoteMonitoringUAP();
@@ -68,6 +82,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringDataGlucoseOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -83,6 +98,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringDataGlucoseOnlyUAP() throws Exception {
 		gen.uap1();
 		gen.remoteMonitoringUAP();
@@ -102,6 +118,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringDataBloodPressureOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -118,6 +135,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringDataBloodPressureOnlyUAP() throws Exception {
 		gen.uap1();
 		gen.remoteMonitoringUAP();
@@ -138,6 +156,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringWeightDataOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -153,6 +172,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringPedometerReadingDataOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -168,6 +188,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringExternalDataOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -184,6 +205,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddRemoteMonitoringHeightWeightDataOnly() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -200,6 +222,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddBadRemoteMonitoringData() throws Exception {
 		RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
 		try {
@@ -283,6 +306,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddBadRemoteMonitoringWeightData() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -300,6 +324,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddBadRemoteMonitoringPedometerReadingData() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();
@@ -317,6 +342,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testRepresentativeReportStatus() throws Exception {
 		action = new AddRemoteMonitoringDataAction(TestDAOFactory.getTestInstance(), 2, 1);
 		try {
@@ -333,6 +359,7 @@ public class AddRemoteMonitoringDataActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testAddBadRemoteMonitoringGlucoseLevelData() throws Exception {
 		try {
 			RemoteMonitoringDataBean b = new RemoteMonitoringDataBean();

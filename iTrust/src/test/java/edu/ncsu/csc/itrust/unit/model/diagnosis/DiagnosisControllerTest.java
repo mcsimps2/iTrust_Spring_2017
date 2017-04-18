@@ -2,7 +2,10 @@ package edu.ncsu.csc.itrust.unit.model.diagnosis;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -14,16 +17,19 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.controller.diagnosis.DiagnosisController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.diagnosis.Diagnosis;
 import edu.ncsu.csc.itrust.model.diagnosis.DiagnosisMySQL;
 import edu.ncsu.csc.itrust.model.icdcode.ICDCode;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisitMySQL;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 import junit.framework.TestCase;
 
-public class DiagnosisControllerTest extends TestCase {
+public class DiagnosisControllerTest {
     DataSource ds;
     DiagnosisController controller;
     TestDataGenerator gen;
@@ -33,8 +39,9 @@ public class DiagnosisControllerTest extends TestCase {
     @Mock
     SessionUtils mockSessionUtils;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
+    	TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
         ds = ConverterDAO.getDataSource();
         gen = new TestDataGenerator();
         gen.clearAllTables();
@@ -48,6 +55,13 @@ public class DiagnosisControllerTest extends TestCase {
         ovSql = new OfficeVisitMySQL(ds);
     }
     
+    @After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
+    
+    @Test
     public void testController() throws DBException{
         Diagnosis d = new Diagnosis();
         d.setIcdCode(new ICDCode("S108", "Skin injury neck", false));

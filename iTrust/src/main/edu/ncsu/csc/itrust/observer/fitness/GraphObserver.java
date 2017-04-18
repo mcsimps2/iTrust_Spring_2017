@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.observer.fitness;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import edu.ncsu.csc.itrust.controller.fitness.FitnessInfoController;
 import edu.ncsu.csc.itrust.controller.fitness.FitnessInfoController.GraphKeyValue;
 
@@ -33,10 +35,18 @@ public abstract class GraphObserver
 	protected static String NO_DATA_FOUND_IN_DATES = "No data found in date ranges.";
 	
 	/**
-	 * Constructor. Also instatiates a new fitness controller.
+	 * Constructor. Also instantiates a new fitness controller.
 	 */
 	public GraphObserver() {
 		setFitnessController(new FitnessInfoController());
+	}
+	
+	/**
+	 * Constructor. Also instantiates a new fitness controller from the given datasource.
+	 * @param Datasource to use
+	 */
+	public GraphObserver(DataSource ds) {
+		setFitnessController(new FitnessInfoController(ds));
 	}
 	
 	/**

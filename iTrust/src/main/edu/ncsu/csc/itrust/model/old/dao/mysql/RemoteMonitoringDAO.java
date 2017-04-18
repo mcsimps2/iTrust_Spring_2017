@@ -87,43 +87,45 @@ public class RemoteMonitoringDAO {
 						.prepareStatement("SELECT * FROM remotemonitoringlists WHERE HCPMID=? ORDER BY PatientMID");
 				PreparedStatement pstmt1 = conn.prepareStatement(
 						"SELECT * FROM remotemonitoringdata WHERE timelogged >= CURRENT_DATE ORDER BY PatientID, timeLogged DESC");
-				final ResultSet dataRS = pstmt1.executeQuery()) {
+				ResultSet dataRS = pstmt1.executeQuery()) {
 			stmt.setLong(1, loggedInMID);
-			final ResultSet patientRS = stmt.executeQuery();
+			try (ResultSet patientRS = stmt.executeQuery();)
+			{
 
-			final List<String> patientList = new ArrayList<String>();
-			while (patientRS.next()) {
-				patientList.add(Long.valueOf(patientRS.getLong("PatientMID")).toString());
-			}
-			final List<RemoteMonitoringDataBean> dataList = loader.loadList(dataRS);
-
-			int idx1;
-			int idx2;
-			// Go through all patients and remove any that aren't monitored by
-			// this HCP
-			for (idx1 = 0; idx1 < dataList.size(); idx1++) {
-				if (!patientList.contains(Long.valueOf(dataList.get(idx1).getPatientMID()).toString())) {
-					dataList.remove(idx1);
-					idx1--;
+				final List<String> patientList = new ArrayList<String>();
+				while (patientRS.next()) {
+					patientList.add(Long.valueOf(patientRS.getLong("PatientMID")).toString());
 				}
-			}
-
-			// Add values in patient list with no data for today to list.
-			boolean itsThere;
-			for (idx1 = 0; idx1 < patientList.size(); idx1++) {
-				itsThere = false;
-				for (idx2 = 0; idx2 < dataList.size(); idx2++) {
-					if (dataList.get(idx2).getPatientMID() == Long.parseLong(patientList.get(idx1))) {
-						itsThere = true;
-						break;
+				final List<RemoteMonitoringDataBean> dataList = loader.loadList(dataRS);
+	
+				int idx1;
+				int idx2;
+				// Go through all patients and remove any that aren't monitored by
+				// this HCP
+				for (idx1 = 0; idx1 < dataList.size(); idx1++) {
+					if (!patientList.contains(Long.valueOf(dataList.get(idx1).getPatientMID()).toString())) {
+						dataList.remove(idx1);
+						idx1--;
 					}
 				}
-				if (!itsThere) {
-					dataList.add(new RemoteMonitoringDataBean(Long.parseLong(patientList.get(idx1))));
+	
+				// Add values in patient list with no data for today to list.
+				boolean itsThere;
+				for (idx1 = 0; idx1 < patientList.size(); idx1++) {
+					itsThere = false;
+					for (idx2 = 0; idx2 < dataList.size(); idx2++) {
+						if (dataList.get(idx2).getPatientMID() == Long.parseLong(patientList.get(idx1))) {
+							itsThere = true;
+							break;
+						}
+					}
+					if (!itsThere) {
+						dataList.add(new RemoteMonitoringDataBean(Long.parseLong(patientList.get(idx1))));
+					}
 				}
+	
+				return dataList;
 			}
-
-			return dataList;
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

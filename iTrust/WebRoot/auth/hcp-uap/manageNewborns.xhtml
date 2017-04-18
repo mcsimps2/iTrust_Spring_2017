@@ -24,12 +24,12 @@
 					</ui:fragment>
 					<div class="form-group">
 						<h:outputLabel for="date">Date of birth:</h:outputLabel>
-						<h:inputText label="DATE" id="date" class="form-control" value="#{newborn_form.newborn.dateOfBirth}" readonly="#{!isOBGYN || !isChildbirthTabSaved}"/>
+						<h:inputText a:placeholder="yyyy-mm-dd" label="DATE" id="date" class="form-control" value="#{newborn_form.newborn.dateOfBirth}" readonly="#{!isOBGYN || !isChildbirthTabSaved}"/>
 						<h:message for="date" showSummary="true" showDetail="false" style="color:red" />
 					</div>
 					<div class="form-group">
 						<h:outputLabel for="time">Time of birth:</h:outputLabel>
-						<h:inputText label="TIME" id="time" class="form-control" value="#{newborn_form.newborn.timeOfBirth}" readonly="#{!isOBGYN || !isChildbirthTabSaved}"/>
+						<h:inputText a:placeholder="h:mm AM/PM" label="TIME" id="time" class="form-control" value="#{newborn_form.newborn.timeOfBirth}" readonly="#{!isOBGYN || !isChildbirthTabSaved}"/>
 						<h:message for="time" showSummary="true" showDetail="false" style="color:red" />
 					</div>
 					<div class="form-group">

@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.unit.controller.obstetrics.initialization;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +13,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +26,7 @@ import org.mockito.stubbing.Answer;
 
 import edu.ncsu.csc.itrust.controller.obstetrics.initialization.ObstetricsInitController;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInit;
 import edu.ncsu.csc.itrust.model.obstetrics.initialization.ObstetricsInitData;
@@ -32,10 +37,12 @@ import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoData;
 import edu.ncsu.csc.itrust.model.obstetrics.pregnancies.PregnancyInfoMySQL;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PersonnelDAO;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 /**
@@ -66,6 +73,7 @@ public class ObstetricsInitControllerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		// Set up variables
 		ds = ConverterDAO.getDataSource();
 		
@@ -113,6 +121,11 @@ public class ObstetricsInitControllerTest {
 		gen.clearAllTables();
 		gen.standardData();
 	}
+	
+	@After
+   	public void tearDown() {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
 
 	/**
 	 * Test method for isPatientEligible(String)

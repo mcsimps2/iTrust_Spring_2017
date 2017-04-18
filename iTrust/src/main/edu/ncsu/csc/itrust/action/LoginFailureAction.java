@@ -73,7 +73,7 @@ public class LoginFailureAction {
 		try {
 			return authDAO.getLoginFailures(ipAddr) >= 3;
 		} catch (DBException e) {
-			System.err.println("Denying access due to DBException");
+			System.err.println("Access denied - database error");
 			return false;
 		}
 	}

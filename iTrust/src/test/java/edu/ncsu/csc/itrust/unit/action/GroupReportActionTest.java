@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.ncsu.csc.itrust.action.GroupReportAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.GroupReportBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
@@ -14,21 +15,32 @@ import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.report.ReportFilter;
 import edu.ncsu.csc.itrust.report.DemographicReportFilter.DemographicReportFilterType;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class GroupReportActionTest extends TestCase {
+public class GroupReportActionTest  {
 
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private TestDataGenerator gen = new TestDataGenerator();
 	private GroupReportAction action;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.standardData();
 		action = new GroupReportAction(factory, 1l);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testGenerateReport() {
 		List<ReportFilter> f = new ArrayList<ReportFilter>();
 		f.add(new DemographicReportFilter(DemographicReportFilterType.LAST_NAME, "Person", factory));
@@ -37,6 +49,7 @@ public class GroupReportActionTest extends TestCase {
 		assertEquals(1L, res.getPatients().get(0).getMID());
 	}
 
+	@Test
 	public void testGetComprehensiveDemographicInfo() throws DBException {
 		PatientBean b = factory.getPatientDAO().getPatient(2L);
 		for (DemographicReportFilterType filterType : DemographicReportFilterType.values()) {
@@ -120,6 +133,7 @@ public class GroupReportActionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetComprehensiveMedicalInfo() throws DBException {
 		PatientBean b = factory.getPatientDAO().getPatient(2L);
 		for (MedicalReportFilterType filterType : MedicalReportFilterType.values()) {
