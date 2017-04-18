@@ -16,6 +16,15 @@
 				<h1>Settings</h1>
 				
 				<hr />
+				
+				<h:form>
+					<h:selectOneMenu id="colorScheme" value="" class="form-control">
+						<f:selectItems var="scheme"
+							value="#{settings_controller.getColorSchemes()}"
+							itemLabel="#{scheme.toString()}"
+							itemValue="#{scheme.toString()}" />
+					</h:selectOneMenu>
+				</h:form>
 			</ui:define>
 		</ui:composition>
 	</h:body>
