@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.controller.settings;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -15,6 +16,9 @@ import edu.ncsu.csc.itrust.model.user.ColorSchemeType;
 @ManagedBean(name = "settings_controller")
 @SessionScoped
 public class SettingsController extends iTrustController {
+	private static final String COLOR_SCHEME_UPDATED = "Color scheme was successfully updated.";
+	private static final String COLOR_SCHEME_FAILED = "An error occurred while updating the color scheme.";
+	
 	private AuthDAO authDAO;
 	
 	private String colorScheme;
@@ -36,10 +40,10 @@ public class SettingsController extends iTrustController {
 	public void save() {
 		try {
 			authDAO.setColorScheme(mid, ColorSchemeType.matchString(getColorScheme()));
-			// TODO show a success message
+			super.printFacesMessage(FacesMessage.SEVERITY_INFO, COLOR_SCHEME_UPDATED, COLOR_SCHEME_UPDATED, null);
 		} catch (DBException e) {
 			e.printStackTrace();
-			// TODO show an error
+			super.printFacesMessage(FacesMessage.SEVERITY_ERROR, COLOR_SCHEME_FAILED, COLOR_SCHEME_FAILED, null);
 		}
 	}
 
