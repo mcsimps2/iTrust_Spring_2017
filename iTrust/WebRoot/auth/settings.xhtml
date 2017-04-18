@@ -17,13 +17,23 @@
 				
 				<hr />
 				
-				<h:form>
-					<h:selectOneMenu id="colorScheme" value="" class="form-control">
-						<f:selectItems var="scheme"
-							value="#{settings_controller.getColorSchemes()}"
-							itemLabel="#{scheme.toString()}"
-							itemValue="#{scheme.toString()}" />
-					</h:selectOneMenu>
+				<h:form id="settings_form" class="form-horizontal">
+					<div class="form-group">
+						<label for="colorScheme" class="col-sm-2 control-label">Color Scheme</label>
+						<div class="col-sm-2">
+							<h:selectOneMenu id="color_scheme" value="" class="form-control">
+								<f:selectItems var="scheme"
+									value="#{settings_controller.getColorSchemes()}"
+									itemLabel="#{scheme.toString()}"
+									itemValue="#{scheme.toString()}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 col-sm-offset-2">
+							<h:commandButton id="submit_button" value="Save" action="#{settings_controller.save()}" />
+						</div>
+					</div>
 				</h:form>
 			</ui:define>
 		</ui:composition>
