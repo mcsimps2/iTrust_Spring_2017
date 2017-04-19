@@ -68,7 +68,7 @@ label {
 }
 
 .welcome {
-	color: rgb(255, 255, 255);
+	//color: rgb(255, 255, 255);
 	float: right;
 	padding: 12px;
 }
