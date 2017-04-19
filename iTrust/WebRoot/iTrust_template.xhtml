@@ -16,7 +16,24 @@
 		<link href="/iTrust/css/datepicker.css" type="text/css" rel="stylesheet" />
 		<link href="https://cdn.datatables.net/v/bs/dt-1.10.12/r-2.1.0/datatables.min.css" rel="stylesheet"/>
 		
-		<ui:include src="/css/colorschemes/default.xhtml" />
+		<ui:param name="colorScheme" value="#{settings_controller.getColorScheme().toString()}" />
+		<ui:fragment rendered="#{colorScheme eq 'Default'}">
+			<ui:include src="/css/colorschemes/default.xhtml" />
+		</ui:fragment>
+		<ui:fragment rendered="#{colorScheme eq 'Dark'}">
+			<ui:include src="/css/colorschemes/dark.xhtml" />
+		</ui:fragment>
+		<ui:fragment rendered="#{colorScheme eq 'Muted Midtones'}">
+			<ui:include src="/css/colorschemes/mutedmidtones.xhtml" />
+		</ui:fragment>
+		<ui:fragment rendered="#{colorScheme eq 'Rainbow'}">
+			<ui:include src="/css/colorschemes/rainbow.xhtml" />
+		</ui:fragment>
+		<ui:fragment rendered="#{colorScheme eq 'I Dare You'}">
+			<ui:include src="/css/colorschemes/idareyou.xhtml" />
+		</ui:fragment>
+		
+		
 		
 		<script src="/iTrust/js/DatePicker.js" type="text/javascript"></script>
 		<script src="/iTrust/js/jquery-1.8.3.js" type="text/javascript"></script>
