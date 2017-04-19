@@ -21,7 +21,7 @@ public class ChangeColorSchemeStepDefs {
 	@When("^I click on the settings page$")
 	public void clickSettings() {
 		try {
-			driver.findElement(By.linkText("Settings")).click();	
+			driver.findElement(By.cssSelector("a[href=\"/iTrust/auth/settings.xhtml\"]")).click();	
 		} catch (NoSuchElementException e) {
 			Assert.fail("Could not click on settings page");
 		}

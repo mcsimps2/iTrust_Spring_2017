@@ -4,7 +4,7 @@ Feature: Change Color Scheme
 	
 Background:
 	Given I am at the iTrust login screen
-	Given the databses have been reset
+	Given the databases have been reset
 	
 Scenario Outline: Change the colors
 	Given I have logged in as HCP <hcpMID> with password <pw>
