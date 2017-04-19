@@ -59,10 +59,9 @@ label {
 	padding-left: 20px;
 	font-size: 1.3em;
 	font-weight: bold;
-	color: rgb(92, 92, 92)
 }
 .welcome {
-	color: rgb(255, 255, 255) !important;
+	color: rgb(255, 255, 255);
 	float: right;
 	padding: 12px;
 }
