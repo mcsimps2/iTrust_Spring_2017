@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.cucumber;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,8 +65,8 @@ public class PatientProfilePictureStepDefs
 	
 	@When("^I upload a profile picture (.+)$")
 	public void i_upload_a_profile_picture_testing_files_sample_profilepictures_profile_jpg(String filePath) {
-		driver.findElement(By.name("file")).sendKeys("/Users/msimpson/Documents/development/csc326-203-Project-05/iTrust/" + filePath);
-		driver.findElement(By.xpath("//*[@id=\"iTrustContent\"]/table/tbody/tr/td[3]/table[3]/tbody/tr[2]/td/form/input[3]")).click();
+		driver.findElement(By.name("file")).sendKeys(System.getProperty("user.dir") + "/" + filePath);
+		driver.findElement(By.xpath("//*[@id=\"iTrustContent\"]/table/tbody/tr[2]/td/form/input[3]")).click();
 	}
 
 	@Then("^the profile picture is saved in the database$")
@@ -95,7 +97,8 @@ public class PatientProfilePictureStepDefs
 	
 	@When("^I upload a picture (.+) but don't submit anything$")
 	public void i_click_the_upload_button_for_profile_pictures_but_don_t_submit_anything(String filePath) {
-		driver.findElement(By.name("file")).sendKeys("/Users/msimpson/Documents/development/csc326-203-Project-05/iTrust/" + filePath);
+		//Find absolute path
+		driver.findElement(By.name("file")).sendKeys(System.getProperty("user.dir") + "/" + filePath);
 		//Don't click the submit button! This is an error path
 	}
 
