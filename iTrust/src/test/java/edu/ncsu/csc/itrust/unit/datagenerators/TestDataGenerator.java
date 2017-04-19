@@ -914,11 +914,13 @@ public class TestDataGenerator {
 	}
 	
 	public void image() throws FileNotFoundException, SQLException, IOException {
-		Connection connection = factory.getConnection();
-		PreparedStatement statement = connection.prepareStatement("INSERT INTO image VALUES('default', ?)");
-		File file = new File("testing-files/default.jpg");
-		statement.setBinaryStream(1, new FileInputStream(file));
-		statement.executeUpdate();
+		try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement("INSERT INTO image VALUES('default', ?)");)
+		{
+			File file = new File("testing-files/default.jpg");
+			statement.setBinaryStream(1, new FileInputStream(file));
+			statement.executeUpdate();
+		}
 	}
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
