@@ -31,7 +31,7 @@ public class LabProcedureController extends iTrustController {
 		try {
 			labProcedureData = new LabProcedureMySQL();
 		} catch (DBException e) {
-			e.printStackTrace();
+			System.err.println("Unable to instantiate MySQL classes for lab procedures");
 		}
 	}
 

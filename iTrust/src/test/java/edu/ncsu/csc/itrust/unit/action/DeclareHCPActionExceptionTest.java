@@ -1,18 +1,22 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.DeclareHCPAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 
-public class DeclareHCPActionExceptionTest extends TestCase {
+public class DeclareHCPActionExceptionTest  {
 	private DeclareHCPAction action;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		action = new DeclareHCPAction(EvilDAOFactory.getEvilInstance(), 2L);
 	}
 
+	@Test
 	public void testDeclareMalformed() throws Exception {
 		try {
 			action.declareHCP("not a number");
@@ -22,6 +26,7 @@ public class DeclareHCPActionExceptionTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testUnDeclareMalformed() throws Exception {
 		try {
 			action.undeclareHCP("not a number");

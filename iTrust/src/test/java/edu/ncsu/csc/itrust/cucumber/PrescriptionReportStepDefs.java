@@ -69,7 +69,6 @@ public class PrescriptionReportStepDefs {
 	private PrescriptionMySQL preSQL;
 	
 	public PrescriptionReportStepDefs(){
-		
 		this.ds = ConverterDAO.getDataSource();
 		this.ovController = new OfficeVisitController(ds);
 		this.ovValidator = new OfficeVisitValidator(ds);

@@ -11,14 +11,18 @@ import edu.ncsu.csc.itrust.action.ViewMyApptsAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.ApptBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.EvilDAOFactory;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class EditApptActionTest extends TestCase {
+public class EditApptActionTest  {
 	private EditApptAction editAction;
 	private EditApptAction evilAction;
 	private ViewMyApptsAction viewAction;
@@ -26,8 +30,9 @@ public class EditApptActionTest extends TestCase {
 	private DAOFactory evilFactory;
 	private long hcpId = 9000000000L;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.hcp0();
@@ -42,7 +47,14 @@ public class EditApptActionTest extends TestCase {
 		this.editAction = new EditApptAction(this.factory, this.hcpId);
 		this.viewAction = new ViewMyApptsAction(this.factory, this.hcpId);
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testRemoveAppt() throws Exception {
 		List<ApptBean> appts = viewAction.getMyAppointments();
 		int size = appts.size();
@@ -51,6 +63,7 @@ public class EditApptActionTest extends TestCase {
 		editAction.removeAppt(appts.get(0));
 	}
 
+	@Test
 	public void testGetAppt() throws Exception, DBException {
 		List<ApptBean> appts = viewAction.getMyAppointments();
 		ApptBean b1 = appts.get(0);
@@ -89,6 +102,7 @@ public class EditApptActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testGetName() throws ITrustException {
 		assertEquals("Kelly Doctor", editAction.getName(hcpId));
 		assertEquals("Bad Horse", editAction.getName(42));
@@ -101,6 +115,7 @@ public class EditApptActionTest extends TestCase {
 	 * @throws SQLException
 	 * @throws FormValidationException
 	 */
+	@Test
 	public void testEditAppt() throws DBException, SQLException, FormValidationException {
 		List<ApptBean> appts = viewAction.getAllMyAppointments();
 		ApptBean orig = appts.get(0);
@@ -144,6 +159,7 @@ public class EditApptActionTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testEditApptConflict() throws Exception {
 
 		Calendar c = Calendar.getInstance();
@@ -173,6 +189,7 @@ public class EditApptActionTest extends TestCase {
 	 * @throws SQLException
 	 * @throws FormValidationException
 	 */
+	@Test
 	public void testEvilFactory() throws DBException, SQLException, FormValidationException {
 		this.editAction = new EditApptAction(EvilDAOFactory.getEvilInstance(), this.hcpId);
 		List<ApptBean> appts = viewAction.getMyAppointments();

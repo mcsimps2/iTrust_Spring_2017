@@ -1,7 +1,6 @@
 package edu.ncsu.csc.itrust.controller.obstetrics.ultrasound;
 
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.Ultrasound;
 import edu.ncsu.csc.itrust.model.obstetrics.ultrasound.UltrasoundMySQL;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "ultrasound_controller")
 @SessionScoped
@@ -46,49 +46,59 @@ public class UltrasoundController extends iTrustController {
 	 * 
 	 * @param ds
 	 *            The injected DataSource dependency
+	 * @param sessionUtils
+	 *            The injected SessionUtils
 	 */
-	public UltrasoundController(DataSource ds) throws DBException {
-		super();
+	public UltrasoundController(DataSource ds, SessionUtils sessionUtils) throws DBException {
+		super(sessionUtils, null);
 		this.sql = new UltrasoundMySQL(ds);
 	}
 
 	/**
 	 * Adds the given ultrasound to the database.
 	 * @param ultrasound
+	 * @return whether or not the add was successful
 	 */
-	public void add(Ultrasound ultrasound) {
+	public boolean add(Ultrasound ultrasound) {
 		try {
 			if (sql.add(ultrasound)) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, ULTRASOUND_SUCCESSFULLY_CREATED,
 						ULTRASOUND_SUCCESSFULLY_CREATED, null);
 				logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
+				return true;
 			} else {
 				throw new Exception();
 			}
 		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, e.getExtendedMessage(), null);
+			return false;
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, INVALID_ULTRASOUND, null);
+			return false;
 		}
 	}
 
 	/**
 	 * Edits the given ultrasound in the database.
 	 * @param ultrasound
+	 * @return whether or not the edit was successful
 	 */
-	public void edit(Ultrasound ultrasound) {
+	public boolean edit(Ultrasound ultrasound) {
 		try {
 			if (sql.update(ultrasound)) {
 				printFacesMessage(FacesMessage.SEVERITY_INFO, ULTRASOUND_SUCCESSFULLY_UPDATED,
 						ULTRASOUND_SUCCESSFULLY_UPDATED, null);
 				logTransaction(TransactionType.ULTRASOUND, getSessionUtils().getCurrentOfficeVisitId().toString());
+				return true;
 			} else {
 				throw new Exception();
 			}
-		} catch (SQLException e) {
+		} catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, e.getMessage(), null);
+			return false;
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, INVALID_ULTRASOUND, null);
+			return false;
 		}
 	}
 
@@ -105,7 +115,7 @@ public class UltrasoundController extends iTrustController {
         	} else {
         		throw new Exception();
         	}
-        } catch (SQLException e) {
+        } catch (DBException e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, e.getMessage(), null);
 		} catch (Exception e) {
 			printFacesMessage(FacesMessage.SEVERITY_ERROR, INVALID_ULTRASOUND, INVALID_ULTRASOUND, null);

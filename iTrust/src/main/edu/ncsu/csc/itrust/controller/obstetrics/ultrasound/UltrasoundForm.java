@@ -27,7 +27,7 @@ public class UltrasoundForm {
 	 * Constructor used in run time.
 	 */
 	public UltrasoundForm() {
-	    this(null, null, SessionUtils.getInstance());
+	    this(null, null, null, null);
 	}
 
 	/**
@@ -36,12 +36,12 @@ public class UltrasoundForm {
 	 * @param ovc
 	 * @param sessionUtils
 	 */
-	public UltrasoundForm(UltrasoundController uc, ObstetricsVisitController ovc, SessionUtils sessionUtils) {
+	public UltrasoundForm(UltrasoundController uc, ObstetricsVisitController ovc, SessionUtils sessionUtils, Long officeVisitID) {
 		try {
-			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
+			this.controller = (uc == null) ? new UltrasoundController() : uc;
 		    this.ovc = (ovc == null) ? new ObstetricsVisitController() : ovc;
-			controller = (uc == null) ? new UltrasoundController() : uc;
-			officeVisitID = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId");
+			this.sessionUtils = (sessionUtils == null) ? SessionUtils.getInstance() : sessionUtils;
+			this.officeVisitID = (officeVisitID == null) ? (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("officeVisitId") : officeVisitID;
 			clearFields();
 		} catch (Exception e) {
 			this.sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "Controller Error",
@@ -51,24 +51,18 @@ public class UltrasoundForm {
 	
 	/**
 	 * Adds the ultrasound to the database.
-	 * Only works if an ObstetricsVisit has been submitted for this office visit.
 	 */
 	public void add(){
-		if (ovc.getByOfficeVisit(officeVisitID) == null) {
-			sessionUtils.printFacesMessage(FacesMessage.SEVERITY_ERROR, "The Obstetrics tab must be saved before you can add an ultrasound",
-					"The Obstetrics tab must be saved before you can add an ultrasound", null);
-			return;
-		}
-		controller.add(ultrasound);
-		clearFields();
+		if (controller.add(ultrasound))
+			clearFields();
 	}
 	
 	/**
 	 * Edits the current ultrasound in the database.
 	 */
 	public void edit(){
-		controller.edit(ultrasound);
-		clearFields();
+		if (controller.edit(ultrasound))
+			clearFields();
 	}
 	
 	/**
@@ -108,7 +102,7 @@ public class UltrasoundForm {
 	 * @param hl
 	 * @param efw
 	 */
-	public void fillInput(Long ultrasoundID, Float crl, Float bpd, Float hc, Float fl, Float ofd, Float ac, Float hl, Float efw){
+	public void fillInput(Long ultrasoundID, Float crl, Float bpd, Float hc, Float fl, Float ofd, Float ac, Float hl, Float efw) {
 		ultrasound.setId(ultrasoundID);
 		ultrasound.setCrl(crl);
 		ultrasound.setBpd(bpd);

@@ -37,7 +37,6 @@ public class EmergencyHealthRecordsStepDefs {
 	private AllergyDAO allergyDAO;
 	
 	public EmergencyHealthRecordsStepDefs(){
-		
 		this.ds = ConverterDAO.getDataSource();
 		this.patientController = new PatientDAO(TestDAOFactory.getTestInstance());
 		this.gen = new TestDataGenerator();

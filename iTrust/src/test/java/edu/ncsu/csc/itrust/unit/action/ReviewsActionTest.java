@@ -11,8 +11,10 @@ import org.junit.Test;
 
 import edu.ncsu.csc.itrust.action.ReviewsAction;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.model.old.beans.ReviewsBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
@@ -36,6 +38,7 @@ public class ReviewsActionTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		act = new ReviewsAction(TestDAOFactory.getTestInstance(), MID);
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
@@ -55,9 +58,11 @@ public class ReviewsActionTest {
 		beanInvalid.setDateOfReview(REVDATE);
 		beanInvalid.setRating(2);
 	}
-
+	
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	/**

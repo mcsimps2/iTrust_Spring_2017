@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import org.mockito.Spy;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitController;
 import edu.ncsu.csc.itrust.controller.officeVisit.OfficeVisitForm;
 import edu.ncsu.csc.itrust.exception.DBException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.apptType.ApptType;
 import edu.ncsu.csc.itrust.model.apptType.ApptTypeData;
@@ -26,10 +28,12 @@ import edu.ncsu.csc.itrust.model.apptType.ApptTypeMySQLConverter;
 import edu.ncsu.csc.itrust.model.hospital.HospitalData;
 import edu.ncsu.csc.itrust.model.hospital.HospitalMySQLConverter;
 import edu.ncsu.csc.itrust.model.officeVisit.OfficeVisit;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import junit.framework.TestCase;
 
-public class OfficeVisitFormTest extends TestCase {
+public class OfficeVisitFormTest {
 
 	private OfficeVisitForm ovf;
 	@Spy
@@ -62,6 +66,7 @@ public class OfficeVisitFormTest extends TestCase {
 	
 	@Before
 	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = ConverterDAO.getDataSource();
 		apptData = new ApptTypeMySQLConverter(ds);
 		hData = new HospitalMySQLConverter(ds);
@@ -84,7 +89,13 @@ public class OfficeVisitFormTest extends TestCase {
 		gen.uc53SetUp();
 	}
 	
-	private void createOVBaby() {
+	@After
+   	public void tearDown() {
+   		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+   	}
+	
+	@Test
+	public void createOVBaby() {
 		ovBaby = new OfficeVisit();
 		ovBaby.setPatientMID(1L);
 		ovBaby.setLength(FLOAT_VALUE);
@@ -93,7 +104,8 @@ public class OfficeVisitFormTest extends TestCase {
 		ovBaby.setHouseholdSmokingStatus(INTEGER_VALUE);
 	}
 	
-	private void createOVChild() {
+	@Test
+	public void createOVChild() {
 		ovChild = new OfficeVisit();
 		ovChild.setPatientMID(1L);
 		ovChild.setHeight(FLOAT_VALUE);
@@ -102,7 +114,8 @@ public class OfficeVisitFormTest extends TestCase {
 		ovChild.setHouseholdSmokingStatus(INTEGER_VALUE);
 	}
 
-	private void createOVAdult() throws SQLException, FileNotFoundException, IOException, DBException {
+	@Test
+	public void createOVAdult() throws SQLException, FileNotFoundException, IOException, DBException {
 		ovAdult = new OfficeVisit();
 		gen.appointmentType();
 		List<ApptType> apptList = apptData.getAll();

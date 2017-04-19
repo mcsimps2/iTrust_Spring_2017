@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.ManageHospitalAssignmentsAction;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.HospitalBean;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
@@ -16,7 +20,7 @@ import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 /**
  * ManageHospitalAssignmentsActionTest
  */
-public class ManageHospitalAssignmentsActionTest extends TestCase {
+public class ManageHospitalAssignmentsActionTest  {
 	private DAOFactory factory = TestDAOFactory.getTestInstance();
 	private DAOFactory evil = EvilDAOFactory.getEvilInstance();
 	private ManageHospitalAssignmentsAction action;
@@ -29,8 +33,9 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	private final static String hosp1 = "9191919191";
 	private final static String hosp2 = "8181818181";
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		gen.clearAllTables();
 		gen.hcp0();
 		gen.admin1();
@@ -39,6 +44,12 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 		gen.ltData0();
 		action = new ManageHospitalAssignmentsAction(factory, performingAdmin);
 		ltAction = new ManageHospitalAssignmentsAction(factory, lt0);
+	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 
 	private String doAssignment() throws ITrustException {
@@ -54,6 +65,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testAssignHCPToHospital() throws ITrustException {
 		assertEquals("HCP successfully assigned.", doAssignment());
 		List<HospitalBean> h = action.getAssignedHospitals("" + hcp0);
@@ -64,6 +76,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testAssignHCPToHospitalEvil
 	 */
+	@Test
 	public void testAssignHCPToHospitalEvil() {
 		action = new ManageHospitalAssignmentsAction(evil, performingAdmin);
 		try {
@@ -80,6 +93,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testAssignDuplicate() throws ITrustException {
 		assertEquals("HCP successfully assigned.", doAssignment());
 		try {
@@ -95,6 +109,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testRemovePersonnelAssignmentToHospital() throws ITrustException {
 		doAssignment();
 		assertEquals("HCP successfully unassigned", action.removeHCPAssignmentToHospital("" + hcp0, hosp0));
@@ -106,6 +121,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testRemoveNonAssigned() throws ITrustException {
 		assertEquals("HCP not unassigned", action.removeHCPAssignmentToHospital("" + hcp0, hosp0));
 	}
@@ -116,6 +132,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * @throws ITrustException
 	 * @throws Exception
 	 */
+	@Test
 	public void testRemoveAll() throws ITrustException, Exception {
 		doAssignment();
 		doAssignment(hosp1);
@@ -128,6 +145,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testRemoveAllEvil
 	 */
+	@Test
 	public void testRemoveAllEvil() {
 		action = new ManageHospitalAssignmentsAction(evil, performingAdmin);
 		try {
@@ -144,6 +162,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testRemovaAllUnassigned() throws ITrustException {
 		assertEquals(0, action.removeAllAssignmentsFromHCP("" + hcp0));
 	}
@@ -151,6 +170,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testCheckHCPIDBadMID
 	 */
+	@Test
 	public void testCheckHCPIDBadMID() {
 		try {
 			action.checkHCPID("90000000001");
@@ -165,6 +185,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testCheckHCPID() throws ITrustException {
 		assertEquals(9000000000L, action.checkHCPID("9000000000"));
 	}
@@ -172,6 +193,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testCheckHCPIDStringMID
 	 */
+	@Test
 	public void testCheckHCPIDStringMID() {
 		try {
 			action.checkHCPID("f");
@@ -184,6 +206,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testCheckHCPIDEvil
 	 */
+	@Test
 	public void testCheckHCPIDEvil() {
 		try {
 			action = new ManageHospitalAssignmentsAction(evil, performingAdmin);
@@ -199,6 +222,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * 
 	 * @throws ITrustException
 	 */
+	@Test
 	public void testGetAvailableHospitals() throws ITrustException {
 		assertSame(9, action.getAvailableHospitals("9000000000").size());
 	}
@@ -206,6 +230,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testGetAvailableHospitalsBadMID
 	 */
+	@Test
 	public void testGetAvailableHospitalsBadMID() {
 		try {
 			action.getAvailableHospitals("f");
@@ -218,6 +243,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testGetAssignedHospitalsBadMID
 	 */
+	@Test
 	public void testGetAssignedHospitalsBadMID() {
 		try {
 			action.getAssignedHospitals("f");
@@ -230,6 +256,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testAssignHCPToHospitalBadID
 	 */
+	@Test
 	public void testAssignHCPToHospitalBadID() {
 		try {
 			action.assignHCPToHospital("f", "1");
@@ -242,6 +269,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testRemoveHCPtoHospitalBADID
 	 */
+	@Test
 	public void testRemoveHCPtoHospitalBadID() {
 		try {
 			action.removeHCPAssignmentToHospital("f", "1");
@@ -254,6 +282,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	/**
 	 * testRemoveHCPAssignmentsBadID
 	 */
+	@Test
 	public void testRemoveHCPAssignmentsBadID() {
 		try {
 			action.removeAllAssignmentsFromHCP("l");
@@ -270,6 +299,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
+	@Test
 	public void testCheckLTHospital() throws ITrustException, IOException, SQLException {
 		assertTrue(ltAction.checkLTHospital("5000000001"));
 		gen.clearHospitalAssignments();
@@ -281,6 +311,7 @@ public class ManageHospitalAssignmentsActionTest extends TestCase {
 	 * This method checks to make sure checkLTHospital method can correctly
 	 * handle and illegal MID.
 	 */
+	@Test
 	public void testCheckLTIDStringMID() {
 		try {
 			assertFalse(ltAction.checkLTHospital("ABCD"));

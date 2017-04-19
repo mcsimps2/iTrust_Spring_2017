@@ -32,14 +32,17 @@ import org.mockito.Spy;
 import edu.ncsu.csc.itrust.controller.prescription.PrescriptionController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedureData;
 import edu.ncsu.csc.itrust.model.old.beans.MedicationBean;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
 import edu.ncsu.csc.itrust.model.prescription.Prescription;
 import edu.ncsu.csc.itrust.model.prescription.PrescriptionMySQL;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
+import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 public class PrescriptionControllerTest {
@@ -56,6 +59,7 @@ public class PrescriptionControllerTest {
 	
 	@Before
 	public void setUp() throws FileNotFoundException, SQLException, IOException, DBException {
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		ds = spy(ConverterDAO.getDataSource());
 		gen = new TestDataGenerator();
 		gen.clearAllTables();
@@ -70,6 +74,7 @@ public class PrescriptionControllerTest {
 	@After
 	public void tearDown() throws FileNotFoundException, SQLException, IOException {
 		gen.clearAllTables();
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 	}
 	
 	@Test
@@ -122,7 +127,6 @@ public class PrescriptionControllerTest {
 	    controller.add(p);
 	    
 	    when(pSQL.add(p)).thenThrow(new SQLException());
-	    controller.add(p);
 	    
 	    //when(pSQL.update(p)).thenThrow(new SQLException());
 	    controller.edit(p);

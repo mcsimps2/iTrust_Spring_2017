@@ -1,21 +1,26 @@
 package edu.ncsu.csc.itrust.unit.action;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 import edu.ncsu.csc.itrust.action.PayBillAction;
 import edu.ncsu.csc.itrust.action.ViewMyBillingAction;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.BillingBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 
-public class PayBillActionTest extends TestCase {
+public class PayBillActionTest  {
 	private ViewMyBillingAction assistantAction;
 	private long mid = 311L; // Sean Ford
 	private PayBillAction action;
 	private BillingBean billBean;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
+		TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 		TestDataGenerator gen = new TestDataGenerator();
 		gen.clearAllTables();
 		gen.standardData();
@@ -27,7 +32,14 @@ public class PayBillActionTest extends TestCase {
 
 		action = new PayBillAction(TestDAOFactory.getTestInstance(), billBean.getBillID());
 	}
+	
+	@After
+	public void tearDown()
+	{
+		TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+	}
 
+	@Test
 	public void testPayBillWithCC() throws Exception {
 		String testCC = "4539592576502361";
 		String thirtyOne = "1234567890123456789012345678901";
@@ -57,6 +69,7 @@ public class PayBillActionTest extends TestCase {
 
 	}
 
+	@Test
 	public void testPayBillWithIns() throws Exception {
 		String eT = "555-555-5555";
 		String t1 = "123456789012345678901";

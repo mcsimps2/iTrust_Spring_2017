@@ -416,6 +416,12 @@
 		<groupId>httpunit</groupId>
 		<artifactId>httpunit</artifactId>
 		<version>1.7</version>
+		<exclusions>
+        	<exclusion>
+            	<groupId>javax.servlet</groupId>
+            	<artifactId>servlet-api</artifactId>
+        	</exclusion>
+    	</exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.easymock</groupId>
@@ -441,6 +447,12 @@
 		<groupId>tomcat</groupId>
 		<artifactId>jasper-runtime</artifactId>
 		<version>5.5.23</version>
+		<exclusions>
+        	<exclusion>
+            	<groupId>javax.servlet</groupId>
+            	<artifactId>servlet-api</artifactId>
+        	</exclusion>
+    	</exclusions>
 	</dependency>
 	<dependency>
 	    <groupId>org.apache.tomcat</groupId>
@@ -528,7 +540,12 @@
     	<artifactId>google-api-services-calendar</artifactId>
     	<version>v3-rev239-1.22.0</version>
 	</dependency>
-	
+	<dependency>
+        <groupId>javax.el</groupId>
+        <artifactId>el-api</artifactId>
+        <version>2.2</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,11 +1,19 @@
 package edu.ncsu.csc.itrust.unit.datagenerators;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.unit.DBBuilder;
@@ -901,9 +909,19 @@ public class TestDataGenerator {
 		new DBBuilder(factory).executeSQLFile(DIR + "/newborns.sql");
 	}
 	
-	public void uc96() throws FileNotFoundException, SQLException, IOException {
-		new DBBuilder(factory).executeSQLFile(DIR + "/uc96.sql");
+	public void uc95() throws FileNotFoundException, SQLException, IOException {
+		new DBBuilder(factory).executeSQLFile(DIR + "/uc95.sql");
 	}
+	
+	public void image() throws FileNotFoundException, SQLException, IOException {
+        try (Connection connection = factory.getConnection();
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO image VALUES('default', ?)");)
+        {
+            File file = new File("testing-files/default.jpg");
+            statement.setBinaryStream(1, new FileInputStream(file));
+            statement.executeUpdate();
+        }
+    }
 
 	public void standardData() throws FileNotFoundException, IOException, SQLException {
 	
@@ -1025,9 +1043,11 @@ public class TestDataGenerator {
 		
 		newborns();
 		
-		uc96();
+		uc95();
 		
 		setMode();
+		
+		image();
 	}
 
 	/**
@@ -1037,27 +1057,18 @@ public class TestDataGenerator {
 	 * @throws SQLException
 	 */
 	private boolean checkIfZipsExists() {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			conn = factory.getConnection();
-			ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
-			rs = ps.executeQuery();
+		try (
+			Connection conn = factory.getConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM zipcodes WHERE zip='27614'");
+			ResultSet rs = ps.executeQuery();)
+		{
 			if (rs.next()) {
 				return true;
 
 			}
 		} catch (SQLException e) {
 			return false;
-		} finally {
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					return false;
-				}
-		}
+		} 
 
 		return false;
 	}

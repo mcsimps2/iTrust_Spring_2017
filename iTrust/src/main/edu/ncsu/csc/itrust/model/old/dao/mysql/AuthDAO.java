@@ -571,8 +571,10 @@ public class AuthDAO {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement stmt = conn.prepareStatement("SELECT Salt FROM users WHERE MID=?")) {
 			stmt.setLong(1, mid);
-			ResultSet rs = stmt.executeQuery();
-			result = rs.next() ? rs.getString(1) : generateRandomSalt();
+			try (ResultSet rs = stmt.executeQuery();)
+			{
+				result = rs.next() ? rs.getString(1) : generateRandomSalt();
+			}
 		} catch (SQLException e) {
 			result = generateRandomSalt();
 		}

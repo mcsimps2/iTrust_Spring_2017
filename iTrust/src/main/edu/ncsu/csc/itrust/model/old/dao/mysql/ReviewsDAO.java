@@ -68,9 +68,10 @@ public class ReviewsDAO {
 		try (Connection conn = factory.getConnection();
 				PreparedStatement ps = conn.prepareStatement("SELECT * FROM reviews WHERE pid=?")) {
 			ps.setLong(1, pid);
-			ResultSet rs = ps.executeQuery();
-
-			return loader.loadList(rs);
+			try (ResultSet rs = ps.executeQuery();)
+			{
+				return loader.loadList(rs);
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}
@@ -110,9 +111,11 @@ public class ReviewsDAO {
 				PreparedStatement ps = conn.prepareStatement("SELECT * FROM reviews WHERE pid=?")) {
 
 			ps.setLong(1, pid);
-			ResultSet rs = ps.executeQuery();
-			List<ReviewsBean> records = loader.loadList(rs);
-			return records;
+			try (ResultSet rs = ps.executeQuery();)
+			{
+				List<ReviewsBean> records = loader.loadList(rs);
+				return records;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}
@@ -161,9 +164,11 @@ public class ReviewsDAO {
 						.prepareStatement("SELECT * FROM appointment WHERE patient_id =? AND doctor_id=?")) {
 			ps.setLong(1, mid);
 			ps.setLong(2, pid);
-			ResultSet rs = ps.executeQuery();
-			boolean isRatable = rs.next();
-			return isRatable;
+			try (ResultSet rs = ps.executeQuery();)
+			{
+				boolean isRatable = rs.next();
+				return isRatable;
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}

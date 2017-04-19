@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -33,6 +35,7 @@ public class ChildbirthVisitStepDefs {
 	private iTrustDriver driver;
 	private ChildbirthVisitData cvd;
 	private NewbornData nd;
+	DataSource ds;
 
 
 	private int numNewborns;
@@ -42,8 +45,6 @@ public class ChildbirthVisitStepDefs {
 		
 	public ChildbirthVisitStepDefs(iTrustDriver driver) {
 		this.driver = driver;
-		this.cvd = new ChildbirthVisitMySQL(ConverterDAO.getDataSource());
-		this.nd = new NewbornMySQL(ConverterDAO.getDataSource());
 		
 		this.newbornList = new ArrayList<Newborn>();
 	}
@@ -276,6 +277,8 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the childbirth visit is in the database$")
 	public void childbirthIsInDatabase() {
+		this.ds = ConverterDAO.getDataSource();
+		this.cvd = new ChildbirthVisitMySQL(ds);
 		try {
 			Assert.assertEquals(cv, cvd.getByOfficeVisit(TEST_OFFICE_VISIT_ID));
 		} catch (DBException e) {
@@ -322,6 +325,8 @@ public class ChildbirthVisitStepDefs {
 	
 	@Then("^the newborns are in the database$")
 	public void newbornsAreInDatabase() {
+		this.ds = ConverterDAO.getDataSource();
+		this.nd = new NewbornMySQL(ds);
 		try {
 			List<Newborn> results = nd.getByOfficeVisit(TEST_OFFICE_VISIT_ID);
 			Assert.assertTrue("Missing newborn(s) in the database", results.size() >= newbornList.size());

@@ -24,6 +24,7 @@ public class WeeklyAvgGraphObserver extends GraphObserver {
 	 * Constructor with data source
 	 */
 	public WeeklyAvgGraphObserver(DataSource ds) {
+		super(ds);
 		this.setFitnessController(new FitnessInfoController(ds));
 	}
 	
@@ -31,6 +32,7 @@ public class WeeklyAvgGraphObserver extends GraphObserver {
 	 * Constructor
 	 */
 	public WeeklyAvgGraphObserver() {
+		super();
 		this.setFitnessController(new FitnessInfoController());
 	}
 	

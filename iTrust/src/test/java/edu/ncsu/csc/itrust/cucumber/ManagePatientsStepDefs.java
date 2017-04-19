@@ -6,7 +6,9 @@ import edu.ncsu.csc.itrust.action.AddPatientAction;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.exception.ITrustException;
+import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.beans.PatientBean;
+import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.PatientDAO;
 import edu.ncsu.csc.itrust.unit.testutils.TestDAOFactory;
 import cucumber.api.java.en.Then;
@@ -32,6 +34,7 @@ public class ManagePatientsStepDefs {
 	@When("^I enter a (.+), (.+), and (.+) for a new patient and submit the information$")
 	public void HCP_enters_new_patient_name_and_email(String firstName, String lastName, String email) {
 		if(this.userData.loginID>0){
+			TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 			AddPatientAction testAction = new AddPatientAction(TestDAOFactory.getTestInstance(), this.userData.loginID);
 			PatientBean newPatient = new PatientBean();
 			newPatient.setFirstName(firstName);
@@ -46,6 +49,10 @@ public class ManagePatientsStepDefs {
 			} catch (ITrustException e) {
 				Assert.fail("Unable to create Patient ITrustException");
 			}
+			finally
+			{
+				TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
+			}
 		}else{
 			Assert.fail("Not logged in");
 		}
@@ -55,6 +62,7 @@ public class ManagePatientsStepDefs {
 	public void create_patient(){
 
 		if(this.userData.loginID>0){
+			TransactionLogger.getInstance().setTransactionDAO(TestDAOFactory.getTestInstance().getTransactionDAO());
 			AddPatientAction testAction = new AddPatientAction(TestDAOFactory.getTestInstance(), this.userData.loginID);
 			PatientBean newPatient = new PatientBean();
 			newPatient.setFirstName("Cucumber");
@@ -70,6 +78,10 @@ public class ManagePatientsStepDefs {
 				Assert.fail("Unable to create Patient - FormValidationException");
 			} catch (ITrustException e) {
 				Assert.fail("Unable to create Patient ITrustException");
+			}
+			finally
+			{
+				TransactionLogger.getInstance().setTransactionDAO(DAOFactory.getProductionInstance().getTransactionDAO());
 			}
 		}else{
 			Assert.fail("Not logged in");
