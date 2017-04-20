@@ -33,6 +33,7 @@
 		<link href="/iTrust/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="/iTrust/css/dashboard.css" rel="stylesheet" />
 		<link href="/iTrust/css/datepicker.css" type="text/css" rel="stylesheet" />
+		<link href="/iTrust/css/csshake.min.css" type="text/css" rel="stylesheet" />
 		
 		<% if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) { %>
 			<% String colorScheme = authDAO.getColorScheme(loggedInMID).toString();%>
