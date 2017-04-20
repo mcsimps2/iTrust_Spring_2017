@@ -12,6 +12,7 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO;
 import edu.ncsu.csc.itrust.model.user.ColorSchemeType;
+import edu.ncsu.csc.itrust.webutils.SessionUtils;
 
 @ManagedBean(name = "settings_controller")
 @SessionScoped
@@ -33,6 +34,14 @@ public class SettingsController extends iTrustController {
 		setColorScheme(authDAO.getColorScheme(mid).toString());
 	}
 	
+	public SettingsController(AuthDAO authDAO, SessionUtils st) {
+		super();
+		this.setSessionUtils(st);
+		this.authDAO = authDAO;
+		this.mid = this.sessionUtils.getSessionLoggedInMIDLong();
+		setColorScheme(authDAO.getColorScheme(mid).toString());
+	}
+	
 	public static List<ColorSchemeType> getColorSchemes() {
 		return Arrays.asList(ColorSchemeType.values());
 	}
@@ -40,10 +49,9 @@ public class SettingsController extends iTrustController {
 	public void save() {
 		try {
 			authDAO.setColorScheme(mid, ColorSchemeType.matchString(getColorScheme()));
-			super.printFacesMessage(FacesMessage.SEVERITY_INFO, COLOR_SCHEME_UPDATED, COLOR_SCHEME_UPDATED, null);
+			this.printFacesMessage(FacesMessage.SEVERITY_INFO, COLOR_SCHEME_UPDATED, COLOR_SCHEME_UPDATED, null);
 		} catch (DBException e) {
-			e.printStackTrace();
-			super.printFacesMessage(FacesMessage.SEVERITY_ERROR, COLOR_SCHEME_FAILED, COLOR_SCHEME_FAILED, null);
+			this.printFacesMessage(FacesMessage.SEVERITY_ERROR, COLOR_SCHEME_FAILED, COLOR_SCHEME_FAILED, null);
 		}
 	}
 

@@ -614,7 +614,11 @@ public class AuthDAO {
 				PreparedStatement stmt = conn.prepareStatement("UPDATE users SET colorScheme=? WHERE MID=?")) {
 			stmt.setString(1, cst.toString());
 			stmt.setLong(2, mid);
-			stmt.executeUpdate();
+			int results = stmt.executeUpdate();
+			if (results == 0)
+			{
+				throw new DBException(new SQLException("No such user in database"));
+			}
 		} catch (SQLException e) {
 			throw new DBException(e);
 		}
