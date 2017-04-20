@@ -34,6 +34,24 @@
 		<link href="/iTrust/css/dashboard.css" rel="stylesheet" />
 		<link href="/iTrust/css/datepicker.css" type="text/css" rel="stylesheet" />
 		
+		<% if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) { %>
+			<% String colorScheme = authDAO.getColorScheme(loggedInMID).toString();%>
+			
+			<% if (colorScheme.equals("Default")) { %>
+				<%@include file="/css/colorschemes/default.html"%>
+			<% } else if (colorScheme.equals("Dark")) { %>
+				<%@include file="/css/colorschemes/dark.html"%>
+			<% } else if (colorScheme.equals("Muted Midtones")) { %>
+				<%@include file="/css/colorschemes/mutedmidtones.html"%>
+			<% } else if (colorScheme.equals("Rainbow")) { %>
+				<%@include file="/css/colorschemes/rainbow.html"%>
+			<% } else if (colorScheme.equals("I Dare You")) { %>
+				<%@include file="/css/colorschemes/idareyou.html"%>
+			<% } else { %>
+				<%@include file="/css/colorschemes/default.html"%>
+			<% } %>
+		<% } %>
+		
 		<script src="/iTrust/js/DatePicker.js" type="text/javascript"></script>
 		<script src="/iTrust/js/jquery-1.8.3.js" type="text/javascript"></script>
 		<script src="/iTrust/js/SwipeableElem.js" type="text/javascript"></script>
@@ -178,3 +196,5 @@
 					<%
 						}
 					%>
+					
+					
