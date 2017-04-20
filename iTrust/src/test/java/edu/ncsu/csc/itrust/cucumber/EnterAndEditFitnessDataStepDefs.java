@@ -139,15 +139,15 @@ public class EnterAndEditFitnessDataStepDefs {
 		
 		//Find the textboxes for entry in the page
 		try {
-			WebElement calsBBox = driver.findElement(By.id("j_idt21:fiCalsBurned"));
-			WebElement stepsBox = driver.findElement(By.id("j_idt21:fiSteps"));
-			WebElement milesBox = driver.findElement(By.id("j_idt21:fiMiles"));
-			WebElement floorsBox = driver.findElement(By.id("j_idt21:fiFloors"));
-			WebElement minSedBox = driver.findElement(By.id("j_idt21:fiSedentary"));
-			WebElement minLightBox = driver.findElement(By.id("j_idt21:fiLightlyActive"));
-			WebElement minFairBox = driver.findElement(By.id("j_idt21:fiFairlyActive"));
-			WebElement minHighBox = driver.findElement(By.id("j_idt21:fiVeryActive"));
-			WebElement calsABox = driver.findElement(By.id("j_idt21:fiActiveCals"));
+			WebElement calsBBox = driver.findElement(By.id("j_idt46:fiCalsBurned"));
+			WebElement stepsBox = driver.findElement(By.id("j_idt46:fiSteps"));
+			WebElement milesBox = driver.findElement(By.id("j_idt46:fiMiles"));
+			WebElement floorsBox = driver.findElement(By.id("j_idt46:fiFloors"));
+			WebElement minSedBox = driver.findElement(By.id("j_idt46:fiSedentary"));
+			WebElement minLightBox = driver.findElement(By.id("j_idt46:fiLightlyActive"));
+			WebElement minFairBox = driver.findElement(By.id("j_idt46:fiFairlyActive"));
+			WebElement minHighBox = driver.findElement(By.id("j_idt46:fiVeryActive"));
+			WebElement calsABox = driver.findElement(By.id("j_idt46:fiActiveCals"));
 			
 			
 			//Clear all the boxes
@@ -185,15 +185,15 @@ public class EnterAndEditFitnessDataStepDefs {
 		
 		//Find the textboxes for entry in the page
 		try {
-			WebElement calsBBox = driver.findElement(By.id("j_idt21:fiCalsBurned"));
-			WebElement stepsBox = driver.findElement(By.id("j_idt21:fiSteps"));
-			WebElement milesBox = driver.findElement(By.id("j_idt21:fiMiles"));
-			WebElement floorsBox = driver.findElement(By.id("j_idt21:fiFloors"));
-			WebElement minSedBox = driver.findElement(By.id("j_idt21:fiSedentary"));
-			WebElement minLightBox = driver.findElement(By.id("j_idt21:fiLightlyActive"));
-			WebElement minFairBox = driver.findElement(By.id("j_idt21:fiFairlyActive"));
-			WebElement minHighBox = driver.findElement(By.id("j_idt21:fiVeryActive"));
-			WebElement calsABox = driver.findElement(By.id("j_idt21:fiActiveCals"));
+			WebElement calsBBox = driver.findElement(By.id("j_idt46:fiCalsBurned"));
+			WebElement stepsBox = driver.findElement(By.id("j_idt46:fiSteps"));
+			WebElement milesBox = driver.findElement(By.id("j_idt46:fiMiles"));
+			WebElement floorsBox = driver.findElement(By.id("j_idt46:fiFloors"));
+			WebElement minSedBox = driver.findElement(By.id("j_idt46:fiSedentary"));
+			WebElement minLightBox = driver.findElement(By.id("j_idt46:fiLightlyActive"));
+			WebElement minFairBox = driver.findElement(By.id("j_idt46:fiFairlyActive"));
+			WebElement minHighBox = driver.findElement(By.id("j_idt46:fiVeryActive"));
+			WebElement calsABox = driver.findElement(By.id("j_idt46:fiActiveCals"));
 			
 			
 			//Clear all the boxes

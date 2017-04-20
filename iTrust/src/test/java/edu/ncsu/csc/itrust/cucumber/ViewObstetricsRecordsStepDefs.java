@@ -85,7 +85,7 @@ public class ViewObstetricsRecordsStepDefs {
 	@When("^I click on the first obstetrics record$")
 	public void clickFirstObstetricsRecord()
 	{
-		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt39\"]/input[2]")).click();
+		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt64\"]/input[2]")).click();
 	}
 	
 	@When("^I decide to select another patient$")
