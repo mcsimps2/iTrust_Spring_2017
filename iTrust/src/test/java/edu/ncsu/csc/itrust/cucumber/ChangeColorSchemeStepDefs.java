@@ -41,6 +41,10 @@ public class ChangeColorSchemeStepDefs {
 	
 	@Then("^the colors have been changed to (.+)$")
 	public void colorsHaveChangedTo(String color) {
-		Assert.assertTrue(true);
+		//Test JSF page
+		driver.getPageSource().contains(color);
+		//Test JSP page
+		driver.findElement(By.linkText("My Demographics")).click();
+		driver.getPageSource().contains(color);
 	}
 }

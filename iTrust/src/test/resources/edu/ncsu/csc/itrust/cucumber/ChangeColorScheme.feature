@@ -14,7 +14,8 @@ Scenario Outline: Change the colors
 	Then the colors have been changed to <color>
 Examples:
 	| hcpMID | pw | scheme | color |
-	| 9000000012 | pw | Dark | #050505 |
-	| 9000000012 | pw | Muted Midtones | #55699a |
-	| 9000000012 | pw | Rainbow | #2DFF1C |
-	| 9000000012 | pw | I Dare You | #ff7700 |
+	| 9000000012 | pw | Dark | DARK |
+	| 9000000012 | pw | Muted Midtones | MUTED_MIDTONES |
+	| 9000000012 | pw | Rainbow | RAINBOW |
+	| 9000000012 | pw | I Dare You | I_DARE_YOU |
+	| 9000000012 | pw | Default | DEFAULT |
