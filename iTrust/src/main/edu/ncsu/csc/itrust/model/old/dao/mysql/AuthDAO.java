@@ -15,6 +15,7 @@ import edu.ncsu.csc.itrust.logger.TransactionLogger;
 import edu.ncsu.csc.itrust.model.old.dao.DAOFactory;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
 import edu.ncsu.csc.itrust.model.old.enums.TransactionType;
+import edu.ncsu.csc.itrust.model.user.ColorSchemeType;
 
 /**
  * AuthDAO is for anything that has to do with authentication. Most methods
@@ -600,5 +601,46 @@ public class AuthDAO {
 	/** Logs that given user was logged out */
 	public void logUserLoggedOut(Long mid) {
 		TransactionLogger.getInstance().logTransaction(TransactionType.LOGOUT, mid, null, "");
+	}
+	
+	/**
+	 * Sets the color scheme for a user
+	 * @param mid the user to set the color scheme for
+	 * @param cst the new Color Scheme preference for the user
+	 * @throws DBException
+	 */
+	public void setColorScheme(long mid, ColorSchemeType cst) throws DBException {
+		try (Connection conn = factory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement("UPDATE users SET colorScheme=? WHERE MID=?")) {
+			stmt.setString(1, cst.toString());
+			stmt.setLong(2, mid);
+			int results = stmt.executeUpdate();
+			if (results == 0)
+			{
+				throw new DBException(new SQLException("No such user in database"));
+			}
+		} catch (SQLException e) {
+			throw new DBException(e);
+		}
+	}
+	
+	/**
+	 * Returns the preferred color scheme for the given user
+	 * @param mid the MID of the user
+	 * @return the preferred color scheme of the user.  Returns the default color scheme is a database exception occurs.
+	 */
+	public ColorSchemeType getColorScheme(long mid) {
+		ColorSchemeType result;
+		try (Connection conn = factory.getConnection();
+				PreparedStatement stmt = conn.prepareStatement("SELECT colorScheme FROM users WHERE MID=?")) {
+			stmt.setLong(1, mid);
+			try (ResultSet rs = stmt.executeQuery();)
+			{
+				result = rs.next() ? ColorSchemeType.matchString(rs.getString(1)) : ColorSchemeType.DEFAULT;
+			}
+		} catch (SQLException e) {
+			result = ColorSchemeType.DEFAULT;
+		}
+		return result;
 	}
 }

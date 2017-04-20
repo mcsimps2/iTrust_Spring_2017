@@ -100,8 +100,8 @@ public class ViewFitnessGraphsStepDefs {
 	@When("^I enter start date (\\S+) and end date (\\S+)$")
 	public void enterStartEndDate(String day1, String day2) {
 		System.out.println(driver.getCurrentUrl());
-		driver.findElement(By.id("j_idt21:start-date")).sendKeys(day1);
-		driver.findElement(By.id("j_idt21:end-date")).sendKeys(day2);
+		driver.findElement(By.id("j_idt46:start-date")).sendKeys(day1);
+		driver.findElement(By.id("j_idt46:end-date")).sendKeys(day2);
 	}
 	
 	@When("^I change the default dates to be the past month$")
@@ -116,8 +116,8 @@ public class ViewFitnessGraphsStepDefs {
 		
 		try {
 			// Send strings to start and end date text fields
-			driver.findElement(By.id("j_idt21:start-date")).sendKeys(startDate);
-			driver.findElement(By.id("j_idt21:end-date")).sendKeys(endDate);
+			driver.findElement(By.id("j_idt46:start-date")).sendKeys(startDate);
+			driver.findElement(By.id("j_idt46:end-date")).sendKeys(endDate);
 		} catch (NoSuchElementException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -176,8 +176,8 @@ public class ViewFitnessGraphsStepDefs {
 		
 		try {
 			// Send strings to start and end date text fields
-			driver.findElement(By.id("j_idt21:start-date")).sendKeys(startDate);
-			driver.findElement(By.id("j_idt21:end-date")).sendKeys(endDate);
+			driver.findElement(By.id("j_idt46:start-date")).sendKeys(startDate);
+			driver.findElement(By.id("j_idt46:end-date")).sendKeys(endDate);
 		} catch (NoSuchElementException e) {
 			Assert.fail(e.getMessage());
 		}

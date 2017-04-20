@@ -105,15 +105,15 @@ public class UserMySQLConverter implements DataBean<User>, Serializable{
 		case UAP:
 		case ER:
 		case LT:
-			stmt = "SELECT users.MID AS MID, users.Role AS Role, personnel.firstName AS firstName, personnel.lastName AS lastName FROM users INNER JOIN personnel ON users.MID = personnel.MID WHERE users.MID=?;";
+			stmt = "SELECT users.MID AS MID, users.Role AS Role, users.colorScheme AS colorScheme, personnel.firstName AS firstName, personnel.lastName AS lastName FROM users INNER JOIN personnel ON users.MID = personnel.MID WHERE users.MID=?;";
 			break;
 //ToDo: add back in when needed
 		case PATIENT:
-			stmt = "SELECT users.MID AS MID, users.Role AS Role, patients.firstName AS firstName, patients.lastName AS lastName FROM users INNER JOIN patients ON users.MID = patients.MID WHERE users.MID=?;";
+			stmt = "SELECT users.MID AS MID, users.Role AS Role, users.colorScheme AS colorScheme, patients.firstName AS firstName, patients.lastName AS lastName FROM users INNER JOIN patients ON users.MID = patients.MID WHERE users.MID=?;";
 //			throw new IllegalStateException("unimplemented");
 			break;
 		case TESTER:
-			stmt = "SELECT MID AS MID, Role, '' AS firstName, MID AS lastName from Users WHERE MID=?;";
+			stmt = "SELECT MID AS MID, Role, '' AS firstName, MID AS lastName, colorScheme AS colorScheme from Users WHERE MID=?;";
 			break;
 		default:
 			throw new DBException(new SQLException("Role " + userRole + " not supported"));

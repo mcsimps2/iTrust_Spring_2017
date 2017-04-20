@@ -14,7 +14,7 @@
 	<c:choose>
 		<c:when test="${!empty prescriptionList}">
 			<h:dataTable styleClass="fTable" value="#{ prescriptionList }" var="prescription" border="1">
-       					 
+				
 				<h:column>
 					<f:facet name="header">Medication Code</f:facet>
 					<h:outputText value="#{prescription.getCode()}"/>
