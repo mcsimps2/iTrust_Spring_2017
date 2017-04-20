@@ -26,7 +26,7 @@ public class ObstetricsInitTest {
 	@Test
 	public void testGetEDD()
 	{
-		Assert.assertEquals("2017-12-21", oi1.getEDD());
+		Assert.assertEquals("2017-10-8", oi1.getEDD());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -45,7 +45,7 @@ public class ObstetricsInitTest {
 	{
 		ObstetricsInit oi = new ObstetricsInit(1, new Timestamp(1L), 5L, "2017-03-03", "2017-01-01");
 		Assert.assertTrue(oi.getPrettyDate().equals("March 3, 2017"));
-		Assert.assertTrue(oi.getPrettyEDD().equals("December 8, 2017"));
+		Assert.assertTrue(oi.getPrettyEDD().equals("October 8, 2017"));
 		Assert.assertTrue(oi.getPrettyLMP().equals("January 1, 2017"));
 		Assert.assertTrue(oi.getPrettyRH().equals("False"));
 		oi.setLMP("2013-01-01");

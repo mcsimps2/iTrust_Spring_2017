@@ -48,7 +48,7 @@ Scenario Outline: View Obstetric Record
 
 Examples:
 	| hcpMID | pw | patientName | pid | initDate | lmp | edd | weeksPreg | numPreg |
-	| 9000000012 | pw | Baby | 5 |  March 1, 2005 | January 3, 2005 | December 6, 2005 | 8 | 1 |
+	| 9000000012 | pw | Baby | 5 |  March 1, 2005 | January 3, 2005 | October 10, 2005 | 8 | 1 |
 
 Scenario Outline: Select Wrong Patient
 	Given I have logged in as HCP <hcpMID> with password <pw>
