@@ -53,6 +53,5 @@ public class SettingsController extends iTrustController {
 
 	public void setColorScheme(String colorScheme) {
 		this.colorScheme = colorScheme;
-		this.sessionUtils.setSessionVariable("colorScheme", colorScheme.toString());
 	}
 }
