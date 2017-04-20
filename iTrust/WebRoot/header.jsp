@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib uri='/WEB-INF/cewolf.tld' prefix='cewolf'%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
@@ -11,11 +10,9 @@
 		session.removeAttribute("errorMessage");
 	}
 
-	if (loggedInMID != null
-			&& session.getAttribute("loginFlag") != null
-			&& session.getAttribute("loginFlag").equals("true")) {
-		loggingAction.logEvent(TransactionType.LOGIN_SUCCESS,
-				loggedInMID, loggedInMID, "");
+	if (loggedInMID != null && session.getAttribute("loginFlag") != null
+		        && session.getAttribute("loginFlag").equals("true")) {
+		loggingAction.logEvent(TransactionType.LOGIN_SUCCESS, loggedInMID, loggedInMID, "");
 		session.removeAttribute("loginFlag");
 	}
 
@@ -23,91 +20,120 @@
 		session.removeAttribute("pid");
 	}
 %>
+
 <!DOCTYPE HTML>
+
 <html>
-<head>
-<title><%=StringEscapeUtils.escapeHtml("" + (pageTitle))%></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<link href="/iTrust/css.jsp" type="text/css" rel="stylesheet" />
-	<link href="/iTrust/css/bootstrap.min.css" rel="stylesheet" />
-	<link href="/iTrust/css/dashboard.css" rel="stylesheet" />
-	<link href="/iTrust/css/datepicker.css" type="text/css" rel="stylesheet" />
-	<script src="/iTrust/js/DatePicker.js" type="text/javascript"></script>
-	<script src="/iTrust/js/jquery-1.8.3.js" type="text/javascript"></script>
-	<script src="/iTrust/js/SwipeableElem.js" type="text/javascript"></script>
-	<script src="/iTrust/js/slidyRabbit.js" type="text/javascript"></script>
+	<head>
+		<title><%=StringEscapeUtils.escapeHtml("" + (pageTitle))%></title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		
+		<link href="/iTrust/css.jsp" type="text/css" rel="stylesheet" />
+		<link href="/iTrust/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="/iTrust/css/dashboard.css" rel="stylesheet" />
+		<link href="/iTrust/css/datepicker.css" type="text/css" rel="stylesheet" />
+		<link href="/iTrust/css/csshake.min.css" type="text/css" rel="stylesheet" />
+		
+		<% if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) { %>
+			<% String colorScheme = authDAO.getColorScheme(loggedInMID).toString();%>
+			
+			<% if (colorScheme.equals("Default")) { %>
+				<%@include file="/css/colorschemes/default.html"%>
+			<% } else if (colorScheme.equals("Dark")) { %>
+				<%@include file="/css/colorschemes/dark.html"%>
+			<% } else if (colorScheme.equals("Muted Midtones")) { %>
+				<%@include file="/css/colorschemes/mutedmidtones.html"%>
+			<% } else if (colorScheme.equals("Rainbow")) { %>
+				<%@include file="/css/colorschemes/rainbow.html"%>
+			<% } else if (colorScheme.equals("I Dare You")) { %>
+				<%@include file="/css/colorschemes/idareyou.html"%>
+			<% } else { %>
+				<%@include file="/css/colorschemes/default.html"%>
+			<% } %>
+		<% } %>
+		
+		<script src="/iTrust/js/DatePicker.js" type="text/javascript"></script>
+		<script src="/iTrust/js/jquery-1.8.3.js" type="text/javascript"></script>
+		<script src="/iTrust/js/SwipeableElem.js" type="text/javascript"></script>
+		<script src="/iTrust/js/slidyRabbit.js" type="text/javascript"></script>
+	</head>
 	
-</head>
-<body>
+	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top top-border" role="navigation">
 			<div class="container-fluid">
 				<div class="navbar-header">
-				  <button type="button" class="navbar-toggle" id="toggleMenu" style="color:#FFFFFF; font-size: 8pt;">
-				  	<span class="glyphicon glyphicon-chevron-right"></span>
-				  </button>
-		          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-		            <span class="sr-only">Toggle navigation</span>
-		            <span class="icon-bar"></span>
-		            <span class="icon-bar"></span>
-		            <span class="icon-bar"></span>
-		          </button>
-		          <a class="navbar-brand" href="/iTrust/"><img src="/iTrust/image/itrust-logo.png"></a>
-		        </div>
+					<button type="button" class="navbar-toggle" id="toggleMenu" style="color:#FFFFFF; font-size: 8pt;">
+						<span class="glyphicon glyphicon-chevron-right"></span>
+					</button>
+					
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					
+					<a class="navbar-brand" href="/iTrust/">
+						<img src="/iTrust/image/itrust-logo.png">
+					</a>
+				</div>
+				
 				<div class="navbar-collapse collapse">
 					<%
-						if (validSession) {
-	
-							if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) //if no one is logged in
-							{
+					if (validSession) {
+						// If no one is logged in
+						if ((loggedInMID != null) && (loggedInMID.longValue() != 0L)) {
 					%>
-	
 					<ul class="nav navbar-nav navbar-right">
 						<span class="welcome">
-						<%out.println("Welcome, "
-							+ StringEscapeUtils.escapeHtml("" + userName)
-							+ "<BR/>");%>
+							<%out.println(
+								"Welcome, "
+								+ StringEscapeUtils.escapeHtml("" + userName)
+								+ "<br/>");
+							%>
 						</span>
+						
 						<li><a href="/iTrust">Home</a></li>
 						<li><a href="/iTrust/logout.jsp">Logout</a></li>
 						<li><a href="/iTrust/auth/changePassword.jsp">Change Password</a></li>
+						<li><a href="/iTrust/auth/settings.xhtml">Settings</a></li>
 					</ul>
 				</div>
+				
 				<div id="iTrustSelectedPatient">
 					<%
 						if (session.getAttribute("pid") != null
 										&& ((String) session.getAttribute("pid")).length() > 0
-										&& !session.getAttribute("pid").equals("null"))
-								//if(session.getAttribute("pid") != null)
-								{
+										&& !session.getAttribute("pid").equals("null")) {
 					%>
-					<span class="selectedPatient"> Viewing information for <b><%=selectedPatientName%></b>
-						| <a
-						href="/iTrust/auth/getPatientID.jsp?forward=<%=request.getRequestURI()%>">Select
-							a Different Patient</a> </span>
+					<span class="selectedPatient">
+						Viewing information for <b><%=selectedPatientName%></b>
+						|
+						<a href="/iTrust/auth/getPatientID.jsp?forward=<%=request.getRequestURI()%>">
+							Select a Different Patient
+						</a>
+					</span>
 					<%
 						}
 					%>
 	
 					<%
-						} else { //no one is logged in
+						} else { // No one is logged in
 					%>
 						</div>
 					<%
 						}
-						} //valid session
+						} // Valid session
 					%>
-	
 				</div>
 			</div>
 		</div>
-		
 		
 		<div class="container-fluid">
 		<div class="row <% if (request.getRequestURL().indexOf("/login.jsp") != -1) {%>home-row<%} %>">
 		
 			<div id="iTrustMenu" class="col-sm-4 col-md-3 sidebar">
-				<!-- 	<img id="menuPic" src="/iTrust/image/new/menu.png"  /> 
-				<img src="/iTrust/image/new/menu_top.png"  /> -->
 				
 					<%
 						if (validSession) {
@@ -158,8 +184,6 @@
 					<%
 						}
 					%>
-				
-				<!-- <img src="/iTrust/image/new/menu_bottom.png"  /> -->
 			</div>
 			<div id="iTrustPage" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
 				<div id="iTrustContent" id="m">
@@ -173,3 +197,5 @@
 					<%
 						}
 					%>
+					
+					

@@ -66,7 +66,7 @@ public class ObstetricsInit implements Comparable<ObstetricsInit> {
 	public String getEDD()
 	{
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getJavaDate());
+		cal.setTime(stringToJavaDate(getLMP()));
 		cal.add(Calendar.DATE, EDD_LMP_DIFF);
 		return dateToString(cal.getTime());
 	}

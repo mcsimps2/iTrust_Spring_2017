@@ -16,7 +16,7 @@ public class ViewObstetricsReportsStepDefs {
 	
 	@When("^I click Generate Report on the first entry$")
 	public void clickGenerateReport() {
-		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt42\"]/input[2]")).click();
+		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt67\"]/input[2]")).click();
 	}
 	
 	@When("^I click Done$")
@@ -46,7 +46,7 @@ public class ViewObstetricsReportsStepDefs {
 		
 		// Pregnancy info section
 		Assert.assertTrue(pageSource.contains("ABPos")); // Blood type
-		Assert.assertTrue(pageSource.contains("December 21, 2017")); // EDD
+		Assert.assertTrue(pageSource.contains("October 8, 2017")); // EDD
 		
 		// Obstetrics office visits section - line 1
 		Assert.assertTrue(pageSource.contains("February 22, 2017")); // Date

@@ -14,8 +14,10 @@ import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
 import edu.ncsu.csc.itrust.model.DataBean;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
+import edu.ncsu.csc.itrust.model.user.ColorSchemeType;
 import edu.ncsu.csc.itrust.model.user.User;
 import edu.ncsu.csc.itrust.model.user.UserMySQLConverter;
+import edu.ncsu.csc.itrust.unit.DBBuilder;
 import edu.ncsu.csc.itrust.unit.datagenerators.TestDataGenerator;
 
 public class UserDataTest extends TestCase {
@@ -26,9 +28,12 @@ public class UserDataTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
+		DBBuilder.rebuildAll();
 		ds = ConverterDAO.getDataSource();
 		testData = new UserMySQLConverter(ds);
 		gen = new TestDataGenerator();
+		gen.clearAllTables();
+		gen.standardData();
 	}
 
 	@Test
@@ -39,6 +44,7 @@ public class UserDataTest extends TestCase {
 		Assert.assertEquals(testUser.getLastName(), "Person");
 		Assert.assertEquals(testUser.getMID(), 1L);
 		Assert.assertEquals(testUser.getRole(), Role.PATIENT);
+		Assert.assertEquals(ColorSchemeType.DEFAULT, testUser.getColorScheme());
 	}
 	
 	@Test
@@ -49,5 +55,6 @@ public class UserDataTest extends TestCase {
 		Assert.assertEquals("Tester",hcpTest.getFirstName());
 		Assert.assertEquals(9900000000L,hcpTest.getMID());
 		Assert.assertEquals(Role.HCP, hcpTest.getRole());
+		Assert.assertEquals(ColorSchemeType.DEFAULT, hcpTest.getColorScheme());
 	}
 }

@@ -1,8 +1,8 @@
 <%@page buffer="64kb" %>
+<%@page import="edu.ncsu.csc.itrust.action.EventLoggingAction"%>
 <%@page import="edu.ncsu.csc.itrust.action.LoginFailureAction"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.DAOFactory"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.dao.mysql.AuthDAO"%>
-<%@page import="edu.ncsu.csc.itrust.action.EventLoggingAction"%>
 <%@page import="edu.ncsu.csc.itrust.model.old.enums.TransactionType"%>
 
 <%
@@ -11,17 +11,15 @@ AuthDAO authDAO    = prodDAO.getAuthDAO();
 EventLoggingAction loggingAction = new EventLoggingAction(prodDAO);
 LoginFailureAction loginFailureAction = (LoginFailureAction)session.getAttribute("loginFailureAction"); 
 
-if(loginFailureAction == null)
+if (loginFailureAction == null)
 {
 	loginFailureAction = new LoginFailureAction(prodDAO, request.getRemoteAddr());
 	session.setAttribute("loginFailureAction", loginFailureAction);
 }
 
-
-
 String pageTitle    = null;
 String loginMessage = null;
-String userName     = null; //"Andy Programmer";
+String userName     = null;
 String errorMessage = null;
 String selectedPatientName = null;
 

@@ -122,7 +122,7 @@ public class ViewFitnessDataStepDefs {
 	{
 		try
 		{
-			driver.findElement(By.name("j_idt16:j_idt17")).click();
+			driver.findElement(By.name("j_idt41:j_idt42")).click();
 		}
 		catch (NoSuchElementException Exception)
 		{
@@ -157,15 +157,15 @@ public class ViewFitnessDataStepDefs {
 	public void verifyFitnessData()
 	{
 		//First, get the fitness data from the screen
-		WebElement calsBBox = driver.findElement(By.id("j_idt21:fiCalsBurned"));
-		WebElement stepsBox = driver.findElement(By.id("j_idt21:fiSteps"));
-		WebElement milesBox = driver.findElement(By.id("j_idt21:fiMiles"));
-		WebElement floorsBox = driver.findElement(By.id("j_idt21:fiFloors"));
-		WebElement minSedBox = driver.findElement(By.id("j_idt21:fiSedentary"));
-		WebElement minLightBox = driver.findElement(By.id("j_idt21:fiLightlyActive"));
-		WebElement minFairBox = driver.findElement(By.id("j_idt21:fiFairlyActive"));
-		WebElement minHighBox = driver.findElement(By.id("j_idt21:fiVeryActive"));
-		WebElement calsABox = driver.findElement(By.id("j_idt21:fiActiveCals"));
+		WebElement calsBBox = driver.findElement(By.id("j_idt46:fiCalsBurned"));
+		WebElement stepsBox = driver.findElement(By.id("j_idt46:fiSteps"));
+		WebElement milesBox = driver.findElement(By.id("j_idt46:fiMiles"));
+		WebElement floorsBox = driver.findElement(By.id("j_idt46:fiFloors"));
+		WebElement minSedBox = driver.findElement(By.id("j_idt46:fiSedentary"));
+		WebElement minLightBox = driver.findElement(By.id("j_idt46:fiLightlyActive"));
+		WebElement minFairBox = driver.findElement(By.id("j_idt46:fiFairlyActive"));
+		WebElement minHighBox = driver.findElement(By.id("j_idt46:fiVeryActive"));
+		WebElement calsABox = driver.findElement(By.id("j_idt46:fiActiveCals"));
 		//Now check various values
 		Assert.assertEquals(randomInfo.getCaloriesBurned(), Integer.parseInt(calsBBox.getAttribute("value"))); //if this doesn't work, try getText()
 		Assert.assertEquals(randomInfo.getSteps(), Integer.parseInt(stepsBox.getAttribute("value")));

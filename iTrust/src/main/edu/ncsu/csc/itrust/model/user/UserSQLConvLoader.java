@@ -12,9 +12,6 @@ import edu.ncsu.csc.itrust.model.SQLLoader;
 import edu.ncsu.csc.itrust.model.old.enums.Role;
 
 public class UserSQLConvLoader implements SQLLoader<User> {
-
-
-	
 	
 	@Override
 	public List<User> loadList(ResultSet rs) throws SQLException {
@@ -43,6 +40,7 @@ public class UserSQLConvLoader implements SQLLoader<User> {
 		} catch (ITrustException e) {
 			throw new SQLException("Incorrect value for MID stored in MySQL database");
 		}
+		ret.setColorScheme(ColorSchemeType.matchString(rs.getString("colorScheme")));
 		return ret;
 	}
 
