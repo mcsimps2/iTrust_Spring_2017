@@ -16,7 +16,7 @@ public class ViewObstetricsReportsStepDefs {
 	
 	@When("^I click Generate Report on the first entry$")
 	public void clickGenerateReport() {
-		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt48\"]/input[2]")).click();
+		driver.findElement(By.xpath("//*[@id=\"previousRecords:0:j_idt42\"]/input[2]")).click();
 	}
 	
 	@When("^I click Done$")
